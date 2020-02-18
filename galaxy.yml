@@ -1,0 +1,22 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+namespace: sstone1
+name: blockchain_platform
+version: 0.0.1
+readme: README.md
+authors:
+  - Simon Stone
+description: Ansible collection for building Hyperledger Fabric networks using the IBM Blockchain Platform
+license:
+  - Apache-2.0
+tags:
+  - ibm
+  - enterprise
+  - blockchain
+  - dlt
+  - hyperledger
+  - fabric
+  - blockchain
+repository: https://github.com/sstone1/ansible-collection
