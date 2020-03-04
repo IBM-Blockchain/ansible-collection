@@ -11,6 +11,7 @@ from ansible.module_utils.urls import open_url
 
 import base64
 import json
+import time
 import urllib.parse
 
 class BlockchainPlatform:
@@ -129,3 +130,33 @@ class BlockchainPlatform:
             'Authorization': self.authorization
         }
         open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+
+    def extract_ca_info(self, ca):
+        return {
+            'name': ca['display_name'],
+            'api_url': ca['api_url'],
+            'operations_url': ca['operations_url'],
+            'ca_url': ca['api_url'],
+            'type': 'fabric-ca',
+            'ca_name': ca['ca_name'],
+            'tlsca_name': ca['tlsca_name'],
+            'pem': ca['tls_cert'],
+            'tls_cert': ca['tls_cert'],
+            'location': ca['location']
+        }
+
+    def wait_for_ca(self, ca, timeout):
+        started = False
+        for x in range(timeout):
+            try:
+                response = open_url(f'{ca["api_url"]}/cainfo', None, None, method='GET', validate_certs=False)
+                if response.code == 200:
+                    cainfo = json.load(response)
+                    if cainfo['result']['Version'] is not None:
+                        started = True
+                        break
+            except:
+                pass
+            time.sleep(1)
+        if not started:
+            raise AnsibleActionFail(f'Certificate authority failed to start within {timeout} seconds')

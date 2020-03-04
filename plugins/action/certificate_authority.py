@@ -68,7 +68,7 @@ class ActionModule(ActionBase):
                 merge_dicts(new_ca['resources'], resources)
             if storage is not None:
                 merge_dicts(new_ca['storage'], storage)
-            ibp.create_ca(new_ca)
+            ca = ibp.create_ca(new_ca)
             changed = True
 
         # If the CA does exist, but should not - delete it.
@@ -121,46 +121,14 @@ class ActionModule(ActionBase):
                 raise AnsibleActionFail(f'config_override.tlsca.registry cannot be updated; must delete CA and try again')
 
             if not equal_dicts(new_ca, ca):
-                ibp.update_ca(ca['id'], new_ca)
+                ca = ibp.update_ca(ca['id'], new_ca)
                 changed = True
 
-        # Extract CA information.
-        url = ca['api_url']
-        parsed_url = urllib.parse.urlparse(url)
-        protocol = parsed_url.scheme
-        hostname = parsed_url.hostname
-        port = parsed_url.port
-        pem = None
-        caname = ca['ca_name']
-        tlscaname = ca['tlsca_name']
-
         # Wait for the CA to start.
-        self._wait_for(url, 60)
+        timeout = self._task.args.get('wait_timeout', 60)
+        ibp.wait_for_ca(ca, timeout)
 
-        # Return CA information.
-        return {
-            'changed': changed,
-            'protocol': protocol,
-            'hostname': hostname,
-            'port': port,
-            'url': url,
-            'pem': pem,
-            'caname': caname,
-            'tlscaname': tlscaname
-        }
-
-    def _wait_for(self, url, seconds):
-        started = False
-        for x in range(seconds):
-            try:
-                response = open_url(f'{url}/cainfo', None, None, method='GET', validate_certs=False)
-                if response.code == 200:
-                    cainfo = json.load(response)
-                    if cainfo['result']['Version'] is not None:
-                        started = True
-                        break
-            except:
-                pass
-            time.sleep(1)
-        if not started:
-            raise AnsibleActionFail(f'Certificate authority failed to start within {seconds} seconds')
+        # Extract CA information.
+        result = ibp.extract_ca_info(ca)
+        result['changed'] = changed
+        return result
