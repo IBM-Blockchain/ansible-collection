@@ -64,8 +64,11 @@ class BlockchainPlatform:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-        return json.load(response)
+        try:
+            response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to get console health', e)
 
     def get_all_components(self, deployment_attrs='omitted'):
         self._ensure_loggedin()
@@ -74,9 +77,12 @@ class BlockchainPlatform:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-        parsed_response = json.load(response)
-        return parsed_response.get('components', list())
+        try:
+            response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+            parsed_response = json.load(response)
+            return parsed_response.get('components', list())
+        except Exception as e:
+            return self.handle_error('Failed to get all components', e)
 
     def get_component_by_id(self, id, deployment_attrs='omitted'):
         self._ensure_loggedin()
@@ -85,8 +91,11 @@ class BlockchainPlatform:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-        return json.load(response)
+        try:
+            response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to get component by ID', e)
 
     def get_component_by_display_name(self, display_name, deployment_attrs='omitted'):
         components = self.get_all_components()
@@ -106,10 +115,8 @@ class BlockchainPlatform:
         try:
             response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
             return json.load(response)
-        except urllib.error.HTTPError as e:
-            print(e)
-            print(json.load(e))
-            raise e
+        except Exception as e:
+            return self.handle_error('Failed to create certificate authority', e)
 
     def update_ca(self, id, data):
         self._ensure_loggedin()
@@ -120,8 +127,11 @@ class BlockchainPlatform:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-        return json.load(response)
+        try:
+            response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to update certificate authority', e)
 
     def delete_ca(self, id):
         self._ensure_loggedin()
@@ -129,7 +139,10 @@ class BlockchainPlatform:
         headers = {
             'Authorization': self.authorization
         }
-        open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        try:
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to delete certificate authority', e)
 
     def extract_ca_info(self, ca):
         return {
@@ -160,3 +173,14 @@ class BlockchainPlatform:
             time.sleep(1)
         if not started:
             raise AnsibleActionFail(f'Certificate authority failed to start within {timeout} seconds')
+
+    def handle_error(self, message, error):
+        if isinstance(error, urllib.error.HTTPError):
+            str = error.read()
+            try:
+                str = json.loads(str)
+            except:
+                pass
+            raise AnsibleActionFail(f'{message}: HTTP status code {error.code}: {str}')
+        else:
+            raise AnsibleActionFail(f'{message}: {error}')
