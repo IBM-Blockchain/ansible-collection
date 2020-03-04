@@ -72,7 +72,7 @@ class BlockchainPlatform:
 
     def get_all_components(self, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = f'{self.api_endpoint}/ak/api/v2/components'
+        url = f'{self.api_endpoint}/ak/api/v2/components?deployment_attrs={deployment_attrs}'
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -86,7 +86,7 @@ class BlockchainPlatform:
 
     def get_component_by_id(self, id, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = f'{self.api_endpoint}/ak/api/v2/components/{id}?deployment_attrs=included'
+        url = f'{self.api_endpoint}/ak/api/v2/components/{id}?deployment_attrs={deployment_attrs}'
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -173,6 +173,76 @@ class BlockchainPlatform:
             time.sleep(1)
         if not started:
             raise AnsibleActionFail(f'Certificate authority failed to start within {timeout} seconds')
+
+    def create_peer(self, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/fabric-peer'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to create peer', e)
+
+    def update_peer(self, id, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v1/kubernetes/components/fabric-peer/{id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to update peer', e)
+
+    def delete_peer(self, id):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/{id}'
+        headers = {
+            'Authorization': self.authorization
+        }
+        try:
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to delete peer', e)
+
+    def extract_peer_info(self, peer):
+        return {
+            'name': peer['display_name'],
+            'api_url': peer['api_url'],
+            'operations_url': peer['operations_url'],
+            'grpcwp_url': peer['grpcwp_url'],
+            'type': 'fabric-peer',
+            'msp_id': peer['msp_id'],
+            'pem': peer['tls_cert'],
+            'tls_cert': peer['tls_cert'],
+            'location': peer['location']
+        }
+
+    def wait_for_peer(self, peer, timeout):
+        started = False
+        for x in range(timeout):
+            try:
+                response = open_url(f'{peer["operations_url"]}/healthz', None, None, method='GET', validate_certs=False)
+                if response.code == 200:
+                    healthz = json.load(response)
+                    if healthz['status'] == 'OK':
+                        started = True
+                        break
+            except:
+                pass
+            time.sleep(1)
+        if not started:
+            raise AnsibleActionFail(f'Peer failed to start within {timeout} seconds')
 
     def handle_error(self, message, error):
         if isinstance(error, urllib.error.HTTPError):
