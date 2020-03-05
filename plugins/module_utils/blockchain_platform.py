@@ -244,6 +244,61 @@ class BlockchainPlatform:
         if not started:
             raise AnsibleActionFail(f'Peer failed to start within {timeout} seconds')
 
+    def create_organization(self, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/msp'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to create organization', e)
+
+    def update_organization(self, id, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v1/components/msp/{id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to update peer', e)
+
+    def delete_organization(self, id):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/{id}'
+        headers = {
+            'Authorization': self.authorization
+        }
+        try:
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to delete peer', e)
+
+    def extract_organization_info(self, organization):
+        return {
+            'name': organization['display_name'],
+            'msp_id': organization['msp_id'],
+            'type': 'msp',
+            'root_certs': organization.get('root_certs', list()),
+            'intermediate_certs': organization.get('intermediate_certs', list()),
+            'admins': organization.get('admins', list()),
+            'revocation_list': organization.get('revocation_list', list()),
+            'tls_root_certs': organization.get('tls_root_certs', list()),
+            'tls_intermediate_certs': organization.get('tls_intermediate_certs', list()),
+            'fabric_node_ous': organization['fabric_node_ous']
+        }
+
     def handle_error(self, message, error):
         if isinstance(error, urllib.error.HTTPError):
             str = error.read()
