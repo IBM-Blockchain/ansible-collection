@@ -21,7 +21,20 @@ def get_ibp(module):
     ibp.login(api_authtype, api_key, api_secret)
     return ibp
 
-def get_certificate_authority(module, ibp):
+def get_certificate_authority_by_name(ibp, name, fail_on_missing=True):
+
+    # Otherwise, it is the display name of a certificate authority that
+    # we need to look up.
+    component = ibp.get_component_by_display_name(name)
+    if component is None:
+        if fail_on_missing:
+            raise Exception(f'The certificate authority {name} does not exist')
+        else:
+            return None
+    data = ibp.extract_ca_info(component)
+    return CertificateAuthority.from_json(data)
+
+def get_certificate_authority_by_module(ibp, module):
 
     # If the certificate authority is a dictionary, then we assume that
     # it contains all of the required keys/values.

@@ -77,9 +77,7 @@ def main():
 
         # If it doesn't exist, return now.
         if not path_exists:
-            return {
-                'exists': False
-            }
+            return module.exit_json(exists=False)
 
         # Return identity information.
         with open(path, 'r') as file:

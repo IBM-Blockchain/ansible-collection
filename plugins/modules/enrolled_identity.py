@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.enrolled_identity import EnrolledIdentity
-from ..module_utils.utils import get_ibp, get_certificate_authority
+from ..module_utils.utils import get_ibp, get_certificate_authority_by_module
 
 from ansible.errors import AnsibleActionFail
 from ansible.module_utils.basic import AnsibleModule
@@ -153,7 +153,7 @@ def main():
         if state == 'present' and not path_exists:
 
             # Enroll the identity.
-            certificate_authority = get_certificate_authority(module, ibp)
+            certificate_authority = get_certificate_authority_by_module(ibp, module)
             name = module.params['name']
             enrollment_id = module.params['enrollment_id']
             enrollment_secret = module.params['enrollment_secret']

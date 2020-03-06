@@ -8,13 +8,16 @@ __metaclass__ = type
 
 from .enrolled_identity import EnrolledIdentity
 
+from ansible.module_utils.urls import open_url
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from hfc.fabric_ca.caservice import ca_service, Enrollment
 
 import base64
+import json
 import os
 import tempfile
+import time
 
 class CertificateAuthority:
 
@@ -58,6 +61,7 @@ class CertificateAuthority:
             api_url=self.api_url,
             operations_url=self.operations_url,
             ca_url=self.ca_url,
+            type='fabric-ca',
             ca_name=self.ca_name,
             tlsca_name=self.tlsca_name,
             pem=self.pem,
@@ -77,6 +81,22 @@ class CertificateAuthority:
             pem=data['pem'],
             location=data['location']
         )
+
+    def wait_for(self, timeout):
+        started = False
+        for x in range(timeout):
+            try:
+                response = open_url(f'{self.api_url}/cainfo', None, None, method='GET', validate_certs=False)
+                if response.code == 200:
+                    cainfo = json.load(response)
+                    if cainfo['result']['Version'] is not None:
+                        started = True
+                        break
+            except:
+                pass
+            time.sleep(1)
+        if not started:
+            raise Exception(f'Certificate authority failed to start within {timeout} seconds')
 
     def connect(self):
         return CertificateAuthorityConnection(self)
