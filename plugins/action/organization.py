@@ -6,8 +6,8 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible_collections.ibm.blockchain_platform.plugins.module_utils.blockchain_platform import BlockchainPlatform
-from ansible_collections.ibm.blockchain_platform.plugins.module_utils.dict_utils import copy_dict, merge_dicts, equal_dicts, diff_dicts
+from ..module_utils.blockchain_platform import BlockchainPlatform
+from ..module_utils.dict_utils import copy_dict, merge_dicts, equal_dicts, diff_dicts
 from ansible.errors import AnsibleActionFail
 from ansible.module_utils.urls import open_url
 from ansible.plugins.action import ActionBase
