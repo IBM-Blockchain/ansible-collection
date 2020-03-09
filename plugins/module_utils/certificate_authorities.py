@@ -126,10 +126,12 @@ class CertificateAuthorityConnection:
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption()
         )
+        ca = enrollment.caCert
         return EnrolledIdentity(
             name=name,
             cert=cert,
-            private_key=private_key
+            private_key=private_key,
+            ca=ca
         )
 
     def _get_enrollment(self, identity):

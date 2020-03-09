@@ -8,8 +8,15 @@ __metaclass__ = type
 
 from .consoles import Console
 from .certificate_authorities import CertificateAuthority
+from .enrolled_identities import EnrolledIdentity
 from .organizations import Organization
+from .ordering_services import OrderingService, OrderingServiceNode
 from .peers import Peer
+
+import base64
+import json
+import os
+import tempfile
 
 def get_console(module):
 
@@ -76,3 +83,78 @@ def get_peer_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_peer_info(component)
     return Peer.from_json(data)
+
+def get_ordering_service_by_name(console, name, fail_on_missing=True):
+
+    # Look up the ordering service by name.
+    components = console.get_components_by_cluster_name(name)
+    if len(components) == 0:
+        if fail_on_missing:
+            raise Exception(f'The ordering service {name} does not exist')
+        else:
+            return None
+    data = console.extract_ordering_service_info(components)
+    return OrderingService.from_json(data)
+
+def get_ordering_service_by_module(console, module, parameter_name='ordering_service'):
+
+    # If the ordering service is a list, then we assume that
+    # it contains all of the required keys/values.
+    ordering_service = module.params[parameter_name]
+    if isinstance(ordering_service, list):
+        return ordering_service
+
+    # Otherwise, it is the display name of a ordering service that
+    # we need to look up.
+    components = console.get_components_by_cluster_name(ordering_service)
+    if len(components) == 0:
+        raise Exception(f'The ordering service {ordering_service} does not exist')
+    data = console.extract_ordering_service_info(components)
+
+    # Return the ordering service.
+    return OrderingService.from_json(data)
+
+def get_ordering_service_node_by_name(console, name, fail_on_missing=True):
+
+    # Look up the ordering service node by name.
+    component = console.get_component_by_display_name(name)
+    if component is None:
+        if fail_on_missing:
+            raise Exception(f'The peer {name} does not exist')
+        else:
+            return None
+    data = console.extract_ordering_service_node_info(component)
+    return OrderingServiceNode.from_json(data)
+
+def get_ordering_service_node_by_module(console, module, parameter_name='ordering_service_node'):
+
+    # If the ordering service is a list, then we assume that
+    # it contains all of the required keys/values.
+    ordering_service_node = module.params[parameter_name]
+    if isinstance(ordering_service_node, dict):
+        return ordering_service_node
+
+    # Otherwise, it is the display name of a ordering service that
+    # we need to look up.
+    component = console.get_component_by_display_name(ordering_service_node)
+    if component is None:
+        raise Exception(f'The ordering service node {ordering_service_node} does not exist')
+    data = console.extract_ordering_service_node_info(component)
+
+    # Return the ordering service.
+    return OrderingServiceNode.from_json(data)
+
+def get_identity_by_module(module, parameter_name='identity'):
+
+    # If the identity is a dictionary, then we assume that
+    # it contains all of the required keys/values.
+    identity = module.params[parameter_name]
+    if isinstance(identity, dict):
+        return EnrolledIdentity.from_json(identity)
+
+    # Otherwise, it is the file name of a identity that
+    # we need to read.
+    with open(identity, 'r') as file:
+        data = json.load(file)
+    return EnrolledIdentity.from_json(data)
+

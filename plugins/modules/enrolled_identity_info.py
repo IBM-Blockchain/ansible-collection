@@ -58,6 +58,10 @@ private_key:
     description:
         - The base64 encoded private key of the enrolled identity.
     type: str
+ca:
+    description:
+        - The base64 encoded CA certificate chain of the enrolled identity.
+    type: str
 '''
 
 def main():

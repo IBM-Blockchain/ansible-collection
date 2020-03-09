@@ -50,8 +50,10 @@ class Peer:
             api_url = self.api_url,
             operations_url = self.operations_url,
             grpcwp_url = self.grpcwp_url,
+            type='fabric-peer',
             msp_id = self.msp_id,
             pem = self.pem,
+            tls_cert = self.pem,
             location = self.location
         )
 

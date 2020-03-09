@@ -103,6 +103,14 @@ class Console:
         if ca is not None:
             return self.get_component_by_id(ca['id'], deployment_attrs)
 
+    def get_components_by_cluster_name(self, cluster_name, deployment_attrs='omitted'):
+        components = self.get_all_components()
+        results = list()
+        for component in components:
+            if component.get('cluster_name', None) == cluster_name:
+                results.append(self.get_component_by_id(component['id'], deployment_attrs))
+        return results
+
     def create_ca(self, data):
         self._ensure_loggedin()
         url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/fabric-ca'
@@ -243,6 +251,30 @@ class Console:
             time.sleep(1)
         if not started:
             raise AnsibleActionFail(f'Peer failed to start within {timeout} seconds')
+
+    def extract_ordering_service_info(self, ordering_service):
+        results = list()
+        for node in ordering_service:
+            results.append(self.extract_ordering_service_node_info(node))
+        return results
+
+    def extract_ordering_service_node_info(self, ordering_service_node):
+        return {
+            'name': ordering_service_node['display_name'],
+            'api_url': ordering_service_node['api_url'],
+            'operations_url': ordering_service_node['operations_url'],
+            'grpcwp_url': ordering_service_node['grpcwp_url'],
+            'type': 'fabric-orderer',
+            'msp_id': ordering_service_node['msp_id'],
+            'pem': ordering_service_node['tls_cert'],
+            'tls_cert': ordering_service_node['tls_cert'],
+            'location': ordering_service_node['location'],
+            'system_channel_id': ordering_service_node['system_channel_id'],
+            'cluster_id': ordering_service_node['cluster_id'],
+            'cluster_name': ordering_service_node['cluster_name'],
+            'client_tls_cert': ordering_service_node['client_tls_cert'],
+            'server_tls_cert': ordering_service_node['server_tls_cert']
+        }
 
     def create_organization(self, data):
         self._ensure_loggedin()
