@@ -8,6 +8,7 @@ __metaclass__ = type
 
 from .blockchain_platform import BlockchainPlatform
 from .certificate_authority import CertificateAuthority
+from .org import Organization
 
 def get_ibp(module):
 
@@ -23,8 +24,7 @@ def get_ibp(module):
 
 def get_certificate_authority_by_name(ibp, name, fail_on_missing=True):
 
-    # Otherwise, it is the display name of a certificate authority that
-    # we need to look up.
+    # Look up the certificate authority by name.
     component = ibp.get_component_by_display_name(name)
     if component is None:
         if fail_on_missing:
@@ -34,11 +34,11 @@ def get_certificate_authority_by_name(ibp, name, fail_on_missing=True):
     data = ibp.extract_ca_info(component)
     return CertificateAuthority.from_json(data)
 
-def get_certificate_authority_by_module(ibp, module):
+def get_certificate_authority_by_module(ibp, module, parameter_name='certificate_authority'):
 
     # If the certificate authority is a dictionary, then we assume that
     # it contains all of the required keys/values.
-    certificate_authority = module.params['certificate_authority']
+    certificate_authority = module.params[parameter_name]
     if isinstance(certificate_authority, dict):
         return certificate_authority
 
@@ -51,3 +51,15 @@ def get_certificate_authority_by_module(ibp, module):
 
     # Return the certificate authority.
     return CertificateAuthority.from_json(data)
+
+def get_organization_by_name(ibp, name, fail_on_missing=True):
+
+    # Look up the organization by name.
+    component = ibp.get_component_by_display_name(name)
+    if component is None:
+        if fail_on_missing:
+            raise Exception(f'The organization {name} does not exist')
+        else:
+            return None
+    data = ibp.extract_organization_info(component)
+    return Organization.from_json(data)
