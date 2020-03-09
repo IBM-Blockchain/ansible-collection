@@ -14,7 +14,7 @@ import json
 import time
 import urllib.parse
 
-class BlockchainPlatform:
+class Console:
 
     def __init__(self, api_endpoint, api_timeout):
         self.api_endpoint = api_endpoint

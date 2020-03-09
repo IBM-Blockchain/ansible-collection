@@ -6,6 +6,11 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.utils import get_console, get_peer_by_name
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils._text import to_native
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -45,9 +50,9 @@ options:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
         type: integer
         default: 60
-    display_name:
+    name:
         description:
-            - The display name for the peer.
+            - The name of the peer.
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the peer is available.
@@ -59,3 +64,89 @@ requirements: []
 
 EXAMPLES = '''
 '''
+
+RETURN = '''
+---
+exists:
+    description:
+        - True if the peer exists, false otherwise.
+    type: boolean
+name:
+    description:
+        - The name of the peer.
+    type: str
+api_url:
+    description:
+        - The URL for the API of the peer.
+    type: str
+operations_url:
+    description:
+        - The URL for the operations service of the peer.
+    type: str
+grpcwp_url:
+    description:
+        - The URL for the gRPC web proxy of the peer.
+    type: str
+msp_id:
+    description:
+        - The MSP ID of the peer.
+    type: str
+pem:
+    description:
+        - The TLS certificate chain for the peer.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+tls_cert:
+    description:
+        - The TLS certificate chain for the peer.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+location:
+    description:
+        - The location of the peer.
+    type: str
+'''
+
+def main():
+
+    # Create the module.
+    argument_spec = dict(
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_key=dict(type='str', required=True),
+        api_secret=dict(type='str'),
+        api_timeout=dict(type='int', default=60),
+        name=dict(type='str', required=True),
+        wait_timeout=dict(type='int', default=60)
+    )
+    required_if = [
+        ('api_authtype', 'basic', ['api_secret'])
+    ]
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+
+    # Ensure all exceptions are caught.
+    try:
+
+        # Log in to the IBP console.
+        console = get_console(module)
+
+        # Determine if the peer exists.
+        peer = get_peer_by_name(console, module.params['name'], fail_on_missing=False)
+
+        # If it doesn't exist, return now.
+        if peer is None:
+            return module.exit_json(exists=False)
+
+        # Wait for the peer to start.
+        wait_timeout = module.params['wait_timeout']
+        peer.wait_for(wait_timeout)
+
+        # Return peer information.
+        module.exit_json(exists=True, **peer.to_json())
+
+    # Notify Ansible of the exception.
+    except Exception as e:
+        module.fail_json(msg=to_native(e))
+
+if __name__ == '__main__':
+    main()

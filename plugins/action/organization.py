@@ -6,8 +6,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.blockchain_platform import BlockchainPlatform
+from ..module_utils.consoles import Console
 from ..module_utils.dict_utils import copy_dict, merge_dicts, equal_dicts, diff_dicts
+
 from ansible.errors import AnsibleActionFail
 from ansible.module_utils.urls import open_url
 from ansible.plugins.action import ActionBase
@@ -28,12 +29,12 @@ class ActionModule(ActionBase):
         api_key = self._task.args['api_key']
         api_secret = self._task.args.get('api_secret', None)
         api_timeout = self._task.args.get('api_timeout', 60)
-        self.ibp = ibp = BlockchainPlatform(api_endpoint, api_timeout)
-        ibp.login(api_authtype, api_key, api_secret)
+        self.console = console = Console(api_endpoint, api_timeout)
+        console.login(api_authtype, api_key, api_secret)
 
         # Determine whether or not the organization exists.
         name = self._task.args['name']
-        organization = ibp.get_component_by_display_name(name)
+        organization = console.get_component_by_display_name(name)
 
         # Extract the organization configuration.
         state = self._task.args.get('state', 'present')
@@ -80,12 +81,12 @@ class ActionModule(ActionBase):
                 merge_dicts(new_organization['fabric_node_ous'], fabric_node_ous)
             if certificate_authority_certs is not None:
                 merge_dicts(new_organization, certificate_authority_certs)
-            organization = ibp.create_organization(new_organization)
+            organization = console.create_organization(new_organization)
             changed = True
 
         # If the organization does exist, but should not - delete it.
         elif organization is not None and state == 'absent':
-            ibp.delete_organization(organization['id'])
+            console.delete_organization(organization['id'])
             return {
                 'changed': True
             }
@@ -137,11 +138,11 @@ class ActionModule(ActionBase):
                 raise AnsibleActionFail(f'msp_id cannot be updated; must delete organization and try again')
 
             if not equal_dicts(new_organization, organization):
-                peer = ibp.update_organization(organization['id'], new_organization)
+                peer = console.update_organization(organization['id'], new_organization)
                 changed = True
 
         # Extract organization information.
-        result = ibp.extract_organization_info(organization)
+        result = console.extract_organization_info(organization)
         result['changed'] = changed
         return result
 
@@ -178,7 +179,7 @@ class ActionModule(ActionBase):
 
         # Otherwise, it is the display name of a certificate authority that
         # we need to look up.
-        component = self.ibp.get_component_by_display_name(certificate_authority)
+        component = self.console.get_component_by_display_name(certificate_authority)
         if component is None:
             raise AnsibleActionFail(f'The certificate authority {certificate_authority} does not exist')
-        return self.ibp.extract_ca_info(component)
+        return self.console.extract_ca_info(component)

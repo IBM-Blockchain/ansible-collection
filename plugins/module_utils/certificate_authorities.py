@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from .enrolled_identity import EnrolledIdentity
+from .enrolled_identities import EnrolledIdentity
 
 from ansible.module_utils.urls import open_url
 from cryptography.hazmat.backends import default_backend

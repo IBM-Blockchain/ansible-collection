@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.utils import get_ibp, get_certificate_authority_by_name
+from ..module_utils.utils import get_console, get_certificate_authority_by_name
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
@@ -132,10 +132,10 @@ def main():
     try:
 
         # Log in to the IBP console.
-        ibp = get_ibp(module)
+        console = get_console(module)
 
         # Determine if the certificate authority exists.
-        certificate_authority = get_certificate_authority_by_name(ibp, module.params['name'], fail_on_missing=False)
+        certificate_authority = get_certificate_authority_by_name(console, module.params['name'], fail_on_missing=False)
 
         # If it doesn't exist, return now.
         if certificate_authority is None:
