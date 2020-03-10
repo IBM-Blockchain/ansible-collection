@@ -9,12 +9,13 @@ __metaclass__ = type
 from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
 from ..module_utils.msp_utils import organization_to_msp
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_organization_by_module
+from ..module_utils.utils import get_console, get_organization_by_module, get_peers_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 import json
+import urllib
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -82,6 +83,15 @@ options:
             - You can also pass a dictionary, which must match the result format of one of the
               M(organization_info) or M(organization[]) modules.
         type: raw
+    anchor_peers:
+        description:
+            - The anchor peers for this organization in this channel.
+            - You can pass strings, which are the names of peers that are
+              registered with the IBM Blockchain Platform console.
+            - You can also pass a dict, which must match the result format of one
+              of the M(peer_info) or M(peer) modules.
+        type: list
+        elements: raw
 notes: []
 requirements: []
 '''
@@ -104,7 +114,8 @@ def main():
         api_secret=dict(type='str'),
         api_timeout=dict(type='int', default=60),
         path=dict(type='str', required=True),
-        organization=dict(type='raw', required=True)
+        organization=dict(type='raw', required=True),
+        anchor_peers=dict(type='list', elements='raw', default=list())
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -121,6 +132,24 @@ def main():
         path = module.params['path']
         organization = get_organization_by_module(console, module)
 
+        # Build the anchor peer values.
+        anchor_peers = get_peers_by_module(console, module, 'anchor_peers')
+        if len(anchor_peers) > 0:
+            anchor_peers_value = dict(
+                mod_policy='Admins',
+                value=dict(
+                    anchor_peers=list()
+                )
+            )
+            for anchor_peer in anchor_peers:
+                api_url_split = urllib.parse.urlsplit(anchor_peer.api_url)
+                anchor_peers_value['value']['anchor_peers'].append(dict(
+                    host=api_url_split.netloc,
+                    port=api_url_split.port
+                ))
+        else:
+            anchor_peers_value = None
+
         # Read the config.
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
@@ -135,12 +164,16 @@ def main():
 
             # Add the channel member.
             msp = organization_to_msp(organization)
+            if anchor_peers_value is not None:
+                msp['values']['AnchorPeers'] = anchor_peers_value
             application_groups[organization.msp_id] = msp
 
         elif state == 'present' and msp is not None:
 
             # Update the channel member.
             new_msp = organization_to_msp(organization)
+            if anchor_peers_value is not None:
+                new_msp['values']['AnchorPeers'] = anchor_peers_value
             updated_msp = copy_dict(msp)
             merge_dicts(updated_msp, new_msp)
             if equal_dicts(msp, updated_msp):

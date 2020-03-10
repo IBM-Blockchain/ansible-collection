@@ -126,6 +126,30 @@ def get_peer_by_name(console, name, fail_on_missing=True):
     data = console.extract_peer_info(component)
     return Peer.from_json(data)
 
+def get_peers_by_module(console, module, parameter_name='peers'):
+
+    # Go over each peer.
+    peers = list()
+    for peer in module.params[parameter_name]:
+
+        # If the peer is a dict, then we assume that
+        # it contains all of the required keys/values.
+        if isinstance(peer, dict):
+            peers.append(peer)
+
+        # Otherwise, it is the display name of an peer that
+        # we need to look up.
+        component = console.get_component_by_display_name(peer)
+        if component is None:
+            raise Exception(f'The peer {peer} does not exist')
+        data = console.extract_peer_info(component)
+
+        # Add the peer.
+        peers.append(Peer.from_json(data))
+
+    # Return the list of organizations.
+    return peers
+
 def get_ordering_service_by_name(console, name, fail_on_missing=True):
 
     # Look up the ordering service by name.
