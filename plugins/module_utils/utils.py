@@ -72,6 +72,24 @@ def get_organization_by_name(console, name, fail_on_missing=True):
     data = console.extract_organization_info(component)
     return Organization.from_json(data)
 
+def get_organization_by_module(console, module, parameter_name='organization'):
+
+    # If the organization is a dict, then we assume that
+    # it contains all of the required keys/values.
+    organization = module.params[parameter_name]
+    if isinstance(organization, dict):
+        return organization
+
+    # Otherwise, it is the display name of an organization that
+    # we need to look up.
+    component = console.get_component_by_display_name(organization)
+    if component is None:
+        raise Exception(f'The organization {organization} does not exist')
+    data = console.extract_organization_info(component)
+
+    # Return the organization.
+    return Organization.from_json(data)
+
 def get_peer_by_name(console, name, fail_on_missing=True):
 
     # Look up the peer by name.
