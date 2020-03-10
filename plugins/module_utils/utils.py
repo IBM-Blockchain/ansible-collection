@@ -90,6 +90,30 @@ def get_organization_by_module(console, module, parameter_name='organization'):
     # Return the organization.
     return Organization.from_json(data)
 
+def get_organizations_by_module(console, module, parameter_name='organizations'):
+
+    # Go over each organization.
+    organizations = list()
+    for organization in module.params[parameter_name]:
+
+        # If the organization is a dict, then we assume that
+        # it contains all of the required keys/values.
+        if isinstance(organization, dict):
+            organizations.append(organization)
+
+        # Otherwise, it is the display name of an organization that
+        # we need to look up.
+        component = console.get_component_by_display_name(organization)
+        if component is None:
+            raise Exception(f'The organization {organization} does not exist')
+        data = console.extract_organization_info(component)
+
+        # Add the organization.
+        organizations.append(Organization.from_json(data))
+
+    # Return the list of organizations.
+    return organizations
+
 def get_peer_by_name(console, name, fail_on_missing=True):
 
     # Look up the peer by name.

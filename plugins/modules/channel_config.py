@@ -10,7 +10,7 @@ from ..module_utils.dict_utils import diff_dicts
 from ..module_utils.file_utils import get_temp_file
 from ..module_utils.msp_utils import convert_identity_to_msp_path
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module
+from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_organizations_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
@@ -63,6 +63,7 @@ options:
         default: 60
     operation:
         description:
+            - C(create) - Create a channel configuration update transaction for a new channel.
             - C(fetch) - Fetch the current channel configuration to the specified I(path).
             - C(compute_update) - Compute a channel configuration update transaction using
               the original configuration at I(origin) and the updated configuration at
@@ -114,6 +115,28 @@ options:
             - The path to the file where the updated channel configuration is stored.
             - Only required when I(operation) is C(compute_update).
         type: str
+    organizations:
+        description:
+            - The list of organizations to add as members in the new channel.
+            - The organizations must all be members of the consortium.
+            - You can pass strings, which are the names of organizations that are
+              registered with the IBM Blockchain Platform console.
+            - You can also pass a dict, which must match the result format of one
+              of the M(organization_info) or M(organization) modules.
+            - Only required when I(operation) is C(create).
+        type: list
+        elements: raw
+    policies:
+        description:
+            - The set of policies to add to the new channel. The keys are the policy
+              names, and the values are the policies.
+            - You can pass strings, which are paths to JSON files containing policies
+              in the Hyperledger Fabric format (common.Policy).
+            - You can also pass a dict, which must correspond to a parsed policy in the
+              Hyperledger Fabric format (common.Policy).
+            - You must provide at least an Admins, Writers, and Readers policy.
+            - Only required when I(operation) is C(create).
+        type: dict
 notes: []
 requirements: []
 '''
@@ -129,6 +152,120 @@ path:
           update transaction is stored.
     type: str
 '''
+
+def create(module):
+
+    # Log in to the IBP console.
+    console = get_console(module)
+
+    # Get the organizations.
+    organizations = get_organizations_by_module(console, module)
+
+    # Get the policies.
+    policies = module.params['policies']
+    actual_policies = dict()
+    for policyName, policy in policies.items():
+        if isinstance(policy, str):
+            with open(policy, 'r') as file:
+                actual_policies[policyName] = json.load(file)
+        elif isinstance(policy, dict):
+            actual_policies[policyName] = policy
+        else:
+            raise Exception(f'The policy {policyName} is invalid')
+
+    # Build the config update for a new channel.
+    name = module.params['name']
+    config_update_json = dict(
+        channel_id=name,
+        read_set=dict(
+            groups=dict(
+                Application=dict(
+                    groups=dict()
+                )
+            ),
+            values=dict(
+                Consortium=dict(
+                    value=dict(
+                        name='SampleConsortium'
+                    )
+                )
+            )
+        ),
+        write_set=dict(
+            groups=dict(
+                Application=dict(
+                    groups=dict(),
+                    mod_policy='Admins',
+                    policies=dict(),
+                    values=dict(
+                        Capabilities=dict(
+                            mod_policy='Admins',
+                            value=dict(
+                                capabilities=dict(
+                                    V1_4_2=dict()
+                                )
+                            )
+                        )
+                    ),
+                    version=1
+                )
+            ),
+            values=dict(
+                Consortium=dict(
+                    value=dict(
+                        name='SampleConsortium'
+                    )
+                )
+            )
+        )
+    )
+
+    # Add the organizations to the config update.
+    for organization in organizations:
+        config_update_json['read_set']['groups']['Application']['groups'][organization.msp_id] = dict()
+        config_update_json['write_set']['groups']['Application']['groups'][organization.msp_id] = dict()
+
+    # Add the policies to the config update.
+    for policyName, policy in actual_policies.items():
+        config_update_json['write_set']['groups']['Application']['policies'][policyName] = dict(
+            mod_policy='Admins',
+            policy=policy
+        )
+
+    # Build the config envelope.
+    config_update_envelope_json = dict(
+        payload=dict(
+            header=dict(
+                channel_header=dict(
+                    channel_id=name,
+                    type=2
+                )
+            ),
+            data=dict(
+                config_update=config_update_json
+            )
+        )
+    )
+    config_update_envelope_proto = json_to_proto('common.Envelope', config_update_envelope_json)
+
+    # Compare and copy if needed.
+    path = module.params['path']
+    if os.path.exists(path):
+        changed = False
+        try:
+            with open(path, 'rb') as file:
+                original_config_update_envelope_json = proto_to_json('common.Envelope', file.read())
+            changed = diff_dicts(original_config_update_envelope_json, config_update_envelope_json)
+        except:
+            changed = True
+        if changed:
+            with open(path, 'wb') as file:
+                file.write(config_update_envelope_proto)
+        module.exit_json(changed=changed, path=path)
+    else:
+        with open(path, 'wb') as file:
+            file.write(config_update_envelope_proto)
+        module.exit_json(changed=True, path=path)
 
 def fetch(module):
 
@@ -310,17 +447,20 @@ def main():
         api_key=dict(type='str'),
         api_secret=dict(type='str'),
         api_timeout=dict(type='int', default=60),
-        operation=dict(type='str', required=True, choices=['fetch', 'compute_update', 'sign_update', 'apply_update']),
+        operation=dict(type='str', required=True, choices=['create', 'fetch', 'compute_update', 'sign_update', 'apply_update']),
         ordering_service=dict(type='str'),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
         name=dict(type='str'),
         path=dict(type='str'),
         original=dict(type='str'),
-        updated=dict(type='str')
+        updated=dict(type='str'),
+        organizations=dict(type='list',elements='raw'),
+        policies=dict(type='dict')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
+        ('operation', 'create', ['api_endpoint', 'api_authtype', 'api_key', 'organizations', 'policies', 'name', 'path']),
         ('operation', 'fetch', ['api_endpoint', 'api_authtype', 'api_key', 'ordering_service', 'identity', 'msp_id', 'name', 'path']),
         ('operation', 'compute_update', ['name', 'path', 'original', 'updated']),
         ('operation', 'sign_update', ['identity', 'msp_id', 'name', 'path']),
@@ -331,7 +471,9 @@ def main():
     # Ensure all exceptions are caught.
     try:
         operation = module.params['operation']
-        if operation == 'fetch':
+        if operation == 'create':
+            create(module)
+        elif operation == 'fetch':
             fetch(module)
         elif operation == 'compute_update':
             compute_update(module)
