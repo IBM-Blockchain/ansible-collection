@@ -126,6 +126,24 @@ def get_peer_by_name(console, name, fail_on_missing=True):
     data = console.extract_peer_info(component)
     return Peer.from_json(data)
 
+def get_peer_by_module(console, module, parameter_name='peer'):
+
+    # If the peer is a dict, then we assume that
+    # it contains all of the required keys/values.
+    peer = module.params[parameter_name]
+    if isinstance(peer, dict):
+        return peer
+
+    # Otherwise, it is the display name of a peer that
+    # we need to look up.
+    component = console.get_component_by_display_name(peer)
+    if component is None:
+        raise Exception(f'The peer {peer} does not exist')
+    data = console.extract_peer_info(component)
+
+    # Return the peer.
+    return Peer.from_json(data)
+
 def get_peers_by_module(console, module, parameter_name='peers'):
 
     # Go over each peer.

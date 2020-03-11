@@ -6,9 +6,17 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from .msp_utils import convert_identity_to_msp_path
+
 from ansible.module_utils.urls import open_url
 
+import base64
 import json
+import os
+import shutil
+import subprocess
+import urllib
+import tempfile
 import time
 
 class Peer:
@@ -84,3 +92,64 @@ class Peer:
             time.sleep(1)
         if not started:
             raise Exception(f'Peer failed to start within {timeout} seconds')
+
+    def connect(self, identity, msp_id):
+        return PeerConnection(self, identity, msp_id)
+
+class PeerConnection:
+
+    def __init__(self, peer, identity, msp_id):
+        self.peer = peer
+        self.identity = identity
+        self.msp_id = msp_id
+
+    def __enter__(self):
+        temp = tempfile.mkstemp()
+        os.write(temp[0], base64.b64decode(self.peer.pem))
+        os.close(temp[0])
+        self.pem_path = temp[1]
+        self.msp_path = convert_identity_to_msp_path(self.identity)
+        return self
+
+    def __exit__(self, type, value, tb):
+        os.remove(self.pem_path)
+        shutil.rmtree(self.msp_path)
+
+    def list_channels(self):
+        api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
+        env = os.environ.copy()
+        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
+        env['CORE_PEER_LOCALMSPID'] = self.msp_id
+        env['CORE_PEER_ADDRESS'] = api_url_parsed.netloc
+        env['CORE_PEER_TLS_ENABLED'] = 'true'
+        env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
+        process = subprocess.run([
+            'peer', 'channel', 'list'
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            channels = list()
+            found_marker = False
+            for line in process.stdout.splitlines():
+                if line.endswith('has joined: '):
+                    found_marker = True
+                elif found_marker:
+                    channels.append(line)
+            return channels
+        else:
+            raise Exception(f'Failed to fetch block from ordering service node: {process.stdout}')
+
+    def join_channel(self, path):
+        api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
+        env = os.environ.copy()
+        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
+        env['CORE_PEER_LOCALMSPID'] = self.msp_id
+        env['CORE_PEER_ADDRESS'] = api_url_parsed.netloc
+        env['CORE_PEER_TLS_ENABLED'] = 'true'
+        env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
+        process = subprocess.run([
+            'peer', 'channel', 'join', '-b', path
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to fetch block from ordering service node: {process.stdout}')
