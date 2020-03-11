@@ -252,11 +252,54 @@ class Console:
         if not started:
             raise AnsibleActionFail(f'Peer failed to start within {timeout} seconds')
 
+    def create_ordering_service(self, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/fabric-orderer'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to create ordering service', e)
+
+    def delete_ordering_service(self, cluster_id):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/tags/{cluster_id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        try:
+            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to create ordering service', e)
+
     def extract_ordering_service_info(self, ordering_service):
         results = list()
         for node in ordering_service:
             results.append(self.extract_ordering_service_node_info(node))
         return results
+
+    def update_ordering_service_node(self, id, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v1/kubernetes/components/fabric-orderer/{id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to update ordering service node', e)
 
     def extract_ordering_service_node_info(self, ordering_service_node):
         return {
@@ -272,8 +315,8 @@ class Console:
             'system_channel_id': ordering_service_node['system_channel_id'],
             'cluster_id': ordering_service_node['cluster_id'],
             'cluster_name': ordering_service_node['cluster_name'],
-            'client_tls_cert': ordering_service_node['client_tls_cert'],
-            'server_tls_cert': ordering_service_node['server_tls_cert']
+            'client_tls_cert': ordering_service_node.get('client_tls_cert', None),
+            'server_tls_cert': ordering_service_node.get('server_tls_cert', None)
         }
 
     def create_organization(self, data):
