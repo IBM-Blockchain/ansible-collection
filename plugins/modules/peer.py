@@ -6,6 +6,16 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.peers import Peer
+from ..module_utils.utils import get_console, get_certificate_authority_by_module
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils._text import to_native
+
+import json
+import urllib
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -58,15 +68,15 @@ options:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
         type: integer
         default: 60
-    display_name:
+    name:
         description:
-            - The display name for the peer.
+            - The name of the peer.
         type: str
     msp_id:
         description:
             - The MSP ID for this peer.
         type: str
-    state_database:
+    state_db:
         description:
             - C(couchdb) - Use CouchDB as the state database for this peer.
             - C(leveldb) - Use LevelDB as the state database for this peer.
@@ -136,7 +146,7 @@ options:
                                 description:
                                     - The Kubernetes memory resource request for the peer container.
                                 type: str
-                                default: 1000M
+                                default: 1G
             proxy:
                 description:
                     - The Kubernetes resource configuration for the proxy container.
@@ -191,12 +201,12 @@ options:
                                 description:
                                     - The Kubernetes CPU resource request for the Docker in Docker (DinD) container.
                                 type: str
-                                default: 1000m
+                                default: 1
                             memory:
                                 description:
                                     - The Kubernetes memory resource request for the Docker in Docker (DinD) container.
                                 type: str
-                                default: 1000M
+                                default: 1G
     storage:
         description:
             - The Kubernetes storage configuration for the peer.
@@ -243,3 +253,266 @@ requirements: []
 
 EXAMPLES = '''
 '''
+
+RETURN = '''
+---
+name:
+    description:
+        - The name of the peer.
+    type: str
+api_url:
+    description:
+        - The URL for the API of the peer.
+    type: str
+operations_url:
+    description:
+        - The URL for the operations service of the peer.
+    type: str
+grpcwp_url:
+    description:
+        - The URL for the gRPC web proxy of the peer.
+    type: str
+msp_id:
+    description:
+        - The MSP ID of the peer.
+    type: str
+pem:
+    description:
+        - The TLS certificate chain for the peer.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+tls_cert:
+    description:
+        - The TLS certificate chain for the peer.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+location:
+    description:
+        - The location of the peer.
+    type: str
+'''
+
+def get_config(console, module):
+
+    # See if the user provided their own configuration.
+    config = module.params['config']
+    if config is not None:
+        return config
+
+    # Otherwise, provide an enrollment configuration.
+    return {
+        'enrollment': get_enrollment_config(console, module)
+    }
+
+def get_enrollment_config(console, module):
+
+    # Get the enrollment configuration.
+    return {
+        'component': get_enrollment_component_config(console, module),
+        'tls': get_enrollment_tls_config(console, module),
+    }
+
+def get_enrollment_component_config(console, module):
+
+    # Get the enrollment configuration for the peers MSP.
+    certificate_authority = get_certificate_authority_by_module(console, module)
+    certificate_authority_url = urllib.parse.urlsplit(certificate_authority.api_url)
+    enrollment_id = module.params['enrollment_id']
+    enrollment_secret = module.params['enrollment_secret']
+    admin_certificates = module.params['admin_certificates']
+    return {
+        'cahost': certificate_authority_url.hostname,
+        'caport': str(certificate_authority_url.port),
+        'caname': certificate_authority.ca_name,
+        'catls': {
+            'cacert': certificate_authority.pem
+        },
+        'enrollid': enrollment_id,
+        'enrollsecret': enrollment_secret,
+        'admincerts': admin_certificates
+    }
+
+def get_enrollment_tls_config(console, module):
+
+    # Get the enrollment configuration for the peers TLS.
+    certificate_authority = get_certificate_authority_by_module(console, module)
+    certificate_authority_url = urllib.parse.urlsplit(certificate_authority.api_url)
+    enrollment_id = module.params['enrollment_id']
+    enrollment_secret = module.params['enrollment_secret']
+    return {
+        'cahost': certificate_authority_url.hostname,
+        'caport': str(certificate_authority_url.port),
+        'caname': certificate_authority.tlsca_name,
+        'catls': {
+            'cacert': certificate_authority.pem
+        },
+        'enrollid': enrollment_id,
+        'enrollsecret': enrollment_secret
+    }
+
+def main():
+
+    # Create the module.
+    argument_spec = dict(
+        state=dict(type='str', default='present', choices=['present', 'absent']),
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_key=dict(type='str', required=True),
+        api_secret=dict(type='str'),
+        api_timeout=dict(type='int', default=60),
+        name=dict(type='str', required=True),
+        msp_id=dict(type='str'),
+        state_db=dict(type='str', default='couchdb', choices=['couchdb', 'leveldb']),
+        certificate_authority=dict(type='raw'),
+        enrollment_id=dict(type='str'),
+        enrollment_secret=dict(type='str'),
+        admin_certificates=dict(type='list', elements='str'),
+        config=dict(type='dict'),
+        config_override=dict(type='dict', default=dict()),
+        resources=dict(type='dict', default=dict(), options=dict(
+            peer=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='200m'),
+                    memory=dict(type='str', default='1G')
+                ))
+            )),
+            proxy=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='100m'),
+                    memory=dict(type='str', default='200M')
+                ))
+            )),
+            couchdb=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='200m'),
+                    memory=dict(type='str', default='400M')
+                ))
+            )),
+            dind=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='1'),
+                    memory=dict(type='str', default='1G')
+                ))
+            ))
+        )),
+        storage=dict(type='dict', default=dict(), options=dict(
+            peer=dict(type='dict', default=dict(), options={
+                'size': dict(type='str', default='100Gi'),
+                'class': dict(type='str', default='default')
+            }),
+            couchdb=dict(type='dict', default=dict(), options={
+                'size': dict(type='str', default='100Gi'),
+                'class': dict(type='str', default='default')
+            })
+        )),
+        wait_timeout=dict(type='int', default=60)
+    )
+    required_if = [
+        ('api_authtype', 'basic', ['api_secret']),
+        ('state', 'present', ['name', 'msp_id'])
+    ]
+    required_one_of = [
+        ['certificate_authority', 'config']
+    ]
+    required_together = [
+        ['certificate_authority', 'enrollment_id'],
+        ['certificate_authority', 'enrollment_secret'],
+        ['certificate_authority', 'admin_certificates']
+    ]
+    mutually_exclusive = [
+        ['certificate_authority', 'config']
+    ]
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+        required_if=required_if,
+        required_one_of=required_one_of,
+        required_together=required_together,
+        mutually_exclusive=mutually_exclusive)
+
+    # Ensure all exceptions are caught.
+    try:
+
+        # Log in to the IBP console.
+        console = get_console(module)
+
+        # Determine if the peer exists.
+        name = module.params['name']
+        peer = console.get_component_by_display_name(name, deployment_attrs='included')
+        peer_exists = peer is not None
+
+        # If the peer should not exist, handle that now.
+        state = module.params['state']
+        if state == 'absent' and peer_exists:
+
+            # The peer should not exist, so delete it.
+            console.delete_peer(peer['id'])
+            return module.exit_json(changed=True)
+
+        elif state == 'absent':
+
+            # The peer should not exist and doesn't.
+            return module.exit_json(changed=False)
+
+        # Extract the expected peer configuration.
+        expected_peer = dict(
+            display_name=name,
+            msp_id=module.params['msp_id'],
+            state_db=module.params['state_db'],
+            config_override=module.params['config_override'],
+            resources=module.params['resources'],
+            storage=module.params['storage']
+        )
+
+        # Either create or update the peer.
+        changed = False
+        if state == 'present' and not peer_exists:
+
+            # Get the config.
+            expected_peer['config'] = get_config(console, module)
+
+            # Create the peer.
+            peer = console.create_peer(expected_peer)
+            changed = True
+
+        elif state == 'present' and peer_exists:
+
+            # HACK: change couchdb to statedb for the storage configuration.
+            expected_peer['storage']['statedb'] = expected_peer['storage']['couchdb']
+            del expected_peer['storage']['couchdb']
+
+            # HACK: the config overrides never seems to get sent back.
+            if 'config_override' not in peer:
+                peer['config_override'] = dict()
+
+            # Update the peer configuration.
+            new_peer = copy_dict(peer)
+            merge_dicts(new_peer, expected_peer)
+
+            # Check to see if any banned changes have been made.
+            banned_changes = ['msp_id', 'state_db', 'storage']
+            diff = diff_dicts(peer, new_peer)
+            for banned_change in banned_changes:
+                if banned_change in diff:
+                    raise Exception(f'{banned_change} cannot be changed from {peer[banned_change]} to {new_peer[banned_change]} for existing peer')
+
+            # If the peer has changed, apply the changes.
+            peer_changed = not equal_dicts(peer, new_peer)
+            if peer_changed:
+                peer = console.update_peer(new_peer['id'], new_peer)
+                changed = True
+
+        # Wait for the peer to start.
+        peer = Peer.from_json(console.extract_peer_info(peer))
+        timeout = module.params['wait_timeout']
+        peer.wait_for(timeout)
+
+        # Return the peer.
+        module.exit_json(changed=changed, **peer.to_json())
+
+    # Notify Ansible of the exception.
+    except Exception as e:
+        module.fail_json(msg=to_native(e))
+
+if __name__ == '__main__':
+    main()

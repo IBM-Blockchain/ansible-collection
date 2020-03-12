@@ -406,7 +406,7 @@ def main():
         changed = False
         if state == 'present' and not ordering_service_exists:
 
-            # Change etcdraft to raft for create.
+            # HACK: change etcdraft to raft for create.
             if orderer_type == 'etcdraft':
                 orderer_type = 'raft'
 
