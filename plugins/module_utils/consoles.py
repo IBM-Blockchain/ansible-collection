@@ -161,8 +161,8 @@ class Console:
             'type': 'fabric-ca',
             'ca_name': ca['ca_name'],
             'tlsca_name': ca['tlsca_name'],
-            'pem': ca['tls_cert'],
-            'tls_cert': ca['tls_cert'],
+            'pem': ca.get('tls_ca_root_cert', ca.get('tls_cert', None)),
+            'tls_cert': ca.get('tls_ca_root_cert', ca.get('tls_cert', None)),
             'location': ca['location']
         }
 
@@ -231,8 +231,8 @@ class Console:
             'grpcwp_url': peer['grpcwp_url'],
             'type': 'fabric-peer',
             'msp_id': peer['msp_id'],
-            'pem': peer['tls_cert'],
-            'tls_cert': peer['tls_cert'],
+            'pem': peer.get('tls_ca_root_cert', peer.get('tls_cert', None)),
+            'tls_cert': peer.get('tls_ca_root_cert', peer.get('tls_cert', None)),
             'location': peer['location']
         }
 
@@ -309,8 +309,8 @@ class Console:
             'grpcwp_url': ordering_service_node['grpcwp_url'],
             'type': 'fabric-orderer',
             'msp_id': ordering_service_node['msp_id'],
-            'pem': ordering_service_node['tls_cert'],
-            'tls_cert': ordering_service_node['tls_cert'],
+            'pem': ordering_service_node.get('tls_ca_root_cert', ordering_service_node.get('tls_cert', None)),
+            'tls_cert': ordering_service_node.get('tls_ca_root_cert', ordering_service_node.get('tls_cert', None)),
             'location': ordering_service_node['location'],
             'system_channel_id': ordering_service_node['system_channel_id'],
             'cluster_id': ordering_service_node['cluster_id'],
