@@ -86,10 +86,10 @@ class CertificateAuthority:
         started = False
         for x in range(timeout):
             try:
-                response = open_url(f'{self.api_url}/cainfo', None, None, method='GET', validate_certs=False)
+                response = open_url(f'{self.operations_url}/healthz', None, None, method='GET', validate_certs=False)
                 if response.code == 200:
-                    cainfo = json.load(response)
-                    if cainfo['result']['Version'] is not None:
+                    healthz = json.load(response)
+                    if healthz['status'] == 'OK':
                         started = True
                         break
             except:
