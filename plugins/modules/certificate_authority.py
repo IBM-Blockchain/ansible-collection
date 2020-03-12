@@ -6,6 +6,15 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.certificate_authorities import CertificateAuthority
+from ..module_utils.utils import get_console
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils._text import to_native
+
+import json
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -58,7 +67,7 @@ options:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
         type: integer
         default: 60
-    display_name:
+    name:
         description:
             - The display name for the certificate authority.
         type: str
@@ -123,3 +132,170 @@ requirements: []
 
 EXAMPLES = '''
 '''
+
+RETURN = '''
+---
+name:
+    description:
+        - The name of the certificate authority.
+    type: str
+api_url:
+    description:
+        - The URL for the API of the certificate authority.
+    type: str
+operations_url:
+    description:
+        - The URL for the operations service of the certificate authority.
+    type: str
+ca_url:
+    description:
+        - The URL for the API of the certificate authority.
+    type: str
+ca_name:
+    description:
+        - The certificate authority name to use for enrollment requests.
+    type: str
+tlsca_name:
+    description:
+        - The certificate authority name to use for TLS enrollment requests.
+    type: str
+location:
+    description:
+        - The location of the certificate authority.
+    type: str
+pem:
+    description:
+        - The TLS certificate chain for the certificate authority.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+tls_cert:
+    description:
+        - The TLS certificate chain for the certificate authority.
+        - The TLS certificate chain is returned as a base64 encoded PEM.
+    type: str
+'''
+
+def main():
+
+    # Create the module.
+    argument_spec = dict(
+        state=dict(type='str', default='present', choices=['present', 'absent']),
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_key=dict(type='str', required=True),
+        api_secret=dict(type='str'),
+        api_timeout=dict(type='int', default=60),
+        name=dict(type='str', required=True),
+        config_override=dict(type='dict', default=dict()),
+        resources=dict(type='dict', default=dict(), options=dict(
+            ca=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='100m'),
+                    memory=dict(type='str', default='200M')
+                ))
+            ))
+        )),
+        storage=dict(type='dict', default=dict(), options=dict(
+            ca=dict(type='dict', default=dict(), options={
+                'size': dict(type='str', default='20Gi'),
+                'class': dict(type='str', default='default')
+            })
+        )),
+        wait_timeout=dict(type='int', default=60)
+    )
+    required_if = [
+        ('api_authtype', 'basic', ['api_secret'])
+    ]
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+        required_if=required_if)
+
+    # Ensure all exceptions are caught.
+    try:
+
+        # Log in to the IBP console.
+        console = get_console(module)
+
+        # Determine if the certificate authority exists.
+        name = module.params['name']
+        certificate_authority = console.get_component_by_display_name(name, deployment_attrs='included')
+        certificate_authority_exists = certificate_authority is not None
+
+        # If the certificate authority should not exist, handle that now.
+        state = module.params['state']
+        if state == 'absent' and certificate_authority_exists:
+
+            # The certificate authority should not exist, so delete it.
+            console.delete_ca(certificate_authority['id'])
+            return module.exit_json(changed=True)
+
+        elif state == 'absent':
+
+            # The certificate authority should not exist and doesn't.
+            return module.exit_json(changed=False)
+
+        # Extract the expected certificate authority configuration.
+        expected_certificate_authority = dict(
+            display_name=name,
+            config_override=module.params['config_override'],
+            resources=module.params['resources'],
+            storage=module.params['storage']
+        )
+
+        # Either create or update the peer.
+        changed = False
+        if state == 'present' and not certificate_authority_exists:
+
+            # Create the certificate authority.
+            certificate_authority = console.create_ca(expected_certificate_authority)
+            changed = True
+
+        elif state == 'present' and certificate_authority_exists:
+
+            # Update the certificate authority configuration.
+            new_certificate_authority = copy_dict(certificate_authority)
+            merge_dicts(new_certificate_authority, expected_certificate_authority)
+
+            # You can't change the registry after creation, but the remote names and secrets are redacted.
+            # In order to diff properly, we need to redact the incoming secrets.
+            identities = new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict()).get('identities', list())
+            for identity in identities:
+                if 'name' in identity:
+                    identity['name'] = '[redacted]'
+                if 'pass' in identity:
+                    identity['pass'] = '[redacted]'
+            identities = new_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('registry', dict()).get('identities', list())
+            for identity in identities:
+                if 'name' in identity:
+                    identity['name'] = '[redacted]'
+                if 'pass' in identity:
+                    identity['pass'] = '[redacted]'
+
+            # Check to see if any banned changes have been made.
+            banned_changes = ['storage']
+            diff = diff_dicts(certificate_authority, new_certificate_authority)
+            for banned_change in banned_changes:
+                if banned_change in diff:
+                    raise Exception(f'{banned_change} cannot be changed from {certificate_authority[banned_change]} to {new_certificate_authority[banned_change]} for existing certificate authority')
+
+            # If the certificate authority has changed, apply the changes.
+            certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
+            if certificate_authority_changed:
+                certificate_authority = console.update_ca(new_certificate_authority['id'], new_certificate_authority)
+                changed = True
+
+        # Wait for the certificate authority to start.
+        certificate_authority = CertificateAuthority.from_json(console.extract_ca_info(certificate_authority))
+        timeout = module.params['wait_timeout']
+        certificate_authority.wait_for(timeout)
+
+        # Return the certificate authority.
+        module.exit_json(changed=changed, **certificate_authority.to_json())
+
+    # Notify Ansible of the exception.
+    except Exception as e:
+        module.fail_json(msg=to_native(e))
+
+if __name__ == '__main__':
+    main()
