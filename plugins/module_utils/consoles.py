@@ -72,7 +72,7 @@ class Console:
 
     def get_all_components(self, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = f'{self.api_endpoint}/ak/api/v2/components?deployment_attrs={deployment_attrs}'
+        url = f'{self.api_endpoint}/ak/api/v2/components?deployment_attrs={deployment_attrs}&cache=skip'
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -86,7 +86,7 @@ class Console:
 
     def get_component_by_id(self, id, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = f'{self.api_endpoint}/ak/api/v2/components/{id}?deployment_attrs={deployment_attrs}'
+        url = f'{self.api_endpoint}/ak/api/v2/components/{id}?deployment_attrs={deployment_attrs}&cache=skip'
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -166,22 +166,6 @@ class Console:
             'location': ca['location']
         }
 
-    def wait_for_ca(self, ca, timeout):
-        started = False
-        for x in range(timeout):
-            try:
-                response = open_url(f'{ca["api_url"]}/cainfo', None, None, method='GET', validate_certs=False)
-                if response.code == 200:
-                    cainfo = json.load(response)
-                    if cainfo['result']['Version'] is not None:
-                        started = True
-                        break
-            except:
-                pass
-            time.sleep(1)
-        if not started:
-            raise AnsibleActionFail(f'Certificate authority failed to start within {timeout} seconds')
-
     def create_peer(self, data):
         self._ensure_loggedin()
         url = f'{self.api_endpoint}/ak/api/v2/kubernetes/components/fabric-peer'
@@ -235,22 +219,6 @@ class Console:
             'tls_cert': peer.get('tls_ca_root_cert', peer.get('tls_cert', None)),
             'location': peer['location']
         }
-
-    def wait_for_peer(self, peer, timeout):
-        started = False
-        for x in range(timeout):
-            try:
-                response = open_url(f'{peer["operations_url"]}/healthz', None, None, method='GET', validate_certs=False)
-                if response.code == 200:
-                    healthz = json.load(response)
-                    if healthz['status'] == 'OK':
-                        started = True
-                        break
-            except:
-                pass
-            time.sleep(1)
-        if not started:
-            raise AnsibleActionFail(f'Peer failed to start within {timeout} seconds')
 
     def create_ordering_service(self, data):
         self._ensure_loggedin()
