@@ -1,0 +1,49 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create the channel
+  hosts: localhost
+  vars:
+    # These variables should be supplied using --extra-vars "@org1-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  tasks:
+    - name: Create the configuration update for the new channel
+      ibm.blockchain_platform.channel_config:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret }}"
+        operation: create
+        name: mychannel
+        path: config_update.bin
+        organizations:
+          - Org1
+        policies:
+          Admins: 08-admins-policy.json
+          Readers: 08-readers-policy.json
+          Writers: 08-writers-policy.json
+
+    - name: Sign the channel configuration update for the new channel
+      ibm.blockchain_platform.channel_config:
+        operation: sign_update
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        name: mychannel
+        path: config_update.bin
+
+    - name: Apply the channel configuration update for the new channel
+      ibm.blockchain_platform.channel_config:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret }}"
+        operation: apply_update
+        ordering_service: Ordering Service
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        name: mychannel
+        path: config_update.bin

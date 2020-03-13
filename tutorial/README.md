@@ -1,0 +1,153 @@
+# Tutorial
+
+This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the building of a two organization Hyperledger Fabric network.
+
+## Overview
+
+During this tutorial, you will execute several Ansible Playbooks. The Ansible Playbooks are named `<task number>-<task>.yml` and will be executed in order. Depending on your IBM Blockchain Platform configuration, you may not need to execute all of the Ansible Playbooks to complete this tutorial.
+
+The Ansible Playbooks require variables that specify the IBM Blockchain Platform connection details, as well as the name, enrollment IDs and secrets for that organiation. These variables are stored in files named `<organization>.yml` and must be passed on the command line when executing an Ansible Playbook.
+
+## Before you start
+
+Edit the files [ordering-org-vars.yml](ordering-org-vars.yml) (Ordering Org), [org1-vars.yml](org1-vars.yml) (Org1), and [org2-vars.yml](org2-vars.yml) (Org2) with the IBM Blockchain Platform connection details for each organization.
+
+Note that if all of the organizations use the same IBM Blockchain Platform console, you will need to skip certain steps. This is because all of the information is already present in the IBM Blockchain Platform console, and does not need to be imported.
+
+## Steps
+
+1. Create the components for the ordering organization Ordering Org
+
+    - Organization: Ordering Org
+    - Playbook: [01-create-ordering-organization-components.yml](01-create-ordering-organization-components.yml)
+    - Command: `ansible-playbook 01-create-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.ordering_organization` to set up the certificate authority, organization (MSP), and ordering service components for the ordering organization Ordering Org.
+
+2. Create the components for the endorsing organization Org1
+
+    - Organization: Org1
+    - Playbook: [02-create-endorsing-organization-components.yml](02-create-endorsing-organization-components.yml)
+    - Command: `ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.endorsing_organization` to set up the certificate authority, organization (MSP), and peer components for the endorsing organization Org1.
+
+3. Export the organization for Org1
+
+    TODO: not written yet!
+
+    - Organization: Org1
+    - Playbook: [03-export-organization.yml](03-export-organization.yml)
+    - Command: `ansible-playbook 03-export-organization.yml --extra-vars "@org1-vars.yml"`
+
+4. Import the organization for Org1
+
+    TODO: not written yet!
+
+    - Organization: Org1
+    - Playbook: [04-import-organization.yml](04-import-organization.yml)
+    - Command: `ansible-playbook 04-import-organization.yml --extra-vars "@ordering-org-vars.yml"`
+
+5. Add Org1 to the consortium
+
+    - Organization: Ordering Org
+    - Playbook: [05-add-organization-to-consortium.yml](05-add-organization-to-consortium.yml)
+    - Command: `ansible-playbook 05-add-organization-to-consortium.yml --extra-vars "@ordering-org-vars.yml"`
+
+    This playbook updates the ordering service system channel configuration to add Org1 as a member of the consortium.
+
+6. Export the ordering service
+
+    TODO: not written yet!
+
+    - Organization: Ordering Org
+    - Playbook: [06-export-ordering-service.yml](06-export-ordering-service.yml)
+    - Command: `ansible-playbook 06-export-ordering-service.yml --extra-vars "@ordering-org-vars.yml"`
+
+7. Import the ordering service
+
+    TODO: not written yet!
+
+    - Organization: Org1
+    - Playbook: [07-import-ordering-service.yml](07-import-ordering-service.yml)
+    - Command: `ansible-playbook 07-import-ordering-service.yml --extra-vars "@org1-vars.yml"`
+
+8. Create the channel mychannel
+
+    - Organization: Org1
+    - Playbook: [08-create-channel.yml](08-create-channel.yml)
+    - Command: `ansible-playbook 08-create-channel.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook creates a new channel named mychannel, with Org1 as the only member.
+
+9. Join the peer to the channel
+
+    - Organization: Org1
+    - Playbook: [09-join-peer-to-channel.yml](09-join-peer-to-channel.yml)
+    - Command: `ansible-playbook 09-join-peer-to-channel.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook joins Org1's peer to the channel mychannel.
+
+10. Add anchor peer to the channel
+
+    - Organization: Org1
+    - Playbook: [10-add-anchor-peer-to-channel.yml](10-add-anchor-peer-to-channel.yml)
+    - Command: `ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook adds Org1's peer as an anchor peer for the channel mychannel.
+
+11. Create the components for the endorsing organization Org2
+
+    - Organization: Org2
+    - Playbook: [11-create-endorsing-organization-components.yml](02-create-endorsing-organization-components.yml)
+    - Command: `ansible-playbook 11-create-endorsing-organization-components.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.endorsing_organization` to set up the certificate authority, organization (MSP), and peer components for the endorsing organization Org2.
+
+12. Export the organization for Org2
+
+    TODO: not written yet!
+
+    - Organization: Org2
+    - Playbook: [12-export-organization.yml](12-export-organization.yml)
+    - Command: `ansible-playbook 12-export-organization.yml --extra-vars "@org2-vars.yml"`
+
+13. Import the organization for Org2
+
+    TODO: not written yet!
+
+    - Organization: Org1
+    - Playbook: [13-import-organization.yml](13-import-organization.yml)
+    - Command: `ansible-playbook 13-import-organization.yml --extra-vars "@org1-vars.yml"`
+
+14. Add Org2 to the channel mychannel
+
+    - Organization: Org1
+    - Playbook: [14-add-organization-to-channel.yml](14-add-organization-to-channel.yml)
+    - Command: `ansible-playbook 14-add-organization-to-channel.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook adds Org2 to the channel mychannel, and updates the channel policies such that Org2 can read from and write to the channel, and both Org1 and Org2 must sign any future configuration updates.
+
+15. Import the ordering service
+
+    TODO: not written yet!
+
+    - Organization: Org2
+    - Playbook: [15-import-ordering-service.yml](15-import-ordering-service.yml)
+    - Command: `ansible-playbook 15-import-ordering-service.yml --extra-vars "@org2-vars.yml"`
+
+16. Join the peer to the channel
+
+    - Organization: Org2
+    - Playbook: [16-join-peer-to-channel.yml](16-join-peer-to-channel.yml)
+    - Command: `ansible-playbook 16-join-peer-to-channel.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook joins Org2's peer to the channel mychannel.
+
+17. Add anchor peer to the channel
+
+    - Organization: Org2
+    - Playbook: [17-add-anchor-peer-to-channel.yml](17-add-anchor-peer-to-channel.yml)
+    - Command: `ansible-playbook 17-add-anchor-peer-to-channel.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook adds Org2's peer as an anchor peer for the channel mychannel.

@@ -1,0 +1,23 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create components for an endorsing organization
+  hosts: localhost
+  vars:
+    state: present
+    organization_name: Org1
+    organization_msp_id: Org1MSP
+    ca_admin_enrollment_id: admin
+    organization_admin_enrollment_id: org1admin
+    peer_enrollment_id: org1peer
+    # These variables should be supplied using --extra-vars "@org1-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # ca_admin_enrollment_secret: adminpw
+    # organization_admin_enrollment_secret: org1adminpw
+    # peer_enrollment_secret: org1peerpw
+  roles:
+    - ibm.blockchain_platform.endorsing_organization

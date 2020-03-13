@@ -1,0 +1,11 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ca_admin_enrollment_secret: adminpw
+organization_admin_enrollment_secret: org1adminpw
+peer_enrollment_secret: org1peerpw
