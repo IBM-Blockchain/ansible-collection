@@ -227,7 +227,7 @@ options:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
                         type: str
                         default: default
-            couchdb:
+            statedb:
                 description:
                     - The Kubernetes storage configuration for the CouchDB container.
                 type: dict
@@ -400,7 +400,7 @@ def main():
                 'size': dict(type='str', default='100Gi'),
                 'class': dict(type='str', default='default')
             }),
-            couchdb=dict(type='dict', default=dict(), options={
+            statedb=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='100Gi'),
                 'class': dict(type='str', default='default')
             })
@@ -477,13 +477,11 @@ def main():
 
         elif state == 'present' and peer_exists:
 
-            # HACK: change couchdb to statedb for the storage configuration.
-            expected_peer['storage']['statedb'] = expected_peer['storage']['couchdb']
-            del expected_peer['storage']['couchdb']
-
-            # HACK: the config overrides never seems to get sent back.
-            if 'config_override' not in peer:
-                peer['config_override'] = dict()
+            # HACK: never send the limits back, as they are rejected.
+            for thing in ['peer', 'proxy', 'couchdb', 'dind']:
+                if thing in peer['resources']:
+                    if 'limits' in peer['resources'][thing]:
+                        del peer['resources'][thing]['limits']
 
             # Update the peer configuration.
             new_peer = copy_dict(peer)
