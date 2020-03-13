@@ -144,7 +144,7 @@ def main():
             for anchor_peer in anchor_peers:
                 api_url_split = urllib.parse.urlsplit(anchor_peer.api_url)
                 anchor_peers_value['value']['anchor_peers'].append(dict(
-                    host=api_url_split.netloc,
+                    host=api_url_split.hostname,
                     port=api_url_split.port
                 ))
         else:
