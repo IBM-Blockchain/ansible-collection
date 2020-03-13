@@ -1,0 +1,50 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Delete certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }} CA"
+
+- name: Delete certificate authority admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
+
+- name: Delete organization admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
+
+- name: Delete organization
+  ibm.blockchain_platform.organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }}"
+
+- name: Delete peer
+  ibm.blockchain_platform.peer:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }} Peer"
+    # HACK: this shouldn't be required
+    config: {}

@@ -1,0 +1,11 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create ordering organization
+  include_tasks: create.yml
+  when: state == "present"
+
+- name: Delete ordering organization
+  include_tasks: delete.yml
+  when: state == "absent"

@@ -1,0 +1,192 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }} CA"
+    config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+            - name: "{{ ca_admin_enrollment_id }}"
+              pass: "{{ ca_admin_enrollment_secret }}"
+              type: client
+              maxenrollments: -1
+              attrs:
+                hf.Registrar.Roles: "*"
+                hf.Registrar.DelegateRoles: "*"
+                hf.Revoker: true
+                hf.IntermediateCA: true
+                hf.GenCRL: true
+                hf.Registrar.Attributes: "*"
+                hf.AffiliationMgr: true
+            - name: "{{ organization_admin_enrollment_id }}"
+              pass: "{{ organization_admin_enrollment_secret }}"
+              type: admin
+              maxenrollments: -1
+            - name: "{{ ordering_service_enrollment_id }}"
+              pass: "{{ ordering_service_enrollment_secret }}"
+              type: orderer
+              maxenrollments: -1
+      tlsca:
+        registry:
+          maxenrollments: -1
+          identities:
+            - name: "{{ ca_admin_enrollment_id }}"
+              pass: "{{ ca_admin_enrollment_secret }}"
+              type: client
+              maxenrollments: -1
+              attrs:
+                hf.Registrar.Roles: "*"
+                hf.Registrar.DelegateRoles: "*"
+                hf.Revoker: true
+                hf.IntermediateCA: true
+                hf.GenCRL: true
+                hf.Registrar.Attributes: "*"
+                hf.AffiliationMgr: true
+            - name: "{{ ordering_service_enrollment_id }}"
+              pass: "{{ ordering_service_enrollment_secret }}"
+              type: orderer
+              maxenrollments: -1
+  register: ca
+
+- name: Print certificate authority
+  debug:
+    msg: "{{ ca }}"
+
+- name: Get certificate authority
+  ibm.blockchain_platform.certificate_authority_info:
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }} CA"
+  register: ca
+
+- name: Print certificate authority
+  debug:
+    msg: "{{ ca }}"
+
+- name: Enroll certificate authority admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    certificate_authority: "{{ organization_name }} CA"
+    name: "{{ organization_name }} CA Admin"
+    enrollment_id: "{{ ca_admin_enrollment_id }}"
+    enrollment_secret: "{{ ca_admin_enrollment_secret }}"
+    path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
+  register: ca_admin
+
+- name: Print certificate authority admin
+  debug:
+    msg: "{{ ca_admin }}"
+
+- name: Get certificate authority admin
+  ibm.blockchain_platform.enrolled_identity_info:
+    path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
+  register: ca_admin
+
+- name: Print certificate authority admin
+  debug:
+    msg: "{{ ca_admin }}"
+
+- name: Enroll the organization admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    certificate_authority: "{{ organization_name }} CA"
+    name: "{{ organization_name }} Admin"
+    enrollment_id: "{{ organization_admin_enrollment_id }}"
+    enrollment_secret: "{{ organization_admin_enrollment_secret }}"
+    path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
+  register: org_admin
+
+- name: Print organization admin
+  debug:
+    msg: "{{ org_admin }}"
+
+- name: Get organization admin
+  ibm.blockchain_platform.enrolled_identity_info:
+    path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
+  register: org_admin
+
+- name: Print organization admin
+  debug:
+    msg: "{{ org_admin }}"
+
+- name: Create organization
+  ibm.blockchain_platform.organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }}"
+    msp_id: "{{ organization_msp_id }}"
+    certificate_authority: "{{ organization_name }} CA"
+  register: organization
+
+- name: Print organization
+  debug:
+    msg: "{{ organization }}"
+
+- name: Get organization
+  ibm.blockchain_platform.organization_info:
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: "{{ organization_name }}"
+  register: organization
+
+- name: Print organization
+  debug:
+    msg: "{{ organization }}"
+
+- name: Create ordering service
+  ibm.blockchain_platform.ordering_service:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: Ordering Service
+    msp_id: "{{ organization_msp_id }}"
+    nodes: 1
+    certificate_authority: "{{ organization_name }} CA"
+    enrollment_id: "{{ ordering_service_enrollment_id }}"
+    enrollment_secret: "{{ ordering_service_enrollment_secret }}"
+    admin_certificates:
+      - "{{ org_admin.cert | default(omit) }}"
+  register: ordering_service
+
+- name: Print ordering service
+  debug:
+    msg: "{{ ordering_service }}"
+
+- name: Get ordering service
+  ibm.blockchain_platform.ordering_service_info:
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret }}"
+    name: Ordering Service
+  register: ordering_service
+
+- name: Print ordering service
+  debug:
+    msg: "{{ ordering_service }}"

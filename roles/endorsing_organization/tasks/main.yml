@@ -1,0 +1,11 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create endorsing organization
+  include_tasks: create.yml
+  when: state == "present"
+
+- name: Delete endorsing organization
+  include_tasks: delete.yml
+  when: state == "absent"
