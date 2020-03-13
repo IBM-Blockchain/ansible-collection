@@ -78,11 +78,11 @@ options:
         type: str
     orderer_type:
         description:
-            - C(etcdraft) - The ordering service will use the etcd/raft consensus algorithm.
-        default: etcdraft
+            - C(raft) - The ordering service will use the Raft consensus algorithm.
+        default: raft
         type: str
         choices:
-            - etcdraft
+            - raft
     system_channel_id:
         description:
             - The name of the system channel for this ordering service.
@@ -347,7 +347,7 @@ def main():
         api_timeout=dict(type='int', default=60),
         name=dict(type='str', required=True),
         msp_id=dict(type='str'),
-        orderer_type=dict(type='str', default='etcdraft'),
+        orderer_type=dict(type='str', default='raft', choices=['raft']),
         system_channel_id=dict(type='str', default='testchainid'),
         certificate_authority=dict(type='raw'),
         enrollment_id=dict(type='str'),
@@ -405,10 +405,6 @@ def main():
         state = module.params['state']
         changed = False
         if state == 'present' and not ordering_service_exists:
-
-            # HACK: change etcdraft to raft for create.
-            if orderer_type == 'etcdraft':
-                orderer_type = 'raft'
 
             # Get the config.
             config = get_config(console, module)
