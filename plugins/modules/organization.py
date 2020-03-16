@@ -201,116 +201,121 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
-name:
+organization:
     description:
-        - The name of the organization.
-    type: str
-root_certs:
-    description:
-        - The list of root certificates for this organization.
-        - Root certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-intermediate_certs:
-    description:
-        - The list of intermediate certificates for this organization.
-        - Intermediate certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-admins:
-    description:
-        - The list of administrator certificates for this organization.
-        - Administrator certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-revocation_list:
-    description:
-        - The list of revoked certificates for this organization.
-        - Revoked certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-tls_root_certs:
-    description:
-        - The list of TLS root certificates for this organization.
-        - TLS root certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-tls_intermediate_certs:
-    description:
-        - The list of TLS root certificates for this organization.
-        - TLS intermediate certificates must be supplied as base64 encoded PEM files.
-    type: list
-    elements: str
-fabric_node_ous:
-    description:
-        - Configuration specific to the identity classification.
+        - The organization.
     type: dict
     suboptions:
-        enable:
+        name:
             description:
-                - True if identity classification is enabled for this organization, false otherwise.
-            default: true
-            type: boolean
-        admin_ou_identifier:
+                - The name of the organization.
+            type: str
+        root_certs:
             description:
-                - Configuration specific to the admin identity classification.
+                - The list of root certificates for this organization.
+                - Root certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        intermediate_certs:
+            description:
+                - The list of intermediate certificates for this organization.
+                - Intermediate certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        admins:
+            description:
+                - The list of administrator certificates for this organization.
+                - Administrator certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        revocation_list:
+            description:
+                - The list of revoked certificates for this organization.
+                - Revoked certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        tls_root_certs:
+            description:
+                - The list of TLS root certificates for this organization.
+                - TLS root certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        tls_intermediate_certs:
+            description:
+                - The list of TLS root certificates for this organization.
+                - TLS intermediate certificates must be supplied as base64 encoded PEM files.
+            type: list
+            elements: str
+        fabric_node_ous:
+            description:
+                - Configuration specific to the identity classification.
             type: dict
             suboptions:
-                certificate:
+                enable:
                     description:
-                        - The root or intermediate certificate for this identity classification.
-                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
-                    type: str
-                organizational_unit_identifier:
+                        - True if identity classification is enabled for this organization, false otherwise.
+                    default: true
+                    type: boolean
+                admin_ou_identifier:
                     description:
-                        - The organizational unit (OU) identifier for this identity classification.
-                    type: str
-                    default: admin
-        client_ou_identifier:
-            description:
-                - Configuration specific to the client identity classification.
-            type: dict
-            suboptions:
-                certificate:
+                        - Configuration specific to the admin identity classification.
+                    type: dict
+                    suboptions:
+                        certificate:
+                            description:
+                                - The root or intermediate certificate for this identity classification.
+                                - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                            type: str
+                        organizational_unit_identifier:
+                            description:
+                                - The organizational unit (OU) identifier for this identity classification.
+                            type: str
+                            default: admin
+                client_ou_identifier:
                     description:
-                        - The root or intermediate certificate for this identity classification.
-                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
-                    type: str
-                organizational_unit_identifier:
+                        - Configuration specific to the client identity classification.
+                    type: dict
+                    suboptions:
+                        certificate:
+                            description:
+                                - The root or intermediate certificate for this identity classification.
+                                - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                            type: str
+                        organizational_unit_identifier:
+                            description:
+                                - The organizational unit (OU) identifier for this identity classification.
+                            type: str
+                            default: client
+                peer_ou_identifier:
                     description:
-                        - The organizational unit (OU) identifier for this identity classification.
-                    type: str
-                    default: client
-        peer_ou_identifier:
-            description:
-                - Configuration specific to the peer identity classification.
-            type: dict
-            suboptions:
-                certificate:
+                        - Configuration specific to the peer identity classification.
+                    type: dict
+                    suboptions:
+                        certificate:
+                            description:
+                                - The root or intermediate certificate for this identity classification.
+                                - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                            type: str
+                        organizational_unit_identifier:
+                            description:
+                                - The organizational unit (OU) identifier for this identity classification.
+                            type: str
+                            default: peer
+                orderer_ou_identifier:
                     description:
-                        - The root or intermediate certificate for this identity classification.
-                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
-                    type: str
-                organizational_unit_identifier:
-                    description:
-                        - The organizational unit (OU) identifier for this identity classification.
-                    type: str
-                    default: peer
-        orderer_ou_identifier:
-            description:
-                - Configuration specific to the orderer identity classification.
-            type: dict
-            suboptions:
-                certificate:
-                    description:
-                        - The root or intermediate certificate for this identity classification.
-                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
-                    type: str
-                organizational_unit_identifier:
-                    description:
-                        - The organizational unit (OU) identifier for this identity classification.
-                    type: str
-                    default: orderer
+                        - Configuration specific to the orderer identity classification.
+                    type: dict
+                    suboptions:
+                        certificate:
+                            description:
+                                - The root or intermediate certificate for this identity classification.
+                                - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                            type: str
+                        organizational_unit_identifier:
+                            description:
+                                - The organizational unit (OU) identifier for this identity classification.
+                            type: str
+                            default: orderer
 '''
 
 def get_from_certificate_authority(console, module):
@@ -499,7 +504,7 @@ def main():
 
         # Return the organization.
         organization = Organization.from_json(console.extract_organization_info(organization))
-        module.exit_json(changed=changed, **organization.to_json())
+        module.exit_json(changed=changed, organization=organization.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:
