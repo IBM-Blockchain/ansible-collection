@@ -1,0 +1,20 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Import the organization
+  hosts: localhost
+  vars:
+    # These variables should be supplied using --extra-vars "@ordering-org-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  tasks:
+    - name: Import the organization
+      ibm.blockchain_platform.external_organization:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret }}"
+        organization: "{{ lookup('file', 'Org1.json' )}}"

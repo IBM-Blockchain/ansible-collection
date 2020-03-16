@@ -1,0 +1,31 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Export the organization
+  hosts: localhost
+  vars:
+    # These variables should be supplied using --extra-vars "@org2-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  tasks:
+    - name: Get the organization
+      ibm.blockchain_platform.organization_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret }}"
+        name: Org2
+      register: result
+
+    - name: Fail if the organization does not exist
+      fail:
+        msg: Organization Org2 does not exist
+      when: not result.exists
+
+    - name: Store the organization in a file
+      copy:
+        content: "{{ result.organization | to_nice_json }}"
+        dest: Org2.json

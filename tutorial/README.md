@@ -34,19 +34,25 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
 3. Export the organization for Org1
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org1
     - Playbook: [03-export-organization.yml](03-export-organization.yml)
     - Command: `ansible-playbook 03-export-organization.yml --extra-vars "@org1-vars.yml"`
 
+    This playbook uses the Ansible Module `ibm.blockchain_platform.organization_info` module to export the organization Org1 to a file.
+
+    In a real deployment, this file must then be passed to the organization Ordering Org out of band, so they could import the organization Org1 into their IBM Blockchain Plaform console.
+
 4. Import the organization for Org1
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org1
     - Playbook: [04-import-organization.yml](04-import-organization.yml)
     - Command: `ansible-playbook 04-import-organization.yml --extra-vars "@ordering-org-vars.yml"`
+
+    This playbook uses the Ansible Module `ibm.blockchain_platform.external_organization` module to import the organization Org1 from a file.
 
 5. Add Org1 to the consortium
 
@@ -58,19 +64,25 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
 6. Export the ordering service
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Ordering Org
     - Playbook: [06-export-ordering-service.yml](06-export-ordering-service.yml)
     - Command: `ansible-playbook 06-export-ordering-service.yml --extra-vars "@ordering-org-vars.yml"`
 
+    This playbook uses the Ansible Module `ibm.blockchain_platform.ordering_service_info` module to export the ordering service to a file.
+
+    In a real deployment, this file must then be passed to the organization Org1 out of band, so they could import the ordering service into their IBM Blockchain Plaform console.
+
 7. Import the ordering service
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org1
     - Playbook: [07-import-ordering-service.yml](07-import-ordering-service.yml)
     - Command: `ansible-playbook 07-import-ordering-service.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook uses the Ansible Module `ibm.blockchain_platform.external_ordering_service` module to import the ordering service from a file.
 
 8. Create the channel mychannel
 
@@ -106,19 +118,25 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
 12. Export the organization for Org2
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org2
     - Playbook: [12-export-organization.yml](12-export-organization.yml)
     - Command: `ansible-playbook 12-export-organization.yml --extra-vars "@org2-vars.yml"`
 
+    This playbook uses the Ansible Module `ibm.blockchain_platform.organization_info` module to export the organization Org2 to a file.
+
+    In a real deployment, this file must then be passed to the organization Org1 out of band, so they could import the organization Org2 into their IBM Blockchain Plaform console.
+
 13. Import the organization for Org2
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org1
     - Playbook: [13-import-organization.yml](13-import-organization.yml)
     - Command: `ansible-playbook 13-import-organization.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook uses the Ansible Module `ibm.blockchain_platform.external_organization` module to import the organization Org2 from a file.
 
 14. Add Org2 to the channel mychannel
 
@@ -130,11 +148,13 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
 15. Import the ordering service
 
-    TODO: not written yet!
+    Note: skip this step if all organizations are using the same IBM Blockchain Platform console.
 
     - Organization: Org2
     - Playbook: [15-import-ordering-service.yml](15-import-ordering-service.yml)
     - Command: `ansible-playbook 15-import-ordering-service.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook uses the Ansible Module `ibm.blockchain_platform.external_ordering_service` module to import the ordering service from a file.
 
 16. Join the peer to the channel
 
