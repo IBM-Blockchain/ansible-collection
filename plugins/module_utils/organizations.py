@@ -55,7 +55,8 @@ class Organization:
             revocation_list = self.revocation_list,
             tls_root_certs = self.tls_root_certs,
             tls_intermediate_certs = self.tls_intermediate_certs,
-            fabric_node_ous = self.fabric_node_ous
+            fabric_node_ous = self.fabric_node_ous,
+            type = 'msp'
         )
 
     @staticmethod
