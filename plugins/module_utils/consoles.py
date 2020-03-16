@@ -246,7 +246,7 @@ class Console:
         try:
             response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
         except Exception as e:
-            return self.handle_error('Failed to create ordering service', e)
+            return self.handle_error('Failed to delete ordering service', e)
 
     def extract_ordering_service_info(self, ordering_service):
         results = list()
@@ -286,6 +286,62 @@ class Console:
             'client_tls_cert': ordering_service_node.get('client_tls_cert', None),
             'server_tls_cert': ordering_service_node.get('server_tls_cert', None)
         }
+
+    def delete_ext_ordering_service(self, cluster_id):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/tags/{cluster_id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        try:
+            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to delete external ordering service', e)
+
+    def create_ext_ordering_service_node(self, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/fabric-orderer'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to create ordering service node', e)
+
+    def update_ext_ordering_service_node(self, id, data):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/fabric-orderer/{id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        try:
+            response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to update ordering service node', e)
+
+    def delete_ext_ordering_service_node(self, id):
+        self._ensure_loggedin()
+        url = f'{self.api_endpoint}/ak/api/v2/components/{id}'
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        try:
+            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+        except Exception as e:
+            return self.handle_error('Failed to delete external ordering service node', e)
 
     def create_organization(self, data):
         self._ensure_loggedin()
