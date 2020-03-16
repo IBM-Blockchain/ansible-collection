@@ -212,9 +212,9 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
-nodes:
+ordering_service:
     description:
-        - The list of ordering service nodes in this ordering service.
+        - The ordering service, as a list of ordering service nodes.
     type: list
     elements: dict
     suboptions:
@@ -263,6 +263,14 @@ nodes:
         server_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
+            type: str
+        cluster_id:
+            description:
+                - The unique ID of the ordering service cluster.
+            type: str
+        cluster_name:
+            description:
+                - The name of the ordering service cluster.
             type: str
 '''
 
@@ -551,7 +559,7 @@ def main():
         ordering_service.wait_for(timeout)
 
         # Return the ordering service.
-        module.exit_json(changed=changed, nodes=ordering_service.to_json())
+        module.exit_json(changed=changed, ordering_service=ordering_service.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:

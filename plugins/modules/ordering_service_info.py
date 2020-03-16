@@ -71,9 +71,9 @@ exists:
     description:
         - True if the peer exists, false otherwise.
     type: boolean
-nodes:
+ordering_service:
     description:
-        - The list of ordering service nodes in this ordering service.
+        - The ordering service, as a list of ordering service nodes.
     type: list
     elements: dict
     suboptions:
@@ -123,6 +123,14 @@ nodes:
             description:
                 - The client TLS certificate for the ordering service node.
             type: str
+        cluster_id:
+            description:
+                - The unique ID of the ordering service cluster.
+            type: str
+        cluster_name:
+            description:
+                - The name of the ordering service cluster.
+            type: str
 '''
 
 def main():
@@ -160,7 +168,7 @@ def main():
         ordering_service.wait_for(wait_timeout)
 
         # Return peer information.
-        module.exit_json(exists=True, nodes=ordering_service.to_json())
+        module.exit_json(exists=True, ordering_service=ordering_service.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:
