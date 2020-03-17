@@ -71,7 +71,7 @@ organization:
     description:
         - The organization.
     type: dict
-    suboptions:
+    contains:
         name:
             description:
                 - The name of the organization.
@@ -116,7 +116,7 @@ organization:
             description:
                 - Configuration specific to the identity classification.
             type: dict
-            suboptions:
+            contains:
                 enable:
                     description:
                         - True if identity classification is enabled for this organization, false otherwise.
@@ -126,7 +126,7 @@ organization:
                     description:
                         - Configuration specific to the admin identity classification.
                     type: dict
-                    suboptions:
+                    contains:
                         certificate:
                             description:
                                 - The root or intermediate certificate for this identity classification.
@@ -141,7 +141,7 @@ organization:
                     description:
                         - Configuration specific to the client identity classification.
                     type: dict
-                    suboptions:
+                    contains:
                         certificate:
                             description:
                                 - The root or intermediate certificate for this identity classification.
@@ -156,7 +156,7 @@ organization:
                     description:
                         - Configuration specific to the peer identity classification.
                     type: dict
-                    suboptions:
+                    contains:
                         certificate:
                             description:
                                 - The root or intermediate certificate for this identity classification.
@@ -171,7 +171,7 @@ organization:
                     description:
                         - Configuration specific to the orderer identity classification.
                     type: dict
-                    suboptions:
+                    contains:
                         certificate:
                             description:
                                 - The root or intermediate certificate for this identity classification.
