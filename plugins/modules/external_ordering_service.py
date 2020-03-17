@@ -149,7 +149,7 @@ ordering_service:
         - The ordering service, as a list of ordering service nodes.
     type: list
     elements: dict
-    suboptions:
+    contains:
         name:
             description:
                 - The name of the ordering service node.
