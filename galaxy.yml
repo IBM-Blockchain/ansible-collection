@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-namespace: sstone1
+namespace: ibm
 name: blockchain_platform
 version: 0.0.1
 readme: README.md
@@ -19,4 +19,4 @@ tags:
   - hyperledger
   - fabric
   - blockchain
-repository: https://github.com/sstone1/ansible-collection
+repository: https://github.com/IBM-Blockchain/ansible-collection

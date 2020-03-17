@@ -1,0 +1,13 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+galaxy_info:
+  author: Simon Stone
+  description: Ansible role for building Hyperledger Fabric components for an endorsing organization using the IBM Blockchain Platform
+  license: Apache-2.0
+  platforms:
+    - name: GenericLinux
+      versions:
+      - all
+  galaxy_tags: []
