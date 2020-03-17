@@ -123,14 +123,14 @@ options:
             - The initial configuration for the ordering service. This is only required if you need more advanced configuration than
               is provided by this module using I(certificate_authority) and related options.
             - You must provide initial configuration for each ordering service node in the ordering service, as defined by I(nodes).
-            - See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
+            - "See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config"
         type: list
         elements: dict
     config_override:
         description:
             - The configuration overrides for the ordering service.
             - You must provide configuration overrides for each ordering service node in the ordering service, as defined by I(nodes).
-            - See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
+            - "See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml"
         type: list
         elements: dict
     resources:
@@ -194,7 +194,7 @@ options:
                         type: str
                         default: 100Gi
                     class:
-                        default:
+                        description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
                         type: str
                         default: default

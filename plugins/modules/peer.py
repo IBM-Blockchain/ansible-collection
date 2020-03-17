@@ -115,12 +115,12 @@ options:
         description:
             - The initial configuration for the peer. This is only required if you need more advanced configuration than
               is provided by this module using I(certificate_authority) and related options.
-            - See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
+            - "See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config"
         type: dict
     config_override:
         description:
             - The configuration overrides for the peer.
-            - See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
+            - "See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml"
         type: dict
     resources:
         description:
@@ -223,7 +223,7 @@ options:
                         type: str
                         default: 100Gi
                     class:
-                        default:
+                        description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
                         type: str
                         default: default
@@ -238,7 +238,7 @@ options:
                         type: str
                         default: 100Gi
                     class:
-                        default:
+                        description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
                         type: str
                         default: default
