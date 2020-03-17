@@ -92,9 +92,9 @@ options:
                 description:
                     - The certificate authority to use to build this organization.
                     - You can pass a string, which is the display name of a certificate authority registered
-                    with the IBM Blockchain Platform console.
+                      with the IBM Blockchain Platform console.
                     - You can also pass a dictionary, which must match the result format of one of the
-                    M(certificate_authority_info) or M(certificate_authority) modules.
+                      M(certificate_authority_info) or M(certificate_authority) modules.
                 type: raw
             root_certs:
                 description:
@@ -213,7 +213,7 @@ EXAMPLES = '''
 RETURN = '''
 ---
 organization:
-    description
+    description:
         - The organization.
     type: dict
     suboptions:

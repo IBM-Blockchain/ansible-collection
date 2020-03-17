@@ -74,7 +74,7 @@ options:
     config_override:
         description:
             - The configuration overrides for the certificate authority.
-            - See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html
+            - "See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html"
         type: dict
     resources:
         description:
@@ -117,7 +117,7 @@ options:
                         type: str
                         default: 20Gi
                     class:
-                        default:
+                        description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
                         type: str
                         default: default

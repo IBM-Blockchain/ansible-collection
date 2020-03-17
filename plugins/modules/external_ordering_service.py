@@ -145,7 +145,7 @@ EXAMPLES = '''
 RETURN = '''
 ---
 ordering_service:
-    description
+    description:
         - The ordering service, as a list of ordering service nodes.
     type: list
     elements: dict
