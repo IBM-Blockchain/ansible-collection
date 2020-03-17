@@ -71,40 +71,44 @@ exists:
     description:
         - True if the peer exists, false otherwise.
     type: boolean
-name:
-    description:
-        - The name of the peer.
-    type: str
-api_url:
-    description:
-        - The URL for the API of the peer.
-    type: str
-operations_url:
-    description:
-        - The URL for the operations service of the peer.
-    type: str
-grpcwp_url:
-    description:
-        - The URL for the gRPC web proxy of the peer.
-    type: str
-msp_id:
-    description:
-        - The MSP ID of the peer.
-    type: str
-pem:
-    description:
-        - The TLS certificate chain for the peer.
-        - The TLS certificate chain is returned as a base64 encoded PEM.
-    type: str
-tls_cert:
-    description:
-        - The TLS certificate chain for the peer.
-        - The TLS certificate chain is returned as a base64 encoded PEM.
-    type: str
-location:
-    description:
-        - The location of the peer.
-    type: str
+peer:
+    description: The peer.
+    type: dict
+    contains:
+        name:
+            description:
+                - The name of the peer.
+            type: str
+        api_url:
+            description:
+                - The URL for the API of the peer.
+            type: str
+        operations_url:
+            description:
+                - The URL for the operations service of the peer.
+            type: str
+        grpcwp_url:
+            description:
+                - The URL for the gRPC web proxy of the peer.
+            type: str
+        msp_id:
+            description:
+                - The MSP ID of the peer.
+            type: str
+        pem:
+            description:
+                - The TLS certificate chain for the peer.
+                - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
+        tls_cert:
+            description:
+                - The TLS certificate chain for the peer.
+                - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
+        location:
+            description:
+                - The location of the peer.
+            type: str
 '''
 
 def main():
@@ -142,7 +146,7 @@ def main():
         peer.wait_for(wait_timeout)
 
         # Return peer information.
-        module.exit_json(exists=True, **peer.to_json())
+        module.exit_json(exists=True, peer=peer.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:

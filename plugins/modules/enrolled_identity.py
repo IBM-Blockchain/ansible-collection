@@ -102,22 +102,27 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
-name:
+enrolled_identity:
     description:
-        - The name of the enrolled identity.
-    type: str
-cert:
-    description:
-        - The base64 encoded certificate of the enrolled identity.
-    type: str
-private_key:
-    description:
-        - The base64 encoded private key of the enrolled identity.
-    type: str
-ca:
-    description:
-        - The base64 encoded CA certificate chain of the enrolled identity.
-    type: str
+        - The enrolled identity.
+    type: dict
+    contains:
+        name:
+            description:
+                - The name of the enrolled identity.
+            type: str
+        cert:
+            description:
+                - The base64 encoded certificate of the enrolled identity.
+            type: str
+        private_key:
+            description:
+                - The base64 encoded private key of the enrolled identity.
+            type: str
+        ca:
+            description:
+                - The base64 encoded CA certificate chain of the enrolled identity.
+            type: str
 '''
 
 def main():
@@ -165,7 +170,7 @@ def main():
                 identity = connection.enroll(name, enrollment_id, enrollment_secret)
             with open(path, 'w') as file:
                 json.dump(identity.to_json(), file, indent=4)
-            module.exit_json(changed=True, **identity.to_json())
+            module.exit_json(changed=True, enrolled_identity=identity.to_json())
 
         elif state == 'present' and path_exists:
 
@@ -183,7 +188,7 @@ def main():
             if changed:
                 with open(path, 'w') as file:
                     json.dump(new_identity.to_json(), file, indent=4)
-            module.exit_json(changed=changed, **new_identity.to_json())
+            module.exit_json(changed=changed, enrolled_identity=new_identity.to_json())
 
         elif state == 'absent' and path_exists:
 

@@ -135,44 +135,49 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
-name:
+certificate_authority:
     description:
-        - The name of the certificate authority.
-    type: str
-api_url:
-    description:
-        - The URL for the API of the certificate authority.
-    type: str
-operations_url:
-    description:
-        - The URL for the operations service of the certificate authority.
-    type: str
-ca_url:
-    description:
-        - The URL for the API of the certificate authority.
-    type: str
-ca_name:
-    description:
-        - The certificate authority name to use for enrollment requests.
-    type: str
-tlsca_name:
-    description:
-        - The certificate authority name to use for TLS enrollment requests.
-    type: str
-location:
-    description:
-        - The location of the certificate authority.
-    type: str
-pem:
-    description:
-        - The TLS certificate chain for the certificate authority.
-        - The TLS certificate chain is returned as a base64 encoded PEM.
-    type: str
-tls_cert:
-    description:
-        - The TLS certificate chain for the certificate authority.
-        - The TLS certificate chain is returned as a base64 encoded PEM.
-    type: str
+        - The certificate authority.
+    type: dict
+    contains:
+        name:
+            description:
+                - The name of the certificate authority.
+            type: str
+        api_url:
+            description:
+                - The URL for the API of the certificate authority.
+            type: str
+        operations_url:
+            description:
+                - The URL for the operations service of the certificate authority.
+            type: str
+        ca_url:
+            description:
+                - The URL for the API of the certificate authority.
+            type: str
+        ca_name:
+            description:
+                - The certificate authority name to use for enrollment requests.
+            type: str
+        tlsca_name:
+            description:
+                - The certificate authority name to use for TLS enrollment requests.
+            type: str
+        location:
+            description:
+                - The location of the certificate authority.
+            type: str
+        pem:
+            description:
+                - The TLS certificate chain for the certificate authority.
+                - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
+        tls_cert:
+            description:
+                - The TLS certificate chain for the certificate authority.
+                - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
 '''
 
 def main():
@@ -291,7 +296,7 @@ def main():
         certificate_authority.wait_for(timeout)
 
         # Return the certificate authority.
-        module.exit_json(changed=changed, **certificate_authority.to_json())
+        module.exit_json(changed=changed, certificate_authority=certificate_authority.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:
