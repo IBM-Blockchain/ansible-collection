@@ -46,22 +46,27 @@ exists:
     description:
         - True if the enrolled identity exists, false otherwise.
     type: boolean
-name:
+enrolled_identity:
     description:
-        - The name of the enrolled identity.
-    type: str
-cert:
-    description:
-        - The base64 encoded certificate of the enrolled identity.
-    type: str
-private_key:
-    description:
-        - The base64 encoded private key of the enrolled identity.
-    type: str
-ca:
-    description:
-        - The base64 encoded CA certificate chain of the enrolled identity.
-    type: str
+        - The enrolled identity.
+    type: dict
+    contains:
+        name:
+            description:
+                - The name of the enrolled identity.
+            type: str
+        cert:
+            description:
+                - The base64 encoded certificate of the enrolled identity.
+            type: str
+        private_key:
+            description:
+                - The base64 encoded private key of the enrolled identity.
+            type: str
+        ca:
+            description:
+                - The base64 encoded CA certificate chain of the enrolled identity.
+            type: str
 '''
 
 def main():
@@ -87,7 +92,7 @@ def main():
         with open(path, 'r') as file:
             data = json.load(file)
         identity = EnrolledIdentity.from_json(data)
-        module.exit_json(exists=True, **identity.to_json())
+        module.exit_json(exists=True, enrolled_identity=identity.to_json())
 
     # Notify Ansible of the exception.
     except Exception as e:
