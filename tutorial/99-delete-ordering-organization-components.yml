@@ -1,0 +1,16 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Delete components for an ordering organization
+  hosts: localhost
+  vars:
+    state: absent
+    organization_name: Ordering Org
+    # These variables should be supplied using --extra-vars "@ordering-org-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  roles:
+    - ibm.blockchain_platform.ordering_organization

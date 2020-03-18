@@ -20,3 +20,6 @@ ansible-playbook 14-add-organization-to-channel.yml --extra-vars "@org1-vars.yml
 ansible-playbook 15-import-ordering-service.yml --extra-vars "@org2-vars.yml"
 ansible-playbook 16-join-peer-to-channel.yml --extra-vars "@org2-vars.yml"
 ansible-playbook 17-add-anchor-peer-to-channel.yml --extra-vars "@org2-vars.yml"
+ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml"
+ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars "@org2-vars.yml"
+ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml"

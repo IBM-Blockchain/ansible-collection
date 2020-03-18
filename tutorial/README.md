@@ -171,3 +171,30 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
     - Command: `ansible-playbook 17-add-anchor-peer-to-channel.yml --extra-vars "@org2-vars.yml"`
 
     This playbook adds Org2's peer as an anchor peer for the channel mychannel.
+
+## Cleaning up
+
+1. Delete the components for the endorsing organization Org1
+
+    - Organization: Org1
+    - Playbook: [97-delete-endorsing-organization-components.yml](97-delete-endorsing-organization-components.yml)
+    - Command: `ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.endorsing_organization` to delete the certificate authority, organization (MSP), and peer components for the endorsing organization Org1.
+
+2. Delete the components for the endorsing organization Org2
+
+    - Organization: Org2
+    - Playbook: [98-delete-endorsing-organization-components.yml](98-delete-endorsing-organization-components.yml)
+    - Command: `ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.endorsing_organization` to delete the certificate authority, organization (MSP), and peer components for the endorsing organization Org2.
+
+3. Delete the components for the ordering organization Ordering Org
+
+    - Organization: Ordering Org
+    - Playbook: [99-delete-ordering-organization-components.yml](99-delete-ordering-organization-components.yml)
+    - Command: `ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml"`
+
+    This playbook uses the Ansible Role `ibm.blockchain_platform.ordering_organization` to delete the certificate authority, organization (MSP), and ordering service components for the ordering organization Ordering Org.
+
