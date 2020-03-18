@@ -37,7 +37,7 @@
         identity: Ordering Org Admin.json
         msp_id: OrdererMSP
         operation: fetch
-        name: "{{ ordering_service.nodes[0].system_channel_id }}"
+        name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: original_config.bin
 
     - name: Create a copy of the system channel configuration
@@ -67,7 +67,7 @@
         identity: Ordering Org Admin.json
         msp_id: OrdererMSP
         operation: compute_update
-        name: "{{ ordering_service.nodes[0].system_channel_id }}"
+        name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         original: original_config.bin
         updated: updated_config.bin
         path: config_update.bin
@@ -78,7 +78,7 @@
         operation: sign_update
         identity: Ordering Org Admin.json
         msp_id: OrdererMSP
-        name: "{{ ordering_service.nodes[0].system_channel_id }}"
+        name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin
       when: compute_update.path
 
@@ -93,6 +93,6 @@
         ordering_service: Ordering Service
         identity: Ordering Org Admin.json
         msp_id: OrdererMSP
-        name: "{{ ordering_service.nodes[0].system_channel_id }}"
+        name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin
       when: compute_update.path
