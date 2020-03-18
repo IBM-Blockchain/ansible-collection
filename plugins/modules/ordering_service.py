@@ -30,6 +30,37 @@ description:
       Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 author: Simon Stone (@sstone1)
 options:
+    api_endpoint:
+        description:
+            - The URL for the IBM Blockchain Platform console.
+        type: str
+    api_authtype:
+        description:
+            - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
+              You must provide a valid API key using I(api_key).
+            - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
+              You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
+        type: str
+    api_key:
+        description:
+            - The API key for the IBM Blockchain Platform console.
+        type: str
+    api_secret:
+        description:
+            - The API secret for the IBM Blockchain Platform console.
+            - Only required when I(api_authtype) is C(basic).
+        type: str
+    api_timeout:
+        description:
+            - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+        type: integer
+        default: 60
+    api_token_endpoint:
+        description:
+            - The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+            - Only required when I(api_authtype) is C(ibmcloud), and you are using IBM internal staging servers for testing.
+        type: str
+        default: https://iam.cloud.ibm.com/identity/token
     state:
         description:
             - C(absent) - An ordering service matching the specified name will be stopped and removed.
@@ -43,31 +74,6 @@ options:
         choices:
             - absent
             - present
-    api_endpoint:
-        description:
-            - The URL for the IBM Blockchain Platform console.
-        type: str
-    api_authtype:
-        description:
-            - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide
-              a valid API key using I(ibp_api_key).
-            - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a
-              valid API key using I(ibp_api_key) and API secret using I(ibp_api_secret).
-        type: str
-    api_key:
-        description:
-            - The API key for the IBM Blockchain Platform console.
-        type: str
-    api_secret:
-        description:
-            - The API secret for the IBM Blockchain Platform console.
-            - Only required when I(ibp_api_authtype) is C(basic).
-        type: str
-    api_timeout:
-        description:
-            - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
-        default: 60
     name:
         description:
             - The name for the ordering service.
@@ -353,6 +359,7 @@ def main():
         api_key=dict(type='str', required=True),
         api_secret=dict(type='str'),
         api_timeout=dict(type='int', default=60),
+        api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
         msp_id=dict(type='str'),
         orderer_type=dict(type='str', default='raft', choices=['raft']),

@@ -8,7 +8,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} CA"
     config_override:
       ca:
@@ -66,7 +67,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} CA"
   register: ca
 
@@ -80,7 +82,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     certificate_authority: "{{ organization_name }} CA"
     name: "{{ organization_name }} CA Admin"
     enrollment_id: "{{ ca_admin_enrollment_id }}"
@@ -107,7 +110,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     certificate_authority: "{{ organization_name }} CA"
     name: "{{ organization_name }} Admin"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
@@ -134,7 +138,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ organization_name }} CA"
@@ -149,7 +154,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }}"
   register: organization
 
@@ -163,7 +169,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} Peer"
     msp_id: "{{ organization_msp_id }}"
     state_db: couchdb
@@ -183,7 +190,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} Peer"
   register: peer
 
