@@ -8,7 +8,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} CA"
 
 - name: Delete certificate authority admin
@@ -17,7 +18,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
 
 - name: Delete organization admin
@@ -26,7 +28,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
 
 - name: Delete organization
@@ -35,7 +38,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }}"
 
 - name: Delete peer
@@ -44,7 +48,8 @@
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} Peer"
     # HACK: this shouldn't be required
     config: {}

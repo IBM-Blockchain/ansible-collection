@@ -42,10 +42,10 @@ options:
         type: str
     api_authtype:
         description:
-            - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide
-              a valid API key using I(ibp_api_key).
-            - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a
-              valid API key using I(ibp_api_key) and API secret using I(ibp_api_secret).
+            - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
+              You must provide a valid API key using I(api_key).
+            - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
+              You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
     api_key:
         description:
@@ -54,13 +54,19 @@ options:
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
-            - Only required when I(ibp_api_authtype) is C(basic).
+            - Only required when I(api_authtype) is C(basic).
         type: str
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: int
+        type: integer
         default: 60
+    api_token_endpoint:
+        description:
+            - The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+            - Only required when I(api_authtype) is C(ibmcloud), and you are using IBM internal staging servers for testing.
+        type: str
+        default: https://iam.cloud.ibm.com/identity/token
     operation:
         description:
             - C(create) - Create a channel configuration update transaction for a new channel.
@@ -447,6 +453,7 @@ def main():
         api_key=dict(type='str'),
         api_secret=dict(type='str'),
         api_timeout=dict(type='int', default=60),
+        api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         operation=dict(type='str', required=True, choices=['create', 'fetch', 'compute_update', 'sign_update', 'apply_update']),
         ordering_service=dict(type='str'),
         identity=dict(type='raw'),

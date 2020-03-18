@@ -16,7 +16,8 @@
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         name: Ordering Service
       register: ordering_service
 
@@ -30,7 +31,8 @@
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         ordering_service: Ordering Service
         identity: Org1 Admin.json
         msp_id: Org1MSP
@@ -49,7 +51,8 @@
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         organization: Org2
         path: updated_config.bin
 
@@ -79,7 +82,8 @@
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         ordering_service: Ordering Service
         identity: Org1 Admin.json
         msp_id: Org1MSP
@@ -104,7 +108,8 @@
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: apply_update
         ordering_service: Ordering Service
         identity: Org1 Admin.json

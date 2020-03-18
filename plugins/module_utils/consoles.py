@@ -16,9 +16,10 @@ import urllib.parse
 
 class Console:
 
-    def __init__(self, api_endpoint, api_timeout):
+    def __init__(self, api_endpoint, api_timeout, api_token_endpoint):
         self.api_endpoint = api_endpoint
         self.api_timeout = api_timeout
+        self.api_token_endpoint = api_token_endpoint
         self.authorization = None
 
     def login(self, api_authtype, api_key, api_secret):
@@ -42,7 +43,7 @@ class Console:
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-            auth_response = open_url(url='https://iam.cloud.ibm.com/identity/token', method='POST', headers=headers, data=data, timeout=self.api_timeout)
+            auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
             auth = json.load(auth_response)
             access_token = auth['access_token']
             self.authorization = f'Bearer {access_token}'

@@ -26,7 +26,8 @@ def get_console(module):
     api_key = module.params['api_key']
     api_secret = module.params['api_secret']
     api_timeout = module.params['api_timeout']
-    console = Console(api_endpoint, api_timeout)
+    api_token_endpoint = module.params['api_token_endpoint']
+    console = Console(api_endpoint, api_timeout, api_token_endpoint)
     console.login(api_authtype, api_key, api_secret)
     return console
 
