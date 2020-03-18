@@ -178,7 +178,7 @@
     enrollment_id: "{{ ordering_service_enrollment_id }}"
     enrollment_secret: "{{ ordering_service_enrollment_secret }}"
     admin_certificates:
-      - "{{ org_admin.cert | default(omit) }}"
+      - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
   register: ordering_service
 
 - name: Print ordering service
