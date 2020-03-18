@@ -18,6 +18,7 @@ import json
 import os
 import tempfile
 import time
+import urllib
 
 class CertificateAuthority:
 
@@ -86,7 +87,8 @@ class CertificateAuthority:
         started = False
         for x in range(timeout):
             try:
-                response = open_url(f'{self.operations_url}/healthz', None, None, method='GET', validate_certs=False)
+                url = urllib.parse.urljoin(self.operations_url, '/healthz')
+                response = open_url(url, None, None, method='GET', validate_certs=False)
                 if response.code == 200:
                     healthz = json.load(response)
                     if healthz['status'] == 'OK':

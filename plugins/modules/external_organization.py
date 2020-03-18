@@ -11,7 +11,6 @@ from ..module_utils.organizations import Organization
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.urls import open_url
 from ansible.module_utils._text import to_native
 
 import json
