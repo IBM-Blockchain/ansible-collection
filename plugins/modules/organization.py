@@ -15,6 +15,7 @@ from ansible.module_utils.urls import open_url
 from ansible.module_utils._text import to_native
 
 import json
+import urllib
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -332,8 +333,10 @@ def get_from_certificate_authority(console, module):
     certificate_authority = get_certificate_authority_by_module(console, module)
 
     # Get the certificate authority information.
-    response = open_url(f'{certificate_authority.api_url}/cainfo?ca={certificate_authority.ca_name}', None, None, method='GET', validate_certs=False)
+    url = urllib.parse.urljoin(certificate_authority.api_url, f'/cainfo?ca={certificate_authority.ca_name}')
+    response = open_url(url, None, None, method='GET', validate_certs=False)
     cainfo = json.load(response)
+    url = urllib.parse.urljoin(certificate_authority.api_url, f'/cainfo?ca={certificate_authority.tlsca_name}')
     response = open_url(f'{certificate_authority.api_url}/cainfo?ca={certificate_authority.tlsca_name}', None, None, method='GET', validate_certs=False)
     tlscainfo = json.load(response)
 
