@@ -30,7 +30,8 @@ class Console:
         else:
             raise AnsibleActionFail(f'invalid authentication type "{api_authtype}" specified, valid values are "ibmcloud" and "basic"')
         try:
-            self.get_health()
+            self.health = self.get_health()
+            self.settings = self.get_settings()
         except Exception as e:
             raise AnsibleActionFail(f'Failed to access IBM Blockchain Platform console: {e}')
 
@@ -70,6 +71,19 @@ class Console:
             return json.load(response)
         except Exception as e:
             return self.handle_error('Failed to get console health', e)
+
+    def get_settings(self):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/settings')
+        headers = {
+            'Accepts': 'application/json',
+            'Authorization': self.authorization
+        }
+        try:
+            response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+            return json.load(response)
+        except Exception as e:
+            return self.handle_error('Failed to get console settings', e)
 
     def get_all_components(self, deployment_attrs='omitted'):
         self._ensure_loggedin()
@@ -409,3 +423,6 @@ class Console:
             raise AnsibleActionFail(f'{message}: HTTP status code {error.code}: {str}')
         else:
             raise AnsibleActionFail(f'{message}: {error}')
+
+    def is_free_cluster(self):
+        return self.settings.get('CLUSTER_DATA', dict()).get('type', None) == 'free'
