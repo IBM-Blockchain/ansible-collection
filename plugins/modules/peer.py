@@ -447,6 +447,11 @@ def main():
         # Log in to the IBP console.
         console = get_console(module)
 
+        # Determine if the peer exists.
+        name = module.params['name']
+        peer = console.get_component_by_display_name(name, deployment_attrs='included')
+        peer_exists = peer is not None
+
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
         # otherwise they cause a mismatch with the values that actually get set.
@@ -454,13 +459,9 @@ def main():
             actual_params = _load_params()
             if 'resources' in actual_params or 'storage' in actual_params:
                 raise Exception(f'Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
-            module.params['resources'] = dict()
-            module.params['storage'] = dict()
-
-        # Determine if the peer exists.
-        name = module.params['name']
-        peer = console.get_component_by_display_name(name, deployment_attrs='included')
-        peer_exists = peer is not None
+            if peer_exists:
+                module.params['resources'] = dict()
+                module.params['storage'] = dict()
 
         # If the peer should not exist, handle that now.
         state = module.params['state']

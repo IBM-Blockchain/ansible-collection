@@ -370,7 +370,7 @@ def main():
         admin_certificates=dict(type='list', elements='str'),
         nodes=dict(type='int'),
         config=dict(type='list', elements='dict'),
-        config_override=dict(type='dict', default=dict()),
+        config_override=dict(type='list'),
         resources=dict(type='dict', default=dict(), options=dict(
             orderer=dict(type='dict', default=dict(), options=dict(
                 requests=dict(type='dict', default=dict(), options=dict(
@@ -422,6 +422,11 @@ def main():
         # Log in to the IBP console.
         console = get_console(module)
 
+        # Determine if the ordering service exists.
+        name = module.params['name']
+        ordering_service = console.get_components_by_cluster_name(name, deployment_attrs='included')
+        ordering_service_exists = len(ordering_service) > 0
+
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
         # otherwise they cause a mismatch with the values that actually get set.
@@ -429,13 +434,9 @@ def main():
             actual_params = _load_params()
             if 'resources' in actual_params or 'storage' in actual_params:
                 raise Exception(f'Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
-            module.params['resources'] = dict()
-            module.params['storage'] = dict()
-
-        # Determine if the ordering service exists.
-        name = module.params['name']
-        ordering_service = console.get_components_by_cluster_name(name, deployment_attrs='included')
-        ordering_service_exists = len(ordering_service) > 0
+            if ordering_service_exists:
+                module.params['resources'] = dict()
+                module.params['storage'] = dict()
 
         # If the ordering service should not exist, handle that now.
         state = module.params['state']
@@ -493,16 +494,10 @@ def main():
             nodes = module.params['nodes']
             if nodes != len(ordering_service):
                 raise Exception(f'nodes cannot be changed from {len(ordering_service)} to {nodes} for existing ordering service')
-
-            # Extract the expected ordering service node configuration.
-            expected_ordering_service_node = dict(
-                msp_id=module.params['msp_id'],
-                orderer_type=module.params['orderer_type'],
-                system_channel_id=module.params['system_channel_id'],
-                config_override=module.params['config_override'],
-                resources=module.params['resources'],
-                storage=module.params['storage']
-            )
+            config_override_list = module.params['config_override']
+            if config_override_list is not None:
+                if len(config_override_list) != nodes:
+                    raise Exception(f'Number of nodes is {nodes}, but only {len(config_override_list)} config override objects provided')
 
             # Go through each ordering service node.
             i = 0
@@ -516,6 +511,22 @@ def main():
                     if thing in ordering_service_node['resources']:
                         if 'limits' in ordering_service_node['resources'][thing]:
                             del ordering_service_node['resources'][thing]['limits']
+
+                # Get the config overrides.
+                if config_override_list is not None:
+                    config_override = config_override[i]
+                else:
+                    config_override = dict()
+
+                # Extract the expected ordering service node configuration.
+                expected_ordering_service_node = dict(
+                    msp_id=module.params['msp_id'],
+                    orderer_type=module.params['orderer_type'],
+                    system_channel_id=module.params['system_channel_id'],
+                    config_override=config_override,
+                    resources=module.params['resources'],
+                    storage=module.params['storage']
+                )
 
                 # Update the ordering service node configuration.
                 new_ordering_service_node = copy_dict(ordering_service_node)
