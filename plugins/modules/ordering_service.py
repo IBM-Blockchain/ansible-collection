@@ -10,7 +10,7 @@ from ..module_utils.ordering_services import OrderingService
 from ..module_utils.dict_utils import merge_dicts, equal_dicts, copy_dict, diff_dicts
 from ..module_utils.utils import get_console, get_ordering_service_by_name, get_certificate_authority_by_module
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, _load_params
 from ansible.module_utils._text import to_native
 
 import json
@@ -370,9 +370,27 @@ def main():
         admin_certificates=dict(type='list', elements='str'),
         nodes=dict(type='int'),
         config=dict(type='list', elements='dict'),
-        config_override=dict(type='raw'),
-        resources=dict(type='dict'),
-        storage=dict(type='dict'),
+        config_override=dict(type='dict', default=dict()),
+        resources=dict(type='dict', default=dict(), options=dict(
+            orderer=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='250m'),
+                    memory=dict(type='str', default='500M')
+                ))
+            )),
+            proxy=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='100m'),
+                    memory=dict(type='str', default='200M')
+                ))
+            ))
+        )),
+        storage=dict(type='dict', default=dict(), options=dict(
+            orderer=dict(type='dict', default=dict(), options={
+                'size': dict(type='str', default='100Gi'),
+                'class': dict(type='str', default='default')
+            })
+        )),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -404,20 +422,35 @@ def main():
         # Log in to the IBP console.
         console = get_console(module)
 
+        # If this is a free cluster, we cannot accept resource/storage configuration,
+        # as these are ignored for free clusters. We must also delete the defaults,
+        # otherwise they cause a mismatch with the values that actually get set.
+        if console.is_free_cluster():
+            actual_params = _load_params()
+            if 'resources' in actual_params or 'storage' in actual_params:
+                raise Exception(f'Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
+            module.params['resources'] = dict()
+            module.params['storage'] = dict()
+
         # Determine if the ordering service exists.
         name = module.params['name']
         ordering_service = console.get_components_by_cluster_name(name, deployment_attrs='included')
         ordering_service_exists = len(ordering_service) > 0
 
-        # Extract the ordering service configuration.
-        msp_id = module.params['msp_id']
-        orderer_type = module.params['orderer_type']
-        system_channel_id = module.params['system_channel_id']
-        resources = module.params['resources']
-        storage = module.params['storage']
+        # If the ordering service should not exist, handle that now.
+        state = module.params['state']
+        if state == 'absent' and ordering_service_exists:
+
+            # The ordering service should not exist, so delete it.
+            console.delete_ordering_service(ordering_service[0]['cluster_id'])
+            return module.exit_json(changed=True)
+
+        elif state == 'absent':
+
+            # The ordering service should not exist and doesn't.
+            return module.exit_json(changed=False)
 
         # Handle appropriately based on state.
-        state = module.params['state']
         changed = False
         if state == 'present' and not ordering_service_exists:
 
@@ -437,128 +470,72 @@ def main():
                     config_override.append(dict())
                     i = i + 1
 
-            # Set the default configuration.
-            new_ordering_service = dict(
+            # Extract the expected ordering service configuration.
+            expected_ordering_service = dict(
                 display_name=name,
                 cluster_name=name,
-                msp_id=msp_id,
-                orderer_type=orderer_type,
-                system_channel_id=system_channel_id,
+                msp_id=module.params['msp_id'],
+                orderer_type=module.params['orderer_type'],
+                system_channel_id=module.params['system_channel_id'],
                 config=config,
                 config_override=config_override,
-                resources=dict(
-                    orderer=dict(
-                        requests=dict(
-                            cpu='250m',
-                            memory='500M'
-                        )
-                    ),
-                    proxy=dict(
-                        requests=dict(
-                            cpu='100m',
-                            memory='200M'
-                        )
-                    )
-                ),
-                storage=dict(
-                    orderer=dict(
-                        size='100Gi'
-                    )
-                )
+                resources=module.params['resources'],
+                storage=module.params['storage']
             )
 
-            # Merge the user provided configuration over the defaults.
-            if resources is not None:
-                merge_dicts(new_ordering_service['resources'], resources)
-            if storage is not None:
-                merge_dicts(new_ordering_service['storage'] ,resources)
-
             # Create the ordering service.
-            ordering_service = console.create_ordering_service(new_ordering_service)
+            ordering_service = console.create_ordering_service(expected_ordering_service)
             changed = True
 
         elif state == 'present' and ordering_service_exists:
 
-            # Check to see if the number of nodes has changed.
+            # Check to see if the number of ordering service nodes has changed.
             nodes = module.params['nodes']
             if nodes != len(ordering_service):
                 raise Exception(f'nodes cannot be changed from {len(ordering_service)} to {nodes} for existing ordering service')
 
-            # Go through each node.
+            # Extract the expected ordering service node configuration.
+            expected_ordering_service_node = dict(
+                msp_id=module.params['msp_id'],
+                orderer_type=module.params['orderer_type'],
+                system_channel_id=module.params['system_channel_id'],
+                config_override=module.params['config_override'],
+                resources=module.params['resources'],
+                storage=module.params['storage']
+            )
+
+            # Go through each ordering service node.
             i = 0
             while i < len(ordering_service):
 
-                # Get the node.
-                node = ordering_service[i]
-                # TODO: remove hack for bug
-                if isinstance(node.get('config_override', None), list):
-                    node['config_override'] = node['config_override'][i]
-                elif node.get('config_override', None) is None:
-                    node['config_override'] = dict()
-                new_node = copy_dict(node)
+                # Get the ordering service node.
+                ordering_service_node = ordering_service[i]
 
-                # Check to see if the config overrides have changed.
-                config_override = module.params['config_override']
-                if config_override is not None:
-                    new_node['config_override'] = config_override
-                else:
-                    new_node['config_override'] = dict()
+                # HACK: never send the limits back, as they are rejected.
+                for thing in ['orderer', 'proxy']:
+                    if thing in ordering_service_node['resources']:
+                        if 'limits' in ordering_service_node['resources'][thing]:
+                            del ordering_service_node['resources'][thing]['limits']
 
-                # Check to see if the resources have changed.
-                new_resources=dict(
-                    orderer=dict(
-                        requests=dict(
-                            cpu='250m',
-                            memory='500M'
-                        )
-                    ),
-                    proxy=dict(
-                        requests=dict(
-                            cpu='100m',
-                            memory='200M'
-                        )
-                    )
-                )
-                if resources is not None:
-                    merge_dicts(new_resources, resources)
-                merge_dicts(new_node['resources'], new_resources)
-
-                # Check to see if the storage has changed.
-                new_storage = dict(
-                    orderer=dict(
-                        size='100Gi'
-                    )
-                )
-                if storage is not None:
-                    merge_dicts(new_storage, storage)
-                merge_dicts(new_node['storage'], new_storage)
+                # Update the ordering service node configuration.
+                new_ordering_service_node = copy_dict(ordering_service_node)
+                merge_dicts(new_ordering_service_node, expected_ordering_service_node)
 
                 # Check to see if any banned changes have been made.
                 banned_changes = ['msp_id', 'orderer_type', 'system_channel_id', 'storage']
-                diff = diff_dicts(node, new_node)
+                diff = diff_dicts(ordering_service_node, new_ordering_service_node)
                 for banned_change in banned_changes:
                     if banned_change in diff:
-                        raise Exception(f'{banned_change} cannot be changed from {node[banned_change]} to {new_node[banned_change]} for existing ordering service')
+                        raise Exception(f'{banned_change} cannot be changed from {ordering_service_node[banned_change]} to {new_ordering_service_node[banned_change]} for existing ordering service node')
 
-                # If the node has changed, apply the changes.
-                node_changed = not equal_dicts(node, new_node)
-                if node_changed:
-                    ordering_service[i] = console.update_ordering_service_node(new_node['id'], new_node)
+                # If the ordering service node has changed, apply the changes.
+                ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
+                if ordering_service_node_changed:
+                    ordering_service[i] = console.update_ordering_service_node(new_ordering_service_node['id'], new_ordering_service_node)
                     changed = True
 
-                # Move to the next node.
+                # Move to the next ordering service node.
                 i = i + 1
-
-        elif state == 'absent' and ordering_service_exists:
-
-            # The ordering service should not exist, so delete it.
-            console.delete_ordering_service(ordering_service[0]['cluster_id'])
-            return module.exit_json(changed=True)
-
-        else:
-
-            # The ordering service should not exist and doesn't.
-            return module.exit_json(changed=False)
 
         # Wait for the ordering service to start.
         ordering_service = OrderingService.from_json(console.extract_ordering_service_info(ordering_service))

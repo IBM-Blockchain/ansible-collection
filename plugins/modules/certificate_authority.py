@@ -10,7 +10,7 @@ from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_
 from ..module_utils.certificate_authorities import CertificateAuthority
 from ..module_utils.utils import get_console
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, _load_params
 from ansible.module_utils._text import to_native
 
 import json
@@ -228,6 +228,16 @@ def main():
 
         # Log in to the IBP console.
         console = get_console(module)
+
+        # If this is a free cluster, we cannot accept resource/storage configuration,
+        # as these are ignored for free clusters. We must also delete the defaults,
+        # otherwise they cause a mismatch with the values that actually get set.
+        if console.is_free_cluster():
+            actual_params = _load_params()
+            if 'resources' in actual_params or 'storage' in actual_params:
+                raise Exception(f'Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
+            module.params['resources'] = dict()
+            module.params['storage'] = dict()
 
         # Determine if the certificate authority exists.
         name = module.params['name']
