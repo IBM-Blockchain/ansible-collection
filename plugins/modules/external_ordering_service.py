@@ -335,12 +335,13 @@ def main():
 
                 # Build the new ordering service node, including any defaults.
                 new_ordering_service_node = copy_dict(ordering_service_node)
-                merge_dicts(ordering_service_node, expected_ordering_service_node)
+                merge_dicts(new_ordering_service_node, expected_ordering_service_node)
 
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
                 if ordering_service_node_changed:
-                    ordering_service_node = console.update_ext_ordering_service_node(new_ordering_service_node['id'], new_ordering_service_node)
+                    console.delete_ext_ordering_service_node(new_ordering_service_node['id'])
+                    ordering_service_node = console.create_ext_ordering_service_node(expected_ordering_service_node)
                     ordering_service.append(ordering_service_node)
                     changed = True
 
