@@ -13,6 +13,7 @@ from ansible.module_utils.urls import open_url
 import base64
 import json
 import os
+import re
 import shutil
 import subprocess
 import urllib
@@ -118,13 +119,7 @@ class PeerConnection:
         shutil.rmtree(self.msp_path)
 
     def list_channels(self):
-        api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
-        env = os.environ.copy()
-        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
-        env['CORE_PEER_LOCALMSPID'] = self.msp_id
-        env['CORE_PEER_ADDRESS'] = api_url_parsed.netloc
-        env['CORE_PEER_TLS_ENABLED'] = 'true'
-        env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
+        env = self._get_environ()
         process = subprocess.run([
             'peer', 'channel', 'list'
         ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
@@ -138,9 +133,73 @@ class PeerConnection:
                     channels.append(line)
             return channels
         else:
-            raise Exception(f'Failed to fetch block from ordering service node: {process.stdout}')
+            raise Exception(f'Failed to list channels on peer: {process.stdout}')
 
     def join_channel(self, path):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'channel', 'join', '-b', path
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to join channel on peer: {process.stdout}')
+
+    def list_installed_chaincodes(self):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'chaincode', 'list', '--installed'
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            chaincodes = list()
+            found_marker = False
+            for line in process.stdout.splitlines():
+                if line.endswith('installed chaincodes on peer:'):
+                    found_marker = True
+                elif found_marker:
+                    p = re.compile('^Name: (.+), Version: (.+), Path: (.+), Id: (.+)$')
+                    m = p.match(line)
+                    if m is None:
+                        continue
+                    (name, version, path, id) = m.groups()
+                    chaincodes.append(dict(name=name, version=version, path=path, id=id))
+            return chaincodes
+        else:
+            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+
+    def install_chaincode(self, path):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'chaincode', 'install', path
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to install chaincode on peer: {process.stdout}')
+
+    def list_instantiated_chaincodes(self, channel):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'chaincode', 'list', '--instantiated', '-C', channel
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            chaincodes = list()
+            found_marker = False
+            for line in process.stdout.splitlines():
+                if line.endswith(f'instantiated chaincodes on channel {channel}:'):
+                    found_marker = True
+                elif found_marker:
+                    p = re.compile('^Name: (.+), Version: (.+), Path: (.+), Input: (.+), Escc: (.+), Vscc: (.+)$')
+                    m = p.match(line)
+                    if m is None:
+                        continue
+                    (name, version, path, id) = m.groups()
+                    chaincodes.append(dict(name=name, version=version, path=path, id=id))
+            return chaincodes
+        else:
+            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+
+    def _get_environ(self):
         api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
         env = os.environ.copy()
         env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
@@ -148,10 +207,4 @@ class PeerConnection:
         env['CORE_PEER_ADDRESS'] = api_url_parsed.netloc
         env['CORE_PEER_TLS_ENABLED'] = 'true'
         env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
-        process = subprocess.run([
-            'peer', 'channel', 'join', '-b', path
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
-        if process.returncode == 0:
-            return
-        else:
-            raise Exception(f'Failed to fetch block from ordering service node: {process.stdout}')
+        return env
