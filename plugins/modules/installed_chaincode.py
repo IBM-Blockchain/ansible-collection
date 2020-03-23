@@ -119,9 +119,9 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
-chaincode:
+installed_chaincode:
     description:
-        - The chaincode.
+        - The installed chaincode.
     type: dict
     contains:
         name:
@@ -231,14 +231,14 @@ def main():
             # an exception.
             if id != installed_chaincode['id']:
                 raise Exception(f'cannot update installed chaincode {name}@{version} with ID {installed_chaincode["id"]}')
-            return module.exit_json(changed=False, chaincode=dict(name=name, version=version, id=id))
+            return module.exit_json(changed=False, installed_chaincode=dict(name=name, version=version, id=id))
 
         else:
 
             # Install the chaincode.
             with peer.connect(identity, msp_id) as peer_connection:
                 peer_connection.install_chaincode(path)
-            return module.exit_json(changed=True, chaincode=dict(name=name, version=version, id=id))
+            return module.exit_json(changed=True, installed_chaincode=dict(name=name, version=version, id=id))
 
     # Notify Ansible of the exception.
     except Exception as e:

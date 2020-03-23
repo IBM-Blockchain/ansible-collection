@@ -1,0 +1,26 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Instantiate chaincode
+  hosts: localhost
+  vars:
+    # These variables should be supplied using --extra-vars "@org1-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  tasks:
+    - name: Instantiate the chaincode on the channel
+      ibm.blockchain_platform.instantiated_chaincode:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
