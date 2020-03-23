@@ -172,6 +172,22 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
     This playbook adds Org2's peer as an anchor peer for the channel mychannel.
 
+18. Install the FabCar chaincode on the peer
+
+    - Organization: Org1
+    - Playbook: [18-install-chaincode.yml](18-install-chaincode.yml)
+    - Command: `ansible-playbook 18-install-chaincode.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook installs the FabCar chaincode onto Org1's peer.
+
+19. Install the FabCar chaincode on the peer
+
+    - Organization: Org2
+    - Playbook: [19-install-chaincode.yml](19-install-chaincode.yml)
+    - Command: `ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook installs the FabCar chaincode onto Org2's peer.
+
 ## Cleaning up
 
 1. Delete the components for the endorsing organization Org1
