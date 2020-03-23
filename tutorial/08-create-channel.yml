@@ -11,6 +11,23 @@
     # api_key: xxxxxxxx
     # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   tasks:
+    - name: Check to see if the channel already exists
+      ibm.blockchain_platform.channel_block:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        operation: fetch
+        ordering_service: Ordering Service
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        name: mychannel
+        target: "0"
+        path: channel_genesis_block.bin
+      failed_when: False
+      register: result
+
     - name: Create the configuration update for the new channel
       ibm.blockchain_platform.channel_config:
         api_endpoint: "{{ api_endpoint }}"
@@ -27,6 +44,7 @@
           Admins: 08-admins-policy.json
           Readers: 08-readers-policy.json
           Writers: 08-writers-policy.json
+      when: result.failed
 
     - name: Sign the channel configuration update for the new channel
       ibm.blockchain_platform.channel_config:
@@ -35,6 +53,7 @@
         msp_id: Org1MSP
         name: mychannel
         path: config_update.bin
+      when: result.failed
 
     - name: Apply the channel configuration update for the new channel
       ibm.blockchain_platform.channel_config:
@@ -49,3 +68,4 @@
         msp_id: Org1MSP
         name: mychannel
         path: config_update.bin
+      when: result.failed
