@@ -188,6 +188,14 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
     This playbook installs the FabCar chaincode onto Org2's peer.
 
+20. Instantiate the FabCar chaincode on the channel
+
+    - Organization: Org1
+    - Playbook: [20-instantiate-chaincode.yml](20-instantiate-chaincode.yml)
+    - Command: `ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook installs the FabCar chaincode onto Org2's peer.
+
 ## Cleaning up
 
 1. Delete the components for the endorsing organization Org1
