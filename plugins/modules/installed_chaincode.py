@@ -16,8 +16,8 @@ import base64
 import hashlib
 
 NSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
+                   'status': ['preview'],
+                   'supported_by': 'community'}
 
 DOCUMENTATION = '''
 ---
@@ -138,6 +138,7 @@ installed_chaincode:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -243,6 +244,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

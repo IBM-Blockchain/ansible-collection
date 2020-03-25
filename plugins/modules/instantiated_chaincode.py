@@ -6,19 +6,16 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.proto_utils import proto_to_json
 from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
-import base64
-import hashlib
 import json
 
 NSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
+                   'status': ['preview'],
+                   'supported_by': 'community'}
 
 DOCUMENTATION = '''
 ---
@@ -179,6 +176,7 @@ instantiated_chaincode:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -266,7 +264,7 @@ def main():
 
         # Handle the chaincode when it should be present.
         changed = False
-        if state == 'present' and instantiated_chaincode_name_and_version:
+        if state == 'present' and chaincode_instantiated_exact:
 
             # Check that the ESCC and VSCC match. If they don't, we
             # cannot update the instantiated version, so throw an
@@ -296,6 +294,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

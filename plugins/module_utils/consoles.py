@@ -11,8 +11,8 @@ from ansible.module_utils.urls import open_url
 
 import base64
 import json
-import time
 import urllib.parse
+
 
 class Console:
 
@@ -259,7 +259,7 @@ class Console:
             'Authorization': self.authorization
         }
         try:
-            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
         except Exception as e:
             return self.handle_error('Failed to delete ordering service', e)
 
@@ -311,7 +311,7 @@ class Console:
             'Authorization': self.authorization
         }
         try:
-            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
         except Exception as e:
             return self.handle_error('Failed to delete external ordering service', e)
 
@@ -354,7 +354,7 @@ class Console:
             'Authorization': self.authorization
         }
         try:
-            response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+            open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
         except Exception as e:
             return self.handle_error('Failed to delete external ordering service node', e)
 
@@ -418,7 +418,7 @@ class Console:
             str = error.read()
             try:
                 str = json.loads(str)
-            except:
+            except Exception:
                 pass
             raise AnsibleActionFail(f'{message}: HTTP status code {error.code}: {str}')
         else:

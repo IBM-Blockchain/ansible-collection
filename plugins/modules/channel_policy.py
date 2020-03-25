@@ -7,9 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
-from ..module_utils.msp_utils import organization_to_msp
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_organization_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
@@ -71,6 +69,7 @@ EXAMPLES = '''
 RETURN = '''
 ---
 '''
+
 
 def main():
 
@@ -146,6 +145,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

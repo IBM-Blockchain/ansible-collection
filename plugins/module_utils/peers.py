@@ -18,10 +18,10 @@ import random
 import re
 import shutil
 import subprocess
-import urllib
 import tempfile
 import time
 import urllib
+
 
 class Peer:
 
@@ -36,13 +36,13 @@ class Peer:
 
     def clone(self):
         return Peer(
-            name = self.name,
-            api_url = self.api_url,
-            operations_url = self.operations_url,
-            grpcwp_url = self.grpcwp_url,
-            msp_id = self.msp_id,
-            pem = self.pem,
-            location = self.location
+            name=self.name,
+            api_url=self.api_url,
+            operations_url=self.operations_url,
+            grpcwp_url=self.grpcwp_url,
+            msp_id=self.msp_id,
+            pem=self.pem,
+            location=self.location
         )
 
     def equals(self, other):
@@ -58,15 +58,15 @@ class Peer:
 
     def to_json(self):
         return dict(
-            name = self.name,
-            api_url = self.api_url,
-            operations_url = self.operations_url,
-            grpcwp_url = self.grpcwp_url,
+            name=self.name,
+            api_url=self.api_url,
+            operations_url=self.operations_url,
+            grpcwp_url=self.grpcwp_url,
             type='fabric-peer',
-            msp_id = self.msp_id,
-            pem = self.pem,
-            tls_cert = self.pem,
-            location = self.location
+            msp_id=self.msp_id,
+            pem=self.pem,
+            tls_cert=self.pem,
+            location=self.location
         )
 
     @staticmethod
@@ -92,7 +92,7 @@ class Peer:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except:
+            except Exception:
                 pass
             time.sleep(1)
         if not started:
@@ -100,6 +100,7 @@ class Peer:
 
     def connect(self, identity, msp_id):
         return PeerConnection(self, identity, msp_id)
+
 
 class PeerConnection:
 

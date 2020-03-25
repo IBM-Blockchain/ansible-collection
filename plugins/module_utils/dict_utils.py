@@ -9,8 +9,10 @@ __metaclass__ = type
 import collections
 import json
 
+
 def copy_dict(source):
     return json.loads(json.dumps(source))
+
 
 def merge_dicts(target, source):
     for key, value in source.items():
@@ -18,6 +20,7 @@ def merge_dicts(target, source):
             merge_dicts(target[key], source[key])
         else:
             target[key] = source[key]
+
 
 def diff_dicts(target, source):
     result = dict()
@@ -28,8 +31,8 @@ def diff_dicts(target, source):
                 result[key] = sub_result
         elif target.get(key, None) != source[key]:
             result[key] = source[key]
-            diff = True
     return result
+
 
 def equal_dicts(source1, source2):
     json1 = json.dumps(source1, sort_keys=True)

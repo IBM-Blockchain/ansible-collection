@@ -9,11 +9,9 @@ __metaclass__ = type
 from ..module_utils.enrolled_identities import EnrolledIdentity
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
 
-from ansible.errors import AnsibleActionFail
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
-import base64
 import json
 import os
 import os.path
@@ -131,6 +129,7 @@ enrolled_identity:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -148,7 +147,7 @@ def main():
         enrollment_secret=dict(type='str'),
         path=dict(type='str', required=True)
     )
-    required_if= [
+    required_if = [
         ('api_authtype', 'basic', ['api_secret']),
         ('state', 'present', ['certificate_authority', 'name', 'enrollment_id', 'enrollment_secret'])
     ]
@@ -211,6 +210,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

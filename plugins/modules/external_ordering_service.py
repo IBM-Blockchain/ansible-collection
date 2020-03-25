@@ -6,14 +6,12 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
 from ..module_utils.ordering_services import OrderingService
-from ..module_utils.utils import get_console, get_certificate_authority_by_module
+from ..module_utils.utils import get_console
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
-
-import json
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -211,6 +209,7 @@ ordering_service:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -352,6 +351,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

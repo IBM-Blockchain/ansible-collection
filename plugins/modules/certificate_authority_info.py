@@ -122,6 +122,7 @@ certificate_authority:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -163,6 +164,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

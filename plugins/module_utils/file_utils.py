@@ -10,10 +10,12 @@ import hashlib
 import os
 import tempfile
 
+
 def get_temp_file():
     temp = tempfile.mkstemp()
     os.close(temp[0])
     return temp[1]
+
 
 def equal_files(file1, file2):
     with open(file1, 'rb') as file:
