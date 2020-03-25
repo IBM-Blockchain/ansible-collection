@@ -125,6 +125,24 @@ options:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
                         type: str
                         default: default
+    hsm:
+        description:
+            - The PKCS #11 compliant HSM configuration to use for the certificate authority.
+            - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
+        type: dict
+        suboptions:
+            pkcs11endpoint:
+                description:
+                    - The HSM proxy endpoint that the certificate authority should use.
+                type: str
+            label:
+                description:
+                    - The HSM label that the certificate authority should use.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that the certificate authority should use.
+                type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
@@ -212,6 +230,11 @@ def main():
                 'class': dict(type='str', default='default')
             })
         )),
+        hsm=dict(type='dict', options=dict(
+            pkcs11endpoint=dict(type='str', required=True),
+            label=dict(type='str', required=True),
+            pin=dict(type='str', required=True)
+        )),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -264,6 +287,26 @@ def main():
             resources=module.params['resources'],
             storage=module.params['storage']
         )
+
+        # Add the HSM configuration if it is specified.
+        hsm = module.params['hsm']
+        if hsm is not None:
+            pkcs11endpoint = hsm['pkcs11endpoint']
+            expected_certificate_authority['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+            bccsp = dict(
+                BCCSP=dict(
+                    Default='PKCS11',
+                    PKCS11=dict(
+                        Label=hsm['label'],
+                        Pin=hsm['pin']
+                    )
+                )
+            )
+            ca = expected_certificate_authority['config_override'].setdefault('ca', dict())
+            tlsca = expected_certificate_authority['config_override'].get('tlsca', None)
+            merge_dicts(ca, bccsp)
+            if tlsca is not None:
+                merge_dicts(tlsca, bccsp)
 
         # Either create or update the peer.
         changed = False
