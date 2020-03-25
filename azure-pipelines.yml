@@ -16,7 +16,7 @@ steps:
     inputs:
       versionSpec: "3.x"
     displayName: Use Python 3.x
-  - script: pip install ansible ansible-lint yamllint yq
+  - script: pip install ansible ansible-lint flake8 yamllint yq
     displayName: Install Python dependencies
   - script: |
       set -ex
@@ -32,15 +32,20 @@ steps:
     displayName: Download Fabric CA CLI
   - script: |
       set -ex
+      ansible-galaxy collection build
+    displayName: Build collection artifact
+  - script: |
+      set -ex
+      VERSION=$(yq -r .version galaxy.yml)
+      ansible-galaxy collection install ibm-blockchain_platform-${VERSION}.tar.gz
+    displayName: Install collection
+  - script: |
+      set -ex
       flake8 .
       ansible-lint .
       for ROLE in roles/*; do ansible-lint ${ROLE}; done
       yamllint .
-    displayName: Lint
-  - script: |
-      set -ex
-      ansible-galaxy collection build
-    displayName: Build collection artifact
+    displayName: Lint collection
   - script: |
       set -ex
       VERSION=$(yq -r .version galaxy.yml)
