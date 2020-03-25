@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+
 class Organization:
 
     def __init__(self, name, msp_id, root_certs, intermediate_certs, admins, revocation_list, tls_root_certs, tls_intermediate_certs, fabric_node_ous):
@@ -21,15 +22,15 @@ class Organization:
 
     def clone(self):
         return Organization(
-            name = self.name,
-            msp_id = self.msp_id,
-            root_certs = self.root_certs,
-            intermediate_certs = self.intermediate_certs,
-            admins = self.admins,
-            revocation_list = self.revocation_list,
-            tls_root_certs = self.tls_root_certs,
-            tls_intermediate_certs = self.tls_intermediate_certs,
-            fabric_node_ous = self.fabric_node_ous
+            name=self.name,
+            msp_id=self.msp_id,
+            root_certs=self.root_certs,
+            intermediate_certs=self.intermediate_certs,
+            admins=self.admins,
+            revocation_list=self.revocation_list,
+            tls_root_certs=self.tls_root_certs,
+            tls_intermediate_certs=self.tls_intermediate_certs,
+            fabric_node_ous=self.fabric_node_ous
         )
 
     def equals(self, other):
@@ -47,16 +48,16 @@ class Organization:
 
     def to_json(self):
         return dict(
-            name = self.name,
-            msp_id = self.msp_id,
-            root_certs = self.root_certs,
-            intermediate_certs = self.intermediate_certs,
-            admins = self.admins,
-            revocation_list = self.revocation_list,
-            tls_root_certs = self.tls_root_certs,
-            tls_intermediate_certs = self.tls_intermediate_certs,
-            fabric_node_ous = self.fabric_node_ous,
-            type = 'msp'
+            name=self.name,
+            msp_id=self.msp_id,
+            root_certs=self.root_certs,
+            intermediate_certs=self.intermediate_certs,
+            admins=self.admins,
+            revocation_list=self.revocation_list,
+            tls_root_certs=self.tls_root_certs,
+            tls_intermediate_certs=self.tls_intermediate_certs,
+            fabric_node_ous=self.fabric_node_ous,
+            type='msp'
         )
 
     @staticmethod

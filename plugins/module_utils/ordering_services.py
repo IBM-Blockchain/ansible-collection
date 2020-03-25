@@ -19,6 +19,7 @@ import tempfile
 import time
 import urllib
 
+
 class OrderingServiceNode:
 
     def __init__(self, name, api_url, operations_url, grpcwp_url, msp_id, pem, location, system_channel_id, cluster_id, cluster_name, client_tls_cert, server_tls_cert):
@@ -37,18 +38,18 @@ class OrderingServiceNode:
 
     def clone(self):
         return OrderingServiceNode(
-            name = self.name,
-            api_url = self.api_url,
-            operations_url = self.operations_url,
-            grpcwp_url = self.grpcwp_url,
-            msp_id = self.msp_id,
-            pem = self.pem,
-            location = self.location,
-            system_channel_id = self.system_channel_id,
-            cluster_id = self.cluster_id,
-            cluster_name = self.cluster_name,
-            client_tls_cert = self.client_tls_cert,
-            server_tls_cert = self.server_tls_cert
+            name=self.name,
+            api_url=self.api_url,
+            operations_url=self.operations_url,
+            grpcwp_url=self.grpcwp_url,
+            msp_id=self.msp_id,
+            pem=self.pem,
+            location=self.location,
+            system_channel_id=self.system_channel_id,
+            cluster_id=self.cluster_id,
+            cluster_name=self.cluster_name,
+            client_tls_cert=self.client_tls_cert,
+            server_tls_cert=self.server_tls_cert
         )
 
     def equals(self, other):
@@ -69,20 +70,20 @@ class OrderingServiceNode:
 
     def to_json(self):
         return dict(
-            name = self.name,
-            api_url = self.api_url,
-            operations_url = self.operations_url,
-            grpcwp_url = self.grpcwp_url,
+            name=self.name,
+            api_url=self.api_url,
+            operations_url=self.operations_url,
+            grpcwp_url=self.grpcwp_url,
             type='fabric-orderer',
-            msp_id = self.msp_id,
-            pem = self.pem,
-            tls_cert = self.pem,
-            location = self.location,
-            system_channel_id = self.system_channel_id,
-            cluster_id = self.cluster_id,
-            cluster_name = self.cluster_name,
-            client_tls_cert = self.client_tls_cert,
-            server_tls_cert = self.server_tls_cert
+            msp_id=self.msp_id,
+            pem=self.pem,
+            tls_cert=self.pem,
+            location=self.location,
+            system_channel_id=self.system_channel_id,
+            cluster_id=self.cluster_id,
+            cluster_name=self.cluster_name,
+            client_tls_cert=self.client_tls_cert,
+            server_tls_cert=self.server_tls_cert
         )
 
     @staticmethod
@@ -113,7 +114,7 @@ class OrderingServiceNode:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except:
+            except Exception:
                 pass
             time.sleep(1)
         if not started:
@@ -121,6 +122,7 @@ class OrderingServiceNode:
 
     def connect(self, identity, msp_id):
         return OrderingServiceNodeConnection(self, identity, msp_id)
+
 
 class OrderingServiceNodeConnection:
 
@@ -171,6 +173,7 @@ class OrderingServiceNodeConnection:
         else:
             raise Exception(f'Failed to update channel on ordering service node: {process.stdout}')
 
+
 class OrderingService:
 
     def __init__(self, nodes):
@@ -210,12 +213,13 @@ class OrderingService:
             try:
                 node.wait_for(timeout)
                 return
-            except:
+            except Exception:
                 pass
         raise Exception(f'Ordering service failed to start within {timeout} seconds')
 
     def connect(self, identity, msp_id):
         return OrderingServiceConnection(self, identity, msp_id)
+
 
 class OrderingServiceConnection:
 

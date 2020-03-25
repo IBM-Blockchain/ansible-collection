@@ -20,6 +20,7 @@ import tempfile
 import time
 import urllib
 
+
 class CertificateAuthority:
 
     def __init__(self, name, api_url, operations_url, ca_url, ca_name, tlsca_name, pem, location):
@@ -34,14 +35,14 @@ class CertificateAuthority:
 
     def clone(self):
         return CertificateAuthority(
-            name = self.name,
-            api_url = self.api_url,
-            operations_url = self.operations_url,
-            ca_url = self.ca_url,
-            ca_name = self.ca_name,
-            tlsca_name = self.tlsca_name,
-            pem = self.pem,
-            location = self.location
+            name=self.name,
+            api_url=self.api_url,
+            operations_url=self.operations_url,
+            ca_url=self.ca_url,
+            ca_name=self.ca_name,
+            tlsca_name=self.tlsca_name,
+            pem=self.pem,
+            location=self.location
         )
 
     def equals(self, other):
@@ -94,7 +95,7 @@ class CertificateAuthority:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except:
+            except Exception:
                 pass
             time.sleep(1)
         if not started:
@@ -102,6 +103,7 @@ class CertificateAuthority:
 
     def connect(self):
         return CertificateAuthorityConnection(self)
+
 
 class CertificateAuthorityConnection:
 

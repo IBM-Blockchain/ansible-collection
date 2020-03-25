@@ -18,9 +18,7 @@ from subprocess import CalledProcessError
 
 import json
 import os
-import shutil
 import subprocess
-import tempfile
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -159,6 +157,7 @@ path:
     type: str
 '''
 
+
 def create(module):
 
     # Log in to the IBP console.
@@ -262,7 +261,7 @@ def create(module):
             with open(path, 'rb') as file:
                 original_config_update_envelope_json = proto_to_json('common.Envelope', file.read())
             changed = diff_dicts(original_config_update_envelope_json, config_update_envelope_json)
-        except:
+        except Exception:
             changed = True
         if changed:
             with open(path, 'wb') as file:
@@ -272,6 +271,7 @@ def create(module):
         with open(path, 'wb') as file:
             file.write(config_update_envelope_proto)
         module.exit_json(changed=True, path=path)
+
 
 def fetch(module):
 
@@ -312,7 +312,7 @@ def fetch(module):
                 with open(path, 'rb') as file:
                     original_config_json = proto_to_json('common.Config', file.read())
                 changed = diff_dicts(original_config_json, config_json)
-            except:
+            except Exception:
                 changed = True
             if changed:
                 with open(path, 'wb') as file:
@@ -326,6 +326,7 @@ def fetch(module):
     # Ensure the temporary file is cleaned up.
     finally:
         os.remove(block_proto_path)
+
 
 def compute_update(module):
 
@@ -341,7 +342,7 @@ def compute_update(module):
 
         # Run the command to compute the update
         try:
-            process = subprocess.run([
+            subprocess.run([
                 'configtxlator', 'compute_update', f'--channel_id={name}', f'--original={original}', f'--updated={updated}', f'--output={config_update_proto_path}'
             ], text=True, close_fds=True, check=True, capture_output=True)
         except CalledProcessError as e:
@@ -380,7 +381,7 @@ def compute_update(module):
                 with open(path, 'rb') as file:
                     original_config_update_envelope_json = proto_to_json('common.Envelope', file.read())
                 changed = diff_dicts(original_config_update_envelope_json, config_update_envelope_json)
-            except:
+            except Exception:
                 changed = True
             if changed:
                 with open(path, 'wb') as file:
@@ -395,10 +396,10 @@ def compute_update(module):
     finally:
         os.remove(config_update_proto_path)
 
+
 def sign_update(module):
 
     # Get the channel and target path.
-    name = module.params['name']
     path = module.params['path']
 
     # Get the identity and MSP ID.
@@ -423,6 +424,7 @@ def sign_update(module):
     ], env=env, text=True, close_fds=True, check=True, capture_output=True)
     module.exit_json(changed=True, path=path)
 
+
 def apply_update(module):
 
     # Log in to the IBP console.
@@ -444,6 +446,7 @@ def apply_update(module):
         connection.update(name, path)
     module.exit_json(changed=True)
 
+
 def main():
 
     # Create the module.
@@ -462,7 +465,7 @@ def main():
         path=dict(type='str'),
         original=dict(type='str'),
         updated=dict(type='str'),
-        organizations=dict(type='list',elements='raw'),
+        organizations=dict(type='list', elements='raw'),
         policies=dict(type='dict')
     )
     required_if = [
@@ -494,6 +497,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

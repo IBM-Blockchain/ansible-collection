@@ -1,0 +1,14 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+extends: default
+rules:
+  comments-indentation: disable
+  line-length: disable
+  truthy:
+    allowed-values:
+      - "True"
+      - "true"
+      - "False"
+      - "false"

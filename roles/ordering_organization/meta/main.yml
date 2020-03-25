@@ -9,5 +9,6 @@ galaxy_info:
   platforms:
     - name: GenericLinux
       versions:
-      - all
+        - all
   galaxy_tags: []
+  min_ansible_version: 2.9

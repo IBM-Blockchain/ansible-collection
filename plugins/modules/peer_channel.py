@@ -6,21 +6,11 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.dict_utils import diff_dicts
-from ..module_utils.file_utils import get_temp_file, equal_files
-from ..module_utils.msp_utils import convert_identity_to_msp_path
-from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_identity_by_module, get_peer_by_module, get_organizations_by_module
+from ..module_utils.proto_utils import proto_to_json
+from ..module_utils.utils import get_console, get_identity_by_module, get_peer_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
-from subprocess import CalledProcessError
-
-import json
-import os
-import shutil
-import subprocess
-import tempfile
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -106,6 +96,7 @@ RETURN = '''
 ---
 '''
 
+
 def join(module):
 
     # Log in to the IBP console.
@@ -141,6 +132,7 @@ def join(module):
         connection.join_channel(path)
         module.exit_json(changed=True)
 
+
 def main():
 
     # Create the module.
@@ -174,6 +166,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

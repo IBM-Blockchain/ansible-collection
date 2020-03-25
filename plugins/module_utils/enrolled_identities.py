@@ -6,9 +6,8 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from cryptography.hazmat.primitives import serialization
-
 import base64
+
 
 class EnrolledIdentity:
 
@@ -45,4 +44,3 @@ class EnrolledIdentity:
             private_key=base64.b64decode(data['private_key']),
             ca=base64.b64decode(data['ca'])
         )
-

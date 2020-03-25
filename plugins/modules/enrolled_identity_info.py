@@ -11,7 +11,6 @@ from ..module_utils.enrolled_identities import EnrolledIdentity
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
-import base64
 import json
 import os
 import os.path
@@ -69,6 +68,7 @@ enrolled_identity:
             type: str
 '''
 
+
 def main():
 
     # Create the module.
@@ -97,6 +97,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

@@ -325,6 +325,7 @@ organization:
                             default: orderer
 '''
 
+
 def get_from_certificate_authority(console, module):
 
     # Get the certificate authority.
@@ -349,6 +350,7 @@ def get_from_certificate_authority(console, module):
             tlscainfo['result']['CAChain']
         ]
     }
+
 
 def main():
 
@@ -519,6 +521,7 @@ def main():
     # Notify Ansible of the exception.
     except Exception as e:
         module.fail_json(msg=to_native(e))
+
 
 if __name__ == '__main__':
     main()

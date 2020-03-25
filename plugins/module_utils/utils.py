@@ -13,10 +13,8 @@ from .organizations import Organization
 from .ordering_services import OrderingService, OrderingServiceNode
 from .peers import Peer
 
-import base64
 import json
-import os
-import tempfile
+
 
 def get_console(module):
 
@@ -31,6 +29,7 @@ def get_console(module):
     console.login(api_authtype, api_key, api_secret)
     return console
 
+
 def get_certificate_authority_by_name(console, name, fail_on_missing=True):
 
     # Look up the certificate authority by name.
@@ -42,6 +41,7 @@ def get_certificate_authority_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_ca_info(component)
     return CertificateAuthority.from_json(data)
+
 
 def get_certificate_authority_by_module(console, module, parameter_name='certificate_authority'):
 
@@ -61,6 +61,7 @@ def get_certificate_authority_by_module(console, module, parameter_name='certifi
     # Return the certificate authority.
     return CertificateAuthority.from_json(data)
 
+
 def get_organization_by_name(console, name, fail_on_missing=True):
 
     # Look up the organization by name.
@@ -72,6 +73,7 @@ def get_organization_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_organization_info(component)
     return Organization.from_json(data)
+
 
 def get_organization_by_module(console, module, parameter_name='organization'):
 
@@ -90,6 +92,7 @@ def get_organization_by_module(console, module, parameter_name='organization'):
 
     # Return the organization.
     return Organization.from_json(data)
+
 
 def get_organizations_by_module(console, module, parameter_name='organizations'):
 
@@ -115,6 +118,7 @@ def get_organizations_by_module(console, module, parameter_name='organizations')
     # Return the list of organizations.
     return organizations
 
+
 def get_peer_by_name(console, name, fail_on_missing=True):
 
     # Look up the peer by name.
@@ -126,6 +130,7 @@ def get_peer_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_peer_info(component)
     return Peer.from_json(data)
+
 
 def get_peer_by_module(console, module, parameter_name='peer'):
 
@@ -144,6 +149,7 @@ def get_peer_by_module(console, module, parameter_name='peer'):
 
     # Return the peer.
     return Peer.from_json(data)
+
 
 def get_peers_by_module(console, module, parameter_name='peers'):
 
@@ -169,6 +175,7 @@ def get_peers_by_module(console, module, parameter_name='peers'):
     # Return the list of organizations.
     return peers
 
+
 def get_ordering_service_by_name(console, name, fail_on_missing=True):
 
     # Look up the ordering service by name.
@@ -180,6 +187,7 @@ def get_ordering_service_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_ordering_service_info(components)
     return OrderingService.from_json(data)
+
 
 def get_ordering_service_by_module(console, module, parameter_name='ordering_service'):
 
@@ -199,6 +207,7 @@ def get_ordering_service_by_module(console, module, parameter_name='ordering_ser
     # Return the ordering service.
     return OrderingService.from_json(data)
 
+
 def get_ordering_service_node_by_name(console, name, fail_on_missing=True):
 
     # Look up the ordering service node by name.
@@ -210,6 +219,7 @@ def get_ordering_service_node_by_name(console, name, fail_on_missing=True):
             return None
     data = console.extract_ordering_service_node_info(component)
     return OrderingServiceNode.from_json(data)
+
 
 def get_ordering_service_node_by_module(console, module, parameter_name='ordering_service_node'):
 
@@ -229,6 +239,7 @@ def get_ordering_service_node_by_module(console, module, parameter_name='orderin
     # Return the ordering service.
     return OrderingServiceNode.from_json(data)
 
+
 def get_identity_by_module(module, parameter_name='identity'):
 
     # If the identity is a dictionary, then we assume that
@@ -242,4 +253,3 @@ def get_identity_by_module(module, parameter_name='identity'):
     with open(identity, 'r') as file:
         data = json.load(file)
     return EnrolledIdentity.from_json(data)
-

@@ -6,7 +6,6 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-import base64
 import os
 import tempfile
 
@@ -25,6 +24,7 @@ BocEfwAAATAKBggqhkjOPQQDAgNIADBFAiEA7OHP7yH7tE0ko6Gp98o/EkhTqo4o
 6cGACl2wEnq4tpsCIEStfRFHHweEFuPkf4Ab+nrXTGovTg35WIP+5XkpQOZf
 -----END CERTIFICATE-----
 '''
+
 
 def convert_identity_to_msp_path(identity):
 
@@ -58,6 +58,7 @@ def convert_identity_to_msp_path(identity):
 
     # Return the temporary directory (user must delete).
     return msp_path
+
 
 def organization_to_msp(organization):
 
