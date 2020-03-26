@@ -229,7 +229,7 @@ options:
                         default: 100Gi
                     class:
                         description:
-                            - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
+                            - The Kubernetes storage class for the the Kubernetes persistent volume claim for the peer container.
                         type: str
                         default: default
             statedb:
@@ -244,9 +244,27 @@ options:
                         default: 100Gi
                     class:
                         description:
-                            - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
+                            - The Kubernetes storage class for the the Kubernetes persistent volume claim for the CouchDB container.
                         type: str
                         default: default
+    hsm:
+        description:
+            - The PKCS #11 compliant HSM configuration to use for the peer.
+            - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
+        type: dict
+        suboptions:
+            pkcs11endpoint:
+                description:
+                    - The HSM proxy endpoint that the peer should use.
+                type: str
+            label:
+                description:
+                    - The HSM label that the peer should use.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that the peer should use.
+                type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the peer is available.
@@ -420,6 +438,11 @@ def main():
                 'class': dict(type='str', default='default')
             })
         )),
+        hsm=dict(type='dict', options=dict(
+            pkcs11endpoint=dict(type='str', required=True),
+            label=dict(type='str', required=True),
+            pin=dict(type='str', required=True)
+        )),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -489,6 +512,24 @@ def main():
             resources=module.params['resources'],
             storage=module.params['storage']
         )
+
+        # Add the HSM configuration if it is specified.
+        hsm = module.params['hsm']
+        if hsm is not None:
+            pkcs11endpoint = hsm['pkcs11endpoint']
+            expected_peer['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+            hsm_config_override = dict(
+                peer=dict(
+                    BCCSP=dict(
+                        Default='PKCS11',
+                        PKCS11=dict(
+                            Label=hsm['label'],
+                            Pin=hsm['pin']
+                        )
+                    )
+                )
+            )
+            merge_dicts(expected_peer['config_override'], hsm_config_override)
 
         # Either create or update the peer.
         changed = False
