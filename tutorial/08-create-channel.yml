@@ -31,7 +31,7 @@
     - name: Fail on any error other than the channel not existing
       fail:
         msg: "{{ result.msg }}"
-      when: result.msg is defined and "'NOT_FOUND' not in result.msg"
+      when: result.msg is defined and 'NOT_FOUND' not in result.msg
 
     - name: Create the configuration update for the new channel
       ibm.blockchain_platform.channel_config:
@@ -49,7 +49,7 @@
           Admins: 08-admins-policy.json
           Readers: 08-readers-policy.json
           Writers: 08-writers-policy.json
-      when: result.msg is defined and "'NOT_FOUND' in result.msg"
+      when: result.msg is defined and 'NOT_FOUND' in result.msg
 
     - name: Sign the channel configuration update for the new channel
       ibm.blockchain_platform.channel_config:
@@ -58,7 +58,7 @@
         msp_id: Org1MSP
         name: mychannel
         path: config_update.bin
-      when: result.msg is defined and "'NOT_FOUND' in result.msg"
+      when: result.msg is defined and 'NOT_FOUND' in result.msg
 
     - name: Apply the channel configuration update for the new channel
       ibm.blockchain_platform.channel_config:
@@ -73,4 +73,4 @@
         msp_id: Org1MSP
         name: mychannel
         path: config_update.bin
-      when: result.msg is defined and "'NOT_FOUND' in result.msg"
+      when: result.msg is defined and 'NOT_FOUND' in result.msg
