@@ -203,6 +203,24 @@ options:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
                         type: str
                         default: default
+    hsm:
+        description:
+            - The PKCS #11 compliant HSM configuration to use for the ordering service.
+            - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
+        type: dict
+        suboptions:
+            pkcs11endpoint:
+                description:
+                    - The HSM proxy endpoint that the ordering service should use.
+                type: str
+            label:
+                description:
+                    - The HSM label that the ordering service should use.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that the ordering service should use.
+                type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the ordering service is available.
@@ -315,7 +333,7 @@ def get_enrollment_config(console, module):
 
 def get_enrollment_component_config(console, module):
 
-    # Get the enrollment configuration for the peers MSP.
+    # Get the enrollment configuration for the ordering services MSP.
     certificate_authority = get_certificate_authority_by_module(console, module)
     certificate_authority_url = urllib.parse.urlsplit(certificate_authority.api_url)
     enrollment_id = module.params['enrollment_id']
@@ -336,7 +354,7 @@ def get_enrollment_component_config(console, module):
 
 def get_enrollment_tls_config(console, module):
 
-    # Get the enrollment configuration for the peers TLS.
+    # Get the enrollment configuration for the ordering services TLS.
     certificate_authority = get_certificate_authority_by_module(console, module)
     certificate_authority_url = urllib.parse.urlsplit(certificate_authority.api_url)
     enrollment_id = module.params['enrollment_id']
@@ -394,6 +412,11 @@ def main():
                 'size': dict(type='str', default='100Gi'),
                 'class': dict(type='str', default='default')
             })
+        )),
+        hsm=dict(type='dict', options=dict(
+            pkcs11endpoint=dict(type='str', required=True),
+            label=dict(type='str', required=True),
+            pin=dict(type='str', required=True)
         )),
         wait_timeout=dict(type='int', default=60)
     )
@@ -455,7 +478,23 @@ def main():
             # The ordering service should not exist and doesn't.
             return module.exit_json(changed=False)
 
-        # Handle appropriately based on state.
+        # Compute the HSM configuration if it is specified.
+        hsm = module.params['hsm']
+        if hsm is not None:
+            pkcs11endpoint = hsm['pkcs11endpoint']
+            hsm_config_override = dict(
+                General=dict(
+                    BCCSP=dict(
+                        Default='PKCS11',
+                        PKCS11=dict(
+                            Label=hsm['label'],
+                            Pin=hsm['pin']
+                        )
+                    )
+                )
+            )
+
+        # Either create or update the ordering service.
         changed = False
         if state == 'present' and not ordering_service_exists:
 
@@ -464,15 +503,15 @@ def main():
 
             # Get the config overrides.
             nodes = module.params['nodes']
-            config_override = module.params['config_override']
-            if config_override is not None:
-                if len(config_override) != nodes:
-                    raise Exception(f'Number of nodes is {nodes}, but only {len(config_override)} config override objects provided')
+            config_override_list = module.params['config_override']
+            if config_override_list is not None:
+                if len(config_override_list) != nodes:
+                    raise Exception(f'Number of nodes is {nodes}, but only {len(config_override_list)} config override objects provided')
             else:
-                config_override = list()
+                config_override_list = list()
                 i = 0
                 while i < nodes:
-                    config_override.append(dict())
+                    config_override_list.append(dict())
                     i = i + 1
 
             # Extract the expected ordering service configuration.
@@ -483,10 +522,16 @@ def main():
                 orderer_type=module.params['orderer_type'],
                 system_channel_id=module.params['system_channel_id'],
                 config=config,
-                config_override=config_override,
+                config_override=config_override_list,
                 resources=module.params['resources'],
                 storage=module.params['storage']
             )
+
+            # Add the HSM configuration if it is specified.
+            if hsm is not None:
+                expected_ordering_service['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+                for config_override in config_override_list:
+                    merge_dicts(config_override, hsm_config_override)
 
             # Create the ordering service.
             ordering_service = console.create_ordering_service(expected_ordering_service)
@@ -531,6 +576,11 @@ def main():
                     resources=module.params['resources'],
                     storage=module.params['storage']
                 )
+
+                # Add the HSM configuration if it is specified.
+                if hsm is not None:
+                    expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+                    merge_dicts(config_override, hsm_config_override)
 
                 # Update the ordering service node configuration.
                 new_ordering_service_node = copy_dict(ordering_service_node)
