@@ -56,7 +56,7 @@ steps:
   - script: |
       set -ex
       VERSION=$(yq -r .version galaxy.yml)
-      # ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform-${VERSION}.tar.gz
+      ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform-${VERSION}.tar.gz
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
     displayName: Publish collection to Ansible Galaxy
   - script: |
