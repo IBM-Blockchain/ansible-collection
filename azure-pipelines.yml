@@ -71,7 +71,9 @@ steps:
       tar cf - . | (cd /tmp/gh-pages; tar xvf -)
       popd
       pushd /tmp/gh-pages
-      git commit -asm "Automatic documentation build"
+      git add .
+      git commit -s -m "Automatic documentation build"
       git -c http.extraheader="Authorization: Basic $(GitHub Basic Auth)" push $(Build.Repository.Uri) HEAD:gh-pages -f
+      popd
     displayName: Publish documentation to GitHub Pages
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
