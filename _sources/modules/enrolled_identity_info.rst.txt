@@ -1,0 +1,99 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/enrolled_identity_info.py
+
+
+enrolled_identity_info -- Get information about an enrolled Hyperledger Fabric identity
+=======================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Get information about an enrolled Hyperledger Fabric identity by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  path (optional, any, None)
+    The path to the JSON file where the enrolled identity is stored.
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  exists (, boolean, )
+    True if the enrolled identity exists, false otherwise.
+
+
+  enrolled_identity (, dict, )
+    The enrolled identity.
+
+
+    name (, str, )
+      The name of the enrolled identity.
+
+
+    cert (, str, )
+      The base64 encoded certificate of the enrolled identity.
+
+
+    private_key (, str, )
+      The base64 encoded private key of the enrolled identity.
+
+
+    ca (, str, )
+      The base64 encoded CA certificate chain of the enrolled identity.
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+

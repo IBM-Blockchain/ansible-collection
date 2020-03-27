@@ -1,0 +1,343 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/organization.py
+
+
+organization -- Manage a Hyperledger Fabric organization
+========================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Create, update, or delete a Hyperledger Fabric organization by using the IBM Blockchain Platform.
+
+A Hyperledger Fabric organziation is also known as a Membership Services Provider (MSP).
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (optional, str, None)
+    The URL for the IBM Blockchain Platform console.
+
+
+  api_authtype (optional, str, None)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+
+  api_key (optional, str, None)
+    The API key for the IBM Blockchain Platform console.
+
+
+  api_secret (optional, str, None)
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+
+  api_timeout (optional, integer, 60)
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+
+  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+
+  state (optional, str, present)
+    ``absent`` - An organization matching the specified name will be stopped and removed.
+
+    ``present`` - Asserts that an organization matching the specified name and configuration exists. If no organization matches the specified name, an organization will be created. If an organization matches the specified name but the configuration does not match, then the organization will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+
+
+  name (optional, str, None)
+    The name of the organization.
+
+
+  msp_id (optional, str, None)
+    The MSP ID for the organization.
+
+
+  certificate_authority (optional, raw, None)
+    The certificate authority to use to build this organization.
+
+    You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
+
+    You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
+
+
+  root_certs (optional, list, None)
+    The list of root certificates for this organization.
+
+    Root certificates must be supplied as base64 encoded PEM files.
+
+
+  intermediate_certs (optional, list, None)
+    The list of intermediate certificates for this organization.
+
+    Intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+  admins (optional, list, None)
+    The list of administrator certificates for this organization.
+
+    Administrator certificates must be supplied as base64 encoded PEM files.
+
+
+  revocation_list (optional, list, None)
+    The list of revoked certificates for this organization.
+
+    Revoked certificates must be supplied as base64 encoded PEM files.
+
+
+  tls_root_certs (optional, list, None)
+    The list of TLS root certificates for this organization.
+
+    TLS root certificates must be supplied as base64 encoded PEM files.
+
+
+  tls_intermediate_certs (optional, list, None)
+    The list of TLS root certificates for this organization.
+
+    TLS intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+  fabric_node_ous (optional, dict, None)
+    Configuration specific to the identity classification.
+
+
+    enable (optional, boolean, True)
+      True if identity classification is enabled for this organization, false otherwise.
+
+
+    admin_ou_identifier (optional, dict, None)
+      Configuration specific to the admin identity classification.
+
+
+      certificate (optional, str, None)
+        The root or intermediate certificate for this identity classification.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (optional, str, admin)
+        The organizational unit (OU) identifier for this identity classification.
+
+
+
+    client_ou_identifier (optional, dict, None)
+      Configuration specific to the client identity classification.
+
+
+      certificate (optional, str, None)
+        The root or intermediate certificate for this identity classification.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (optional, str, client)
+        The organizational unit (OU) identifier for this identity classification.
+
+
+
+    peer_ou_identifier (optional, dict, None)
+      Configuration specific to the peer identity classification.
+
+
+      certificate (optional, str, None)
+        The root or intermediate certificate for this identity classification.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (optional, str, peer)
+        The organizational unit (OU) identifier for this identity classification.
+
+
+
+    orderer_ou_identifier (optional, dict, None)
+      Configuration specific to the orderer identity classification.
+
+
+      certificate (optional, str, None)
+        The root or intermediate certificate for this identity classification.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (optional, str, orderer)
+        The organizational unit (OU) identifier for this identity classification.
+
+
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  organization (, dict, )
+    The organization.
+
+
+    name (, str, )
+      The name of the organization.
+
+
+    root_certs (, list, )
+      The list of root certificates for this organization.
+
+      Root certificates must be supplied as base64 encoded PEM files.
+
+
+    intermediate_certs (, list, )
+      The list of intermediate certificates for this organization.
+
+      Intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+    admins (, list, )
+      The list of administrator certificates for this organization.
+
+      Administrator certificates must be supplied as base64 encoded PEM files.
+
+
+    revocation_list (, list, )
+      The list of revoked certificates for this organization.
+
+      Revoked certificates must be supplied as base64 encoded PEM files.
+
+
+    tls_root_certs (, list, )
+      The list of TLS root certificates for this organization.
+
+      TLS root certificates must be supplied as base64 encoded PEM files.
+
+
+    tls_intermediate_certs (, list, )
+      The list of TLS root certificates for this organization.
+
+      TLS intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+    fabric_node_ous (, dict, )
+      Configuration specific to the identity classification.
+
+
+      enable (, boolean, )
+        True if identity classification is enabled for this organization, false otherwise.
+
+
+      admin_ou_identifier (, dict, )
+        Configuration specific to the admin identity classification.
+
+
+        certificate (, str, )
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+        organizational_unit_identifier (, str, )
+          The organizational unit (OU) identifier for this identity classification.
+
+
+
+      client_ou_identifier (, dict, )
+        Configuration specific to the client identity classification.
+
+
+        certificate (, str, )
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+        organizational_unit_identifier (, str, )
+          The organizational unit (OU) identifier for this identity classification.
+
+
+
+      peer_ou_identifier (, dict, )
+        Configuration specific to the peer identity classification.
+
+
+        certificate (, str, )
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+        organizational_unit_identifier (, str, )
+          The organizational unit (OU) identifier for this identity classification.
+
+
+
+      orderer_ou_identifier (, dict, )
+        Configuration specific to the orderer identity classification.
+
+
+        certificate (, str, )
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+        organizational_unit_identifier (, str, )
+          The organizational unit (OU) identifier for this identity classification.
+
+
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+

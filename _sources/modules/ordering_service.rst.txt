@@ -1,0 +1,315 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service.py
+
+
+ordering_service -- Manage a Hyperledger Fabric ordering service
+================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Create, update, or delete a Hyperledger Fabric ordering service by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (optional, str, None)
+    The URL for the IBM Blockchain Platform console.
+
+
+  api_authtype (optional, str, None)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+
+  api_key (optional, str, None)
+    The API key for the IBM Blockchain Platform console.
+
+
+  api_secret (optional, str, None)
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+
+  api_timeout (optional, integer, 60)
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+
+  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+
+  state (optional, str, present)
+    ``absent`` - An ordering service matching the specified name will be stopped and removed.
+
+    ``present`` - Asserts that an ordering service matching the specified name and configuration exists. If no ordering service matches the specified name, an ordering service will be created. If an ordering service matches the specified name but the configuration does not match, then the ordering service will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+
+
+  name (optional, str, None)
+    The name for the ordering service.
+
+
+  msp_id (optional, str, None)
+    The MSP ID for this ordering service.
+
+
+  orderer_type (optional, str, raft)
+    ``raft`` - The ordering service will use the Raft consensus algorithm.
+
+
+  system_channel_id (optional, str, testchainid)
+    The name of the system channel for this ordering service.
+
+
+  certificate_authority (optional, raw, None)
+    The certificate authority to use to enroll the identity for this ordering service.
+
+    You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
+
+    You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
+
+    Only required when *config* is not specified.
+
+
+  enrollment_id (optional, str, None)
+    The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service.
+
+    Only required when *config* is not specified.
+
+
+  enrollment_secret (optional, str, None)
+    The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service.
+
+    Only required when *config* is not specified.
+
+
+  admin_certificates (optional, list, None)
+    The list of administrator certificates for this ordering service.
+
+    Administrator certificates must be supplied as base64 encoded PEM files.
+
+    Only required when *config* is not specified.
+
+
+  nodes (optional, int, None)
+    The number of ordering service nodes in this ordering service.
+
+
+  config (optional, list, None)
+    The initial configuration for the ordering service. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
+
+    You must provide initial configuration for each ordering service node in the ordering service, as defined by *nodes*.
+
+    See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
+
+
+  config_override (optional, list, None)
+    The configuration overrides for the ordering service.
+
+    You must provide configuration overrides for each ordering service node in the ordering service, as defined by *nodes*.
+
+    See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
+
+
+  resources (optional, dict, None)
+    The Kubernetes resource configuration for the ordering service.
+
+
+    orderer (optional, dict, None)
+      The Kubernetes resource configuration for the orderer container.
+
+
+      requests (optional, str, None)
+        The Kubernetes resource requests for the orderer container.
+
+
+        cpu (optional, str, 250m)
+          The Kubernetes CPU resource request for the orderer container.
+
+
+        memory (optional, str, 500M)
+          The Kubernetes memory resource request for the orderer container.
+
+
+
+
+    proxy (optional, dict, None)
+      The Kubernetes resource configuration for the proxy container.
+
+
+      requests (optional, str, None)
+        The Kubernetes resource requests for the proxy container.
+
+
+        cpu (optional, str, 100m)
+          The Kubernetes CPU resource request for the proxy container.
+
+
+        memory (optional, str, 200M)
+          The Kubernetes memory resource request for the proxy container.
+
+
+
+
+
+  storage (optional, dict, None)
+    The Kubernetes storage configuration for the ordering service.
+
+
+    orderer (optional, dict, None)
+      The Kubernetes storage configuration for the orderer container.
+
+
+      size (optional, str, 100Gi)
+        The size of the Kubernetes persistent volume claim for the orderer container.
+
+
+      class (optional, str, default)
+        The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
+
+
+
+
+  hsm (optional, dict, None)
+    The PKCS
+
+    See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
+
+
+    pkcs11endpoint (optional, str, None)
+      The HSM proxy endpoint that the ordering service should use.
+
+
+    label (optional, str, None)
+      The HSM label that the ordering service should use.
+
+
+    pin (optional, str, None)
+      The HSM pin that the ordering service should use.
+
+
+
+  wait_timeout (optional, integer, 60)
+    The timeout, in seconds, to wait until the ordering service is available.
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  ordering_service (, list, )
+    The ordering service, as a list of ordering service nodes.
+
+
+    name (, str, )
+      The name of the ordering service node.
+
+
+    api_url (, str, )
+      The URL for the API of the ordering service node.
+
+
+    operations_url (, str, )
+      The URL for the operations service of the ordering service node.
+
+
+    grpcwp_url (, str, )
+      The URL for the gRPC web proxy of the ordering service node.
+
+
+    msp_id (, str, )
+      The MSP ID of the ordering service node.
+
+
+    pem (, str, )
+      The TLS certificate chain for the ordering service node.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+
+    tls_cert (, str, )
+      The TLS certificate chain for the ordering service node.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+
+    location (, str, )
+      The location of the ordering service node.
+
+
+    system_channel_id (, str, )
+      The name of the system channel for the ordering service node.
+
+
+    client_tls_cert (, str, )
+      The client TLS certificate for the ordering service node.
+
+
+    server_tls_cert (, str, )
+      The client TLS certificate for the ordering service node.
+
+
+    cluster_id (, str, )
+      The unique ID of the ordering service cluster.
+
+
+    cluster_name (, str, )
+      The name of the ordering service cluster.
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+

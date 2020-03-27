@@ -1,0 +1,169 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/peer_info.py
+
+
+peer_info -- Get information about a Hyperledger Fabric peer
+============================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Get information about a Hyperledger Fabric peer by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (optional, str, None)
+    The URL for the IBM Blockchain Platform console.
+
+
+  api_authtype (optional, str, None)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+
+  api_key (optional, str, None)
+    The API key for the IBM Blockchain Platform console.
+
+
+  api_secret (optional, str, None)
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+
+  api_timeout (optional, integer, 60)
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+
+  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+
+  name (optional, any, None)
+    The name of the peer.
+
+
+  wait_timeout (optional, integer, 60)
+    The timeout, in seconds, to wait until the peer is available.
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  exists (, boolean, )
+    True if the peer exists, false otherwise.
+
+
+  peer (, dict, )
+    T
+
+    h
+
+    e
+
+     
+
+    p
+
+    e
+
+    e
+
+    r
+
+    .
+
+
+    name (, str, )
+      The name of the peer.
+
+
+    api_url (, str, )
+      The URL for the API of the peer.
+
+
+    operations_url (, str, )
+      The URL for the operations service of the peer.
+
+
+    grpcwp_url (, str, )
+      The URL for the gRPC web proxy of the peer.
+
+
+    msp_id (, str, )
+      The MSP ID of the peer.
+
+
+    pem (, str, )
+      The TLS certificate chain for the peer.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+
+    tls_cert (, str, )
+      The TLS certificate chain for the peer.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+
+    location (, str, )
+      The location of the peer.
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+

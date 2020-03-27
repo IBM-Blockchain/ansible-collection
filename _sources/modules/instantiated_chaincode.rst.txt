@@ -1,0 +1,192 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/instantiated_chaincode.py
+
+
+instantiated_chaincode -- Manage a instantiated chaincode on a Hyperledger Fabric channel
+=========================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Instantiate a chaincode on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (optional, str, None)
+    The URL for the IBM Blockchain Platform console.
+
+
+  api_authtype (optional, str, None)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+
+  api_key (optional, str, None)
+    The API key for the IBM Blockchain Platform console.
+
+
+  api_secret (optional, str, None)
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+
+  api_timeout (optional, integer, 60)
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+
+  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+
+  state (optional, str, present)
+    ``absent`` - If a chaincode matching the specified name and version is instantiated, then an error will be thrown, as it is not possible to uninstantiate chaincode.
+
+    ``present`` - Asserts that a chaincode matching the specified name and version is instantiated on the specified channel. If it is not instantiated, then the chaincode with the specified name and version is instantiated on the specified channel. If it is instantiated with a different version, then the chaincode is upgraded on the specified channel. Otherwise, the instantiated chaincode is checked to ensure that it matches the specified ESCC and VSCC. It is not possible to check that the instantiated chaincode matches the specified endorsement policy and collections configuration. If the instantiated chaincode does not match, then an error will be thrown, as it is not possible to update instantiated chaincode without upgrading to a new version.
+
+
+  peer (optional, raw, None)
+    The peer to use to manage the instantiated chaincode.
+
+    You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`peer_info <peer_info_module>` or :ref:`peer <peer_module>` modules.
+
+
+  identity (optional, raw, None)
+    The identity to use when interacting with the peer.
+
+    You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+
+
+  msp_id (optional, str, None)
+    The MSP ID to use for interacting with the peer.
+
+
+  channel (optional, str, None)
+    The name of the channel.
+
+
+  name (optional, str, None)
+    The name of the chaincode.
+
+
+  version (optional, str, None)
+    The version of the chaincode.
+
+
+  constructor (optional, dict, None)
+    The constructor for the chaincode.
+
+
+    function (optional, str, None)
+      The function name to call in the chaincode.
+
+
+    args (optional, list, None)
+      The arguments to pass to the chaincode function.
+
+
+
+  endorsement_policy (optional, str, None)
+    The endorsement policy for the chaincode.
+
+
+  collections_config (optional, str, None)
+    The path to the collections configuration file for the chaincode.
+
+
+  escc (optional, str, escc)
+    The name of the endorsement system chaincode (ESCC) to use for the chaincode.
+
+
+  vscc (optional, str, vscc)
+    The name of the validation system chaincode (VSCC) to use for the chaincode.
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  instantiated_chaincode (, dict, )
+    The instantiated chaincode.
+
+
+    channel (, str, )
+      The name of the channel.
+
+
+    name (, str, )
+      The name of the chaincode.
+
+
+    version (, str, )
+      The version of the chaincode.
+
+
+    escc (, str, )
+      The name of the endorsement system chaincode (ESCC) used by the chaincode.
+
+
+    vscc (, str, )
+      The name of the validation system chaincode (VSCC) used by the chaincode.
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+
