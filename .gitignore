@@ -140,3 +140,6 @@ dmypy.json
 
 # collection packages
 ibm-blockchain_platform-*.tar.gz
+
+# generated documentation
+docs/source/modules/*.rst
