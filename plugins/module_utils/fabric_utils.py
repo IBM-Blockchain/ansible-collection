@@ -9,6 +9,9 @@ __metaclass__ = type
 import os.path
 import tempfile
 
+# This is horrible, but Ansible transfers modules as a ZIP file, and
+# loads them from the ZIP file using the zipimport module. This means
+# you can't use __file__ to find the path to anything in the collection.
 core_yaml = '''
 # Copyright IBM Corp. All Rights Reserved.
 #
