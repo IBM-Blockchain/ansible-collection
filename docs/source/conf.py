@@ -54,3 +54,5 @@ html_context = {
     "github_version": "master",
     "conf_py_path": "/docs/source/",
 }
+
+html_favicon = 'favicon.ico'
