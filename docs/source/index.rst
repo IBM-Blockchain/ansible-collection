@@ -32,4 +32,5 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    :hidden:
 
    modules
+   roles
 
