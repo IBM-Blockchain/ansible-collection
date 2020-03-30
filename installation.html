@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
@@ -86,6 +88,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-using-ansible-galaxy">Installing using Ansible Galaxy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-from-source">Installing from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-a-docker-image">Using a Docker image</a></li>
 </ul>
 </li>
 </ul>
@@ -232,6 +235,17 @@ If you install Python from the package manager for your operating system, you mu
 <li><p>Install the collection, replacing <code class="docutils literal notranslate"><span class="pre">x.y.z</span></code> with the current version:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ansible</span><span class="o">-</span><span class="n">galaxy</span> <span class="n">collection</span> <span class="n">install</span> <span class="n">ibm</span><span class="o">-</span><span class="n">blockchain_platform</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-a-docker-image">
+<h2>Using a Docker image<a class="headerlink" href="#using-a-docker-image" title="Permalink to this headline">¶</a></h2>
+<p>As an alternative to installing all of the requirements on your system, you can build a Docker image that contains all of the requirements.
+You can then use that Docker image to run your playbooks.</p>
+<p>An example Dockerfile can be found here: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docker/Dockerfile">https://github.com/IBM-Blockchain/ansible-collection/blob/master/docker/Dockerfile</a></p>
+<p>The Dockerfile makes use of the Docker multi-stage build feature to reduce the size of the image built by 50%.</p>
+<p>Assuming you have built the Docker image and tagged it as <code class="docutils literal notranslate"><span class="pre">mydockerorg/ansible</span></code>, you can run a playbook by volume mounting it into the container:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">playbooks</span><span class="p">:</span><span class="o">/</span><span class="n">playbooks</span> <span class="n">mydockerorg</span><span class="o">/</span><span class="n">ansible</span> <span class="n">ansible</span><span class="o">-</span><span class="n">playbook</span> <span class="o">/</span><span class="n">playbooks</span><span class="o">/</span><span class="n">playbook</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
 </div>
