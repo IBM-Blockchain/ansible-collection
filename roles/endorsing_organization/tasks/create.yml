@@ -56,6 +56,7 @@
               pass: "{{ peer_enrollment_secret }}"
               type: peer
               maxenrollments: -1
+    wait_timeout: "{{ wait_timeout | default(omit) }}"
   register: ca
 
 - name: Print certificate authority
@@ -179,6 +180,7 @@
     enrollment_secret: "{{ peer_enrollment_secret }}"
     admin_certificates:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+    wait_timeout: "{{ wait_timeout | default(omit) }}"
   register: peer
 
 - name: Print peer
