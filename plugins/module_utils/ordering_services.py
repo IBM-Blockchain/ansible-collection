@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from .fabric_utils import get_fabric_cfg_path
 from .msp_utils import convert_identity_to_msp_path
 
 from ansible.module_utils.urls import open_url
@@ -137,16 +138,16 @@ class OrderingServiceNodeConnection:
         os.close(temp[0])
         self.pem_path = temp[1]
         self.msp_path = convert_identity_to_msp_path(self.identity)
+        self.fabric_cfg_path = get_fabric_cfg_path()
         return self
 
     def __exit__(self, type, value, tb):
         os.remove(self.pem_path)
         shutil.rmtree(self.msp_path)
+        shutil.rmtree(self.fabric_cfg_path)
 
     def fetch(self, channel, target, path):
-        env = os.environ.copy()
-        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
-        env['CORE_PEER_LOCALMSPID'] = self.msp_id
+        env = self._get_environ()
         netloc = urllib.parse.urlparse(self.ordering_service_node.api_url).netloc
         process = subprocess.run([
             'peer', 'channel', 'fetch', target, path,
@@ -159,9 +160,7 @@ class OrderingServiceNodeConnection:
             raise Exception(f'Failed to fetch block from ordering service node: {process.stdout}')
 
     def update(self, channel, path):
-        env = os.environ.copy()
-        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
-        env['CORE_PEER_LOCALMSPID'] = self.msp_id
+        env = self._get_environ()
         netloc = urllib.parse.urlparse(self.ordering_service_node.api_url).netloc
         process = subprocess.run([
             'peer', 'channel', 'update', '-f', path,
@@ -172,6 +171,13 @@ class OrderingServiceNodeConnection:
             return
         else:
             raise Exception(f'Failed to update channel on ordering service node: {process.stdout}')
+
+    def _get_environ(self):
+        env = os.environ.copy()
+        env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
+        env['CORE_PEER_LOCALMSPID'] = self.msp_id
+        env['FABRIC_CFG_PATH'] = self.fabric_cfg_path
+        return env
 
 
 class OrderingService:
