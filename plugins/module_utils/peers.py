@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from .fabric_utils import get_fabric_cfg_path
 from .msp_utils import convert_identity_to_msp_path
 from .proto_utils import proto_to_json
 
@@ -116,6 +117,7 @@ class PeerConnection:
         self.pem_path = temp[1]
         self.msp_path = convert_identity_to_msp_path(self.identity)
         self.other_paths = list()
+        self.fabric_cfg_path = get_fabric_cfg_path()
         return self
 
     def __exit__(self, type, value, tb):
@@ -123,6 +125,7 @@ class PeerConnection:
             os.remove(other_path)
         os.remove(self.pem_path)
         shutil.rmtree(self.msp_path)
+        shutil.rmtree(self.fabric_cfg_path)
 
     def list_channels(self):
         env = self._get_environ()
@@ -264,6 +267,7 @@ class PeerConnection:
         env['CORE_PEER_ADDRESS'] = api_url_parsed.netloc
         env['CORE_PEER_TLS_ENABLED'] = 'true'
         env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
+        env['FABRIC_CFG_PATH'] = self.fabric_cfg_path
         return env
 
     def _get_ordering_service(self, channel):

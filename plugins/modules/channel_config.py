@@ -7,6 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.dict_utils import diff_dicts
+from ..module_utils.fabric_utils import get_fabric_cfg_path
 from ..module_utils.file_utils import get_temp_file
 from ..module_utils.msp_utils import convert_identity_to_msp_path
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
@@ -18,6 +19,7 @@ from subprocess import CalledProcessError
 
 import json
 import os
+import shutil
 import subprocess
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -416,13 +418,19 @@ def sign_update(module):
 
     # Need to sign it.
     msp_path = convert_identity_to_msp_path(identity)
-    env = os.environ.copy()
-    env['CORE_PEER_MSPCONFIGPATH'] = msp_path
-    env['CORE_PEER_LOCALMSPID'] = msp_id
-    subprocess.run([
-        'peer', 'channel', 'signconfigtx', '-f', path
-    ], env=env, text=True, close_fds=True, check=True, capture_output=True)
-    module.exit_json(changed=True, path=path)
+    fabric_cfg_path = get_fabric_cfg_path()
+    try:
+        env = os.environ.copy()
+        env['CORE_PEER_MSPCONFIGPATH'] = msp_path
+        env['CORE_PEER_LOCALMSPID'] = msp_id
+        env['FABRIC_CFG_PATH'] = fabric_cfg_path
+        subprocess.run([
+            'peer', 'channel', 'signconfigtx', '-f', path
+        ], env=env, text=True, close_fds=True, check=True, capture_output=True)
+        module.exit_json(changed=True, path=path)
+    finally:
+        shutil.rmtree(msp_path)
+        shutil.rmtree(fabric_cfg_path)
 
 
 def apply_update(module):
