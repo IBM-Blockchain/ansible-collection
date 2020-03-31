@@ -1,0 +1,31 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+# target: k8s | openshift
+# arch: amd64 | s390x
+# project: my-project
+# namespace: my-namespace
+
+image_pull_secret: docker-key-secret
+image_registry: cp.icr.io
+image_registry_username: cp
+# image_registry_email: user@example.org
+# image_registry_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+image_repository: cp
+
+cluster_role: "{{ project | default(namespace) | default('') }}"
+cluster_role_binding: "{{ project | default(namespace) | default('') }}"
+security_context_constraints: "{{ project | default(namespace) | default('') }}"
+service_account: default
+operator: ibp-operator
+console: ibp-console
+
+# console_domain: example.org
+# console_email: user@example.org
+# console_default_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+console_storage_class: default
+console_storage_size: 10Gi
+
+wait_timeout: 60

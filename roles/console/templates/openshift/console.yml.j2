@@ -1,0 +1,23 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+apiVersion: ibp.com/v1alpha1
+kind: IBPConsole
+metadata:
+  name: "{{ console }}"
+spec:
+  arch:
+  - "{{ arch }}"
+  license: accept
+  serviceAccountName: "{{ service_account }}"
+  email: "{{ console_email }}"
+  password: "{{ console_default_password }}"
+  registryURL: "{{ image_registry }}/{{ image_repository }}"
+  imagePullSecret: "{{ image_pull_secret }}"
+  networkinfo:
+    domain: "{{ console_domain }}"
+  storage:
+    console:
+      class: "{{ console_storage_class }}"
+      size: "{{ console_storage_size }}"

@@ -1,0 +1,90 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if project not specified
+  fail:
+    msg: project not specified
+  when: not project is defined
+
+- name: Determine if project exists
+  k8s_info:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ project }}"
+  register: project_info
+
+- name: Create project
+  k8s:
+    state: present
+    api_version: project.openshift.io/v1
+    kind: ProjectRequest
+    name: "{{ project }}"
+  when: not project_info.resources
+
+- name: Create security context constraints
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
+
+- name: Create cluster role
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/cluster_role.yml.j2') }}"
+
+- name: Create cluster role binding
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/cluster_role_binding.yml.j2') }}"
+
+- name: Create image secret
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/image_pull_secret.yml.j2') }}"
+
+- name: Create operator
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/operator.yml.j2') }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+
+- name: Create console
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/console.yml.j2') }}"
+
+- name: Find console route
+  k8s_info:
+    namespace: "{{ project }}"
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: "{{ console }}-console"
+  register: console_route
+  until: console_route.resources
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Set console URL from console ingress
+  set_fact:
+    console_url: "https://{{ console_route.resources[0].spec.host }}"
+
+- name: Wait for console to start
+  uri:
+    url: "{{ console_url }}"
+    status_code: "200"
+    validate_certs: no
+  register: result
+  until: result.status == 200
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Print console URL
+  debug:
+    msg: IBM Blockchain Platform console available at {{ console_url }}
