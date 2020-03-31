@@ -18,7 +18,7 @@ Synopsis
 
 This role allows you to quickly build Hyperledger Fabric components for an ordering organization. An ordering organization has a certificate authority and an ordering service.
 
-This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+This role works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
 Parameters
 ----------
