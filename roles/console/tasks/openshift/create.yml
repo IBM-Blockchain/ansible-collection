@@ -71,7 +71,7 @@
   retries: "{{ wait_timeout }}"
   delay: 1
 
-- name: Set console URL from console ingress
+- name: Set console URL from console route
   set_fact:
     console_url: "https://{{ console_route.resources[0].spec.host }}"
 
