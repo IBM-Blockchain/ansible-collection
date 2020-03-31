@@ -17,6 +17,8 @@ image_repository: cp
 
 cluster_role: "{{ project | default(namespace) | default('') }}"
 cluster_role_binding: "{{ project | default(namespace) | default('') }}"
+pod_security_policy: "{{ project | default(namespace) | default('') }}"
+role_binding: "{{ project | default(namespace) | default('') }}"
 security_context_constraints: "{{ project | default(namespace) | default('') }}"
 service_account: default
 operator: ibp-operator

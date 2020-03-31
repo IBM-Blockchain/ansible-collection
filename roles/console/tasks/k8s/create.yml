@@ -1,0 +1,96 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if namespace not specified
+  fail:
+    msg: namespace not specified
+  when: not namespace is defined
+
+- name: Determine if namespace exists
+  k8s_info:
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  register: namespace_info
+
+- name: Create namespace
+  k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  when: not namespace_info.resources
+
+- name: Create pod security policy
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/pod_security_policy.yml.j2') }}"
+
+- name: Create cluster role
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/cluster_role.yml.j2') }}"
+
+- name: Create cluster role binding
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/cluster_role_binding.yml.j2') }}"
+
+- name: Create role binding
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/role_binding.yml.j2') }}"
+
+- name: Create image secret
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/image_pull_secret.yml.j2') }}"
+
+- name: Create operator
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/operator.yml.j2') }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+
+- name: Create console
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/console.yml.j2') }}"
+
+- name: Find console ingress
+  k8s_info:
+    namespace: "{{ namespace }}"
+    api_version: extensions/v1beta1
+    kind: Ingress
+    name: "{{ console }}"
+  register: console_route
+  until: console_route.resources
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Set console URL from console ingress
+  set_fact:
+    console_url: "https://{{ console_route.resources[0].spec.rules[0].host }}"
+
+- name: Wait for console to start
+  uri:
+    url: "{{ console_url }}"
+    status_code: "200"
+    validate_certs: no
+  register: result
+  until: result.status == 200
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Print console URL
+  debug:
+    msg: IBM Blockchain Platform console available at {{ console_url }}

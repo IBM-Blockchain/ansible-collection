@@ -92,6 +92,20 @@ Parameters
 
     By default, the cluster role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
+  pod_security_policy (optional, str, None)
+    The name of the pod security policy.
+
+    By default, the pod security policy has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
+
+    Only required when *target* is ``k8s``.
+
+  role_binding (optional, str, None)
+    The name of the role binding.
+
+    By default, the role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
+
+    Only required when *target* is ``k8s``.
+
   security_context_constraints (optional, str, None)
     The name of the security context constraints.
 
