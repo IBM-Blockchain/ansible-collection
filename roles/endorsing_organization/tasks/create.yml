@@ -57,25 +57,6 @@
               type: peer
               maxenrollments: -1
     wait_timeout: "{{ wait_timeout | default(omit) }}"
-  register: ca
-
-- name: Print certificate authority
-  debug:
-    msg: "{{ ca }}"
-
-- name: Get certificate authority
-  ibm.blockchain_platform.certificate_authority_info:
-    api_endpoint: "{{ api_endpoint }}"
-    api_authtype: "{{ api_authtype }}"
-    api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret | default(omit) }}"
-    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: "{{ organization_name }} CA"
-  register: ca
-
-- name: Print certificate authority
-  debug:
-    msg: "{{ ca }}"
 
 - name: Enroll certificate authority admin
   ibm.blockchain_platform.enrolled_identity:
@@ -90,20 +71,6 @@
     enrollment_id: "{{ ca_admin_enrollment_id }}"
     enrollment_secret: "{{ ca_admin_enrollment_secret }}"
     path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
-  register: ca_admin
-
-- name: Print certificate authority admin
-  debug:
-    msg: "{{ ca_admin }}"
-
-- name: Get certificate authority admin
-  ibm.blockchain_platform.enrolled_identity_info:
-    path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
-  register: ca_admin
-
-- name: Print certificate authority admin
-  debug:
-    msg: "{{ ca_admin }}"
 
 - name: Enroll the organization admin
   ibm.blockchain_platform.enrolled_identity:
@@ -120,19 +87,6 @@
     path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
   register: org_admin
 
-- name: Print organization admin
-  debug:
-    msg: "{{ org_admin }}"
-
-- name: Get organization admin
-  ibm.blockchain_platform.enrolled_identity_info:
-    path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
-  register: org_admin
-
-- name: Print organization admin
-  debug:
-    msg: "{{ org_admin }}"
-
 - name: Create organization
   ibm.blockchain_platform.organization:
     state: "{{ state }}"
@@ -144,25 +98,6 @@
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ organization_name }} CA"
-  register: organization
-
-- name: Print organization
-  debug:
-    msg: "{{ organization }}"
-
-- name: Get organization
-  ibm.blockchain_platform.organization_info:
-    api_endpoint: "{{ api_endpoint }}"
-    api_authtype: "{{ api_authtype }}"
-    api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret | default(omit) }}"
-    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: "{{ organization_name }}"
-  register: organization
-
-- name: Print organization
-  debug:
-    msg: "{{ organization }}"
 
 - name: Create peer
   ibm.blockchain_platform.peer:
@@ -181,22 +116,3 @@
     admin_certificates:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
-  register: peer
-
-- name: Print peer
-  debug:
-    msg: "{{ peer }}"
-
-- name: Get peer
-  ibm.blockchain_platform.peer_info:
-    api_endpoint: "{{ api_endpoint }}"
-    api_authtype: "{{ api_authtype }}"
-    api_key: "{{ api_key }}"
-    api_secret: "{{ api_secret | default(omit) }}"
-    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: "{{ organization_name }} Peer"
-  register: peer
-
-- name: Print peer
-  debug:
-    msg: "{{ peer }}"
