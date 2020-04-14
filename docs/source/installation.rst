@@ -60,6 +60,16 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install fabric-sdk-py
 
+**OpenShift client for Python v0.10.3+**
+
+    This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform console.
+
+    You can install this SDK using ``pip``, the package manager for Python:
+
+    ::
+
+        pip install openshift
+
 Installing using Ansible Galaxy
 -------------------------------
 
