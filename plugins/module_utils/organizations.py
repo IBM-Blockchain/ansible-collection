@@ -9,7 +9,7 @@ __metaclass__ = type
 
 class Organization:
 
-    def __init__(self, name, msp_id, root_certs, intermediate_certs, admins, revocation_list, tls_root_certs, tls_intermediate_certs, fabric_node_ous):
+    def __init__(self, name, msp_id, root_certs, intermediate_certs, admins, revocation_list, tls_root_certs, tls_intermediate_certs, fabric_node_ous, host_url):
         self.name = name
         self.msp_id = msp_id
         self.root_certs = root_certs
@@ -19,6 +19,7 @@ class Organization:
         self.tls_root_certs = tls_root_certs
         self.tls_intermediate_certs = tls_intermediate_certs
         self.fabric_node_ous = fabric_node_ous
+        self.host_url = host_url
 
     def clone(self):
         return Organization(
@@ -30,7 +31,8 @@ class Organization:
             revocation_list=self.revocation_list,
             tls_root_certs=self.tls_root_certs,
             tls_intermediate_certs=self.tls_intermediate_certs,
-            fabric_node_ous=self.fabric_node_ous
+            fabric_node_ous=self.fabric_node_ous,
+            host_url=self.host_url
         )
 
     def equals(self, other):
@@ -43,7 +45,8 @@ class Organization:
             self.revocation_list == other.revocation_list and
             self.tls_root_certs == other.tls_root_certs and
             self.tls_intermediate_certs == other.tls_intermediate_certs and
-            self.fabric_node_ous == other.fabric_node_ous
+            self.fabric_node_ous == other.fabric_node_ous and
+            self.host_url == other.host_url
         )
 
     def to_json(self):
@@ -57,6 +60,7 @@ class Organization:
             tls_root_certs=self.tls_root_certs,
             tls_intermediate_certs=self.tls_intermediate_certs,
             fabric_node_ous=self.fabric_node_ous,
+            host_url=self.host_url,
             type='msp'
         )
 
@@ -71,5 +75,6 @@ class Organization:
             revocation_list=data['revocation_list'],
             tls_root_certs=data['tls_root_certs'],
             tls_intermediate_certs=data['tls_intermediate_certs'],
-            fabric_node_ous=data['fabric_node_ous']
+            fabric_node_ous=data['fabric_node_ous'],
+            host_url=data['host_url']
         )

@@ -478,7 +478,8 @@ class Console:
             'revocation_list': organization.get('revocation_list', list()),
             'tls_root_certs': organization.get('tls_root_certs', list()),
             'tls_intermediate_certs': organization.get('tls_intermediate_certs', list()),
-            'fabric_node_ous': organization['fabric_node_ous']
+            'fabric_node_ous': organization['fabric_node_ous'],
+            'host_url': organization.get('host_url', None)
         }
 
     def should_retry_error(self, error):
@@ -502,3 +503,17 @@ class Console:
 
     def is_free_cluster(self):
         return self.settings.get('CLUSTER_DATA', dict()).get('type', None) == 'free'
+
+    def get_host_url(self):
+        split_url = urllib.parse.urlsplit(self.api_endpoint)
+        scheme = split_url.scheme
+        hostname = split_url.hostname
+        port = split_url.port
+        if not port:
+            if split_url.scheme == "http":
+                port = 80
+            elif split_url.scheme == "https":
+                port = 443
+            else:
+                raise Exception(f'Invalid scheme {scheme} in console URL {self.api_endpoint}')
+        return urllib.parse.urlunsplit((scheme, f'{hostname}:{port}', '', '', ''))

@@ -403,6 +403,7 @@ def main():
         tls_root_certs = module.params['tls_root_certs']
         tls_intermediate_certs = module.params['tls_intermediate_certs']
         fabric_node_ous = module.params['fabric_node_ous']
+        host_url = console.get_host_url()
 
         # Get any certificates from the certificate authority, if specified.
         certificate_authority_certs = get_from_certificate_authority(console, module)
@@ -436,7 +437,8 @@ def main():
                     orderer_ou_identifier=dict(
                         organizational_unit_identifier='orderer'
                     )
-                )
+                ),
+                host_url=host_url
             )
 
             # Merge any certificate authority certificates.
@@ -478,7 +480,8 @@ def main():
                     orderer_ou_identifier=dict(
                         organizational_unit_identifier='orderer'
                     )
-                )
+                ),
+                host_url=host_url
             ))
 
             # Merge any certificate authority certificates.
