@@ -109,7 +109,7 @@ options:
             - The enrollment secret, or password, of an identity registered on the certificate authority for this peer.
             - Only required when I(config) is not specified.
         type: str
-    admin_certificates:
+    admins:
         description:
             - The list of administrator certificates for this peer.
             - Administrator certificates must be supplied as base64 encoded PEM files.
@@ -349,7 +349,7 @@ def get_enrollment_component_config(console, module):
     certificate_authority_url = urllib.parse.urlsplit(certificate_authority.api_url)
     enrollment_id = module.params['enrollment_id']
     enrollment_secret = module.params['enrollment_secret']
-    admin_certificates = module.params['admin_certificates']
+    admins = module.params['admins']
     return {
         'cahost': certificate_authority_url.hostname,
         'caport': str(certificate_authority_url.port),
@@ -359,7 +359,7 @@ def get_enrollment_component_config(console, module):
         },
         'enrollid': enrollment_id,
         'enrollsecret': enrollment_secret,
-        'admincerts': admin_certificates
+        'admincerts': admins
     }
 
 
@@ -399,7 +399,7 @@ def main():
         certificate_authority=dict(type='raw'),
         enrollment_id=dict(type='str'),
         enrollment_secret=dict(type='str'),
-        admin_certificates=dict(type='list', elements='str'),
+        admins=dict(type='list', elements='str', aliases=['admin_certificates']),
         config=dict(type='dict'),
         config_override=dict(type='dict', default=dict()),
         resources=dict(type='dict', default=dict(), options=dict(
@@ -455,7 +455,7 @@ def main():
     required_together = [
         ['certificate_authority', 'enrollment_id'],
         ['certificate_authority', 'enrollment_secret'],
-        ['certificate_authority', 'admin_certificates']
+        ['certificate_authority', 'admins']
     ]
     mutually_exclusive = [
         ['certificate_authority', 'config']
