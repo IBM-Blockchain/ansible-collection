@@ -49,7 +49,7 @@ def get_certificate_authority_by_module(console, module, parameter_name='certifi
     # it contains all of the required keys/values.
     certificate_authority = module.params[parameter_name]
     if isinstance(certificate_authority, dict):
-        return certificate_authority
+        return CertificateAuthority.from_json(certificate_authority)
 
     # Otherwise, it is the display name of a certificate authority that
     # we need to look up.
@@ -81,7 +81,7 @@ def get_organization_by_module(console, module, parameter_name='organization'):
     # it contains all of the required keys/values.
     organization = module.params[parameter_name]
     if isinstance(organization, dict):
-        return organization
+        return Organization.from_json(organization)
 
     # Otherwise, it is the display name of an organization that
     # we need to look up.
@@ -103,7 +103,8 @@ def get_organizations_by_module(console, module, parameter_name='organizations')
         # If the organization is a dict, then we assume that
         # it contains all of the required keys/values.
         if isinstance(organization, dict):
-            organizations.append(organization)
+            organizations.append(Organization.from_json(organization))
+            continue
 
         # Otherwise, it is the display name of an organization that
         # we need to look up.
@@ -138,7 +139,7 @@ def get_peer_by_module(console, module, parameter_name='peer'):
     # it contains all of the required keys/values.
     peer = module.params[parameter_name]
     if isinstance(peer, dict):
-        return peer
+        return Peer.from_json(peer)
 
     # Otherwise, it is the display name of a peer that
     # we need to look up.
@@ -160,7 +161,8 @@ def get_peers_by_module(console, module, parameter_name='peers'):
         # If the peer is a dict, then we assume that
         # it contains all of the required keys/values.
         if isinstance(peer, dict):
-            peers.append(peer)
+            peers.append(Peer.from_json(peer))
+            continue
 
         # Otherwise, it is the display name of an peer that
         # we need to look up.
@@ -195,7 +197,7 @@ def get_ordering_service_by_module(console, module, parameter_name='ordering_ser
     # it contains all of the required keys/values.
     ordering_service = module.params[parameter_name]
     if isinstance(ordering_service, list):
-        return ordering_service
+        return OrderingService.from_json(ordering_service)
 
     # Otherwise, it is the display name of a ordering service that
     # we need to look up.
@@ -227,7 +229,7 @@ def get_ordering_service_node_by_module(console, module, parameter_name='orderin
     # it contains all of the required keys/values.
     ordering_service_node = module.params[parameter_name]
     if isinstance(ordering_service_node, dict):
-        return ordering_service_node
+        return OrderingServiceNode.from_json(ordering_service_node)
 
     # Otherwise, it is the display name of a ordering service that
     # we need to look up.
