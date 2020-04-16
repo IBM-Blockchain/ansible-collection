@@ -98,6 +98,8 @@
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ organization_name }} CA"
+    admins:
+      - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
 
 - name: Create ordering service
   ibm.blockchain_platform.ordering_service:
