@@ -227,6 +227,10 @@ Return Values
       The name of the organization.
 
 
+    msp_id (, str, )
+      The MSP ID for the organization.
+
+
     root_certs (, list, )
       The list of root certificates for this organization.
 

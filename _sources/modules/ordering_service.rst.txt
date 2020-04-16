@@ -102,7 +102,7 @@ Parameters
     Only required when *config* is not specified.
 
 
-  admin_certificates (optional, list, None)
+  admins (optional, list, None)
     The list of administrator certificates for this ordering service.
 
     Administrator certificates must be supplied as base64 encoded PEM files.
