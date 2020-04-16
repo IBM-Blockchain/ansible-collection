@@ -217,6 +217,10 @@ organization:
             description:
                 - The name of the organization.
             type: str
+        msp_id:
+            description:
+                - The MSP ID for the organization.
+            type: str
         root_certs:
             description:
                 - The list of root certificates for this organization.
