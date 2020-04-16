@@ -355,6 +355,7 @@ def main():
             tls_root_certs=dict(type='list', elements='str', default=list()),
             tls_intermediate_certs=dict(type='list', elements='str', default=list()),
             fabric_node_ous=dict(type='dict'),
+            host_url=dict(type='str', default=None),
             type=dict(type='str')
         ))
     )
@@ -409,7 +410,8 @@ def main():
             revocation_list=organization_definition['revocation_list'],
             tls_root_certs=organization_definition['tls_root_certs'],
             tls_intermediate_certs=organization_definition['tls_intermediate_certs'],
-            fabric_node_ous=organization_definition['fabric_node_ous']
+            fabric_node_ous=organization_definition['fabric_node_ous'],
+            host_url=organization_definition['host_url']
         )
 
         # Handle appropriately based on state.
