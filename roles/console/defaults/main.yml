@@ -31,3 +31,6 @@ console_storage_class: default
 console_storage_size: 10Gi
 
 wait_timeout: 60
+
+product_version: "2.1.3"
+operator_version: "20200416"

@@ -31,7 +31,9 @@ spec:
       annotations:
         productName: "IBM Blockchain Platform"
         productID: "54283fa24f1a4e8589964e6e92626ec4"
-        productVersion: "2.1.3"
+        productVersion: "{{ product_version }}"
+        productChargedContainers: ""
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
     spec:
       hostIPC: false
       hostNetwork: false
@@ -50,7 +52,7 @@ spec:
         - name: "{{ image_pull_secret }}"
       containers:
         - name: ibp-operator
-          image: "{{ image_registry }}/{{ image_repository }}/ibp-operator:2.1.3-20200324-{{ arch }}"
+          image: "{{ image_registry }}/{{ image_repository }}/ibp-operator:{{ product_version }}-{{ operator_version }}-{{ arch }}"
           command:
           - ibp-operator
           imagePullPolicy: Always
