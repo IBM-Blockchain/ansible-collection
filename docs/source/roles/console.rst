@@ -139,6 +139,14 @@ Parameters
   console_storage_size (optional, str, 10Gi)
     The storage size to use for the console.
 
+  product_version (optional, str, 2.1.3)
+    The version of IBM Blockchain Platform to use.
+
+  operator_version (optional, str, 20200416)
+    The version of the IBM Blockchain Platform operator to use.
+
+    The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.1.3-20200416-amd64``.
+
   wait_timeout (optional, str, 60)
     The timeout, in seconds, to wait until the console is available.
 
