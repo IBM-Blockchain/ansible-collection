@@ -106,7 +106,7 @@
   k8s:
     state: absent
     namespace: "{{ project }}"
-    api_version: extensions/v1beta1
+    api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
   when: operator_upgrade and existing_console.resources
@@ -115,7 +115,7 @@
   k8s:
     state: present
     namespace: "{{ project }}"
-    api_version: extensions/v1beta1
+    api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
     wait: yes

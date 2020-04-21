@@ -54,7 +54,7 @@
 
 - name: Determine if operator exists
   k8s_info:
-    namespace: "{{ project }}"
+    namespace: "{{ namespace }}"
     api_version: apps/v1
     kind: Deployment
     name: "{{ operator }}"
@@ -86,7 +86,7 @@
 
 - name: Determine if console exists
   k8s_info:
-    namespace: "{{ project }}"
+    namespace: "{{ namespace }}"
     api_version: ibp.com/v1alpha1
     kind: IBPConsole
     name: "{{ console }}"
@@ -102,7 +102,7 @@
 - name: Delete console config map if it is being upgraded
   k8s:
     state: absent
-    namespace: "{{ project }}"
+    namespace: "{{ namespace }}"
     api_version: v1
     kind: ConfigMap
     name: "{{ console }}-deployer"
@@ -111,8 +111,8 @@
 - name: Delete console deployment if it is being upgraded
   k8s:
     state: absent
-    namespace: "{{ project }}"
-    api_version: extensions/v1beta1
+    namespace: "{{ namespace }}"
+    api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
   when: operator_upgrade and existing_console.resources
@@ -120,8 +120,8 @@
 - name: Wait for console deployment to start
   k8s:
     state: present
-    namespace: "{{ project }}"
-    api_version: extensions/v1beta1
+    namespace: "{{ namespace }}"
+    api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
     wait: yes
