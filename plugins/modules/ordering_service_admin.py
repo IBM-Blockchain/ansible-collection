@@ -97,6 +97,7 @@ EXAMPLES = '''
 
 RETURN = '''
 ---
+{}
 '''
 
 
