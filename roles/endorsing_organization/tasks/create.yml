@@ -111,7 +111,7 @@
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }} Peer"
     msp_id: "{{ organization_msp_id }}"
-    state_db: couchdb
+    state_db: "{{ peer_state_db }}"
     certificate_authority: "{{ organization_name }} CA"
     enrollment_id: "{{ peer_enrollment_id }}"
     enrollment_secret: "{{ peer_enrollment_secret }}"
