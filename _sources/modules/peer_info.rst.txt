@@ -90,23 +90,7 @@ Return Values
 
 
   peer (, dict, )
-    T
-
-    h
-
-    e
-
-     
-
-    p
-
-    e
-
-    e
-
-    r
-
-    .
+    The peer.
 
 
     name (, str, )

@@ -229,6 +229,11 @@
 </dd>
 <dt>ordering_service_enrollment_secret (optional, str, None)</dt><dd><p>The enrollment secret, or password, of the identity registered for the ordering service.</p>
 </dd>
+<dt>ordering_service_name (optional, str, Ordering Service)</dt><dd><p>The name of the ordering service.</p>
+</dd>
+<dt>ordering_service_nodes (optional, integer, 1)</dt><dd><p>The number of ordering service nodes in the ordering service.</p>
+<p>For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.</p>
+</dd>
 <dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the certificate authority and the ordering service is available.</p>
 </dd>
 </dl>

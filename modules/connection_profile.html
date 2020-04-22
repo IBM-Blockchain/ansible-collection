@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>peer – Manage a Hyperledger Fabric peer &mdash; Ansible Collection  documentation</title>
+  <title>connection_profile – Manage a connection profile for a Hyperledger Fabric network &mdash; Ansible Collection  documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer" href="peer_channel.html" />
-    <link rel="prev" title="organization_info – Get information about a Hyperledger Fabric organization" href="organization_info.html" /> 
+    <link rel="next" title="consortium_member – Manage a consortium member for a Hyperledger Fabric ordering service" href="consortium_member.html" />
+    <link rel="prev" title="channel_policy – Manage a policy for a Hyperledger Fabric channel" href="channel_policy.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -96,7 +96,13 @@
 <li class="toctree-l3"><a class="reference internal" href="channel_config.html">channel_config – Manage the configuration for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_member.html">channel_member – Manage a member for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_policy.html">channel_policy – Manage a policy for a Hyperledger Fabric channel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="connection_profile.html">connection_profile – Manage a connection profile for a Hyperledger Fabric network</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">connection_profile – Manage a connection profile for a Hyperledger Fabric network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="consortium_member.html">consortium_member – Manage a consortium member for a Hyperledger Fabric ordering service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enrolled_identity.html">enrolled_identity – Manage an enrolled Hyperledger Fabric identity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enrolled_identity_info.html">enrolled_identity_info – Get information about an enrolled Hyperledger Fabric identity</a></li>
@@ -109,14 +115,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ordering_service_info.html">ordering_service_info – Get information about a Hyperledger Fabric ordering service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="organization.html">organization – Manage a Hyperledger Fabric organization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="organization_info.html">organization_info – Get information about a Hyperledger Fabric organization</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">peer – Manage a Hyperledger Fabric peer</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="peer.html">peer – Manage a Hyperledger Fabric peer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="peer_channel.html">peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="peer_info.html">peer_info – Get information about a Hyperledger Fabric peer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="registered_identity.html">registered_identity – Manage a registered Hyperledger Fabric identity</a></li>
@@ -174,7 +173,7 @@
         
           <li><a href="../modules.html">Modules</a> &raquo;</li>
         
-      <li>peer – Manage a Hyperledger Fabric peer</li>
+      <li>connection_profile – Manage a connection profile for a Hyperledger Fabric network</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -182,7 +181,7 @@
             
             
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/peer.py" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/connection_profile.py" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -196,20 +195,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="peer-manage-a-hyperledger-fabric-peer">
-<h1>peer – Manage a Hyperledger Fabric peer<a class="headerlink" href="#peer-manage-a-hyperledger-fabric-peer" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="connection-profile-manage-a-connection-profile-for-a-hyperledger-fabric-network">
+<h1>connection_profile – Manage a connection profile for a Hyperledger Fabric network<a class="headerlink" href="#connection-profile-manage-a-connection-profile-for-a-hyperledger-fabric-network" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
+<li><p><a class="reference internal" href="#status" id="id4">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
 <h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
-<p>Create, update, or delete a Hyperledger Fabric peer by using the IBM Blockchain Platform.</p>
+<p>Create, update, or delete a connection profile for a Hyperledger Fabric network by using the IBM Blockchain Platform.</p>
 <p>This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 </div>
 <div class="section" id="parameters">
@@ -231,121 +229,22 @@
 <dt>api_token_endpoint (optional, str, <a class="reference external" href="https://iam.cloud.ibm.com/identity/token">https://iam.cloud.ibm.com/identity/token</a>)</dt><dd><p>The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.</p>
 <p>Only required when <em>api_authtype</em> is <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code>, and you are using IBM internal staging servers for testing.</p>
 </dd>
-<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - A peer matching the specified name will be stopped and removed.</p>
-<p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that a peer matching the specified name and configuration exists. If no peer matches the specified name, a peer will be created. If a peer matches the specified name but the configuration does not match, then the peer will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.</p>
+<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - If a connection profile exists at the specified path, it will be removed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that a connection profile exists at the specified path. If no connection profile exists, a connection profile will be created. If a connection profile exists, but does not match the specfied configuration, then the connection profile will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.</p>
 </dd>
-<dt>name (optional, str, None)</dt><dd><p>The name of the peer.</p>
+<dt>name (optional, str, None)</dt><dd><p>The name of this connection profile.</p>
 </dd>
-<dt>msp_id (optional, str, None)</dt><dd><p>The MSP ID for this peer.</p>
+<dt>path (optional, any, None)</dt><dd><p>The path to the JSON file where the connection profile will be stored.</p>
 </dd>
-<dt>state_db (optional, str, couchdb)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">couchdb</span></code> - Use CouchDB as the state database for this peer.</p>
-<p><code class="docutils literal notranslate"><span class="pre">leveldb</span></code> - Use LevelDB as the state database for this peer.</p>
+<dt>organization (optional, any, None)</dt><dd><p>The organization for this connection profile.</p>
 </dd>
-<dt>certificate_authority (optional, raw, None)</dt><dd><p>The certificate authority to use to enroll the identity for this peer.</p>
-<p>You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.</p>
+<dt>certificate_authority (optional, list, None)</dt><dd><p>The certificate authority to reference in this connection profile.</p>
+<p>You can pass a string, which is the display names of a certificate authority registered with the IBM Blockchain Platform console.</p>
 <p>You can also pass a dictionary, which must match the result format of one of the <span class="xref std std-ref">certificate_authority_info</span> or <span class="xref std std-ref">certificate_authority</span> modules.</p>
-<p>Only required when <em>config</em> is not specified.</p>
 </dd>
-<dt>enrollment_id (optional, str, None)</dt><dd><p>The enrollment ID, or user name, of an identity registered on the certificate authority for this peer.</p>
-<p>Only required when <em>config</em> is not specified.</p>
-</dd>
-<dt>enrollment_secret (optional, str, None)</dt><dd><p>The enrollment secret, or password, of an identity registered on the certificate authority for this peer.</p>
-<p>Only required when <em>config</em> is not specified.</p>
-</dd>
-<dt>admins (optional, list, None)</dt><dd><p>The list of administrator certificates for this peer.</p>
-<p>Administrator certificates must be supplied as base64 encoded PEM files.</p>
-<p>Only required when <em>config</em> is not specified.</p>
-</dd>
-<dt>config (optional, dict, None)</dt><dd><p>The initial configuration for the peer. This is only required if you need more advanced configuration than is provided by this module using <em>certificate_authority</em> and related options.</p>
-<p>See the IBM Blockchain Platform documentation for available options: <a class="reference external" href="https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config">https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config</a></p>
-</dd>
-<dt>config_override (optional, dict, None)</dt><dd><p>The configuration overrides for the peer.</p>
-<p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml">https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml</a></p>
-</dd>
-<dt>resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the peer.</p>
-<dl>
-<dt>peer (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the peer container.</p>
-<dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the peer container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 200m)</dt><dd><p>The Kubernetes CPU resource request for the peer container.</p>
-</dd>
-<dt>memory (optional, str, 1G)</dt><dd><p>The Kubernetes memory resource request for the peer container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>proxy (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the proxy container.</p>
-<dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the proxy container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 100m)</dt><dd><p>The Kubernetes CPU resource request for the proxy container.</p>
-</dd>
-<dt>memory (optional, str, 200M)</dt><dd><p>The Kubernetes memory resource request for the proxy container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>couchdb (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the CouchDB container.</p>
-<dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the CouchDB container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 200m)</dt><dd><p>The Kubernetes CPU resource request for the CouchDB container.</p>
-</dd>
-<dt>memory (optional, str, 400M)</dt><dd><p>The Kubernetes memory resource request for the CouchDB container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>dind (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the Docker in Docker (DinD) container.</p>
-<dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the Docker in Docker (DinD) container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 1)</dt><dd><p>The Kubernetes CPU resource request for the Docker in Docker (DinD) container.</p>
-</dd>
-<dt>memory (optional, str, 1G)</dt><dd><p>The Kubernetes memory resource request for the Docker in Docker (DinD) container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>storage (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the peer.</p>
-<dl>
-<dt>peer (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the peer container.</p>
-<dl class="simple">
-<dt>size (optional, str, 100Gi)</dt><dd><p>The size of the Kubernetes persistent volume claim for the peer container.</p>
-</dd>
-<dt>class (optional, str, default)</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the peer container.</p>
-</dd>
-</dl>
-</dd>
-<dt>statedb (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the CouchDB container.</p>
-<dl class="simple">
-<dt>size (optional, str, 100Gi)</dt><dd><p>The size of the Kubernetes persistent volume claim for the CouchDB container.</p>
-</dd>
-<dt>class (optional, str, default)</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the CouchDB container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>hsm (optional, dict, None)</dt><dd><p>The PKCS</p>
-<p>See the IBM Blockchain Platform documentation for more information: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm</a></p>
-<dl class="simple">
-<dt>pkcs11endpoint (optional, str, None)</dt><dd><p>The HSM proxy endpoint that the peer should use.</p>
-</dd>
-<dt>label (optional, str, None)</dt><dd><p>The HSM label that the peer should use.</p>
-</dd>
-<dt>pin (optional, str, None)</dt><dd><p>The HSM pin that the peer should use.</p>
-</dd>
-</dl>
-</dd>
-<dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the peer is available.</p>
+<dt>peers (optional, list, None)</dt><dd><p>The peers to reference in this connection profile.</p>
+<p>You can pass strings, which are the display names of peers registered with the IBM Blockchain Platform console.</p>
+<p>You can also pass dictionaries, which must match the result format of one of the <span class="xref std std-ref">peer_info</span> or <span class="xref std std-ref">peer</span> modules.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -356,37 +255,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="return-values">
-<h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><dl>
-<dt>peer (, dict, )</dt><dd><p>The peer.</p>
-<dl>
-<dt>name (, str, )</dt><dd><p>The name of the peer.</p>
-</dd>
-<dt>api_url (, str, )</dt><dd><p>The URL for the API of the peer.</p>
-</dd>
-<dt>operations_url (, str, )</dt><dd><p>The URL for the operations service of the peer.</p>
-</dd>
-<dt>grpcwp_url (, str, )</dt><dd><p>The URL for the gRPC web proxy of the peer.</p>
-</dd>
-<dt>msp_id (, str, )</dt><dd><p>The MSP ID of the peer.</p>
-</dd>
-<dt>pem (, str, )</dt><dd><p>The TLS certificate chain for the peer.</p>
-<p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
-</dd>
-<dt>tls_cert (, str, )</dt><dd><p>The TLS certificate chain for the peer.</p>
-<p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
-</dd>
-<dt>location (, str, )</dt><dd><p>The location of the peer.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-</div>
 <div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>This  is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
 <li><p>This  is maintained by community.</p></li>
@@ -408,10 +278,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="peer_channel.html" class="btn btn-neutral float-right" title="peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="consortium_member.html" class="btn btn-neutral float-right" title="consortium_member – Manage a consortium member for a Hyperledger Fabric ordering service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="organization_info.html" class="btn btn-neutral float-left" title="organization_info – Get information about a Hyperledger Fabric organization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="channel_policy.html" class="btn btn-neutral float-left" title="channel_policy – Manage a policy for a Hyperledger Fabric channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,0 +1,193 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/registered_identity.py
+
+
+registered_identity -- Manage a registered Hyperledger Fabric identity
+======================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Register, update, or revoke an Hyperledger Fabric identity by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (optional, str, None)
+    The URL for the IBM Blockchain Platform console.
+
+
+  api_authtype (optional, str, None)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+
+  api_key (optional, str, None)
+    The API key for the IBM Blockchain Platform console.
+
+
+  api_secret (optional, str, None)
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+
+  api_timeout (optional, integer, 60)
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+
+  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+
+  state (optional, str, present)
+    ``absent`` - If an identity is registered matching the specified enrollment ID, the identity will be removed. Note that this operation is unsupported by default and must be enabled by the certificate authority.
+
+    ``present`` - Asserts that an identity matching the specified enrollment ID and configuration is registered. If no identity matches the specified enrollment ID, the identity will be created. If an identity matches the specified enrollment ID but the configuration does not match, then the identity will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+
+
+  certificate_authority (optional, raw, None)
+    The certificate authority to use to register this identity.
+
+    You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
+
+    You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
+
+
+  registrar (optional, raw, None)
+    The identity to use when interacting with the certificate authority.
+
+    You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+
+
+  enrollment_id (optional, str, None)
+    The enrollment ID, or user name, of the identity to register on the certificate authority.
+
+
+  enrollment_secret (optional, str, None)
+    The enrollment secret, or password, of an identity to register on the certificate authority.
+
+
+  max_enrollments (optional, int, -1)
+    The maximum number of times that this identity can be enrolled.
+
+
+  type (optional, str, client)
+    The type of this identity.
+
+
+  affiliation (optional, str, None)
+    The affiliation of this identity.
+
+
+  attributes (optional, list, None)
+    The attributes for this identity.
+
+
+    name (optional, str, None)
+      The name of the attribute.
+
+
+    value (optional, str, None)
+      The value of the attribute.
+
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+
+
+
+Return Values
+-------------
+
+  registered_identity (, dict, )
+    The registered identity.
+
+
+    enrollment_id (, str, )
+      The enrollment ID, or user name, of the identity.
+
+
+    enrollment_secret (, str, )
+      The enrollment secret, or password, of an identity.
+
+
+    max_enrollments (, int, )
+      The maximum number of times that this identity can be enrolled.
+
+
+    type (, str, )
+      The type of this identity.
+
+
+    affiliation (, str, )
+      The affiliation of this identity.
+
+
+    attributes (, list, )
+      The attributes for this identity.
+
+
+      name (, str, )
+        The name of the attribute.
+
+
+      value (, str, )
+        The value of the attribute.
+
+
+
+
+
+
+
+Status
+------
+
+
+
+
+- This  is not guaranteed to have a backwards compatible interface. *[preview]*
+
+
+- This  is maintained by community.
+
+
+
+Authors
+~~~~~~~
+
+- Simon Stone (@sstone1)
+
