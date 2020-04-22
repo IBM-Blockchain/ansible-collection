@@ -11,6 +11,7 @@
     ca_admin_enrollment_id: admin
     organization_admin_enrollment_id: orderingorgadmin
     ordering_service_enrollment_id: orderingorgorderer
+    ordering_service_nodes: 1
     # These variables should be supplied using --extra-vars "@ordering-org-vars.yml"
     # api_endpoint: https://ibp-console.example.org:32000
     # api_authtype: basic

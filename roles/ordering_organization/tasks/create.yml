@@ -109,9 +109,9 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: Ordering Service
+    name: "{{ ordering_service_name }}"
     msp_id: "{{ organization_msp_id }}"
-    nodes: 1
+    nodes: "{{ ordering_service_nodes }}"
     certificate_authority: "{{ organization_name }} CA"
     enrollment_id: "{{ ordering_service_enrollment_id }}"
     enrollment_secret: "{{ ordering_service_enrollment_secret }}"
