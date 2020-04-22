@@ -9,3 +9,4 @@ api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ca_admin_enrollment_secret: adminpw
 organization_admin_enrollment_secret: org1adminpw
 peer_enrollment_secret: org1peerpw
+application_enrollment_secret: org1apppw
