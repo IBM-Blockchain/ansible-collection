@@ -162,7 +162,7 @@ def organization_to_msp(organization):
                         fabric_node_ous=organization.fabric_node_ous,
                         intermediate_certs=organization.intermediate_certs,
                         name=organization.msp_id,
-                        organizational_unit_identifiers=[],
+                        organizational_unit_identifiers=organization.organizational_unit_identifiers,
                         revocation_list=organization.revocation_list,
                         root_certs=organization.root_certs,
                         signing_identity=None,

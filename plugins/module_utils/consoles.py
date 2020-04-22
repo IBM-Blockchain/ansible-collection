@@ -479,6 +479,7 @@ class Console:
             'tls_root_certs': organization.get('tls_root_certs', list()),
             'tls_intermediate_certs': organization.get('tls_intermediate_certs', list()),
             'fabric_node_ous': organization['fabric_node_ous'],
+            'organizational_unit_identifiers': organization.get('organizational_unit_identifiers', list()),
             'host_url': organization.get('host_url', None)
         }
 
