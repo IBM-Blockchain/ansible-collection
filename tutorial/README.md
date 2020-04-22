@@ -196,6 +196,26 @@ Note that if all of the organizations use the same IBM Blockchain Platform conso
 
     This playbook installs the FabCar chaincode onto Org2's peer.
 
+21. Register application identity and create connection profile
+
+    - Organiation: Org1
+    - Playbook: [21-register-application.yml](21-register-application.yml)
+    - Command: `ansible-playbook 21-register-application.yml --extra-vars "@org1-vars.yml"`
+
+    This playbook registers a new identity and creates a new connection profile, that the FabCar application can use to connect to the network.
+
+    The enrollment ID (`org1app`), enrollment secret (`org1apppw` by default), and connection profile (`Org1 Gateway.json`) should be passed to the application developer.
+
+22. Register application identity and create connection profile
+
+    - Organiation: Org2
+    - Playbook: [22-register-application.yml](22-register-application.yml)
+    - Command: `ansible-playbook 22-register-application.yml --extra-vars "@org2-vars.yml"`
+
+    This playbook registers a new identity and creates a new connection profile, that the FabCar application can use to connect to the network.
+
+    The enrollment ID (`org2app`), enrollment secret (`org2apppw` by default), and connection profile (`Org2 Gateway.json`) should be passed to the application developer.
+
 ## Cleaning up
 
 1. Delete the components for the endorsing organization Org1

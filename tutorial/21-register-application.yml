@@ -1,0 +1,44 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Register application
+  hosts: localhost
+  vars:
+    # These variables should be supplied using --extra-vars "@org1-vars.yml"
+    # api_endpoint: https://ibp-console.example.org:32000
+    # api_authtype: basic
+    # api_key: xxxxxxxx
+    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # application_enrollment_secret: org1apppw
+  tasks:
+    - name: Register a new identity
+      ibm.blockchain_platform.registered_identity:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        certificate_authority: Org1 CA
+        registrar: Org1 CA Admin.json
+        enrollment_id: org1app
+        enrollment_secret: "{{ application_enrollment_secret }}"
+        max_enrollments: 10
+        type: client
+        attributes:
+          - name: fabcar.admin
+            value: "true"
+
+    - name: Create a connection profile
+      ibm.blockchain_platform.connection_profile:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        name: Org1 Gateway
+        path: Org1 Gateway.json
+        organization: Org1
+        certificate_authority: Org1 CA
+        peers:
+          - Org1 Peer
