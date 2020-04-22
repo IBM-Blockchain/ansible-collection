@@ -1,0 +1,7 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+ordering_service_name: Ordering Service
+ordering_service_nodes: 1

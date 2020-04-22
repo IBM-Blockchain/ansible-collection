@@ -76,6 +76,14 @@ Parameters
   ordering_service_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered for the ordering service.
 
+  ordering_service_name (optional, str, Ordering Service)
+    The name of the ordering service.
+
+  ordering_service_nodes (optional, integer, 1)
+    The number of ordering service nodes in the ordering service.
+
+    For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.
+
   wait_timeout (optional, integer, 60)
     The timeout, in seconds, to wait until the certificate authority and the ordering service is available.
 
