@@ -290,7 +290,7 @@ def main():
                     if ordering_service_node['display_name'] == expected_ordering_service_node['name']:
                         found = True
                 if not found:
-                    console.delete_ext_ordering_service_node(expected_ordering_service_node['id'])
+                    console.delete_ext_ordering_service_node(ordering_service_node['id'])
                     changed = True
 
         # Go through all of the nodes that should exist.
