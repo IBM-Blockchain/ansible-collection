@@ -205,6 +205,21 @@ options:
                                     - The organizational unit (OU) identifier for this identity classification.
                                 type: str
                                 default: orderer
+            organizational_unit_identifiers:
+                description:
+                    - The list of organizational unit identifiers for this organization.
+                type: list
+                elements: dict
+                suboptions:
+                    certificate:
+                        description:
+                            - The root or intermediate certificate for this organizational unit identifier.
+                            - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                        type: str
+                    organizational_unit_identifier:
+                        description:
+                            - The organizational unit (OU) identifier.
+                        type: str
 
 notes: []
 requirements: []
@@ -334,6 +349,21 @@ organization:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
                             default: orderer
+        organizational_unit_identifiers:
+            description:
+                - The list of organizational unit identifiers for this organization.
+            type: list
+            elements: dict
+            contains:
+                certificate:
+                    description:
+                        - The root or intermediate certificate for this organizational unit identifier.
+                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                    type: str
+                organizational_unit_identifier:
+                    description:
+                        - The organizational unit (OU) identifier.
+                    type: str
 '''
 
 
@@ -358,7 +388,29 @@ def main():
             revocation_list=dict(type='list', elements='str', default=list()),
             tls_root_certs=dict(type='list', elements='str', default=list()),
             tls_intermediate_certs=dict(type='list', elements='str', default=list()),
-            fabric_node_ous=dict(type='dict'),
+            fabric_node_ous=dict(type='dict', options=dict(
+                enable=dict(type='bool'),
+                admin_ou_identifier=dict(type='dict', options=dict(
+                    certificate=dict(type='str'),
+                    organizational_unit_identifier=dict(type='str')
+                )),
+                client_ou_identifier=dict(type='dict', options=dict(
+                    certificate=dict(type='str'),
+                    organizational_unit_identifier=dict(type='str')
+                )),
+                peer_ou_identifier=dict(type='dict', options=dict(
+                    certificate=dict(type='str'),
+                    organizational_unit_identifier=dict(type='str')
+                )),
+                orderer_ou_identifier=dict(type='dict', options=dict(
+                    certificate=dict(type='str'),
+                    organizational_unit_identifier=dict(type='str')
+                ))
+            )),
+            organizational_unit_identifiers=dict(type='list', elements='dict', default=list(), options=dict(
+                certificate=dict(type='str'),
+                organizational_unit_identifier=dict(type='str')
+            )),
             host_url=dict(type='str', default=None),
             type=dict(type='str')
         ))
@@ -415,6 +467,7 @@ def main():
             tls_root_certs=organization_definition['tls_root_certs'],
             tls_intermediate_certs=organization_definition['tls_intermediate_certs'],
             fabric_node_ous=organization_definition['fabric_node_ous'],
+            organizational_unit_identifiers=organization_definition['organizational_unit_identifiers'],
             host_url=organization_definition['host_url']
         )
 

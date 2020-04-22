@@ -198,6 +198,21 @@ options:
                             - The organizational unit (OU) identifier for this identity classification.
                         type: str
                         default: orderer
+    organizational_unit_identifiers:
+        description:
+            - The list of organizational unit identifiers for this organization.
+        type: list
+        elements: dict
+        suboptions:
+            certificate:
+                description:
+                    - The root or intermediate certificate for this organizational unit identifier.
+                    - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                type: str
+            organizational_unit_identifier:
+                description:
+                    - The organizational unit (OU) identifier.
+                type: str
 
 notes: []
 requirements: []
@@ -327,6 +342,21 @@ organization:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
                             default: orderer
+        organizational_unit_identifiers:
+            description:
+                - The list of organizational unit identifiers for this organization.
+            type: list
+            elements: dict
+            contains:
+                certificate:
+                    description:
+                        - The root or intermediate certificate for this organizational unit identifier.
+                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                    type: str
+                organizational_unit_identifier:
+                    description:
+                        - The organizational unit (OU) identifier.
+                    type: str
 '''
 
 
@@ -376,7 +406,29 @@ def main():
         revocation_list=dict(type='list', elements='str', default=list()),
         tls_root_certs=dict(type='list', elements='str', default=list()),
         tls_intermediate_certs=dict(type='list', elements='str', default=list()),
-        fabric_node_ous=dict(type='dict')
+        fabric_node_ous=dict(type='dict', default=dict(), options=dict(
+            enable=dict(type='bool', default=True),
+            admin_ou_identifier=dict(type='dict', default=dict(), options=dict(
+                certificate=dict(type='str'),
+                organizational_unit_identifier=dict(type='str', default='admin')
+            )),
+            client_ou_identifier=dict(type='dict', default=dict(), options=dict(
+                certificate=dict(type='str'),
+                organizational_unit_identifier=dict(type='str', default='client')
+            )),
+            peer_ou_identifier=dict(type='dict', default=dict(), options=dict(
+                certificate=dict(type='str'),
+                organizational_unit_identifier=dict(type='str', default='peer')
+            )),
+            orderer_ou_identifier=dict(type='dict', default=dict(), options=dict(
+                certificate=dict(type='str'),
+                organizational_unit_identifier=dict(type='str', default='orderer')
+            ))
+        )),
+        organizational_unit_identifiers=dict(type='list', elements='dict', default=list(), options=dict(
+            certificate=dict(type='str', required=True),
+            organizational_unit_identifier=dict(type='str', required=True)
+        ))
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
@@ -399,103 +451,42 @@ def main():
         organization_exists = organization is not None
 
         # Extract the organization configuration.
-        msp_id = module.params['msp_id']
-        root_certs = module.params['root_certs']
-        intermediate_certs = module.params['intermediate_certs']
-        admins = module.params['admins']
-        revocation_list = module.params['revocation_list']
-        tls_root_certs = module.params['tls_root_certs']
-        tls_intermediate_certs = module.params['tls_intermediate_certs']
-        fabric_node_ous = module.params['fabric_node_ous']
-        host_url = console.get_host_url()
+        expected_organization = dict(
+            display_name=name,
+            msp_id=module.params['msp_id'],
+            root_certs=module.params['root_certs'],
+            intermediate_certs=module.params['intermediate_certs'],
+            admins=module.params['admins'],
+            revocation_list=module.params['revocation_list'],
+            tls_root_certs=module.params['tls_root_certs'],
+            tls_intermediate_certs=module.params['tls_intermediate_certs'],
+            fabric_node_ous=module.params['fabric_node_ous'],
+            organizational_unit_identifiers=module.params['organizational_unit_identifiers'],
+            host_url=console.get_host_url()
+        )
 
         # Get any certificates from the certificate authority, if specified.
         certificate_authority_certs = get_from_certificate_authority(console, module)
+
+        # Merge any certificate authority certificates.
+        if certificate_authority_certs is not None:
+            expected_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
+            expected_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
 
         # Handle appropriately based on state.
         state = module.params['state']
         changed = False
         if state == 'present' and not organization_exists:
 
-            # Build the new organization, including any defaults.
-            new_organization = dict(
-                display_name=name,
-                msp_id=msp_id,
-                root_certs=root_certs,
-                intermediate_certs=intermediate_certs,
-                admins=admins,
-                revocation_list=revocation_list,
-                tls_root_certs=tls_root_certs,
-                tls_intermediate_certs=tls_intermediate_certs,
-                fabric_node_ous=dict(
-                    enable=True,
-                    admin_ou_identifier=dict(
-                        organizational_unit_identifier='admin'
-                    ),
-                    client_ou_identifier=dict(
-                        organizational_unit_identifier='client'
-                    ),
-                    peer_ou_identifier=dict(
-                        organizational_unit_identifier='peer'
-                    ),
-                    orderer_ou_identifier=dict(
-                        organizational_unit_identifier='orderer'
-                    )
-                ),
-                host_url=host_url
-            )
-
-            # Merge any certificate authority certificates.
-            if certificate_authority_certs is not None:
-                new_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
-                new_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
-
-            # Merge the user provided NodeOU configuration.
-            if fabric_node_ous is not None:
-                merge_dicts(new_organization['fabric_node_ous'], fabric_node_ous)
-
             # Create the organization.
-            organization = console.create_organization(new_organization)
+            organization = console.create_organization(expected_organization)
             changed = True
 
         elif state == 'present' and organization_exists:
 
             # Build the new organization, including any defaults.
             new_organization = copy_dict(organization)
-            merge_dicts(new_organization, dict(
-                msp_id=msp_id,
-                root_certs=root_certs,
-                intermediate_certs=intermediate_certs,
-                admins=admins,
-                revocation_list=revocation_list,
-                tls_root_certs=tls_root_certs,
-                tls_intermediate_certs=tls_intermediate_certs,
-                fabric_node_ous=dict(
-                    enable=True,
-                    admin_ou_identifier=dict(
-                        organizational_unit_identifier='admin'
-                    ),
-                    client_ou_identifier=dict(
-                        organizational_unit_identifier='client'
-                    ),
-                    peer_ou_identifier=dict(
-                        organizational_unit_identifier='peer'
-                    ),
-                    orderer_ou_identifier=dict(
-                        organizational_unit_identifier='orderer'
-                    )
-                ),
-                host_url=host_url
-            ))
-
-            # Merge any certificate authority certificates.
-            if certificate_authority_certs is not None:
-                new_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
-                new_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
-
-            # Merge the user provided NodeOU configuration.
-            if fabric_node_ous is not None:
-                merge_dicts(new_organization['fabric_node_ous'], fabric_node_ous)
+            merge_dicts(new_organization, expected_organization)
 
             # Check to see if any banned changes have been made.
             banned_changes = ['msp_id']
