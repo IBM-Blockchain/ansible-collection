@@ -138,6 +138,35 @@ class CertificateAuthorityConnection:
             ca=ca
         )
 
+    def is_registered(self, registrar, enrollment_id):
+        result = self.identity_service.getOne(enrollment_id, self._get_enrollment(registrar))
+        if result['success']:
+            return True
+        elif result['errors'][0]['code'] == 63:
+            return False
+        else:
+            raise Exception(result['errors'][0])
+
+    def get_registration(self, registrar, enrollment_id):
+        result = self.identity_service.getOne(enrollment_id, self._get_enrollment(registrar))
+        if not result['success']:
+            raise Exception(result['errors'][0])
+        return result['result']
+
+    def create_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
+        secret = self.identity_service.create(self._get_enrollment(registrar), enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs)
+        return secret
+
+    def update_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
+        result = self.identity_service.update(enrollment_id, self._get_enrollment(registrar), type, affiliation, max_enrollments, attrs, enrollment_secret)
+        if not result['success']:
+            raise Exception(result['errors'][0])
+
+    def delete_registration(self, registrar, enrollment_id):
+        result = self.identity_service.delete(enrollment_id, self._get_enrollment(registrar))
+        if not result['success']:
+            raise Exception(result['errors'][0])
+
     def _get_enrollment(self, identity):
         private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
         return Enrollment(private_key, identity.cert, service=self.ca_service)
