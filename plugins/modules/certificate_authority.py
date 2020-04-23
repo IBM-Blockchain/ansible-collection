@@ -308,9 +308,15 @@ def main():
             if tlsca is not None:
                 merge_dicts(tlsca, bccsp)
 
-        # Either create or update the peer.
+        # Either create or update the certificate authority.
         changed = False
         if state == 'present' and not certificate_authority_exists:
+
+            # Delete the resources and storage configuration for a new certificate
+            # authority being deployed to a free cluster.
+            if console.is_free_cluster():
+                del expected_certificate_authority['resources']
+                del expected_certificate_authority['storage']
 
             # Create the certificate authority.
             certificate_authority = console.create_ca(expected_certificate_authority)
