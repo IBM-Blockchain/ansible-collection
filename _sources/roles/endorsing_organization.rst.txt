@@ -76,6 +76,11 @@ Parameters
   peer_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered for the peer.
 
+  peer_state_db (optional, str, couchdb)
+    ``couchdb`` - Use CouchDB as the state database for this peer.
+
+    ``leveldb`` - Use LevelDB as the state database for this peer.
+
   wait_timeout (optional, integer, 60)
     The timeout, in seconds, to wait until the certificate authority and the peer are available.
 

@@ -86,6 +86,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
+</ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
@@ -309,6 +313,15 @@
 </dd>
 </dl>
 </dd>
+<dt>organizational_unit_identifiers (optional, list, None)</dt><dd><p>The list of organizational unit identifiers for this organization.</p>
+<dl>
+<dt>certificate (optional, str, None)</dt><dd><p>The root or intermediate certificate for this organizational unit identifier.</p>
+<p>Root or intermediate certificates must be supplied as base64 encoded PEM files.</p>
+</dd>
+<dt>organizational_unit_identifier (optional, str, None)</dt><dd><p>The organizational unit (OU) identifier.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -387,6 +400,15 @@
 <dt>organizational_unit_identifier (, str, )</dt><dd><p>The organizational unit (OU) identifier for this identity classification.</p>
 </dd>
 </dl>
+</dd>
+</dl>
+</dd>
+<dt>organizational_unit_identifiers (, list, )</dt><dd><p>The list of organizational unit identifiers for this organization.</p>
+<dl>
+<dt>certificate (, str, )</dt><dd><p>The root or intermediate certificate for this organizational unit identifier.</p>
+<p>Root or intermediate certificates must be supplied as base64 encoded PEM files.</p>
+</dd>
+<dt>organizational_unit_identifier (, str, )</dt><dd><p>The organizational unit (OU) identifier.</p>
 </dd>
 </dl>
 </dd>

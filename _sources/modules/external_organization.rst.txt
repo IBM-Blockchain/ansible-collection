@@ -199,6 +199,21 @@ Parameters
 
 
 
+    organizational_unit_identifiers (optional, list, None)
+      The list of organizational unit identifiers for this organization.
+
+
+      certificate (optional, str, None)
+        The root or intermediate certificate for this organizational unit identifier.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (optional, str, None)
+        The organizational unit (OU) identifier.
+
+
+
 
 
 
@@ -333,6 +348,21 @@ Return Values
         organizational_unit_identifier (, str, )
           The organizational unit (OU) identifier for this identity classification.
 
+
+
+
+    organizational_unit_identifiers (, list, )
+      The list of organizational unit identifiers for this organization.
+
+
+      certificate (, str, )
+        The root or intermediate certificate for this organizational unit identifier.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+
+      organizational_unit_identifier (, str, )
+        The organizational unit (OU) identifier.
 
 
 

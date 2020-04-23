@@ -86,6 +86,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
+</ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
@@ -229,6 +233,9 @@
 <dt>peer_enrollment_id (optional, str, None)</dt><dd><p>The enrollment ID, or user name, of the identity registered for the peer.</p>
 </dd>
 <dt>peer_enrollment_secret (optional, str, None)</dt><dd><p>The enrollment secret, or password, of the identity registered for the peer.</p>
+</dd>
+<dt>peer_state_db (optional, str, couchdb)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">couchdb</span></code> - Use CouchDB as the state database for this peer.</p>
+<p><code class="docutils literal notranslate"><span class="pre">leveldb</span></code> - Use LevelDB as the state database for this peer.</p>
 </dd>
 <dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the certificate authority and the peer are available.</p>
 </dd>
