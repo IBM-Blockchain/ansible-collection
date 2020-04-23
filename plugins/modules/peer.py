@@ -535,6 +535,12 @@ def main():
         changed = False
         if state == 'present' and not peer_exists:
 
+            # Delete the resources and storage configuration for a new peer
+            # being deployed to a free cluster.
+            if console.is_free_cluster():
+                del expected_peer['resources']
+                del expected_peer['storage']
+
             # Get the config.
             expected_peer['config'] = get_config(console, module)
 

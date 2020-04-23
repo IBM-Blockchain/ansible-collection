@@ -527,6 +527,12 @@ def main():
                 storage=module.params['storage']
             )
 
+            # Delete the resources and storage configuration for a new ordering
+            # service being deployed to a free cluster.
+            if console.is_free_cluster():
+                del expected_ordering_service['resources']
+                del expected_ordering_service['storage']
+
             # Add the HSM configuration if it is specified.
             if hsm is not None:
                 expected_ordering_service['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
