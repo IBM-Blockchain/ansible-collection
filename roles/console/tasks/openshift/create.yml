@@ -111,6 +111,17 @@
     name: "{{ console }}"
   when: operator_upgrade and existing_console.resources
 
+- name: Wait for console deployment to exist
+  k8s_info:
+    namespace: "{{ project }}"
+    api_version: apps/v1
+    kind: Deployment
+    name: "{{ console }}"
+  register: console_deployment
+  until: console_deployment.resources
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
 - name: Wait for console deployment to start
   k8s:
     state: present
@@ -122,7 +133,7 @@
     wait_timeout: "{{ wait_timeout }}"
   changed_when: False
 
-- name: Find console route
+- name: Wait for console route to exist
   k8s_info:
     namespace: "{{ project }}"
     api_version: route.openshift.io/v1
@@ -137,7 +148,7 @@
   set_fact:
     console_url: "https://{{ console_route.resources[0].spec.host }}"
 
-- name: Wait for console to start
+- name: Wait for console route to start
   uri:
     url: "{{ console_url }}"
     status_code: "200"
