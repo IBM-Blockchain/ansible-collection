@@ -21,6 +21,13 @@ import time
 import urllib
 
 
+class CertificateAuthorityException(Exception):
+
+    def __init__(self, code, message):
+        super(CertificateAuthorityException, self).__init__(dict(code=code, message=message))
+        self.code = code
+
+
 class CertificateAuthority:
 
     def __init__(self, name, api_url, operations_url, ca_url, ca_name, tlsca_name, pem, location):
@@ -117,6 +124,7 @@ class CertificateAuthorityConnection:
         self.pem_path = temp[1]
         self.ca_service = ca_service(self.certificate_authority.api_url, self.pem_path, ca_name=self.certificate_authority.ca_name)
         self.identity_service = self.ca_service.newIdentityService()
+        self.certificate_service = self.ca_service.newCertificateService()
         return self
 
     def __exit__(self, type, value, tb):
@@ -145,12 +153,12 @@ class CertificateAuthorityConnection:
         elif result['errors'][0]['code'] == 63:
             return False
         else:
-            raise Exception(result['errors'][0])
+            raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
 
     def get_registration(self, registrar, enrollment_id):
         result = self.identity_service.getOne(enrollment_id, self._get_enrollment(registrar))
         if not result['success']:
-            raise Exception(result['errors'][0])
+            raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
         return result['result']
 
     def create_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
@@ -160,12 +168,18 @@ class CertificateAuthorityConnection:
     def update_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
         result = self.identity_service.update(enrollment_id, self._get_enrollment(registrar), type, affiliation, max_enrollments, attrs, enrollment_secret)
         if not result['success']:
-            raise Exception(result['errors'][0])
+            raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
 
     def delete_registration(self, registrar, enrollment_id):
         result = self.identity_service.delete(enrollment_id, self._get_enrollment(registrar))
         if not result['success']:
-            raise Exception(result['errors'][0])
+            raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
+
+    def get_certificates(self, registrar, enrollment_id):
+        result = self.certificate_service.getCertificates(self._get_enrollment(registrar), enrollment_id)
+        if not result['success']:
+            raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
+        return result['result']
 
     def _get_enrollment(self, identity):
         private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
