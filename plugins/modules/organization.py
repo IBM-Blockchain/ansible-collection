@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.cert_utils import split_ca_chain
 from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
 from ..module_utils.organizations import Organization
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
@@ -375,14 +376,18 @@ def get_from_certificate_authority(console, module):
     response = open_url(f'{certificate_authority.api_url}/cainfo?ca={certificate_authority.tlsca_name}', None, None, method='GET', validate_certs=False)
     tlscainfo = json.load(response)
 
+    # Split the certificate authority chains into root certificates and intermediate certificates.
+    ca_chain = cainfo['result']['CAChain']
+    (root_certs, intermediate_certs) = split_ca_chain(ca_chain)
+    tlsca_chain = tlscainfo['result']['CAChain']
+    (tls_root_certs, tls_intermediate_certs) = split_ca_chain(tlsca_chain)
+
     # Return the certificate authority information.
     return {
-        'root_certs': [
-            cainfo['result']['CAChain']
-        ],
-        'tls_root_certs': [
-            tlscainfo['result']['CAChain']
-        ]
+        'root_certs': root_certs,
+        'intermediate_certs': intermediate_certs,
+        'tls_root_certs': tls_root_certs,
+        'tls_intermediate_certs': tls_intermediate_certs
     }
 
 
@@ -473,17 +478,26 @@ def main():
 
             # Extend the root certificate lists.
             expected_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
+            expected_organization['intermediate_certs'].extend(certificate_authority_certs['intermediate_certs'])
             expected_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
+            expected_organization['tls_intermediate_certs'].extend(certificate_authority_certs['tls_intermediate_certs'])
 
             # Check to see if NodeOU support is enabled.
             node_ous_enabled = expected_organization['fabric_node_ous']['enable']
             if node_ous_enabled:
 
+                # If using an intermediate certificate authority, use the intermediate certificate.
+                # Otherwise, use the root certificate.
+                if certificate_authority_certs['intermediate_certs']:
+                    default_cert = certificate_authority_certs['intermediate_certs'][0]
+                else:
+                    default_cert = certificate_authority_certs['root_certs'][0]
+
                 # Go through each OU, ensuring that the certificate field is set.
                 for node_ou in ['admin', 'client', 'orderer', 'peer']:
                     node_ou_identifier = expected_organization['fabric_node_ous'][f'{node_ou}_ou_identifier']
                     if node_ou_identifier.get('certificate', None) is None:
-                        node_ou_identifier['certificate'] = certificate_authority_certs['root_certs'][0]
+                        node_ou_identifier['certificate'] = default_cert
 
         # Handle appropriately based on state.
         state = module.params['state']

@@ -10,7 +10,7 @@ This Ansible collection, provided as part of the IBM Blockchain Platform, enable
 
 Documentation for this Ansible collection is available here: https://ibm-blockchain.github.io/ansible-collection/
 
-The documentation includes installation instructions, and reference material for all modules and roles in this collection.
+The documentation includes installation instructions, tutorials, and reference material for all modules and roles in this collection.
 
 ## License
 
