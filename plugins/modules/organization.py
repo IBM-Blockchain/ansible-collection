@@ -470,8 +470,20 @@ def main():
 
         # Merge any certificate authority certificates.
         if certificate_authority_certs is not None:
+
+            # Extend the root certificate lists.
             expected_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
             expected_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
+
+            # Check to see if NodeOU support is enabled.
+            node_ous_enabled = expected_organization['fabric_node_ous']['enable']
+            if node_ous_enabled:
+
+                # Go through each OU, ensuring that the certificate field is set.
+                for node_ou in ['admin', 'client', 'orderer', 'peer']:
+                    node_ou_identifier = expected_organization['fabric_node_ous'][f'{node_ou}_ou_identifier']
+                    if node_ou_identifier.get('certificate', None) is None:
+                        node_ou_identifier['certificate'] = certificate_authority_certs['root_certs'][0]
 
         # Handle appropriately based on state.
         state = module.params['state']
