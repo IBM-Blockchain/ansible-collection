@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.certificate_authorities import CertificateAuthorityException
 from ..module_utils.enrolled_identities import EnrolledIdentity
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
 
@@ -188,6 +189,33 @@ def main():
             name = module.params['name']
             new_identity = identity.clone()
             new_identity.name = name
+
+            # The certificate may no longer be valid (revoked, expired, new certificate authority).
+            # If this is the case, we want to try re-enrolling it.
+            certificate_authority = get_certificate_authority_by_module(console, module)
+            with certificate_authority.connect() as connection:
+
+                # Determine if the certificate is valid.
+                enrollment_id = module.params['enrollment_id']
+                enrollment_secret = module.params['enrollment_secret']
+                certificate_valid = False
+                try:
+                    connection.get_certificates(new_identity, enrollment_id)
+                    certificate_valid = True
+                except CertificateAuthorityException as e:
+                    if e.code == 71:
+                        # This means that the user is authenticated (certificate is valid), but the user is not authorized to get certificates.
+                        certificate_valid = True
+                    elif e.code == 20:
+                        # This means that the user is not authenticated (certificate is invalid).
+                        pass
+                    else:
+                        # This is some other problem that we should not ignore.
+                        raise
+
+                # If the certificate is not valid, enroll it again.
+                if not certificate_valid:
+                    new_identity = connection.enroll(name, enrollment_id, enrollment_secret)
 
             # Check if it has changed.
             changed = not new_identity.equals(identity)
