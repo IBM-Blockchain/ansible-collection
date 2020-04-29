@@ -64,6 +64,9 @@ Parameters
   ca_admin_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered as the administrator of the certificate authority.
 
+  ca_name (optional, str, *organization_name* CA)
+    The name of the certificate authority.
+
   organization_admin_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
 

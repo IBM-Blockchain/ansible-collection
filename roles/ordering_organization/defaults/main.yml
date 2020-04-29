@@ -3,5 +3,6 @@
 #
 ---
 state: present
+ca_name: "{{ organization_name }} CA"
 ordering_service_name: Ordering Service
 ordering_service_nodes: 1
