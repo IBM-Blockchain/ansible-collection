@@ -249,7 +249,7 @@ options:
                         default: default
     hsm:
         description:
-            - The PKCS #11 compliant HSM configuration to use for the peer.
+            - "The PKCS #11 compliant HSM configuration to use for the peer."
             - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
         type: dict
         suboptions:
@@ -265,6 +265,12 @@ options:
                 description:
                     - The HSM pin that the peer should use.
                 type: str
+    zone:
+        description:
+            - The Kubernetes zone for this peer.
+            - If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
+            - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
+        type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the peer is available.
@@ -443,6 +449,7 @@ def main():
             label=dict(type='str', required=True),
             pin=dict(type='str', required=True)
         )),
+        zone=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -531,6 +538,11 @@ def main():
             )
             merge_dicts(expected_peer['config_override'], hsm_config_override)
 
+        # Add the zone if it is specified.
+        zone = module.params['zone']
+        if zone is not None:
+            expected_peer['zone'] = zone
+
         # Either create or update the peer.
         changed = False
         if state == 'present' and not peer_exists:
@@ -565,7 +577,8 @@ def main():
             merge_dicts(new_peer, expected_peer)
 
             # Check to see if any banned changes have been made.
-            permitted_changes = ['resources', 'zone', 'config_override', 'version']
+            # HACK: zone is documented as a permitted change, but it has no effect.
+            permitted_changes = ['resources', 'config_override', 'version']
             diff = diff_dicts(peer, new_peer)
             for change in diff:
                 if change not in permitted_changes:
