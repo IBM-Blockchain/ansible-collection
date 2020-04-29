@@ -10,3 +10,4 @@ ca_admin_enrollment_secret: adminpw
 organization_admin_enrollment_secret: org2adminpw
 peer_enrollment_secret: org2peerpw
 application_enrollment_secret: org2apppw
+wait_timeout: 600

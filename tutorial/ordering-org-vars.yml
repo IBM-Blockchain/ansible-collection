@@ -9,3 +9,4 @@ api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ca_admin_enrollment_secret: adminpw
 organization_admin_enrollment_secret: orderingorgadminpw
 ordering_service_enrollment_secret: orderingorgordererpw
+wait_timeout: 600
