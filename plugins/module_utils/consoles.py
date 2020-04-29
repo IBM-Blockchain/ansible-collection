@@ -166,10 +166,15 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        data = json.dumps(data)
+        # Extract only the parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override', 'replicas', 'version']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        serialized_data = json.dumps(stripped_data)
         for attempt in range(self.retries):
             try:
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
                 if self.should_retry_error(e):
@@ -231,10 +236,15 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        data = json.dumps(data)
+        # Extract only the parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override', 'version']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        serialized_data = json.dumps(stripped_data)
         for attempt in range(self.retries):
             try:
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
                 if self.should_retry_error(e):
@@ -318,10 +328,15 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        data = json.dumps(data)
+        # Extract only the parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override', 'version']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        serialized_data = json.dumps(stripped_data)
         for attempt in range(self.retries):
             try:
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
                 if self.should_retry_error(e):

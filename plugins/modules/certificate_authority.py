@@ -324,6 +324,12 @@ def main():
 
         elif state == 'present' and certificate_authority_exists:
 
+            # HACK: never send the limits back, as they are rejected.
+            for thing in ['ca']:
+                if thing in certificate_authority['resources']:
+                    if 'limits' in certificate_authority['resources'][thing]:
+                        del certificate_authority['resources'][thing]['limits']
+
             # Update the certificate authority configuration.
             new_certificate_authority = copy_dict(certificate_authority)
             merge_dicts(new_certificate_authority, expected_certificate_authority)
@@ -344,11 +350,11 @@ def main():
                     identity['pass'] = '[redacted]'
 
             # Check to see if any banned changes have been made.
-            banned_changes = ['storage']
+            permitted_changes = ['resources', 'zone', 'config_override', 'replicas', 'version']
             diff = diff_dicts(certificate_authority, new_certificate_authority)
-            for banned_change in banned_changes:
-                if banned_change in diff:
-                    raise Exception(f'{banned_change} cannot be changed from {certificate_authority[banned_change]} to {new_certificate_authority[banned_change]} for existing certificate authority')
+            for change in diff:
+                if change not in permitted_changes:
+                    raise Exception(f'{change} cannot be changed from {certificate_authority[change]} to {new_certificate_authority[change]} for existing certificate authority')
 
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
