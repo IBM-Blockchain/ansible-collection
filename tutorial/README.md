@@ -1,6 +1,6 @@
 # Tutorial
 
-This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the building of a two organization Hyperledger Fabric network.
+This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the building of a two organization Hyperledger Fabric network. You can use this tutorial to build a two organization Hyperledger Fabric network using the IBM Blockchain Platform on IBM Cloud or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
 ## Overview
 
@@ -10,9 +10,45 @@ The Ansible Playbooks require variables that specify the IBM Blockchain Platform
 
 ## Before you start
 
-Edit the files [ordering-org-vars.yml](ordering-org-vars.yml) (Ordering Org), [org1-vars.yml](org1-vars.yml) (Org1), and [org2-vars.yml](org2-vars.yml) (Org2) with the IBM Blockchain Platform connection details for each organization.
+Edit the variable files [ordering-org-vars.yml](ordering-org-vars.yml) (Ordering Org), [org1-vars.yml](org1-vars.yml) (Org1), and [org2-vars.yml](org2-vars.yml) (Org2) with the IBM Blockchain Platform connection details for each organization as follows:
+
+- IBM Blockchain Platform on IBM Cloud
+
+  1. Create an IBM Blockchain Platform service instance.
+
+  2. Create service credentials for the IBM Blockchain Platform service instance.
+
+  3. Edit the variable file:
+
+     1. Set `api_endpoint` to the value of `api_endpoint` contained in the service credentials.
+
+     2. Set `api_authtype` to `ibmcloud`.
+
+     3. Set `api_key` to the value of `api_key` contained in the service credentials.
+
+     4. You do not need to specify a value for `api_secret`.
+
+- IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster
+
+  1. Install the IBM Blockchain Platform software.
+
+  2. Determine the URL of your IBM Blockchain Platform console.
+
+  3. Determine the API key and secret you use to access your IBM Blockchain Platform console. You can also use a username and password instead of an API key and secret.
+
+  4. Edit the variable file:
+
+     1. Set `api_endpoint` to the URL of your IBM Blockchain Platform console.
+
+     2. Set `api_authtype` to `basic`.
+
+     3. Set `api_key` to your API key or username.
+
+     4. Set `api_secret` to your API secret or password.
 
 Note that if all of the organizations use the same IBM Blockchain Platform console, you will need to skip certain steps. This is because all of the information is already present in the IBM Blockchain Platform console, and does not need to be imported.
+
+Finally, all of these files contain a `wait_timeout` variable, with the default set to `600` (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.
 
 ## Steps
 
