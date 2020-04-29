@@ -116,7 +116,7 @@ Parameters
 
 
   hsm (optional, dict, None)
-    The PKCS
+    The PKCS #11 compliant HSM configuration to use for the certificate authority.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
@@ -132,6 +132,14 @@ Parameters
     pin (optional, str, None)
       The HSM pin that the certificate authority should use.
 
+
+
+  zone (optional, str, None)
+    The Kubernetes zone for this certificate authority.
+
+    If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
+
+    See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
 
   wait_timeout (optional, integer, 60)

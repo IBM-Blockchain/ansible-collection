@@ -271,7 +271,7 @@
 </dd>
 </dl>
 </dd>
-<dt>hsm (optional, dict, None)</dt><dd><p>The PKCS</p>
+<dt>hsm (optional, dict, None)</dt><dd><p>The PKCS #11 compliant HSM configuration to use for the certificate authority.</p>
 <p>See the IBM Blockchain Platform documentation for more information: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm</a></p>
 <dl class="simple">
 <dt>pkcs11endpoint (optional, str, None)</dt><dd><p>The HSM proxy endpoint that the certificate authority should use.</p>
@@ -281,6 +281,10 @@
 <dt>pin (optional, str, None)</dt><dd><p>The HSM pin that the certificate authority should use.</p>
 </dd>
 </dl>
+</dd>
+<dt>zone (optional, str, None)</dt><dd><p>The Kubernetes zone for this certificate authority.</p>
+<p>If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.</p>
+<p>See the Kubernetes documentation for more information: <a class="reference external" href="https://kubernetes.io/docs/setup/best-practices/multiple-zones/">https://kubernetes.io/docs/setup/best-practices/multiple-zones/</a></p>
 </dd>
 <dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the certificate authority is available.</p>
 </dd>

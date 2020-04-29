@@ -190,7 +190,7 @@ Parameters
 
 
   hsm (optional, dict, None)
-    The PKCS
+    The PKCS #11 compliant HSM configuration to use for the ordering service.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
@@ -206,6 +206,16 @@ Parameters
     pin (optional, str, None)
       The HSM pin that the ordering service should use.
 
+
+
+  zone (optional, list, None)
+    The Kubernetes zones for this ordering service.
+
+    If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by *nodes*.
+
+    If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
+
+    See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
 
   wait_timeout (optional, integer, 60)

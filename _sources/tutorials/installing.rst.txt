@@ -87,7 +87,9 @@ Next, you will need to replace the variable placeholders with the required value
 
 Replace ``<namespace>`` with the name of the Kubernetes namespace, or ``<project>`` with the name of the Red Hat OpenShift project, that you are installing the IBM Blockchain Platform into.
 
-Replace ``<image_registry_email>`` with the email address of your IBMid account that you use to access the My IBM dashboard. Replace ``<image_registry_password>`` with your IBM Blockchain Platform entitlement key.
+Replace ``<image_registry_password>`` with your IBM Blockchain Platform entitlement key.
+
+Replace ``<image_registry_email>`` with the email address of your IBMid account that you use to access the My IBM dashboard.
 
 Replace ``<console_domain>`` with the domain name of your Kubernetes cluster or Red Hat OpenShift cluster. This domain name is used as the base domain name for all ingress or routes created by the IBM Blockchain Platform.
 
