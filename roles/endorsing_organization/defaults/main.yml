@@ -3,4 +3,5 @@
 #
 ---
 state: present
+ca_name: "{{ organization_name }} CA"
 peer_state_db: couchdb

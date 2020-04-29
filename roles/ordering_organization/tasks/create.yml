@@ -10,7 +10,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: "{{ organization_name }} CA"
+    name: "{{ ca_name }}"
     config_override:
       ca:
         registry:
@@ -66,11 +66,11 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    certificate_authority: "{{ organization_name }} CA"
-    name: "{{ organization_name }} CA Admin"
+    certificate_authority: "{{ ca_name }}"
+    name: "{{ ca_name }} Admin"
     enrollment_id: "{{ ca_admin_enrollment_id }}"
     enrollment_secret: "{{ ca_admin_enrollment_secret }}"
-    path: "{{ playbook_dir }}/{{ organization_name }} CA Admin.json"
+    path: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
 
 - name: Enroll the organization admin
   ibm.blockchain_platform.enrolled_identity:
@@ -80,7 +80,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    certificate_authority: "{{ organization_name }} CA"
+    certificate_authority: "{{ ca_name }}"
     name: "{{ organization_name }} Admin"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
     enrollment_secret: "{{ organization_admin_enrollment_secret }}"
@@ -97,7 +97,7 @@
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
-    certificate_authority: "{{ organization_name }} CA"
+    certificate_authority: "{{ ca_name }}"
     admins:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
 
@@ -112,7 +112,7 @@
     name: "{{ ordering_service_name }}"
     msp_id: "{{ organization_msp_id }}"
     nodes: "{{ ordering_service_nodes }}"
-    certificate_authority: "{{ organization_name }} CA"
+    certificate_authority: "{{ ca_name }}"
     enrollment_id: "{{ ordering_service_enrollment_id }}"
     enrollment_secret: "{{ ordering_service_enrollment_secret }}"
     admin_certificates:
