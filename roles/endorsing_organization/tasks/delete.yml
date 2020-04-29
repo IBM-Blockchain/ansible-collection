@@ -50,6 +50,6 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-    name: "{{ organization_name }} Peer"
+    name: "{{ peer_name }}"
     # HACK: this shouldn't be required
     config: {}

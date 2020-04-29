@@ -79,6 +79,9 @@ Parameters
   peer_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered for the peer.
 
+  peer_name (optional, str, *organization_name* Peer)
+    The name of the peer.
+
   peer_state_db (optional, str, couchdb)
     ``couchdb`` - Use CouchDB as the state database for this peer.
 
