@@ -556,16 +556,20 @@ def main():
                     if 'limits' in peer['resources'][thing]:
                         del peer['resources'][thing]['limits']
 
+            # HACK: never send the fluentd and init resources back, as they are rejected.
+            peer['resources'].pop('fluentd', None)
+            peer['resources'].pop('init', None)
+
             # Update the peer configuration.
             new_peer = copy_dict(peer)
             merge_dicts(new_peer, expected_peer)
 
             # Check to see if any banned changes have been made.
-            banned_changes = ['msp_id', 'state_db', 'storage']
+            permitted_changes = ['resources', 'zone', 'config_override', 'version']
             diff = diff_dicts(peer, new_peer)
-            for banned_change in banned_changes:
-                if banned_change in diff:
-                    raise Exception(f'{banned_change} cannot be changed from {peer[banned_change]} to {new_peer[banned_change]} for existing peer')
+            for change in diff:
+                if change not in permitted_changes:
+                    raise Exception(f'{change} cannot be changed from {peer[change]} to {new_peer[change]} for existing peer')
 
             # If the peer has changed, apply the changes.
             peer_changed = not equal_dicts(peer, new_peer)

@@ -567,6 +567,9 @@ def main():
                         if 'limits' in ordering_service_node['resources'][thing]:
                             del ordering_service_node['resources'][thing]['limits']
 
+                # HACK: never send the init resources back, as they are rejected.
+                ordering_service_node['resources'].pop('init', None)
+
                 # Get the config overrides.
                 if config_override_list is not None:
                     config_override = config_override[i]
@@ -593,11 +596,11 @@ def main():
                 merge_dicts(new_ordering_service_node, expected_ordering_service_node)
 
                 # Check to see if any banned changes have been made.
-                banned_changes = ['msp_id', 'orderer_type', 'system_channel_id', 'storage']
+                permitted_changes = ['resources', 'zone', 'config_override', 'version']
                 diff = diff_dicts(ordering_service_node, new_ordering_service_node)
-                for banned_change in banned_changes:
-                    if banned_change in diff:
-                        raise Exception(f'{banned_change} cannot be changed from {ordering_service_node[banned_change]} to {new_ordering_service_node[banned_change]} for existing ordering service node')
+                for change in diff:
+                    if change not in permitted_changes:
+                        raise Exception(f'{change} cannot be changed from {ordering_service_node[change]} to {new_ordering_service_node[change]} for existing ordering service node')
 
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
