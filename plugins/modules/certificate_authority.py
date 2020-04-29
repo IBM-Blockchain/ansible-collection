@@ -127,7 +127,7 @@ options:
                         default: default
     hsm:
         description:
-            - The PKCS #11 compliant HSM configuration to use for the certificate authority.
+            - "The PKCS #11 compliant HSM configuration to use for the certificate authority."
             - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
         type: dict
         suboptions:
@@ -143,6 +143,12 @@ options:
                 description:
                     - The HSM pin that the certificate authority should use.
                 type: str
+    zone:
+        description:
+            - The Kubernetes zone for this certificate authority.
+            - If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
+            - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
+        type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
@@ -235,6 +241,7 @@ def main():
             label=dict(type='str', required=True),
             pin=dict(type='str', required=True)
         )),
+        zone=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -308,6 +315,11 @@ def main():
             if tlsca is not None:
                 merge_dicts(tlsca, bccsp)
 
+        # Add the zone if it is specified.
+        zone = module.params['zone']
+        if zone is not None:
+            expected_certificate_authority['zone'] = zone
+
         # Either create or update the certificate authority.
         changed = False
         if state == 'present' and not certificate_authority_exists:
@@ -350,7 +362,8 @@ def main():
                     identity['pass'] = '[redacted]'
 
             # Check to see if any banned changes have been made.
-            permitted_changes = ['resources', 'zone', 'config_override', 'replicas', 'version']
+            # HACK: zone is documented as a permitted change, but it has no effect.
+            permitted_changes = ['resources', 'config_override', 'replicas', 'version']
             diff = diff_dicts(certificate_authority, new_certificate_authority)
             for change in diff:
                 if change not in permitted_changes:
