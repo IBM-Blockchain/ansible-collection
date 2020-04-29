@@ -205,7 +205,7 @@ options:
                         default: default
     hsm:
         description:
-            - The PKCS #11 compliant HSM configuration to use for the ordering service.
+            - "The PKCS #11 compliant HSM configuration to use for the ordering service."
             - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm"
         type: dict
         suboptions:
@@ -221,6 +221,14 @@ options:
                 description:
                     - The HSM pin that the ordering service should use.
                 type: str
+    zone:
+        description:
+            - The Kubernetes zones for this ordering service.
+            - If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by I(nodes).
+            - If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
+            - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
+        type: list
+        elements: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the ordering service is available.
@@ -418,6 +426,7 @@ def main():
             label=dict(type='str', required=True),
             pin=dict(type='str', required=True)
         )),
+        zone=dict(type='list', elements='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -539,6 +548,13 @@ def main():
                 for config_override in config_override_list:
                     merge_dicts(config_override, hsm_config_override)
 
+            # Add the zones if they are specified.
+            zone_list = module.params['zone']
+            if zone_list is not None:
+                if len(zone_list) != nodes:
+                    raise Exception(f'Number of nodes is {nodes}, but only {len(zone_list)} zones provided')
+                expected_ordering_service['zone'] = zone_list
+
             # Create the ordering service.
             ordering_service = console.create_ordering_service(expected_ordering_service)
             changed = True
@@ -591,12 +607,18 @@ def main():
                     expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
                     merge_dicts(config_override, hsm_config_override)
 
+                # Add the zone if it is specified.
+                zone_list = module.params['zone']
+                if zone_list is not None:
+                    expected_ordering_service_node['zone'] = zone_list[i]
+
                 # Update the ordering service node configuration.
                 new_ordering_service_node = copy_dict(ordering_service_node)
                 merge_dicts(new_ordering_service_node, expected_ordering_service_node)
 
                 # Check to see if any banned changes have been made.
-                permitted_changes = ['resources', 'zone', 'config_override', 'version']
+                # HACK: zone is documented as a permitted change, but it has no effect.
+                permitted_changes = ['resources', 'config_override', 'version']
                 diff = diff_dicts(ordering_service_node, new_ordering_service_node)
                 for change in diff:
                     if change not in permitted_changes:
