@@ -3,6 +3,22 @@
 #
 ---
 state: present
+# api_endpoint:
+# api_authtype:
+# api_key:
+# api_secret:
+# api_token_endpoint:
+# organization_name:
+# ca_admin_enrollment_id
+# ca_admin_enrollment_secret
+# organization_admin_enrollment_id:
+# organization_admin_enrollment_secret:
+# ordering_service_enrollment_id:
+# ordering_service_enrollment_secret:
 ca_name: "{{ organization_name }} CA"
+# ca_resources:
+# ca_storage:
 ordering_service_name: Ordering Service
 ordering_service_nodes: 1
+# ordering_service_resources:
+# ordering_service_storage:

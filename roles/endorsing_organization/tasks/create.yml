@@ -56,6 +56,8 @@
               pass: "{{ peer_enrollment_secret }}"
               type: peer
               maxenrollments: -1
+    resources: "{{ ca_resources | default(omit) }}"
+    storage: "{{ ca_storage | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
 
 - name: Enroll certificate authority admin
@@ -117,4 +119,6 @@
     enrollment_secret: "{{ peer_enrollment_secret }}"
     admin_certificates:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+    resources: "{{ peer_resources | default(omit) }}"
+    storage: "{{ peer_storage | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
