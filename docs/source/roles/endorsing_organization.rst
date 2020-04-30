@@ -67,6 +67,16 @@ Parameters
   ca_name (optional, str, *organization_name* CA)
     The name of the certificate authority.
 
+  ca_resources (optional, dict, None)
+    The Kubernetes resource configuration for the certificate authority.
+
+    For more information, review the documentation for the *resources* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
+  ca_storage (optional, dict, None)
+    The Kubernetes storage configuration for the certificate authority.
+
+    For more information, review the documentation for the *storage* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
   organization_admin_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
 
@@ -86,6 +96,16 @@ Parameters
     ``couchdb`` - Use CouchDB as the state database for this peer.
 
     ``leveldb`` - Use LevelDB as the state database for this peer.
+
+  peer_resources (optional, dict, None)
+    The Kubernetes resource configuration for the peer.
+
+    For more information, review the documentation for the *resources* parameter of the *peer* module: `peer <../modules/peer.html>`_
+
+  peer_storage (optional, dict, None)
+    The Kubernetes storage configuration for the peer.
+
+    For more information, review the documentation for the *storage* parameter of the *peer* module: `peer <../modules/peer.html>`_
 
   wait_timeout (optional, integer, 60)
     The timeout, in seconds, to wait until the certificate authority and the peer are available.

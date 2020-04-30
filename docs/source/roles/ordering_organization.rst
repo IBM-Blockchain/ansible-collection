@@ -67,6 +67,16 @@ Parameters
   ca_name (optional, str, *organization_name* CA)
     The name of the certificate authority.
 
+  ca_resources (optional, dict, None)
+    The Kubernetes resource configuration for the certificate authority.
+
+    For more information, review the documentation for the *resources* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
+  ca_storage (optional, dict, None)
+    The Kubernetes storage configuration for the certificate authority.
+
+    For more information, review the documentation for the *storage* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
   organization_admin_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
 
@@ -86,6 +96,16 @@ Parameters
     The number of ordering service nodes in the ordering service.
 
     For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.
+
+  ordering_service_resources (optional, dict, None)
+    The Kubernetes resource configuration for the ordering service.
+
+    For more information, review the documentation for the *resources* parameter of the *ordering_service* module: `ordering_service <../modules/ordering_service.html>`_
+
+  ordering_service_storage (optional, dict, None)
+    The Kubernetes storage configuration for the ordering service.
+
+    For more information, review the documentation for the *storage* parameter of the *ordering_service* module: `ordering_service <../modules/ordering_service.html>`_
 
   wait_timeout (optional, integer, 60)
     The timeout, in seconds, to wait until the certificate authority and the ordering service is available.

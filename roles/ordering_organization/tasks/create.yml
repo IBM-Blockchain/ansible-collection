@@ -56,6 +56,8 @@
               pass: "{{ ordering_service_enrollment_secret }}"
               type: orderer
               maxenrollments: -1
+    resources: "{{ ca_resources | default(omit) }}"
+    storage: "{{ ca_storage | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
 
 - name: Enroll certificate authority admin
@@ -117,4 +119,6 @@
     enrollment_secret: "{{ ordering_service_enrollment_secret }}"
     admin_certificates:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+    resources: "{{ ordering_service_resources | default(omit) }}"
+    storage: "{{ ordering_service_storage | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
