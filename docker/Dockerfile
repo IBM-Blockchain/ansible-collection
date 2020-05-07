@@ -14,7 +14,7 @@ RUN mkdir /opt/fabric \
 
 # In the second stage, copy all the installed Python modules across from the first stage.
 FROM alpine:3.11
-RUN apk add --no-cache python3 \
+RUN apk add --no-cache bash python3 \
     && mkdir /lib64 \
     && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 COPY --from=builder /root/.local /root/.local
