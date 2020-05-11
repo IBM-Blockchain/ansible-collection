@@ -103,7 +103,7 @@
         path: config_update.bin
       when: compute_update.path
 
-    - name: Apply the system channel configuration update
+    - name: Apply the channel configuration update
       ibm.blockchain_platform.channel_config:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
