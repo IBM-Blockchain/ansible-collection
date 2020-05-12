@@ -67,11 +67,26 @@ Parameters
   ca_name (optional, str, *organization_name* CA)
     The name of the certificate authority.
 
+  ca_resources (optional, dict, None)
+    The Kubernetes resource configuration for the certificate authority.
+
+    For more information, review the documentation for the *resources* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
+  ca_storage (optional, dict, None)
+    The Kubernetes storage configuration for the certificate authority.
+
+    For more information, review the documentation for the *storage* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
+
   organization_admin_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
 
   organization_admin_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered as the administrator of the organization.
+
+  peers (optional, integer, 1)
+    The number of peers.
+
+    For development and test purposes, use one peer. Three peers provides high availability, even if one of the peers is taken down for maintenance, and is suitable for production networks.
 
   peer_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered for the peer.
@@ -79,10 +94,25 @@ Parameters
   peer_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered for the peer.
 
+  peer_name (optional, str, *organization_name* Peer)
+    The name of the peer.
+
+    If more than one peer is being created using the *peers* parameter, then a number will be appended to the specified peer name.
+
   peer_state_db (optional, str, couchdb)
     ``couchdb`` - Use CouchDB as the state database for this peer.
 
     ``leveldb`` - Use LevelDB as the state database for this peer.
+
+  peer_resources (optional, dict, None)
+    The Kubernetes resource configuration for the peer.
+
+    For more information, review the documentation for the *resources* parameter of the *peer* module: `peer <../modules/peer.html>`_
+
+  peer_storage (optional, dict, None)
+    The Kubernetes storage configuration for the peer.
+
+    For more information, review the documentation for the *storage* parameter of the *peer* module: `peer <../modules/peer.html>`_
 
   wait_timeout (optional, integer, 60)
     The timeout, in seconds, to wait until the certificate authority and the peer are available.

@@ -183,20 +183,20 @@
 <h1>ordering_organization – Build Hyperledger Fabric components for an ordering organization<a class="headerlink" href="#ordering-organization-build-hyperledger-fabric-components-for-an-ordering-organization" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
+<li><p><a class="reference internal" href="#synopsis" id="id3">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id4">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id6">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#status" id="id7">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
-<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
 <p>This role allows you to quickly build Hyperledger Fabric components for an ordering organization. An ordering organization has a certificate authority and an ordering service.</p>
 <p>This role works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 </div>
 <div class="section" id="parameters">
-<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
 <dt>api_endpoint (optional, str, None)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
@@ -227,6 +227,12 @@
 </dd>
 <dt>ca_name (optional, str, <em>organization_name</em> CA)</dt><dd><p>The name of the certificate authority.</p>
 </dd>
+<dt>ca_resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the certificate authority.</p>
+<p>For more information, review the documentation for the <em>resources</em> parameter of the <em>certificate_authority</em> module: <a class="reference external" href="../modules/certificate_authority.html">certificate_authority</a></p>
+</dd>
+<dt>ca_storage (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the certificate authority.</p>
+<p>For more information, review the documentation for the <em>storage</em> parameter of the <em>certificate_authority</em> module: <a class="reference external" href="../modules/certificate_authority.html">certificate_authority</a></p>
+</dd>
 <dt>organization_admin_enrollment_id (optional, str, None)</dt><dd><p>The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.</p>
 </dd>
 <dt>organization_admin_enrollment_secret (optional, str, None)</dt><dd><p>The enrollment secret, or password, of the identity registered as the administrator of the organization.</p>
@@ -240,22 +246,28 @@
 <dt>ordering_service_nodes (optional, integer, 1)</dt><dd><p>The number of ordering service nodes in the ordering service.</p>
 <p>For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.</p>
 </dd>
+<dt>ordering_service_resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the ordering service.</p>
+<p>For more information, review the documentation for the <em>resources</em> parameter of the <em>ordering_service</em> module: <a class="reference external" href="../modules/ordering_service.html">ordering_service</a></p>
+</dd>
+<dt>ordering_service_storage (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the ordering service.</p>
+<p>For more information, review the documentation for the <em>storage</em> parameter of the <em>ordering_service</em> module: <a class="reference external" href="../modules/ordering_service.html">ordering_service</a></p>
+</dd>
 <dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the certificate authority and the ordering service is available.</p>
 </dd>
 </dl>
 </div></blockquote>
 </div>
 <div class="section" id="examples">
-<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="return-values">
-<h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>This is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
 <li><p>This is maintained by community.</p></li>
