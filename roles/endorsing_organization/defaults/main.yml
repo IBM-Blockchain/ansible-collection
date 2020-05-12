@@ -18,6 +18,7 @@ state: present
 ca_name: "{{ organization_name }} CA"
 # ca_resources:
 # ca_storage:
+peers: 1
 peer_name: "{{ organization_name }} Peer"
 # peer_resources:
 # peer_storage:

@@ -59,7 +59,7 @@ class Console:
 
     def _ensure_loggedin(self):
         if self.authorization is None:
-            raise AnsibleActionFail(f'Not logged in')
+            raise AnsibleActionFail('Not logged in')
 
     def get_health(self):
         self._ensure_loggedin()

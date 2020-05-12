@@ -53,3 +53,18 @@
     name: "{{ peer_name }}"
     # HACK: this shouldn't be required
     config: {}
+  when: peers == 1
+
+- name: Delete multiple peers
+  ibm.blockchain_platform.peer:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    name: "{{ peer_name }}{{ item }}"
+    # HACK: this shouldn't be required
+    config: {}
+  loop: "{{ range(1, peers + 1, 1) | list }}"
+  when: peers > 1
