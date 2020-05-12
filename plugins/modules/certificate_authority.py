@@ -269,7 +269,7 @@ def main():
         if console.is_free_cluster():
             actual_params = _load_params()
             if 'resources' in actual_params or 'storage' in actual_params:
-                raise Exception(f'Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
+                raise Exception('Cannot specify resources or storage for a free IBM Kubernetes Service cluster')
             if certificate_authority_exists:
                 module.params['resources'] = dict()
                 module.params['storage'] = dict()
