@@ -83,6 +83,11 @@ Parameters
   organization_admin_enrollment_secret (optional, str, None)
     The enrollment secret, or password, of the identity registered as the administrator of the organization.
 
+  peers (optional, integer, 1)
+    The number of peers.
+
+    For development and test purposes, use one peer. Three peers provides high availability, even if one of the peers is taken down for maintenance, and is suitable for production networks.
+
   peer_enrollment_id (optional, str, None)
     The enrollment ID, or user name, of the identity registered for the peer.
 
@@ -91,6 +96,8 @@ Parameters
 
   peer_name (optional, str, *organization_name* Peer)
     The name of the peer.
+
+    If more than one peer is being created using the *peers* parameter, then a number will be appended to the specified peer name.
 
   peer_state_db (optional, str, couchdb)
     ``couchdb`` - Use CouchDB as the state database for this peer.
