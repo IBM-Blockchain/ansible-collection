@@ -361,23 +361,6 @@ class Console:
             'server_tls_cert': ordering_service_node.get('server_tls_cert', None)
         }
 
-    def delete_ext_ordering_service(self, cluster_id):
-        self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
-        headers = {
-            'Accepts': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': self.authorization
-        }
-        for attempt in range(self.retries):
-            try:
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
-                return
-            except Exception as e:
-                if self.should_retry_error(e):
-                    continue
-                return self.handle_error('Failed to delete external ordering service', e)
-
     def create_ext_ordering_service_node(self, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/components/fabric-orderer')
