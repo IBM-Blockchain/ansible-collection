@@ -272,7 +272,8 @@ def main():
         if state == 'absent' and existing_ordering_service_exists:
 
             # The ordering service should not exist, so delete it.
-            console.delete_ext_ordering_service(existing_ordering_service[0]['cluster_id'])
+            for ordering_service_node in existing_ordering_service:
+                console.delete_ext_ordering_service_node(ordering_service_node['id'])
             return module.exit_json(changed=True)
 
         elif state == 'absent':
