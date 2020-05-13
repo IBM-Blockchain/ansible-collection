@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Joining a network &mdash; Ansible Collection  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Deploying a smart contract" href="deploying.html" />
+    <link rel="prev" title="Building a network" href="building.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Ansible Collection
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Joining a network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#editing-the-variable-file">Editing the variable file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#joining-the-network">Joining the network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-the-network">Exploring the network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-the-playbooks">Exploring the playbooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#destroying-the-network">Destroying the network</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying a smart contract</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible Collection</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Joining a network</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docs/source/tutorials/joining.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="joining-a-network">
+<h1>Joining a network<a class="headerlink" href="#joining-a-network" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of joining an existing Hyperledger Fabric network.</p>
+<p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to join an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has two organizations - an ordering organization “Ordering Org”, and an endorsing organization “Org1”. You will create a new endorsing organization “Org2”, and that organization will run a peer. You will add the new organization “Org2” into an existing channel, and join the new organizations peer into that channel.</p>
+<p>For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
+<div class="section" id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial builds upon the Hyperledger Fabric that is created as part of the <a class="reference external" href="./building.html">Building a network</a> tutorial. Ensure that you have followed this tutorial, and that you have the network up and running.</p>
+<p>If you used separate IBM Blockchain Platform instances for each organization in the previous tutorial, you will need another IBM Blockchain Platform instance for the new organization created during this tutorial. Again, if you use separate IBM Blockchain Platform instances, then there are additional steps that you must follow which will be described below.</p>
+<p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorials directory:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/tutorials
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="editing-the-variable-file">
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
+<p>Variable files are used to store variables that are used across multiple Ansible playbooks. Each organization has their own variable file, and you must edit these files to specify the connection details for the IBM Blockchain Platform instance for that organization.</p>
+<p>In the previous tutorial, you edited the variable files <cite>ordering-org-vars.yml</cite> (for Ordering Org) and <cite>org1-vars.yml</cite> (for Org1).</p>
+<p>You must now edit the variable file for the new organization Org2, <cite>org2-vars.yml</cite>. The values you set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
+<ul class="simple">
+<li><p>If the organization is using IBM Blockchain Platform on IBM Cloud:</p>
+<ol class="arabic simple">
+<li><p>Create service credentials for the IBM Blockchain Platform service instance, if they have not been created already.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> to the value of <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> specified in the service credentials.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_authtype</span></code> to <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_key</span></code> to the value of <code class="docutils literal notranslate"><span class="pre">api_key</span></code> specified in the service credentials.</p></li>
+<li><p>Note that you do not need to specify a value for <code class="docutils literal notranslate"><span class="pre">api_secret</span></code>.</p></li>
+</ol>
+</li>
+<li><p>If the organization is using IBM Blockchain Platform software:</p>
+<ol class="arabic simple">
+<li><p>Determine the URL of your IBM Blockchain Platform console.</p></li>
+<li><p>Determine the API key and secret you use to access your IBM Blockchain Platform console. You can also use a username and password instead of an API key and secret.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> to the URL of your IBM Blockchain Platform console.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_authtype</span></code> to <code class="docutils literal notranslate"><span class="pre">basic</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_key</span></code> to your API key or username.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_secret</span></code> to your API secret or password.</p></li>
+</ol>
+</li>
+</ul>
+<p>When the Ansible playbooks are run, the variable files are passed in to Ansible using the <code class="docutils literal notranslate"><span class="pre">--extra-vars</span></code> option, for example <code class="docutils literal notranslate"><span class="pre">--extra-vars</span> <span class="pre">&quot;&#64;org2-vars.yml&quot;</span></code>.</p>
+<p>Finally, all of these files contain a <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> variable, with the default set to <code class="docutils literal notranslate"><span class="pre">600</span></code> (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.</p>
+</div>
+<div class="section" id="joining-the-network">
+<h2>Joining the network<a class="headerlink" href="#joining-the-network" title="Permalink to this headline">¶</a></h2>
+<p>There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to build the network. Each of the Ansible playbooks is run as either the existing endorsing organization “Org1”, or the new endorsing organization “Org2”.</p>
+<p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/join_network.sh">join_network.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
+<p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command. This is required as organization and ordering service information must be exported and then imported into the other IBM Blockchain Platform instance.</p>
+<p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
+<ul>
+<li><p>Both organizations use the same IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./join_network.sh join
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Each organization has their own IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./join_network -i join
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>If you have installed the collection by building a Docker image, then run the script as follows:</p>
+<ul>
+<li><p>Both organizations use the same IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/join_network.sh join
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Each organization has their own IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/join_network.sh -i join
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section that details how many tasks have been executed, and how many of those tasks have failed.</p>
+</div>
+<div class="section" id="exploring-the-network">
+<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this headline">¶</a></h2>
+<p>The Ansible playbooks that you just ran created the following new components:</p>
+<ul class="simple">
+<li><p>An endorsing organization named <cite>Org2</cite>, with a certificate authority named <cite>Org2 CA</cite>, and a peer named <cite>Org2 Peer</cite>.</p></li>
+</ul>
+<p>The Ansible playbooks also added the endorsing organization <cite>Org2</cite> to the channel <cite>mychannel</cite>, with <cite>Org2 Peer</cite> as an anchor peer for the channel. The channel policy <cite>Admins</cite> was updated so that both endorsing organizations <cite>Org1</cite> and <cite>Org2</cite> must sign any future configuration updates for this channel.</p>
+<p>The Ansible playbooks also registered and enrolled several identities - digital certificate and private key pairs - that act as the administrator for each organization. These identities are created on disk, as JSON files in the same directory as the playbooks, and you must store these identities somewhere.</p>
+<p>The new identities created are:</p>
+<ul>
+<li><p><cite>Org2 CA Admin.json</cite></p>
+<div class="line-block">
+<div class="line">This is the identity of the administrator for the certificate authority <cite>Org2 CA</cite>. You can use this identity to register new users, and revoke existing users.</div>
+</div>
+</li>
+<li><p><cite>Org2 Admin.json</cite></p>
+<div class="line-block">
+<div class="line">This is the identity of the administrator for the endorsing organization <cite>Org2</cite>, and the peer <cite>Org2 Peer</cite>. You can use this identity to manage the organization and the peer.</div>
+</div>
+</li>
+</ul>
+<p>If you log in to the IBM Blockchain Platform console for the new organization using a web browser, you should find that these components are now displayed in the list of nodes.</p>
+<p>You can also import the JSON files containing the identities listed above into the IBM Blockchain Platform console wallet. Once all of the identities have been imported, you can associate each component with the appropriate identity. This will allow you to manage and view those components using the IBM Blockchain Platform console.</p>
+</div>
+<div class="section" id="exploring-the-playbooks">
+<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline">¶</a></h2>
+<p>When you ran the script <cite>join_network.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of joining the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
+<p>Here are the Ansible playbooks that were executed by the script above:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/11-create-endorsing-organization-components.yml">11-create-endorsing-organization-components.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 11-create-endorsing-organization-components.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook creates the components for the endorsing organization <cite>Org2</cite>. It makes use of the Ansible role <a class="reference external" href="../roles/endorsing_organization.html">endorsing_organization</a> to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/12-export-organization.yml">12-export-organization.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 12-export-organization.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/organization_info.html">organization_info</a> to export the organization <cite>Org2</cite> to a file. This is so that <cite>Org2</cite> can pass this file to the endorsing organization <cite>Org1</cite>. <cite>Org1</cite> can then import this file into their IBM Blockchain Platform console, so they can add <cite>Org2</cite> into the existing channel <cite>mychannel</cite>.</div>
+</div>
+<div class="line-block">
+<div class="line">Note: this playbook only needs to be executed when the organizations <cite>Org1</cite> and <cite>Org2</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/13-import-organization.yml">13-import-organization.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org1</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 13-import-organization.yml --extra-vars &quot;@org1-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/external_organization.html">external_organization</a> to import the organization <cite>Org2</cite> from a file. This file was passed to <cite>Org1</cite> by <cite>Org2</cite>, so that <cite>Org1</cite> could add <cite>Org2</cite> into the existing channel <cite>mychannel</cite>.</div>
+</div>
+<div class="line-block">
+<div class="line">Note: this playbook only needs to be executed when the organizations <cite>Org1</cite> and <cite>Org2</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-add-organization-to-channel.yml">14-add-organization-to-channel.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org1</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 14-add-organization-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook adds the organization <cite>Org2</cite> into the existing channel <cite>Org1</cite>. The channel now contains two organizations, <cite>Org1</cite> and <cite>Org2</cite>. The policies for this channel are updated, using new policies that are supplied in policy files:</div>
+</div>
+<ul class="simple">
+<li><p><cite>Admins</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-admins-policy.json">14-admins-policy.json</a></p></li>
+<li><p><cite>Readers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-readers-policy.json">14-readers-policy.json</a></p></li>
+<li><p><cite>Writers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-writers-policy.json">14-writers-policy.json</a></p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line">The Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a>, <a class="reference external" href="../modules/channel_member.html">channel_member</a>, and <a class="reference external" href="../modules/channel_policy.html">channel_policy</a> are used to update the channel.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-import-ordering-service.yml">15-import-ordering-service.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 15-import-ordering-service.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/external_ordering_service.html">external_ordering_service</a> to import the ordering service from a file. This file was passed to <cite>Org2</cite> by <cite>Org1</cite>, so that <cite>Org2</cite> could start to join channels on the ordering service.</div>
+</div>
+<div class="line-block">
+<div class="line">Note: this playbook only needs to be executed when the organizations <cite>Org1</cite> and <cite>Org2</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/16-join-peer-to-channel.yml">16-join-peer-to-channel.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 16-join-peer-to-channel.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/channel_block.html">channel_block</a> to fetch the genesis block for the channel, before using the Ansible module <a class="reference external" href="../modules/peer_channel.html">peer_channel</a> to join the peer <cite>Org2 Peer</cite> to the channel.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/17-add-anchor-peer-to-channel.yml">17-add-anchor-peer-to-channel.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 17-add-anchor-peer-to-channel.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook updates the organization (MSP) definition for <cite>Org2</cite> in the channel <cite>mychannel</cite> to specify that the peer <cite>Org2 Peer</cite> is an anchor peer for the channel. It uses the Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a> and <a class="reference external" href="../modules/channel_member.html">channel_member</a> to update the channel configuration.</div>
+</div>
+</li>
+</ul>
+<p>Finally, there is one Ansible playbook that can be used to destroy the network components for <cite>Org2</cite>. It is:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/98-delete-endorsing-organization-components.yml">98-delete-endorsing-organization-components.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook deletes the components for the endorsing organization <cite>Org2</cite>. It makes use of the Ansible role <a class="reference external" href="../roles/endorsing_organization.html">endorsing_organization</a> to remove the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.</div>
+</div>
+<div class="line-block">
+<div class="line">Note: this is the same Ansible role that is used to create the components, but the <code class="docutils literal notranslate"><span class="pre">state:</span> <span class="pre">absent</span></code> variable tells this role that we do not want these components to exist.</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="destroying-the-network">
+<h2>Destroying the network<a class="headerlink" href="#destroying-the-network" title="Permalink to this headline">¶</a></h2>
+<p>If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/join_network.sh">join_network.sh</a> script again to run these Ansible playbooks. This script will also remove all of the components for the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> created by the previous tutorial.</p>
+<p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command.</p>
+<p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
+<ul>
+<li><p>All organizations use the same IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./join_network.sh destroy
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>All organizations have their own IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./join_network -i destroy
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>If you have installed the collection by building a Docker image, then run the script as follows:</p>
+<ul>
+<li><p>All organizations use the same IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/join_network.sh destroy
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>All organizations have their own IBM Blockchain Platform instance:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/join_network.sh -i destroy
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section that details how many tasks have been executed, and how many of those tasks have failed.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="deploying.html" class="btn btn-neutral float-right" title="Deploying a smart contract" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="building.html" class="btn btn-neutral float-left" title="Building a network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Simon Stone
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

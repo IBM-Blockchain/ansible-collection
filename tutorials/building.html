@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="next" title="Joining a network" href="joining.html" />
     <link rel="prev" title="Installing the IBM Blockchain Platform" href="installing.html" /> 
 </head>
 
@@ -99,6 +99,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#destroying-the-network">Destroying the network</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="joining.html">Joining a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying a smart contract</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -273,7 +275,7 @@
 <li><p>An endorsing organization named <cite>Org1</cite>, with a certificate authority named <cite>Org1 CA</cite>, and a peer named <cite>Org1 Peer</cite>.</p></li>
 <li><p>A single channel called <cite>mychannel</cite>, with the endorsing organization <cite>Org1</cite> as the only member, and the peer <cite>Org1 Peer</cite> as the only anchor peer.</p></li>
 </ul>
-<p>The Ansible playbooks also register and enroll an identity - a digital certificate and private key pair - that acts as the administrator for each organization. These identities are created on disk, as JSON files in the same directory as the playbooks, and you must store these identities somewhere.</p>
+<p>The Ansible playbooks also registered and enrolled several identities - digital certificate and private key pairs - that act as the administrator for each organization. These identities are created on disk, as JSON files in the same directory as the playbooks, and you must store these identities somewhere.</p>
 <p>The identities created are:</p>
 <ul>
 <li><p><cite>Ordering Org CA Admin.json</cite></p>
@@ -479,7 +481,7 @@
 </div>
 </li>
 </ul>
-<p>Finally, there are also two Ansible playbooks that can be used to destroy the network. They are:</p>
+<p>Finally, there are also two Ansible playbooks that can be used to destroy the network components for <cite>Ordering Org</cite> and <cite>Org1</cite>. They are:</p>
 <ul>
 <li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/97-delete-endorsing-organization-components.yml">97-delete-endorsing-organization-components.yml</a></p>
 <div class="line-block">
@@ -567,7 +569,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="joining.html" class="btn btn-neutral float-right" title="Joining a network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installing.html" class="btn btn-neutral float-left" title="Installing the IBM Blockchain Platform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

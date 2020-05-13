@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Deploying a smart contract &mdash; Ansible Collection  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="prev" title="Joining a network" href="joining.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Ansible Collection
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joining.html">Joining a network</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Deploying a smart contract</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-the-smart-contract">Deploying the smart contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-the-playbooks">Exploring the playbooks</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible Collection</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Deploying a smart contract</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docs/source/tutorials/deploying.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="deploying-a-smart-contract">
+<h1>Deploying a smart contract<a class="headerlink" href="#deploying-a-smart-contract" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of deploying a smart contract to an existing Hyperledger Fabric network.</p>
+<p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization “Ordering Org”, and two endorsing organizations “Org1” and “Org2”. Both organizations are members of an existing channel called “mychannel”. You will install the FabCar sample smart contract onto the peers for both “Org1” and “Org2”, and then instantiate the smart contract on the channel “mychannel”.</p>
+<p>For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
+<div class="section" id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial builds upon the Hyperledger Fabric that is created as part of the <a class="reference external" href="./building.html">Building a network</a> and the <a class="reference external" href="./joining.html">Joining a network</a> tutorials. Ensure that you have followed these tutorials, and that you have the network up and running.</p>
+<p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorials directory:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/tutorials
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="deploying-the-smart-contract">
+<h2>Deploying the smart contract<a class="headerlink" href="#deploying-the-smart-contract" title="Permalink to this headline">¶</a></h2>
+<p>There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to deploy the smart contract. Each of the Ansible playbooks is run as one of the endorsing organizations “Org1” or “Org2”.</p>
+<p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/deploy_smart_contract.sh">deploy_smart_contract.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
+<p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./deploy_smart_contract.sh
+</pre></div>
+</div>
+</div></blockquote>
+<p>If you have installed the collection by building a Docker image, then run the script as follows:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/deploy_smart_contract.sh
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="exploring-the-playbooks">
+<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline">¶</a></h2>
+<p>When you ran the script <cite>join_network.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of joining the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
+<p>Here are the Ansible playbooks that were executed by the script above:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-install-chaincode.yml">18-install-chaincode.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org1</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 18-install-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org1 Peer</cite>.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-chaincode.yml">19-install-chaincode.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 19-install-chaincode.yml --extra-vars &quot;@org2-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org2 Peer</cite>.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-instantiate-chaincode.yml">20-instantiate-chaincode.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org1</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 20-instantiate-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/instantiated_chaincode.html">instantiated_chaincode</a> to instantiate the FabCar smart contract on the channel <cite>mychannel</cite>.</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="joining.html" class="btn btn-neutral float-left" title="Joining a network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Simon Stone
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
