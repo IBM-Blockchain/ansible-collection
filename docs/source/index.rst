@@ -30,9 +30,9 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    :maxdepth: 2
    :caption: Tutorials
    :hidden:
-   :glob:
 
-   tutorials/*
+   tutorials/installing
+   tutorials/building
 
 .. toctree::
    :maxdepth: 3
