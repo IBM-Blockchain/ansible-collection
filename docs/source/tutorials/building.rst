@@ -115,7 +115,7 @@ The Ansible playbooks that you just ran created the following components:
 - An endorsing organization named `Org1`, with a certificate authority named `Org1 CA`, and a peer named `Org1 Peer`.
 - A single channel called `mychannel`, with the endorsing organization `Org1` as the only member, and the peer `Org1 Peer` as the only anchor peer.
 
-The Ansible playbooks also register and enroll an identity - a digital certificate and private key pair - that acts as the administrator for each organization. These identities are created on disk, as JSON files in the same directory as the playbooks, and you must store these identities somewhere.
+The Ansible playbooks also registered and enrolled several identities - digital certificate and private key pairs - that act as the administrator for each organization. These identities are created on disk, as JSON files in the same directory as the playbooks, and you must store these identities somewhere.
 
 The identities created are:
 
@@ -272,7 +272,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
       ansible-playbook 09-join-peer-to-channel.yml --extra-vars "@org1-vars.yml"
 
-  | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>` to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>` to join the peer `Org1 Peer` to the channel.
+  | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org1 Peer` to the channel.
 
 * `10-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-add-anchor-peer-to-channel.yml>`_
 
@@ -285,7 +285,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook updates the organization (MSP) definition for `Org1` in the channel `mychannel` to specify that the peer `Org1 Peer` is an anchor peer for the channel. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_member <../modules/channel_member.html>`_ to update the channel configuration.
 
-Finally, there are also two Ansible playbooks that can be used to destroy the network. They are:
+Finally, there are also two Ansible playbooks that can be used to destroy the network components for `Ordering Org` and `Org1`. They are:
 
 * `97-delete-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/97-delete-endorsing-organization-components.yml>`_
 
