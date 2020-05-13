@@ -5,6 +5,34 @@
 Installation
 ============
 
+There are three options for installing the IBM Blockchain Platform collection for Ansible:
+
+* Installing using Ansible Galaxy
+
+  Ansible Galaxy is the package manager for Ansible. The collection is published to Ansible Galaxy on a regular basis: https://galaxy.ansible.com/ibm/blockchain_platform
+
+  In order to install using Ansible Galaxy, you must:
+
+  1. Install all of the software listed in :ref:`Requirements`.
+  2. Follow the instructions for :ref:`Installing using Ansible Galaxy`.
+
+* Installing from source
+
+  You may wish to install the collection from source if you cannot access Ansible Galaxy due to firewall or proxy issues, or if you need to install a version of the collection that has not yet been published.
+
+  In order to install from source, you must:
+
+  1. Install all of the software listed in :ref:`Requirements`.
+  2. Follow the instructions for :ref:`Installing from source`.
+
+* Using a Docker image
+
+  If you do not want to, or can not, install all of the required software for this collection on your system, you may wish to build a Docker image that contains all of the software required to run Ansible playbooks which use this collection.
+
+  In order to build a Docker image, you must:
+
+  1. Follow the instructions for :ref:`Using a Docker image`.
+
 Requirements
 ------------
 

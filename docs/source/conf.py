@@ -32,6 +32,7 @@ author = 'Simon Stone'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autosectionlabel'
 ]
 
 # List of patterns, relative to source directory, that match files and
