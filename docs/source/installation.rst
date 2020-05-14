@@ -54,18 +54,6 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install ansible
 
-**IBM Blockchain Platform v2.1.3+**
-
-    This Ansible collection can deploy Hyperledger Fabric networks using the IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection.
-
-    You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
-
-    You must have deployed the IBM Blockchain Platform before using this Ansible collection. This Ansible collection cannot currently be used to deploy the IBM Blockchain Platform itself.
-
-    If you are using the IBM Blockchain Platform on IBM Cloud, you must create service credentials for this Ansible collection to use. The ``api_endpoint`` and ``api_key`` properties in the service credentials must be passed into the modules and roles in this Ansible collection.
-
-    If you are using the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster, you must determine the URL of your IBM Blockchain Platform console - this will be the ``api_endpoint`` property. You must also provide a valid API key ``api_key`` and secret ``api_secret`` for the IBM Blockchain Platform console. These properties must be passed into the modules and roles in this Ansible collection.
-
 **Hyperledger Fabric v1.4.x binaries**
 
     This Ansible collection uses the Hyperledger Fabric v1.4 binaries to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxgen``, ``peer``, and ``fabric-ca-client``.
@@ -90,13 +78,25 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
 **OpenShift client for Python v0.10.3+**
 
-    This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform console.
+    This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform software.
 
     You can install this SDK using ``pip``, the package manager for Python:
 
     ::
 
         pip install openshift
+
+**IBM Blockchain Platform v2.1.3+**
+
+    This Ansible collection requires use of IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection. You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+    You can not use this Ansible collection to create an instance of the IBM Blockchain Platform service on IBM Cloud. If you want to use the IBM Blockchain Platform on IBM Cloud, you must create the instance before you attempt to use this Ansible collection: https://cloud.ibm.com/catalog/services/blockchain-platform#about
+
+    You can use this Ansible collection to install the IBM Blockchain Platform software into a Red Hat Openshift or Kubernetes cluster, if you have not already installed it. To see how to do this, follow this tutorial: `Installing the IBM Blockchain Platform <./tutorials/installing.html>`_
+
+    If you are using the IBM Blockchain Platform on IBM Cloud, you must create service credentials for this Ansible collection to use. The ``api_endpoint`` and ``api_key`` properties in the service credentials must be passed into the modules and roles in this Ansible collection.
+
+    If you are using the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster, you must determine the URL of your IBM Blockchain Platform console - this will be the ``api_endpoint`` property. You must also provide a valid API key ``api_key`` and secret ``api_secret`` for the IBM Blockchain Platform console. These properties must be passed into the modules and roles in this Ansible collection.
 
 Installing using Ansible Galaxy
 -------------------------------
