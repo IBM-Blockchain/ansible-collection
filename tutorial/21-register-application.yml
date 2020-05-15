@@ -19,14 +19,14 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        certificate_authority: Org1 CA
-        registrar: Org1 CA Admin.json
-        enrollment_id: org1app
+        certificate_authority: "{{ org1_ca_name }}"
+        registrar: "{{ org1_ca_name }} Admin.json"
+        enrollment_id: "{{ application_enrollment_id }}"
         enrollment_secret: "{{ application_enrollment_secret }}"
-        max_enrollments: 10
-        type: client
+        max_enrollments: "{{ application_max_enrollments }}"
+        type: "{{ application_enrollment_type }}"
         attributes:
-          - name: fabcar.admin
+          - name: "{{ smart_contract_base_name }}.admin"
             value: "true"
 
     - name: Create a connection profile
@@ -36,9 +36,9 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Org1 Gateway
-        path: Org1 Gateway.json
-        organization: Org1
-        certificate_authority: Org1 CA
+        name: "{{ org1_name }} Gateway"
+        path: "{{ org1_name }} Gateway.json"
+        organization: "{{ org1_name }}"
+        certificate_authority: "{{ org1_ca_name }}"
         peers:
-          - Org1 Peer
+          - "{{ org1_peer_name }}"

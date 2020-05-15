@@ -18,15 +18,15 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Org1
+        name: "{{ org1_name }}"
       register: result
 
     - name: Fail if the organization does not exist
       fail:
-        msg: Organization Org1 does not exist
+        msg: "Organization {{ org1_name }} does not exist"
       when: not result.exists
 
     - name: Store the organization in a file
       copy:
         content: "{{ result.organization | to_nice_json }}"
-        dest: Org1.json
+        dest: "{{ org1_name }}.json"

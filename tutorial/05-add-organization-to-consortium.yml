@@ -18,12 +18,12 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Ordering Service
+        name: "{{ ordering_service_name }}"
       register: ordering_service
 
     - name: Fail if the ordering service does not exist
       fail:
-        msg: Ordering Service does not exist
+        msg: "{{ ordering_service_name }} does not exist"
       when: not ordering_service.exists
 
     - name: Fetch the system channel configuration
@@ -33,9 +33,9 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        ordering_service: Ordering Service
-        identity: Ordering Org Admin.json
-        msp_id: OrdererMSP
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ ordering_org_name }} Admin.json"
+        msp_id: "{{ ordering_service_msp }}"
         operation: fetch
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: original_config.bin
@@ -53,7 +53,7 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        organization: Org1
+        organization: "{{ org1_name }}"
         path: updated_config.bin
 
     - name: Compute the system channel configuration update
@@ -63,9 +63,9 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        ordering_service: Ordering Service
-        identity: Ordering Org Admin.json
-        msp_id: OrdererMSP
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ ordering_org_name }} Admin.json"
+        msp_id: "{{ ordering_service_msp }}"
         operation: compute_update
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         original: original_config.bin
@@ -76,8 +76,8 @@
     - name: Sign the system channel configuration update
       ibm.blockchain_platform.channel_config:
         operation: sign_update
-        identity: Ordering Org Admin.json
-        msp_id: OrdererMSP
+        identity: "{{ ordering_org_name }} Admin.json"
+        msp_id: "{{ ordering_service_msp }}"
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin
       when: compute_update.path
@@ -90,9 +90,9 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: apply_update
-        ordering_service: Ordering Service
-        identity: Ordering Org Admin.json
-        msp_id: OrdererMSP
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ ordering_org_name }} Admin.json"
+        msp_id: "{{ ordering_service_msp }}"
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin
       when: compute_update.path

@@ -18,9 +18,13 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        peer: Org1 Peer
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
-        channel: mychannel
-        name: fabcar
-        version: 1.0.0
+        peer: "{{ org1_peer_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        channel: "{{ channel_name }}"
+        name: "{{ smart_contract_base_name }}"
+        constructor: 
+          function: "{{ smart_contract_constructor | default(omit) }}"
+        version: "{{ smart_contract_version }}"
+        endorsement_policy: "{{ smart_contract_endorsement_policy | default(omit) }}"
+        collections_config: "{{ smart_contract_collections_file | default(omit) }}"

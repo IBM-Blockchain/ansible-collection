@@ -18,12 +18,12 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Ordering Service
+        name: "{{ ordering_service_name }}"
       register: ordering_service
 
     - name: Fail if the ordering service does not exist
       fail:
-        msg: Ordering Service does not exist
+        msg: "{{ ordering_service_name }} does not exist"
       when: not ordering_service.exists
 
     - name: Fetch the channel configuration
@@ -33,11 +33,11 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        ordering_service: Ordering Service
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
         operation: fetch
-        name: mychannel
+        name: "{{ channel_name }}"
         path: original_config.bin
 
     - name: Create a copy of the channel configuration
@@ -53,7 +53,7 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        organization: Org2
+        organization: "{{ org2_name }}"
         path: updated_config.bin
 
     - name: Update the channel admins policy
@@ -61,21 +61,21 @@
         state: present
         path: updated_config.bin
         name: Admins
-        policy: 14-admins-policy.json
+        policy: "{{ lookup('template', '14-admins-policy.json.j2') }}"
 
     - name: Update the channel readers policy
       ibm.blockchain_platform.channel_policy:
         state: present
         path: updated_config.bin
         name: Readers
-        policy: 14-readers-policy.json
+        policy: "{{ lookup('template', '14-readers-policy.json.j2') }}"
 
     - name: Update the channel writers policy
       ibm.blockchain_platform.channel_policy:
         state: present
         path: updated_config.bin
         name: Writers
-        policy: 14-writers-policy.json
+        policy: "{{ lookup('template', '14-writers-policy.json.j2') }}"
 
     - name: Compute the channel configuration update
       ibm.blockchain_platform.channel_config:
@@ -84,11 +84,11 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        ordering_service: Ordering Service
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
         operation: compute_update
-        name: mychannel
+        name: "{{ channel_name }}"
         original: original_config.bin
         updated: updated_config.bin
         path: config_update.bin
@@ -97,9 +97,9 @@
     - name: Sign the channel configuration update
       ibm.blockchain_platform.channel_config:
         operation: sign_update
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
-        name: mychannel
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        name: "{{ channel_name }}"
         path: config_update.bin
       when: compute_update.path
 
@@ -111,9 +111,9 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: apply_update
-        ordering_service: Ordering Service
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
-        name: mychannel
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        name: "{{ channel_name }}"
         path: config_update.bin
       when: compute_update.path

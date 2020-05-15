@@ -19,10 +19,10 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: fetch
-        ordering_service: Ordering Service
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
-        name: mychannel
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        name: "{{ channel_name }}"
         target: "0"
         path: channel_genesis_block.bin
 
@@ -34,7 +34,7 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: join
-        peer: Org1 Peer
-        identity: Org1 Admin.json
-        msp_id: Org1MSP
+        peer: "{{ org1_peer_name }}"
+        identity: "{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
         path: channel_genesis_block.bin

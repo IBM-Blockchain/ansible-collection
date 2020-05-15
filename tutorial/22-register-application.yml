@@ -5,7 +5,7 @@
 - name: Register application
   hosts: localhost
   vars:
-    # These variables should be supplied using --extra-vars "@org1-vars.yml"
+    # These variables should be supplied using --extra-vars "@org2-vars.yml"
     # api_endpoint: https://ibp-console.example.org:32000
     # api_authtype: basic
     # api_key: xxxxxxxx
@@ -19,14 +19,14 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        certificate_authority: Org2 CA
-        registrar: Org2 CA Admin.json
-        enrollment_id: org2app
+        certificate_authority: "{{ org2_ca_name }}"
+        registrar: "{{ org2_ca_name }} Admin.json"
+        enrollment_id: "{{ application_enrollment_id }}"
         enrollment_secret: "{{ application_enrollment_secret }}"
-        max_enrollments: 10
-        type: client
+        max_enrollments: "{{ application_max_enrollments }}"
+        type: "{{ application_enrollment_type }}"
         attributes:
-          - name: fabcar.admin
+          - name: "{{ smart_contract_base_name }}.admin"
             value: "true"
 
     - name: Create a connection profile
@@ -36,9 +36,9 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Org2 Gateway
-        path: Org2 Gateway.json
-        organization: Org2
-        certificate_authority: Org2 CA
+        name: "{{ org2_name }} Gateway"
+        path: "{{ org2_name }} Gateway.json"
+        organization: "{{ org2_name }}"
+        certificate_authority: "{{ org2_ca_name }}"
         peers:
-          - Org2 Peer
+          - "{{ org2_peer_name }}"

@@ -7,9 +7,6 @@
                 "rules": [
                     {
                         "signed_by": 0
-                    },
-                    {
-                        "signed_by": 1
                     }
                 ]
             }
@@ -18,14 +15,7 @@
             {
                 "principal_classification": "ROLE",
                 "principal": {
-                    "msp_identifier": "Org1MSP",
-                    "role": "MEMBER"
-                }
-            },
-            {
-                "principal_classification": "ROLE",
-                "principal": {
-                    "msp_identifier": "Org2MSP",
+                    "msp_identifier": "{{ org1_msp_id }}",
                     "role": "MEMBER"
                 }
             }
