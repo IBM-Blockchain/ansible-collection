@@ -19,4 +19,3 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         ordering_service: "{{ lookup('file', ordering_service_name+'.json' )}}"
-        

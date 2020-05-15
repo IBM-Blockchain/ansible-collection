@@ -28,4 +28,3 @@
         version: "{{ smart_contract_version }}"
         endorsement_policy: "{{ smart_contract_endorsement_policy | default(omit) }}"
         collections_config: "{{ smart_contract_collections_file | default(omit) }}"
-        
