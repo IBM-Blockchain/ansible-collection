@@ -18,4 +18,4 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        organization: "{{ lookup('file', org2_name+'.json' )}}"
+        organization: "{{ lookup('file', org2_name+'.json') }}"

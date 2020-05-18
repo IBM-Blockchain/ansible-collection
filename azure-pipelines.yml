@@ -51,6 +51,7 @@ steps:
       flake8 .
       ansible-lint .
       for ROLE in roles/*; do ansible-lint ${ROLE}; done
+      for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
       yamllint .
     displayName: Lint collection
   - script: |
