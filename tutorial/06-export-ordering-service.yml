@@ -18,7 +18,7 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        name: Ordering Service
+        name: "{{ ordering_service_name }}"
       register: result
 
     - name: Fail if the ordering service does not exist
@@ -29,4 +29,4 @@
     - name: Store the ordering service in a file
       copy:
         content: "{{ result.ordering_service | to_nice_json }}"
-        dest: Ordering Service.json
+        dest: "{{ ordering_service_name }}.json"

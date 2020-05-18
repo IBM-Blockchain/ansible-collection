@@ -18,7 +18,7 @@
         api_key: "{{ api_key }}"
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        peer: Org2 Peer
-        identity: Org2 Admin.json
-        msp_id: Org2MSP
-        path: fabcar@1.0.0.cds
+        peer: "{{ org2_peer_name }}"
+        identity: "{{ org2_name }} Admin.json"
+        msp_id: "{{ org2_msp_id }}"
+        path: "{{ smart_contract_base_name }}@{{ smart_contract_version }}.cds"
