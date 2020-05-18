@@ -28,14 +28,6 @@
                 hf.GenCRL: true
                 hf.Registrar.Attributes: "*"
                 hf.AffiliationMgr: true
-            - name: "{{ organization_admin_enrollment_id }}"
-              pass: "{{ organization_admin_enrollment_secret }}"
-              type: admin
-              maxenrollments: -1
-            - name: "{{ peer_enrollment_id }}"
-              pass: "{{ peer_enrollment_secret }}"
-              type: peer
-              maxenrollments: -1
       tlsca:
         registry:
           maxenrollments: -1
@@ -52,10 +44,6 @@
                 hf.GenCRL: true
                 hf.Registrar.Attributes: "*"
                 hf.AffiliationMgr: true
-            - name: "{{ peer_enrollment_id }}"
-              pass: "{{ peer_enrollment_secret }}"
-              type: peer
-              maxenrollments: -1
     resources: "{{ ca_resources | default(omit) }}"
     storage: "{{ ca_storage | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
@@ -73,6 +61,36 @@
     enrollment_id: "{{ ca_admin_enrollment_id }}"
     enrollment_secret: "{{ ca_admin_enrollment_secret }}"
     path: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+
+- name: Register the organization admin
+  ibm.blockchain_platform.registered_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    enrollment_id: "{{ organization_admin_enrollment_id }}"
+    enrollment_secret: "{{ organization_admin_enrollment_secret }}"
+    max_enrollments: -1
+    type: admin
+
+- name: Register the peer
+  ibm.blockchain_platform.registered_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ api_endpoint }}"
+    api_authtype: "{{ api_authtype }}"
+    api_key: "{{ api_key }}"
+    api_secret: "{{ api_secret | default(omit) }}"
+    api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    enrollment_id: "{{ peer_enrollment_id }}"
+    enrollment_secret: "{{ peer_enrollment_secret }}"
+    max_enrollments: -1
+    type: peer
 
 - name: Enroll the organization admin
   ibm.blockchain_platform.enrolled_identity:
