@@ -63,9 +63,15 @@ Edit the variable files `ordering-org-vars.yml` (for Ordering Org) and `org1-var
   5. Set ``api_key`` to your API key or username.
   6. Set ``api_secret`` to your API secret or password.
 
-When the Ansible playbooks are run, the variable files are passed in to Ansible using the ``--extra-vars`` option, for example ``--extra-vars "@ordering-org-vars.yml"``.
+There is also a common variables file, `common-vars.yml`. You do not need to edit this variable file. This file contains variables that are used by multiple organizations, for example the name of the channel that will be created, and the name of the smart contract that will be deployed.
 
-Finally, all of these files contain a ``wait_timeout`` variable, with the default set to ``600`` (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.
+When the Ansible playbooks are run, the variable files are passed in to Ansible using the ``--extra-vars`` option, for example:
+
+  ::
+
+    ansible-playbook 01-create-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+
+Finally, all of the organization specific variable files contain a ``wait_timeout`` variable, with the default set to ``600`` (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.
 
 Building the network
 --------------------
@@ -88,7 +94,7 @@ If you have installed the collection using Ansible Galaxy, or from source, then 
 
     ::
 
-        ./build_network -i build
+        ./build_network.sh -i build
 
 If you have installed the collection by building a Docker image, then run the script as follows:
 
@@ -332,7 +338,7 @@ If you have installed the collection using Ansible Galaxy, or from source, then 
 
     ::
 
-        ./build_network -i destroy
+        ./build_network.sh -i destroy
 
 If you have installed the collection by building a Docker image, then run the script as follows:
 
@@ -349,3 +355,5 @@ If you have installed the collection by building a Docker image, then run the sc
         docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/build_network.sh -i destroy
 
 After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a ``PLAY RECAP`` section that details how many tasks have been executed, and how many of those tasks have failed.
+
+Finally, if you have imported any identities into the IBM Blockchain Platform console wallet that have been created by these Ansible playbooks, then these identities will still remain in the wallet even after the network has been destroyed. Ansible cannot remove these identities from the wallet. You must remove these identities yourself using the IBM Blockchain Platform console.
