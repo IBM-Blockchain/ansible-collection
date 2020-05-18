@@ -25,6 +25,6 @@ ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml" --extra-
 ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
 ansible-playbook 21-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
 ansible-playbook 22-register-application.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
+ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
+ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
