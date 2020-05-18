@@ -36,8 +36,13 @@ if [ "${COMMAND}" = "build" ]; then
     set +x
 elif [ "${COMMAND}" = "destroy" ]; then
     set -x
-    ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-    ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+    if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
+        ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
+        ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
+    else
+        ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+        ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+    fi
     set +x
 else
     usage

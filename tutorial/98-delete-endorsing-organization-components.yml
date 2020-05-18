@@ -14,3 +14,17 @@
     # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   roles:
     - ibm.blockchain_platform.endorsing_organization
+
+- name: Remove imported components
+  hosts: localhost
+  tasks:
+    - name: Remove imported ordering service
+      ibm.blockchain_platform.external_ordering_service:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        state: absent
+        name: "{{ ordering_service_name }}"
+      when: import_export_used | default(false)
