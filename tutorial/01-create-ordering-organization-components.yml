@@ -8,7 +8,7 @@
     state: present
     organization_name: "{{ ordering_org_name }}"
     organization_msp_id: "{{ ordering_service_msp }}"
-    ca_admin_enrollment_id: "{{ca_admin_enrollment_id}}"
+    ca_admin_enrollment_id: "{{ ca_admin_enrollment_id }}"
     organization_admin_enrollment_id: "{{ organization_admin_enrollment_id }}"
     ordering_service_enrollment_id: "{{ ordering_service_enrollment_id }}"
     ordering_service_name: "{{ ordering_service_name }}"
