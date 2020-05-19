@@ -77,9 +77,20 @@ options:
         type: str
     config_override:
         description:
-            - The configuration overrides for the certificate authority.
-            - "See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html"
+            - The configuration overrides for the root certificate authority and the TLS certificate authority.
+            - If configuration overrides are provided for the root certificate authority, but not the TLS certificate authority, then the configuration overrides for the root certificate authority will be copied for the TLS certificate authority.
         type: dict
+        suboptions:
+            ca:
+                description:
+                    - The configuration overrides for the root certificate authority.
+                    - "See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html"
+                type: dict
+            tlsca:
+                description:
+                    - The configuration overrides for the TLS certificate authority.
+                    - "See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html"
+                type: dict
     resources:
         description:
             - The Kubernetes resource configuration for the certificate authority.
@@ -221,7 +232,10 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
-        config_override=dict(type='dict', default=dict()),
+        config_override=dict(type='dict', default=dict(), options=dict(
+            ca=dict(type='dict'),
+            tlsca=dict(type='dict'),
+        )),
         resources=dict(type='dict', default=dict(), options=dict(
             ca=dict(type='dict', default=dict(), options=dict(
                 requests=dict(type='dict', default=dict(), options=dict(
@@ -287,10 +301,18 @@ def main():
             # The certificate authority should not exist and doesn't.
             return module.exit_json(changed=False)
 
+        # If config overrides are provided for the CA, but not the TLSCA, copy
+        # the CA ones into place. This is what the REST API does.
+        config_override = module.params['config_override']
+        ca = config_override['ca']
+        tlsca = config_override['tlsca']
+        if ca is not None and tlsca is None:
+            config_override['tlsca'] = ca
+
         # Extract the expected certificate authority configuration.
         expected_certificate_authority = dict(
             display_name=name,
-            config_override=module.params['config_override'],
+            config_override=config_override,
             resources=module.params['resources'],
             storage=module.params['storage']
         )
@@ -309,11 +331,12 @@ def main():
                     )
                 )
             )
-            ca = expected_certificate_authority['config_override'].setdefault('ca', dict())
-            tlsca = expected_certificate_authority['config_override'].get('tlsca', None)
+            if ca is None:
+                config_override['ca'] = ca = dict()
+            if tlsca is None:
+                config_override['tlsca'] = tlsca = dict()
             merge_dicts(ca, bccsp)
-            if tlsca is not None:
-                merge_dicts(tlsca, bccsp)
+            merge_dicts(tlsca, bccsp)
 
         # Add the zone if it is specified.
         zone = module.params['zone']
