@@ -139,7 +139,7 @@ Parameters
   console_storage_size (optional, str, 10Gi)
     The storage size to use for the console.
 
-    console_tls_secret (optional, str, None)
+  console_tls_secret (optional, str, None)
     The TLS secret name to use for the console.
 
     If specified this secret must already exist in the specified Kubernetes namespace or Red Hat OpenShift project and must contain the TLS certificate and private key that the console will use.
