@@ -139,6 +139,13 @@ Parameters
   console_storage_size (optional, str, 10Gi)
     The storage size to use for the console.
 
+    console_tls_secret (optional, str, None)
+    The TLS secret name to use for the console.
+
+    If specified this secret must already exist in the specified Kubernetes namespace or Red Hat OpenShift project and must contain the TLS certificate and private key that the console will use.
+
+    If not specified the console will generate it's own self-signed certificates
+
   product_version (optional, str, 2.1.3)
     The version of IBM Blockchain Platform to use.
 
