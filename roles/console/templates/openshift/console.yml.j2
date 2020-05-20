@@ -21,3 +21,4 @@ spec:
     console:
       class: "{{ console_storage_class }}"
       size: "{{ console_storage_size }}"
+  tlsSecretName: "{{ console_tls_secret | default('') }}"
