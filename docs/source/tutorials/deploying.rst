@@ -41,7 +41,7 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/deploy_smart_contract.sh
+        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/deploy_smart_contract.sh
 
 Exploring the playbooks
 -----------------------
