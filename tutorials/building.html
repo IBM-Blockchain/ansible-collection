@@ -223,8 +223,14 @@
 </ol>
 </li>
 </ul>
-<p>When the Ansible playbooks are run, the variable files are passed in to Ansible using the <code class="docutils literal notranslate"><span class="pre">--extra-vars</span></code> option, for example <code class="docutils literal notranslate"><span class="pre">--extra-vars</span> <span class="pre">&quot;&#64;ordering-org-vars.yml&quot;</span></code>.</p>
-<p>Finally, all of these files contain a <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> variable, with the default set to <code class="docutils literal notranslate"><span class="pre">600</span></code> (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.</p>
+<p>There is also a common variables file, <cite>common-vars.yml</cite>. You do not need to edit this variable file. This file contains variables that are used by multiple organizations, for example the name of the channel that will be created, and the name of the smart contract that will be deployed.</p>
+<p>When the Ansible playbooks are run, the variable files are passed in to Ansible using the <code class="docutils literal notranslate"><span class="pre">--extra-vars</span></code> option, for example:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<p>Finally, all of the organization specific variable files contain a <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> variable, with the default set to <code class="docutils literal notranslate"><span class="pre">600</span></code> (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.</p>
 </div>
 <div class="section" id="building-the-network">
 <h2>Building the network<a class="headerlink" href="#building-the-network" title="Permalink to this headline">¶</a></h2>
@@ -242,7 +248,7 @@
 </li>
 <li><p>Each organization has their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./build_network -i build
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./build_network.sh -i build
 </pre></div>
 </div>
 </div></blockquote>
@@ -252,14 +258,14 @@
 <ul>
 <li><p>Both organizations use the same IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/build_network.sh build
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/build_network.sh build
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Each organization has their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/build_network.sh -i build
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/build_network.sh -i build
 </pre></div>
 </div>
 </div></blockquote>
@@ -534,7 +540,7 @@
 </li>
 <li><p>Each organization has their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./build_network -i destroy
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./build_network.sh -i destroy
 </pre></div>
 </div>
 </div></blockquote>
@@ -544,20 +550,21 @@
 <ul>
 <li><p>Both organizations use the same IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/build_network.sh destroy
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/build_network.sh destroy
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Each organization has their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible ansible-playbook /tutorials/build_network.sh -i destroy
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/build_network.sh -i destroy
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 </ul>
 <p>After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section that details how many tasks have been executed, and how many of those tasks have failed.</p>
+<p>Finally, if you have imported any identities into the IBM Blockchain Platform console wallet that have been created by these Ansible playbooks, then these identities will still remain in the wallet even after the network has been destroyed. Ansible cannot remove these identities from the wallet. You must remove these identities yourself using the IBM Blockchain Platform console.</p>
 </div>
 </div>
 

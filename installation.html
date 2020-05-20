@@ -216,14 +216,6 @@ If you install Python from the package manager for your operating system, you mu
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>IBM Blockchain Platform v2.1.3+</strong></p>
-<blockquote>
-<div><p>This Ansible collection can deploy Hyperledger Fabric networks using the IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection.</p>
-<p>You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
-<p>You must have deployed the IBM Blockchain Platform before using this Ansible collection. This Ansible collection cannot currently be used to deploy the IBM Blockchain Platform itself.</p>
-<p>If you are using the IBM Blockchain Platform on IBM Cloud, you must create service credentials for this Ansible collection to use. The <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> and <code class="docutils literal notranslate"><span class="pre">api_key</span></code> properties in the service credentials must be passed into the modules and roles in this Ansible collection.</p>
-<p>If you are using the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster, you must determine the URL of your IBM Blockchain Platform console - this will be the <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> property. You must also provide a valid API key <code class="docutils literal notranslate"><span class="pre">api_key</span></code> and secret <code class="docutils literal notranslate"><span class="pre">api_secret</span></code> for the IBM Blockchain Platform console. These properties must be passed into the modules and roles in this Ansible collection.</p>
-</div></blockquote>
 <p><strong>Hyperledger Fabric v1.4.x binaries</strong></p>
 <blockquote>
 <div><p>This Ansible collection uses the Hyperledger Fabric v1.4 binaries to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxgen</span></code>, <code class="docutils literal notranslate"><span class="pre">peer</span></code>, and <code class="docutils literal notranslate"><span class="pre">fabric-ca-client</span></code>.</p>
@@ -243,11 +235,19 @@ If you install Python from the package manager for your operating system, you mu
 </div></blockquote>
 <p><strong>OpenShift client for Python v0.10.3+</strong></p>
 <blockquote>
-<div><p>This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform console.</p>
+<div><p>This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform software.</p>
 <p>You can install this SDK using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, the package manager for Python:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">openshift</span>
 </pre></div>
 </div>
+</div></blockquote>
+<p><strong>IBM Blockchain Platform v2.1.3+</strong></p>
+<blockquote>
+<div><p>This Ansible collection requires use of IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection. You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
+<p>You can not use this Ansible collection to create an instance of the IBM Blockchain Platform service on IBM Cloud. If you want to use the IBM Blockchain Platform on IBM Cloud, you must create the instance before you attempt to use this Ansible collection: <a class="reference external" href="https://cloud.ibm.com/catalog/services/blockchain-platform#about">https://cloud.ibm.com/catalog/services/blockchain-platform#about</a></p>
+<p>You can use this Ansible collection to install the IBM Blockchain Platform software into a Red Hat Openshift or Kubernetes cluster, if you have not already installed it. To see how to do this, follow this tutorial: <a class="reference external" href="./tutorials/installing.html">Installing the IBM Blockchain Platform</a></p>
+<p>If you are using the IBM Blockchain Platform on IBM Cloud, you must create service credentials for this Ansible collection to use. The <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> and <code class="docutils literal notranslate"><span class="pre">api_key</span></code> properties in the service credentials must be passed into the modules and roles in this Ansible collection.</p>
+<p>If you are using the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster, you must determine the URL of your IBM Blockchain Platform console - this will be the <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> property. You must also provide a valid API key <code class="docutils literal notranslate"><span class="pre">api_key</span></code> and secret <code class="docutils literal notranslate"><span class="pre">api_secret</span></code> for the IBM Blockchain Platform console. These properties must be passed into the modules and roles in this Ansible collection.</p>
 </div></blockquote>
 </div>
 <div class="section" id="installing-using-ansible-galaxy">

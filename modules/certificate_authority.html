@@ -243,8 +243,16 @@
 </dd>
 <dt>name (optional, str, None)</dt><dd><p>The display name for the certificate authority.</p>
 </dd>
-<dt>config_override (optional, dict, None)</dt><dd><p>The configuration overrides for the certificate authority.</p>
+<dt>config_override (optional, dict, None)</dt><dd><p>The configuration overrides for the root certificate authority and the TLS certificate authority.</p>
+<p>If configuration overrides are provided for the root certificate authority, but not the TLS certificate authority, then the configuration overrides for the root certificate authority will be copied for the TLS certificate authority.</p>
+<dl>
+<dt>ca (optional, dict, None)</dt><dd><p>The configuration overrides for the root certificate authority.</p>
 <p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html">https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html</a></p>
+</dd>
+<dt>tlsca (optional, dict, None)</dt><dd><p>The configuration overrides for the TLS certificate authority.</p>
+<p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html">https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html</a></p>
+</dd>
+</dl>
 </dd>
 <dt>resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the certificate authority.</p>
 <dl>
