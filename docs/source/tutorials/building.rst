@@ -102,13 +102,13 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/build_network.sh build
+        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/build_network.sh build
 
 * Each organization has their own IBM Blockchain Platform instance:
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/build_network.sh -i build
+        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/build_network.sh -i build
 
 After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a ``PLAY RECAP`` section that details how many tasks have been executed, and how many of those tasks have failed.
 
@@ -346,13 +346,13 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/build_network.sh destroy
+        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/build_network.sh destroy
 
 * Each organization has their own IBM Blockchain Platform instance:
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible ansible-playbook /tutorials/build_network.sh -i destroy
+        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/build_network.sh -i destroy
 
 After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a ``PLAY RECAP`` section that details how many tasks have been executed, and how many of those tasks have failed.
 
