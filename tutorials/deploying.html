@@ -94,6 +94,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Deploying a smart contract</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#deploying-the-smart-contract">Deploying the smart contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-the-network">Exploring the network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exploring-the-playbooks">Exploring the playbooks</a></li>
 </ul>
 </li>
@@ -200,9 +201,21 @@
 </div>
 </div></blockquote>
 </div>
+<div class="section" id="exploring-the-network">
+<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this headline">¶</a></h2>
+<p>The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers <cite>Org1 Peer</cite> and <cite>Org2 Peer</cite>. The Ansible playbooks also instantiated the FabCar smart contract on the channel <cite>mychannel</cite>.</p>
+<p>At this point, the FabCar smart contract is deployed and ready for applications to connect to the network and submit transactions. An application that wishes to connect to the network requires two things: an identity and a connection profile. The connection profile is a JSON document that provides the application with a list of endpoints or URLs that the application can use to connect to the network.</p>
+<p>The Ansible playbooks registered an application identity for each organization. The organization <cite>Org1</cite> has an application identity named <cite>org1app</cite>, with an enrollment secret of <cite>org1apppw</cite>. The organization <cite>Org2</cite> has an application identity named <cite>org2app</cite>, with an enrollment secret of <cite>org2apppw</cite>. You can use this information to enroll the identity against the respective organizations certificate authority, <cite>Org1 CA</cite> or <cite>Org2 CA</cite>.</p>
+<p>The Ansible playbooks created a connection profile for each organization. These connection profiles are created on disk, as JSON files in the same directory as the playbooks. The connection profiles are:</p>
+<ul class="simple">
+<li><p><cite>Org1 Gateway.json</cite></p></li>
+<li><p><cite>Org2 Gateway.json</cite></p></li>
+</ul>
+<p>An application that uses one of the available Fabric SDKs (Go, Java, or Node.js) can use the identity and connection profile for an organization to connect to the network and submit a transaction. You could also try using the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform">IBM Blockchain Platform extension for Visual Studio Code</a> to connect to the network and submit a transaction.</p>
+</div>
 <div class="section" id="exploring-the-playbooks">
 <h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline">¶</a></h2>
-<p>When you ran the script <cite>join_network.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of joining the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
+<p>When you ran the script <cite>deploy_smart_contract.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of deploying the smart contract. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
 <p>Here are the Ansible playbooks that were executed by the script above:</p>
 <ul>
 <li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-install-chaincode.yml">18-install-chaincode.yml</a></p>
@@ -211,7 +224,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 18-install-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 18-install-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -225,7 +238,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 19-install-chaincode.yml --extra-vars &quot;@org2-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 19-install-chaincode.yml --extra-vars &quot;@org2-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -239,12 +252,40 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 20-instantiate-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 20-instantiate-chaincode.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
 <div class="line-block">
 <div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/instantiated_chaincode.html">instantiated_chaincode</a> to instantiate the FabCar smart contract on the channel <cite>mychannel</cite>.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-register-application.yml">21-register-application.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org1</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 21-register-application.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/registered_identity.html">registered_identity</a> to register a new identity in the certificate authority <cite>Org1 CA</cite>. This playbook also uses the Ansible module <a class="reference external" href="../modules/connection_profile.html">connection_profile</a> to create a connection profile for the organization <cite>Org1</cite>. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml">22-register-application.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Org2</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 22-register-application.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/registered_identity.html">registered_identity</a> to register a new identity in the certificate authority <cite>Org2 CA</cite>. This playbook also uses the Ansible module <a class="reference external" href="../modules/connection_profile.html">connection_profile</a> to create a connection profile for the organization <cite>Org2</cite>. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.</div>
 </div>
 </li>
 </ul>

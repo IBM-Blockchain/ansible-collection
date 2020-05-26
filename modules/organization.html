@@ -250,6 +250,10 @@
 <p>You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.</p>
 <p>You can also pass a dictionary, which must match the result format of one of the <span class="xref std std-ref">certificate_authority_info</span> or <span class="xref std std-ref">certificate_authority</span> modules.</p>
 </dd>
+<dt>registrar (optional, raw, None)</dt><dd><p>The identity to use when interacting with the certificate authority. If you want a CRL (Certificate Revocation List) generated from the certificate authority, you must supply an identity to use as the registrar.</p>
+<p>You can pass a string, which is the path to the JSON file where the enrolled identity is stored.</p>
+<p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">enrolled_identity_info</span> or <span class="xref std std-ref">enrolled_identity</span> modules.</p>
+</dd>
 <dt>root_certs (optional, list, None)</dt><dd><p>The list of root certificates for this organization.</p>
 <p>Root certificates must be supplied as base64 encoded PEM files.</p>
 </dd>

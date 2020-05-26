@@ -331,7 +331,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -345,7 +345,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -359,7 +359,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 03-export-organization.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 03-export-organization.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -376,7 +376,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 04-import-organization.yml --extra-vars &quot;@ordering-org-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 04-import-organization.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -393,7 +393,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-add-organization-to-consortium.yml --extra-vars &quot;@ordering-org-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-add-organization-to-consortium.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -407,7 +407,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-export-ordering-service.yml --extra-vars &quot;@ordering-org-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-export-ordering-service.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -424,7 +424,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-import-ordering-service.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-import-ordering-service.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -441,7 +441,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-create-channel.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-create-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -464,7 +464,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-join-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-join-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -478,7 +478,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -495,7 +495,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>
@@ -512,7 +512,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
 </pre></div>
 </div>
 </div></blockquote>

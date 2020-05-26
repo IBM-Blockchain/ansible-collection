@@ -82,6 +82,14 @@ Parameters
     You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
 
 
+  registrar (optional, raw, None)
+    The identity to use when interacting with the certificate authority. If you want a CRL (Certificate Revocation List) generated from the certificate authority, you must supply an identity to use as the registrar.
+
+    You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+
+
   root_certs (optional, list, None)
     The list of root certificates for this organization.
 

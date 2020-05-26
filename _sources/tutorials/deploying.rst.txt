@@ -43,10 +43,26 @@ If you have installed the collection by building a Docker image, then run the sc
 
         docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/deploy_smart_contract.sh
 
+Exploring the network
+---------------------
+
+The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers `Org1 Peer` and `Org2 Peer`. The Ansible playbooks also instantiated the FabCar smart contract on the channel `mychannel`.
+
+At this point, the FabCar smart contract is deployed and ready for applications to connect to the network and submit transactions. An application that wishes to connect to the network requires two things: an identity and a connection profile. The connection profile is a JSON document that provides the application with a list of endpoints or URLs that the application can use to connect to the network.
+
+The Ansible playbooks registered an application identity for each organization. The organization `Org1` has an application identity named `org1app`, with an enrollment secret of `org1apppw`. The organization `Org2` has an application identity named `org2app`, with an enrollment secret of `org2apppw`. You can use this information to enroll the identity against the respective organizations certificate authority, `Org1 CA` or `Org2 CA`.
+
+The Ansible playbooks created a connection profile for each organization. These connection profiles are created on disk, as JSON files in the same directory as the playbooks. The connection profiles are:
+
+- `Org1 Gateway.json`
+- `Org2 Gateway.json`
+
+An application that uses one of the available Fabric SDKs (Go, Java, or Node.js) can use the identity and connection profile for an organization to connect to the network and submit a transaction. You could also try using the `IBM Blockchain Platform extension for Visual Studio Code <https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform>`_ to connect to the network and submit a transaction.
+
 Exploring the playbooks
 -----------------------
 
-When you ran the script `join_network.sh`, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of joining the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.
+When you ran the script `deploy_smart_contract.sh`, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of deploying the smart contract. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.
 
 Here are the Ansible playbooks that were executed by the script above:
 
@@ -57,7 +73,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 18-install-chaincode.yml --extra-vars "@org1-vars.yml"
+      ansible-playbook 18-install-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org1 Peer`.
 
@@ -68,7 +84,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml"
+      ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org2 Peer`.
 
@@ -79,6 +95,28 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml"
+      ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
 
   | This playbook uses the Ansible module `instantiated_chaincode <../modules/instantiated_chaincode.html>`_ to instantiate the FabCar smart contract on the channel `mychannel`.
+
+* `21-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-register-application.yml>`_
+
+  | Organization: Org1
+  | Command:
+
+    ::
+
+      ansible-playbook 21-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+
+  | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org1 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org1`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
+
+* `22-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml>`_
+
+  | Organization: Org2
+  | Command:
+
+    ::
+
+      ansible-playbook 22-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+
+  | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org2 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org2`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
