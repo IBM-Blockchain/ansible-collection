@@ -102,6 +102,7 @@
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ ca_name }}"
+    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
     admins:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
 

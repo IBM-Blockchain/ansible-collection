@@ -181,6 +181,9 @@ class CertificateAuthorityConnection:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
         return result['result']
 
+    def generate_crl(self, registrar):
+        return self.ca_service.generateCRL(None, None, None, None, self._get_enrollment(registrar))
+
     def _get_enrollment(self, identity):
         private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
         return Enrollment(private_key, identity.cert, service=self.ca_service)

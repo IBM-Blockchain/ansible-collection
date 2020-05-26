@@ -12,6 +12,7 @@ from cryptography.hazmat.primitives.serialization import Encoding
 from cryptography.x509.oid import ExtensionOID
 
 import base64
+import hashlib
 
 
 def load_cert(cert):
@@ -63,3 +64,23 @@ def split_ca_chain(chain):
         else:
             intermediate_certs.append(serialized_cert)
     return (root_certs, intermediate_certs)
+
+
+def load_crl(crl):
+    parsed_crl = base64.b64decode(crl)
+    return x509.load_pem_x509_crl(parsed_crl, default_backend())
+
+
+def hash_crl(crl):
+    m = hashlib.sha256()
+    m.update(str(len(crl)).encode('utf-8'))
+    for entry in crl:
+        loaded_crl = load_crl(entry)
+        m.update(str(len(loaded_crl)).encode('utf-8'))
+        for revoked_cert in loaded_crl:
+            m.update(str(revoked_cert.serial_number).encode('utf-8'))
+    return m.hexdigest()
+
+
+def equal_crls(crl1, crl2):
+    return hash_crl(crl1) == hash_crl(crl2)
