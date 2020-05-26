@@ -21,4 +21,4 @@
         peer: "{{ org1_peer_name }}"
         identity: "{{ org1_name }} Admin.json"
         msp_id: "{{ org1_msp_id }}"
-        path: "{{ smart_contract_base_name }}@{{ smart_contract_version }}.cds"
+        path: "{{ smart_contract_package }}"

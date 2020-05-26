@@ -7,6 +7,8 @@
   vars:
     state: absent
     organization_name: "{{ org2_name }}"
+    ca_name: "{{ org2_ca_name }}"
+    peer_name: "{{ org2_peer_name }}"
     # These variables should be supplied using --extra-vars "@org2-vars.yml"
     # api_endpoint: https://ibp-console.example.org:32000
     # api_authtype: basic

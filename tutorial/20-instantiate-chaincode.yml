@@ -22,7 +22,7 @@
         identity: "{{ org1_name }} Admin.json"
         msp_id: "{{ org1_msp_id }}"
         channel: "{{ channel_name }}"
-        name: "{{ smart_contract_base_name }}"
+        name: "{{ smart_contract_name }}"
         constructor:
           function: "{{ smart_contract_constructor | default(omit) }}"
         version: "{{ smart_contract_version }}"
