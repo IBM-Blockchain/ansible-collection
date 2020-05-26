@@ -6,10 +6,10 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.cert_utils import split_ca_chain
+from ..module_utils.cert_utils import split_ca_chain, equal_crls
 from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
 from ..module_utils.organizations import Organization
-from ..module_utils.utils import get_console, get_certificate_authority_by_module
+from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_identity_by_module
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
@@ -92,6 +92,16 @@ options:
               with the IBM Blockchain Platform console.
             - You can also pass a dictionary, which must match the result format of one of the
               M(certificate_authority_info) or M(certificate_authority) modules.
+        type: raw
+    registrar:
+        description:
+            - The identity to use when interacting with the certificate authority. If you want
+              a CRL (Certificate Revocation List) generated from the certificate authority, you
+              must supply an identity to use as the registrar.
+            - You can pass a string, which is the path to the JSON file where the enrolled
+              identity is stored.
+            - You can also pass a dict, which must match the result format of one of the
+              M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
     root_certs:
         description:
@@ -382,13 +392,23 @@ def get_from_certificate_authority(console, module):
     tlsca_chain = tlscainfo['result']['CAChain']
     (tls_root_certs, tls_intermediate_certs) = split_ca_chain(tlsca_chain)
 
-    # Return the certificate authority information.
-    return {
+    # Build the return information.
+    result = {
         'root_certs': root_certs,
         'intermediate_certs': intermediate_certs,
         'tls_root_certs': tls_root_certs,
         'tls_intermediate_certs': tls_intermediate_certs
     }
+
+    # Generate a revocation list if a registrar has been provided.
+    if module.params['registrar']:
+        registrar = get_identity_by_module(module, 'registrar')
+        with certificate_authority.connect() as connection:
+            revocation_list = connection.generate_crl(registrar)
+            result['revocation_list'] = [revocation_list]
+
+    # Return the information retrieved from the certificate authority.
+    return result
 
 
 def main():
@@ -405,6 +425,7 @@ def main():
         name=dict(type='str', required=True),
         msp_id=dict(type='str'),
         certificate_authority=dict(type='raw'),
+        registrar=dict(type='raw'),
         root_certs=dict(type='list', elements='str', default=list()),
         intermediate_certs=dict(type='list', elements='str', default=list()),
         admins=dict(type='list', elements='str', default=list()),
@@ -476,11 +497,15 @@ def main():
         # Merge any certificate authority certificates.
         if certificate_authority_certs is not None:
 
-            # Extend the root certificate lists.
+            # Extend the root and intermediate certificate lists.
             expected_organization['root_certs'].extend(certificate_authority_certs['root_certs'])
             expected_organization['intermediate_certs'].extend(certificate_authority_certs['intermediate_certs'])
             expected_organization['tls_root_certs'].extend(certificate_authority_certs['tls_root_certs'])
             expected_organization['tls_intermediate_certs'].extend(certificate_authority_certs['tls_intermediate_certs'])
+
+            # If a revocation list has been generated, extend that as well.
+            if 'revocation_list' in certificate_authority_certs:
+                expected_organization['revocation_list'].extend(certificate_authority_certs['revocation_list'])
 
             # Check to see if NodeOU support is enabled.
             node_ous_enabled = expected_organization['fabric_node_ous']['enable']
@@ -520,6 +545,12 @@ def main():
             for banned_change in banned_changes:
                 if banned_change in diff:
                     raise Exception(f'{banned_change} cannot be changed from {organization[banned_change]} to {new_organization[banned_change]} for existing organization')
+
+            # Check to see if the revocation list has actually changed (in terms of actual serial numbers).
+            # We need to do this because the revocation list is generated every time.
+            if 'revocation_list' in organization and 'revocation_list' in new_organization:
+                if equal_crls(organization['revocation_list'], new_organization['revocation_list']):
+                    new_organization['revocation_list'] = organization['revocation_list']
 
             # If the organization has changed, apply the changes.
             organization_changed = not equal_dicts(organization, new_organization)
