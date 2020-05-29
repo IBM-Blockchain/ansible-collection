@@ -10,16 +10,8 @@
     organization_msp_id: "{{ org1_msp_id }}"
     ca_name: "{{ org1_ca_name }}"
     peer_name: "{{ org1_peer_name }}"
-    # These variables should be supplied using --extra-vars "@org1-vars.yml"
-    # api_endpoint: https://ibp-console.example.org:32000
-    # api_authtype: basic
-    # api_key: xxxxxxxx
-    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    # ca_admin_enrollment_id: admin
-    # ca_admin_enrollment_secret: adminpw
-    # organization_admin_enrollment_id: org1admin
-    # organization_admin_enrollment_secret: org1adminpw
-    # peer_enrollment_id: org1peer
-    # peer_enrollment_secret: org1peerpw
+  vars_files:
+    - common-vars.yml
+    - org1-vars.yml
   roles:
     - ibm.blockchain_platform.endorsing_organization

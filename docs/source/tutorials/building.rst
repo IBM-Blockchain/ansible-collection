@@ -65,11 +65,7 @@ Edit the variable files `ordering-org-vars.yml` (for Ordering Org) and `org1-var
 
 There is also a common variables file, `common-vars.yml`. You do not need to edit this variable file. This file contains variables that are used by multiple organizations, for example the name of the channel that will be created, and the name of the smart contract that will be deployed.
 
-When the Ansible playbooks are run, the variable files are passed in to Ansible using the ``--extra-vars`` option, for example:
-
-  ::
-
-    ansible-playbook 01-create-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+The variable files are specified in the Ansible playbooks using the ``vars_files`` argument for each play. When the Ansible playbooks are run, Ansible loads all variables from all variable files specified and makes them available for use in that play.
 
 Finally, all of the organization specific variable files contain a ``wait_timeout`` variable, with the default set to ``600`` (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.
 
@@ -150,9 +146,17 @@ Exploring the playbooks
 
 When you ran the script `build_network.sh`, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of building the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.
 
-Firstly, each of these Ansible playbooks require information that allows them to connect to the IBM Blockchain Platform instance, so they can interact with the IBM Blockchain Platform APIs. Before you ran the Ansible playbooks, you edited the variable files `ordering-org-vars.yml` and `org1-vars.yml`. These variable files are passed in on the command line using the ``--extra-vars`` option.
+Firstly, each of these Ansible playbooks require information that allows them to connect to the IBM Blockchain Platform instance, so they can interact with the IBM Blockchain Platform APIs. Before you ran the Ansible playbooks, you edited the variable files `ordering-org-vars.yml` and `org1-vars.yml`. These variable files are specified in the Ansible playbooks using the ``vars_files`` argument for each play, for example:
 
-When you pass these variable files in on the command line, all variables are accessible for use in tasks within the Ansible playbook being run. You will see these variables are referenced when calling the Ansible modules in this collection, for example:
+  ::
+
+    - name: Add the organization to the consortium
+      hosts: localhost
+      vars_files:
+        - common-vars.yml
+        - ordering-org-vars.yml
+
+When the Ansible playbooks are run, Ansible loads all variables from all variable files specified and makes them accessible for use in tasks within the Ansible playbook being run. You will see these variables are referenced when calling the Ansible modules in this collection, for example:
 
   ::
 
@@ -173,7 +177,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 01-create-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 01-create-ordering-organization-components.yml
 
   | This playbook creates the components for the ordering organization `Ordering Org`. It makes use of the Ansible role `ordering_organization <../roles/ordering_organization.html>`_ to set up the certificate authority, organization (MSP) and ordering service for this organization, along with the administrator identities for this organization.
 
@@ -184,7 +188,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 02-create-endorsing-organization-components.yml
 
   | This playbook creates the components for the endorsing organization `Org1`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
@@ -195,7 +199,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 03-export-organization.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 03-export-organization.yml
 
   | This playbook uses the Ansible module `organization_info <../modules/organization_info.html>`_ to export the organization `Org1` to a file. This is so that `Org1` can pass this file to the ordering organization `Ordering Org`. `Ordering Org` can then import this file into their IBM Blockchain Platform console, so they can add `Org1` into the consortium for the ordering service.
 
@@ -208,7 +212,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 04-import-organization.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 04-import-organization.yml
 
   | This playbook uses the Ansible module `external_organization <../modules/external_organization.html>`_ to import the organization `Org1` from a file. This file was passed to `Ordering Org` by `Org1`, so that `Ordering Org` could add `Org1` into the consortium for the ordering service.
 
@@ -221,7 +225,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 05-add-organization-to-consortium.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 05-add-organization-to-consortium.yml
 
   | This playbook adds the organization `Org1` into the consortium for the ordering service. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `consortium_member <../modules/consortium_member.html>`_ to update the system channel configuration, which contains the list of consortium members.
 
@@ -232,7 +236,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 06-export-ordering-service.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 06-export-ordering-service.yml
 
   | This playbook uses the Ansible module `ordering_service_info <../modules/ordering_service_info.html>`_ to export the ordering service to a file. This is so that `Ordering Org` can pass this file to the organization `Org1`. `Org1` can then import this file into their IBM Blockchain Platform console, so they can start to create channels on the ordering service.
 
@@ -245,7 +249,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 07-import-ordering-service.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 07-import-ordering-service.yml
 
   | This playbook uses the Ansible module `external_ordering_service <../modules/external_ordering_service.html>`_ to import the ordering service from a file. This file was passed to `Org1` by `Ordering Org`, so that `Org1` could start to create channels on the ordering service.
 
@@ -258,7 +262,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 08-create-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 08-create-channel.yml
 
   | This playbook creates a channel called `mychannel` on the ordering service. The channel contains a single organization, `Org1`. The policies for this channel are supplied in policy files:
 
@@ -276,7 +280,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 09-join-peer-to-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 09-join-peer-to-channel.yml
 
   | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org1 Peer` to the channel.
 
@@ -287,7 +291,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 10-add-anchor-peer-to-channel.yml
 
   | This playbook updates the organization (MSP) definition for `Org1` in the channel `mychannel` to specify that the peer `Org1 Peer` is an anchor peer for the channel. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_member <../modules/channel_member.html>`_ to update the channel configuration.
 
@@ -300,7 +304,7 @@ Finally, there are also two Ansible playbooks that can be used to destroy the ne
 
     ::
 
-      ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 97-delete-endorsing-organization-components.yml
 
   | This playbook deletes the components for the endorsing organization `Org1`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to remove the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
@@ -313,7 +317,7 @@ Finally, there are also two Ansible playbooks that can be used to destroy the ne
 
     ::
 
-      ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 99-delete-ordering-organization-components.yml
 
   | This playbook deletes the components for the ordering organization `Ordering Org`. It makes use of the Ansible role `ordering_organization <../roles/ordering_organization.html>`_ to remove up the certificate authority, organization (MSP) and ordering service for this organization, along with the administrator identities for this organization.
 

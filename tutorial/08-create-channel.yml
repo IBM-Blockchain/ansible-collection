@@ -4,12 +4,9 @@
 ---
 - name: Create the channel
   hosts: localhost
-  vars:
-    # These variables should be supplied using --extra-vars "@org1-vars.yml"
-    # api_endpoint: https://ibp-console.example.org:32000
-    # api_authtype: basic
-    # api_key: xxxxxxxx
-    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  vars_files:
+    - common-vars.yml
+    - org1-vars.yml
   tasks:
     - name: Check to see if the channel already exists
       ibm.blockchain_platform.channel_block:

@@ -54,11 +54,7 @@ You must now edit the variable file for the new organization Org2, `org2-vars.ym
 
 There is also a common variables file, `common-vars.yml`. You do not need to edit this variable file. This file contains variables that are used by multiple organizations, for example the name of the channel that will be created, and the name of the smart contract that will be deployed.
 
-When the Ansible playbooks are run, the variable files are passed in to Ansible using the ``--extra-vars`` option, for example:
-
-  ::
-
-    ansible-playbook 11-create-endorsing-organization-components.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+The variable files are specified in the Ansible playbooks using the ``vars_files`` argument for each play. When the Ansible playbooks are run, Ansible loads all variables from all variable files specified and makes them available for use in that play.
 
 Finally, all of the organization specific variable files contain a ``wait_timeout`` variable, with the default set to ``600`` (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.
 
@@ -140,7 +136,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 11-create-endorsing-organization-components.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 11-create-endorsing-organization-components.yml
 
   | This playbook creates the components for the endorsing organization `Org2`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
@@ -151,7 +147,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 12-export-organization.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 12-export-organization.yml
 
   | This playbook uses the Ansible module `organization_info <../modules/organization_info.html>`_ to export the organization `Org2` to a file. This is so that `Org2` can pass this file to the endorsing organization `Org1`. `Org1` can then import this file into their IBM Blockchain Platform console, so they can add `Org2` into the existing channel `mychannel`.
 
@@ -164,7 +160,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 13-import-organization.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 13-import-organization.yml
 
   | This playbook uses the Ansible module `external_organization <../modules/external_organization.html>`_ to import the organization `Org2` from a file. This file was passed to `Org1` by `Org2`, so that `Org1` could add `Org2` into the existing channel `mychannel`.
 
@@ -177,7 +173,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 14-add-organization-to-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 14-add-organization-to-channel.yml
 
   | This playbook adds the organization `Org2` into the existing channel `Org1`. The channel now contains two organizations, `Org1` and `Org2`. The policies for this channel are updated, using new policies that are supplied in policy files:
 
@@ -195,7 +191,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 15-import-ordering-service.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 15-import-ordering-service.yml
 
   | This playbook uses the Ansible module `external_ordering_service <../modules/external_ordering_service.html>`_ to import the ordering service from a file. This file was passed to `Org2` by `Org1`, so that `Org2` could start to join channels on the ordering service.
 
@@ -208,7 +204,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 16-join-peer-to-channel.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 16-join-peer-to-channel.yml
 
   | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org2 Peer` to the channel.
 
@@ -219,7 +215,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 17-add-anchor-peer-to-channel.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 17-add-anchor-peer-to-channel.yml
 
   | This playbook updates the organization (MSP) definition for `Org2` in the channel `mychannel` to specify that the peer `Org2 Peer` is an anchor peer for the channel. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_member <../modules/channel_member.html>`_ to update the channel configuration.
 
@@ -232,7 +228,7 @@ Finally, there is one Ansible playbook that can be used to destroy the network c
 
     ::
 
-      ansible-playbook 98-delete-endorsing-organization-components.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 98-delete-endorsing-organization-components.yml
 
   | This playbook deletes the components for the endorsing organization `Org2`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to remove the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
