@@ -4,13 +4,9 @@
 ---
 - name: Register application
   hosts: localhost
-  vars:
-    # These variables should be supplied using --extra-vars "@org1-vars.yml"
-    # api_endpoint: https://ibp-console.example.org:32000
-    # api_authtype: basic
-    # api_key: xxxxxxxx
-    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    # application_enrollment_secret: org1apppw
+  vars_files:
+    - common-vars.yml
+    - org1-vars.yml
   tasks:
     - name: Register a new identity
       ibm.blockchain_platform.registered_identity:

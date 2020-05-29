@@ -14,6 +14,8 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
 steps:
+  - script: sudo apt-get update && sudo apt-get install -y shellcheck
+    displayName: Install Ubuntu dependencies
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "3.x"
@@ -52,6 +54,7 @@ steps:
       ansible-lint .
       for ROLE in roles/*; do ansible-lint ${ROLE}; done
       for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+      shellcheck tutorial/*.sh
       yamllint .
     displayName: Lint collection
   - script: |

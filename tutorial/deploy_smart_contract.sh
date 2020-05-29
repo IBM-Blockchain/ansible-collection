@@ -13,9 +13,9 @@ while getopts ":" OPT; do
     esac
 done
 set -x
-ansible-playbook 18-install-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 21-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-ansible-playbook 22-register-application.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+ansible-playbook 18-install-chaincode.yml
+ansible-playbook 19-install-chaincode.yml
+ansible-playbook 20-instantiate-chaincode.yml
+ansible-playbook 21-register-application.yml
+ansible-playbook 22-register-application.yml
 set +x

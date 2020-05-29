@@ -9,16 +9,17 @@
     organization_name: "{{ org2_name }}"
     ca_name: "{{ org2_ca_name }}"
     peer_name: "{{ org2_peer_name }}"
-    # These variables should be supplied using --extra-vars "@org2-vars.yml"
-    # api_endpoint: https://ibp-console.example.org:32000
-    # api_authtype: basic
-    # api_key: xxxxxxxx
-    # api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  vars_files:
+    - common-vars.yml
+    - org2-vars.yml
   roles:
     - ibm.blockchain_platform.endorsing_organization
 
 - name: Remove imported components
   hosts: localhost
+  vars_files:
+    - common-vars.yml
+    - org2-vars.yml
   tasks:
     - name: Remove imported ordering service
       ibm.blockchain_platform.external_ordering_service:

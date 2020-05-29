@@ -16,32 +16,33 @@ while getopts ":i" OPT; do
             ;;
     esac
 done
-COMMAND=${@:$OPTIND:1}
+shift $((OPTIND -1))
+COMMAND=$1
 if [ "${COMMAND}" = "build" ]; then
     set -x
-    ansible-playbook 01-create-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
-    ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+    ansible-playbook 01-create-ordering-organization-components.yml
+    ansible-playbook 02-create-endorsing-organization-components.yml
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 03-export-organization.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-        ansible-playbook 04-import-organization.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+        ansible-playbook 03-export-organization.yml
+        ansible-playbook 04-import-organization.yml
     fi
-    ansible-playbook 05-add-organization-to-consortium.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+    ansible-playbook 05-add-organization-to-consortium.yml
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 06-export-ordering-service.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
-        ansible-playbook 07-import-ordering-service.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+        ansible-playbook 06-export-ordering-service.yml
+        ansible-playbook 07-import-ordering-service.yml
     fi
-    ansible-playbook 08-create-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-    ansible-playbook 09-join-peer-to-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-    ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+    ansible-playbook 08-create-channel.yml
+    ansible-playbook 09-join-peer-to-channel.yml
+    ansible-playbook 10-add-anchor-peer-to-channel.yml
     set +x
 elif [ "${COMMAND}" = "destroy" ]; then
     set -x
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
-        ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml" --extra-vars '{"import_export_used":true}'
+        ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars '{"import_export_used":true}'
+        ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars '{"import_export_used":true}'
     else
-        ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
-        ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars "@ordering-org-vars.yml" --extra-vars "@common-vars.yml"
+        ansible-playbook 97-delete-endorsing-organization-components.yml
+        ansible-playbook 99-delete-ordering-organization-components.yml
     fi
     set +x
 else
