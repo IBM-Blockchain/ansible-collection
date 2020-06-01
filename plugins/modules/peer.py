@@ -485,6 +485,7 @@ def main():
         name = module.params['name']
         peer = console.get_component_by_display_name(name, deployment_attrs='included')
         peer_exists = peer is not None
+        peer_corrupt = peer is not None and 'deployment_attrs_missing' in peer
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -542,6 +543,15 @@ def main():
         zone = module.params['zone']
         if zone is not None:
             expected_peer['zone'] = zone
+
+        # If the peer is corrupt, delete it first. This may happen if somebody imported an external peer
+        # with the same name, or if somebody deleted the Kubernetes resources directly.
+        changed = False
+        if peer_corrupt:
+            module.warn('Peer exists in console but not in Kubernetes, deleting it before continuing')
+            console.delete_ext_peer(peer['id'])
+            peer_exists = peer_corrupt = False
+            changed = True
 
         # Either create or update the peer.
         changed = False

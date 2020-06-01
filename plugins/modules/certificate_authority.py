@@ -276,6 +276,7 @@ def main():
         name = module.params['name']
         certificate_authority = console.get_component_by_display_name(name, deployment_attrs='included')
         certificate_authority_exists = certificate_authority is not None
+        certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -343,8 +344,16 @@ def main():
         if zone is not None:
             expected_certificate_authority['zone'] = zone
 
-        # Either create or update the certificate authority.
+        # If the certificate authority is corrupt, delete it first. This may happen if somebody imported an external certificate
+        # authority with the same name, or if somebody deleted the Kubernetes resources directly.
         changed = False
+        if certificate_authority_corrupt:
+            module.warn('Certificate authority exists in console but not in Kubernetes, deleting it before continuing')
+            console.delete_ext_ca(certificate_authority['id'])
+            certificate_authority_exists = certificate_authority_corrupt = False
+            changed = True
+
+        # Either create or update the certificate authority.
         if state == 'present' and not certificate_authority_exists:
 
             # Delete the resources and storage configuration for a new certificate
