@@ -54,9 +54,9 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install ansible
 
-**Hyperledger Fabric v1.4.x binaries**
+**Hyperledger Fabric v1.4.3+ binaries**
 
-    This Ansible collection uses the Hyperledger Fabric v1.4 binaries to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxgen``, ``peer``, and ``fabric-ca-client``.
+    This Ansible collection requires use of the binaries from Hyperledger Fabric v1.4.3 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxlator`` and ``peer``.
 
     You can install these binaries by following the Hyperledger Fabric documentation: https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html
 
