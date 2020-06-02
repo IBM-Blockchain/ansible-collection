@@ -9,9 +9,14 @@ __metaclass__ = type
 from .enrolled_identities import EnrolledIdentity
 
 from ansible.module_utils.urls import open_url
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-from hfc.fabric_ca.caservice import ca_service, Enrollment
+
+try:
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import serialization
+    from hfc.fabric_ca.caservice import ca_service, Enrollment
+except ImportError:
+    # Missing dependencies are handled elsewhere.
+    pass
 
 import base64
 import json

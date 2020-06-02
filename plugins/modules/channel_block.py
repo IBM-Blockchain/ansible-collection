@@ -7,9 +7,9 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.file_utils import get_temp_file, equal_files
+from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 import os
@@ -181,7 +181,7 @@ def main():
         ('api_authtype', 'basic', ['api_secret']),
         ('operation', 'fetch', ['api_endpoint', 'api_authtype', 'api_key', 'ordering_service', 'identity', 'msp_id', 'name', 'path', 'target']),
     ]
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     # Ensure all exceptions are caught.
     try:

@@ -7,9 +7,9 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
+from ..module_utils.module import BlockchainModule
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 import json
@@ -83,7 +83,7 @@ def main():
     )
     required_if = [
     ]
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     # Ensure all exceptions are caught.
     try:

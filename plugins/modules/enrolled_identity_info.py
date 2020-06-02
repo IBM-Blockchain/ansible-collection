@@ -7,8 +7,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.enrolled_identities import EnrolledIdentity
+from ..module_utils.module import BlockchainModule
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 import json
@@ -75,7 +75,7 @@ def main():
     argument_spec = dict(
         path=dict(type='str', required=True)
     )
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True)
 
     # Ensure all exceptions are caught.
     try:

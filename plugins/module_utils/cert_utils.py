@@ -6,10 +6,14 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.serialization import Encoding
-from cryptography.x509.oid import ExtensionOID
+try:
+    from cryptography import x509
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives.serialization import Encoding
+    from cryptography.x509.oid import ExtensionOID
+except ImportError:
+    # Missing dependencies are handled elsewhere.
+    pass
 
 import base64
 import hashlib

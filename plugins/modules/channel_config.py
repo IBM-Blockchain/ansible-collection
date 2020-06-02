@@ -9,11 +9,11 @@ __metaclass__ = type
 from ..module_utils.dict_utils import diff_dicts
 from ..module_utils.fabric_utils import get_fabric_cfg_path
 from ..module_utils.file_utils import get_temp_file
+from ..module_utils.module import BlockchainModule
 from ..module_utils.msp_utils import convert_identity_to_msp_path
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
 from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_organizations_by_module
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 from subprocess import CalledProcessError
 
@@ -484,7 +484,7 @@ def main():
         ('operation', 'sign_update', ['identity', 'msp_id', 'name', 'path']),
         ('operation', 'apply_update', ['api_endpoint', 'api_authtype', 'api_key', 'ordering_service', 'identity', 'msp_id', 'name', 'path'])
     ]
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     # Ensure all exceptions are caught.
     try:

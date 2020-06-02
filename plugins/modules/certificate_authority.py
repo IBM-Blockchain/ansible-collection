@@ -6,11 +6,12 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
 from ..module_utils.certificate_authorities import CertificateAuthority
+from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console
 
-from ansible.module_utils.basic import AnsibleModule, _load_params
+from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -261,7 +262,7 @@ def main():
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
     ]
-    module = AnsibleModule(
+    module = BlockchainModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if)
