@@ -6,9 +6,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 import json
@@ -207,7 +207,7 @@ def main():
         ('api_authtype', 'basic', ['api_secret']),
         ('state', 'present', ['version'])
     ]
-    module = AnsibleModule(
+    module = BlockchainModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if)

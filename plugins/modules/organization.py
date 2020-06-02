@@ -8,10 +8,10 @@ __metaclass__ = type
 
 from ..module_utils.cert_utils import split_ca_chain, equal_crls
 from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.module import BlockchainModule
 from ..module_utils.organizations import Organization
 from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_identity_by_module
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
 from ansible.module_utils._text import to_native
 
@@ -460,7 +460,7 @@ def main():
         ('api_authtype', 'basic', ['api_secret']),
         ('state', 'present', ['name', 'msp_id'])
     ]
-    module = AnsibleModule(
+    module = BlockchainModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if)

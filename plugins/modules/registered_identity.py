@@ -7,9 +7,9 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
+from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_identity_by_module
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_native
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -204,7 +204,7 @@ def main():
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
     ]
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     # Ensure all exceptions are caught.
     try:

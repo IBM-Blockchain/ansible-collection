@@ -8,9 +8,10 @@ __metaclass__ = type
 
 from ..module_utils.ordering_services import OrderingService
 from ..module_utils.dict_utils import merge_dicts, equal_dicts, copy_dict, diff_dicts
+from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
 
-from ansible.module_utils.basic import AnsibleModule, _load_params
+from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
 
 import urllib
@@ -444,7 +445,7 @@ def main():
     mutually_exclusive = [
         ['certificate_authority', 'config']
     ]
-    module = AnsibleModule(
+    module = BlockchainModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if,
