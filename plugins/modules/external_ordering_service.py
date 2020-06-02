@@ -265,8 +265,24 @@ def main():
         cluster_name = module.params['name']
         if state == 'present':
             cluster_name = ordering_service_definition[0]['cluster_name']
-        existing_ordering_service = console.get_components_by_cluster_name(cluster_name)
+        existing_ordering_service = console.get_components_by_cluster_name(cluster_name, 'included')
         existing_ordering_service_exists = len(existing_ordering_service) > 0
+
+        # If the ordering service exists, make sure it's an imported one and not
+        # a real one - we don't want to delete it, which may lose data or orphan
+        # the Kubernetes components.
+        if existing_ordering_service_exists:
+            has_deployment_attrs = False
+            has_location = False
+            for ordering_service_node in existing_ordering_service:
+                if not ordering_service_node.get('deployment_attrs_missing', False):
+                    has_deployment_attrs = True
+                    break
+                elif ordering_service_node.get('location', '-') != '-':
+                    has_location = True
+                    break
+            if has_deployment_attrs or has_location:
+                raise Exception('Ordering service exists and appears to be managed by this console, refusing to continue')
 
         # If state is absent, then handle the removal now.
         if state == 'absent' and existing_ordering_service_exists:
