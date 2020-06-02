@@ -504,7 +504,10 @@ def main():
         if state == 'absent' and peer_exists:
 
             # The peer should not exist, so delete it.
-            console.delete_peer(peer['id'])
+            if peer_corrupt:
+                console.delete_ext_peer(peer['id'])
+            else:
+                console.delete_peer(peer['id'])
             return module.exit_json(changed=True)
 
         elif state == 'absent':

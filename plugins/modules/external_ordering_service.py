@@ -275,7 +275,7 @@ def main():
             has_deployment_attrs = False
             has_location = False
             for ordering_service_node in existing_ordering_service:
-                if not ordering_service_node.get('deployment_attrs_missing', False):
+                if 'deployment_attrs_missing' not in ordering_service_node:
                     has_deployment_attrs = True
                     break
                 elif ordering_service_node.get('location', '-') != '-':
