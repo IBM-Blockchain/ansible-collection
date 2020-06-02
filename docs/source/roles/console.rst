@@ -144,7 +144,7 @@ Parameters
 
     If specified this secret must already exist in the specified Kubernetes namespace or Red Hat OpenShift project and must contain the TLS certificate and private key that the console will use.
 
-    If not specified the console will generate it's own self-signed certificates
+    If not specified the console will generate it's own self-signed certificates.
 
   product_version (optional, str, 2.1.3)
     The version of IBM Blockchain Platform to use.
@@ -153,6 +153,13 @@ Parameters
     The version of the IBM Blockchain Platform operator to use.
 
     The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.1.3-20200416-amd64``.
+
+  zones (optional, list, None)
+    The list of Kubernetes zones that this console can deploy components into.
+
+    If you do not specify a list of Kubernetes zones, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you when you attempt to create any components.
+
+    See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
   wait_timeout (optional, str, 60)
     The timeout, in seconds, to wait until the console is available.
