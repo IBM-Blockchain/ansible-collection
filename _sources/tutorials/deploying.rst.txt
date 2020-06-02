@@ -73,7 +73,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 18-install-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 18-install-chaincode.yml
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org1 Peer`.
 
@@ -84,7 +84,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 19-install-chaincode.yml --extra-vars "@org2-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 19-install-chaincode.yml
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org2 Peer`.
 
@@ -95,7 +95,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 20-instantiate-chaincode.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 20-instantiate-chaincode.yml
 
   | This playbook uses the Ansible module `instantiated_chaincode <../modules/instantiated_chaincode.html>`_ to instantiate the FabCar smart contract on the channel `mychannel`.
 
@@ -106,7 +106,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 21-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 21-register-application.yml
 
   | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org1 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org1`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
 
@@ -117,6 +117,6 @@ Here are the Ansible playbooks that were executed by the script above:
 
     ::
 
-      ansible-playbook 22-register-application.yml --extra-vars "@org1-vars.yml" --extra-vars "@common-vars.yml"
+      ansible-playbook 22-register-application.yml
 
   | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org2 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org2`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.

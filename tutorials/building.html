@@ -224,12 +224,7 @@
 </li>
 </ul>
 <p>There is also a common variables file, <cite>common-vars.yml</cite>. You do not need to edit this variable file. This file contains variables that are used by multiple organizations, for example the name of the channel that will be created, and the name of the smart contract that will be deployed.</p>
-<p>When the Ansible playbooks are run, the variable files are passed in to Ansible using the <code class="docutils literal notranslate"><span class="pre">--extra-vars</span></code> option, for example:</p>
-<blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
-</pre></div>
-</div>
-</div></blockquote>
+<p>The variable files are specified in the Ansible playbooks using the <code class="docutils literal notranslate"><span class="pre">vars_files</span></code> argument for each play. When the Ansible playbooks are run, Ansible loads all variables from all variable files specified and makes them available for use in that play.</p>
 <p>Finally, all of the organization specific variable files contain a <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> variable, with the default set to <code class="docutils literal notranslate"><span class="pre">600</span></code> (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.</p>
 </div>
 <div class="section" id="building-the-network">
@@ -311,8 +306,17 @@
 <div class="section" id="exploring-the-playbooks">
 <h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline">¶</a></h2>
 <p>When you ran the script <cite>build_network.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of building the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
-<p>Firstly, each of these Ansible playbooks require information that allows them to connect to the IBM Blockchain Platform instance, so they can interact with the IBM Blockchain Platform APIs. Before you ran the Ansible playbooks, you edited the variable files <cite>ordering-org-vars.yml</cite> and <cite>org1-vars.yml</cite>. These variable files are passed in on the command line using the <code class="docutils literal notranslate"><span class="pre">--extra-vars</span></code> option.</p>
-<p>When you pass these variable files in on the command line, all variables are accessible for use in tasks within the Ansible playbook being run. You will see these variables are referenced when calling the Ansible modules in this collection, for example:</p>
+<p>Firstly, each of these Ansible playbooks require information that allows them to connect to the IBM Blockchain Platform instance, so they can interact with the IBM Blockchain Platform APIs. Before you ran the Ansible playbooks, you edited the variable files <cite>ordering-org-vars.yml</cite> and <cite>org1-vars.yml</cite>. These variable files are specified in the Ansible playbooks using the <code class="docutils literal notranslate"><span class="pre">vars_files</span></code> argument for each play, for example:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- name: Add the organization to the consortium
+  hosts: localhost
+  vars_files:
+    - common-vars.yml
+    - ordering-org-vars.yml
+</pre></div>
+</div>
+</div></blockquote>
+<p>When the Ansible playbooks are run, Ansible loads all variables from all variable files specified and makes them accessible for use in tasks within the Ansible playbook being run. You will see these variables are referenced when calling the Ansible modules in this collection, for example:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ibm.blockchain_platform.channel_block:
   api_endpoint: &quot;{{ api_endpoint }}&quot;
@@ -331,7 +335,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-create-ordering-organization-components.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -345,7 +349,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-create-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-create-endorsing-organization-components.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -359,7 +363,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 03-export-organization.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 03-export-organization.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -376,7 +380,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 04-import-organization.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 04-import-organization.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -393,7 +397,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-add-organization-to-consortium.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-add-organization-to-consortium.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -407,7 +411,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-export-ordering-service.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-export-ordering-service.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -424,7 +428,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-import-ordering-service.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-import-ordering-service.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -441,7 +445,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-create-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-create-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -464,7 +468,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-join-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-join-peer-to-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -478,7 +482,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-add-anchor-peer-to-channel.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-add-anchor-peer-to-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -495,7 +499,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 97-delete-endorsing-organization-components.yml --extra-vars &quot;@org1-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 97-delete-endorsing-organization-components.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -512,7 +516,7 @@
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 99-delete-ordering-organization-components.yml --extra-vars &quot;@ordering-org-vars.yml&quot; --extra-vars &quot;@common-vars.yml&quot;
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 99-delete-ordering-organization-components.yml
 </pre></div>
 </div>
 </div></blockquote>

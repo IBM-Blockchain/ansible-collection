@@ -149,7 +149,7 @@ Parameters
   product_version (optional, str, 2.1.3)
     The version of IBM Blockchain Platform to use.
 
-  operator_version (optional, str, 20200416)
+  operator_version (optional, str, 20200520)
     The version of the IBM Blockchain Platform operator to use.
 
     The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.1.3-20200416-amd64``.
