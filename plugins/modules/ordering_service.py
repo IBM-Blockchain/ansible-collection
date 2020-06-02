@@ -462,6 +462,11 @@ def main():
         name = module.params['name']
         ordering_service = console.get_components_by_cluster_name(name, deployment_attrs='included')
         ordering_service_exists = len(ordering_service) > 0
+        ordering_service_corrupt_nodes = 0
+        for ordering_service_node in ordering_service:
+            if 'deployment_attrs_missing' in ordering_service_node:
+                ordering_service_corrupt_nodes += 1
+        ordering_service_corrupt = ordering_service_corrupt_nodes > 0
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -502,6 +507,21 @@ def main():
                     )
                 )
             )
+
+        # If the ordering service is corrupt, delete it first. This may happen if somebody imported an external ordering
+        # service with the same name, or if somebody deleted the Kubernetes resources directly.
+        changed = False
+        if ordering_service_corrupt:
+            # We can't handle an ordering service where some of the nodes are in Kubernetes
+            # and some aren't. We don't want to delete the entire ordering service if we don't
+            # know it's all corrupt as that will lose data, and since some of the nodes exist
+            # then the ordering service should be recoverable.
+            if ordering_service_corrupt_nodes < len(ordering_service):
+                raise Exception('Some ordering service nodes exist in console but not in Kubernetes, refusing to continue')
+            module.warn('Ordering service exists in console but not in Kubernetes, deleting it before continuing')
+            console.delete_ext_ordering_service(ordering_service[0]['cluster_id'])
+            ordering_service_exists = ordering_service_corrupt = False
+            changed = True
 
         # Either create or update the ordering service.
         changed = False

@@ -124,6 +124,13 @@ class Console:
             except Exception as e:
                 if self.should_retry_error(e):
                     continue
+                elif isinstance(e, urllib.error.HTTPError) and e.code == 404 and deployment_attrs == 'included':
+                    # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
+                    # console, but not in Kubernetes. Try again without requesting the deployment attributes, and
+                    # add a value to the result that will trigger the calling module to delete the component.
+                    result = self.get_component_by_id(id, 'omitted')
+                    result['deployment_attrs_missing'] = True
+                    return result
                 return self.handle_error('Failed to get component by ID', e)
 
     def get_component_by_display_name(self, display_name, deployment_attrs='omitted'):
@@ -210,6 +217,21 @@ class Console:
             'location': ca['location']
         }
 
+    def delete_ext_ca(self, id):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        headers = {
+            'Authorization': self.authorization
+        }
+        for attempt in range(self.retries):
+            try:
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                return
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to delete external certificate authority', e)
+
     def create_peer(self, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/kubernetes/components/fabric-peer')
@@ -279,6 +301,21 @@ class Console:
             'location': peer['location']
         }
 
+    def delete_ext_peer(self, id):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        headers = {
+            'Authorization': self.authorization
+        }
+        for attempt in range(self.retries):
+            try:
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                return
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to delete external peer', e)
+
     def create_ordering_service(self, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/kubernetes/components/fabric-orderer')
@@ -307,7 +344,21 @@ class Console:
         }
         for attempt in range(self.retries):
             try:
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                if response.getcode() == 207:
+                    json_response = json.load(response)
+                    for deleted in json_response['deleted']:
+                        statusCode = deleted['statusCode']
+                        if statusCode >= 200 and statusCode < 300:
+                            pass
+                        elif statusCode == 404:
+                            # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
+                            # console, but not in Kubernetes. Try to delete the component again, but only from the IBM
+                            # Blockchain Platform console this time.
+                            new_url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
+                            open_url(new_url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                        else:
+                            raise Exception(f'{deleted}')
                 return
             except Exception as e:
                 if self.should_retry_error(e):
@@ -319,6 +370,31 @@ class Console:
         for node in ordering_service:
             results.append(self.extract_ordering_service_node_info(node))
         return results
+
+    def delete_ext_ordering_service(self, cluster_id):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        for attempt in range(self.retries):
+            try:
+                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                if response.getcode() == 207:
+                    json_response = json.load(response)
+                    for deleted in json_response['deleted']:
+                        statusCode = deleted['statusCode']
+                        if statusCode >= 200 and statusCode < 300:
+                            pass
+                        else:
+                            raise Exception(f'{deleted}')
+                return
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to delete external ordering service', e)
 
     def update_ordering_service_node(self, id, data):
         self._ensure_loggedin()
