@@ -295,7 +295,10 @@ def main():
         if state == 'absent' and certificate_authority_exists:
 
             # The certificate authority should not exist, so delete it.
-            console.delete_ca(certificate_authority['id'])
+            if certificate_authority_corrupt:
+                console.delete_ext_ca(certificate_authority['id'])
+            else:
+                console.delete_ca(certificate_authority['id'])
             return module.exit_json(changed=True)
 
         elif state == 'absent':
