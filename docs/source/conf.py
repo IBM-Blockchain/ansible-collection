@@ -22,8 +22,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Ansible Collection'
-copyright = '2020, Simon Stone'
-author = 'Simon Stone'
+copyright = 'IBM Corporation 2020'
+author = 'IBM Blockchain Platform'
 
 
 # -- General configuration ---------------------------------------------------

@@ -42,14 +42,20 @@ The below requirements are needed on the host that executes this module.
 
 {% macro option_desc(opts, level) %}
 {%   for name, spec in opts.items() %}
-{%     set req = spec.required | default("optional") %}
-{%     set typ = spec.type | default("any") %}
-{%     set def_val = spec.default | default("None") %}
-  {{ "  " * level }}{{ name }} ({{ req }}, {{ typ }}, {{ def_val }})
+  {{ "  " * level }}{{ name }}{{ ' (required)' if spec.required }}
 {%     for para in spec.description %}
     {{ "  " * level }}{{ para | rst_ify }}
 
 {%     endfor %}
+{% if spec.type %}
+    {{ "  " * level }}| **Type**: {{ spec.type }}
+{% endif %}
+{% if spec.type == 'list' and spec.elements %}
+    {{ "  " * level }}| **Elements**: {{ spec.elements }}
+{% endif %}
+{% if spec.default %}
+    {{ "  " * level }}| **Default value**: ``{{ spec.default }}``
+{% endif %}
 
 {%     if spec.suboptions %}
 {{ option_desc(spec.suboptions, level + 1) }}
@@ -111,14 +117,20 @@ Examples
 
 {% macro result_desc(results, level) %}
 {%   for name, spec in results.items() %}
-{%     set ret = spec.returned %}
-{%     set typ = spec.type | default("any") %}
-{%     set sample = spec.sample %}
-  {{ "  " * level }}{{ name }} ({{ ret }}, {{ typ }}, {{ sample }})
+  {{ "  " * level }}{{ name }}
 {%     for para in spec.description %}
     {{ "  " * level }}{{ para | rst_ify }}
 
 {%     endfor %}
+{% if spec.returned %}
+    {{ "  " * level }}| **Returned**: {{ spec.returned }}
+{% endif %}
+{% if spec.type %}
+    {{ "  " * level }}| **Type**: {{ spec.type }}
+{% endif %}
+{% if spec.sample %}
+    {{ "  " * level }}| **Sample**: ``{{ spec.sample }}``
+{% endif %}
 
 {%     if spec.contains %}
 {{ result_desc(spec.contains, level + 1) }}
@@ -131,49 +143,4 @@ Return Values
 -------------
 
 {{ result_desc(returndocs, 0) }}
-{% endif %}
-
-
-Status
-------
-
-{% if deprecated %}
-
-- This {{ plugin_type }} will be removed in version
-  {{ deprecated['removed_in'] | default('') | string | rst_ify }}.
-  *[deprecated]*
-
-{% else %}
-
-{% set module_states = {
-     "preview": "not guaranteed to have a backwards compatible interface",
-     "stableinterface": "guaranteed to have backward compatible interface changes going forward",
-   }
-%}
-
-{%   if metadata %}
-{%     if metadata.status %}
-
-{%       for cur_state in metadata.status %}
-- This {{ plugin_type }} is {{ module_states[cur_state] }}. *[{{ cur_state }}]*
-{%       endfor %}
-
-{%     endif %}
-
-{%     if metadata.supported_by %}
-- This {{ plugin_type }} is maintained by {{ metadata.supported_by }}.
-{%     endif %}
-
-{%   endif %}
-
-{% endif %}
-
-{% if author is defined -%}
-Authors
-~~~~~~~
-
-{%   for author_name in author %}
-- {{ author_name }}
-{%   endfor %}
-
 {% endif %}
