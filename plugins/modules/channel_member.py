@@ -34,6 +34,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -41,10 +42,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -53,7 +56,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -80,6 +83,7 @@ options:
             - This file will be updated in place. You will need to keep a copy of the original file for computing the configuration
               update.
         type: str
+        required: true
     organization:
         description:
             - The organization to add, update, or remove from the channel.
@@ -88,6 +92,7 @@ options:
             - You can also pass a dictionary, which must match the result format of one of the
               M(organization_info) or M(organization[]) modules.
         type: raw
+        required: true
     anchor_peers:
         description:
             - The anchor peers for this organization in this channel.
@@ -102,6 +107,37 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Add the organization to the channel
+  ibm.blockchain_platform.channel_member:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    organization: Org2
+    path: channel_config.bin
+
+- name: Update the organization in the channel with anchor peers
+  ibm.blockchain_platform.channel_member:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    organization: Org2
+    path: channel_config.bin
+    anchor_peers:
+      - Org2 Peer
+
+- name: Remove the organization from the channel
+  ibm.blockchain_platform.channel_member:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    organization: Org2
+    path: channel_config.bin
 '''
 
 RETURN = '''
