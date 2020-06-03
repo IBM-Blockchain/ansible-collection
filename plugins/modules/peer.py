@@ -447,8 +447,8 @@ def main():
         )),
         hsm=dict(type='dict', options=dict(
             pkcs11endpoint=dict(type='str', required=True),
-            label=dict(type='str', required=True),
-            pin=dict(type='str', required=True)
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
         )),
         zone=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
