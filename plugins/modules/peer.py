@@ -405,7 +405,7 @@ def main():
         state_db=dict(type='str', default='couchdb', choices=['couchdb', 'leveldb']),
         certificate_authority=dict(type='raw'),
         enrollment_id=dict(type='str'),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         admins=dict(type='list', elements='str', aliases=['admin_certificates']),
         config=dict(type='dict'),
         config_override=dict(type='dict', default=dict()),

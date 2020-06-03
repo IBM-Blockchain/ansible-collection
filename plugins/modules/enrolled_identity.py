@@ -145,7 +145,7 @@ def main():
         certificate_authority=dict(type='raw'),
         name=dict(type='str'),
         enrollment_id=dict(type='str'),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         path=dict(type='str', required=True)
     )
     required_if = [

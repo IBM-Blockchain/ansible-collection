@@ -312,7 +312,7 @@ def main():
         ca = config_override['ca']
         tlsca = config_override['tlsca']
         if ca is not None and tlsca is None:
-            config_override['tlsca'] = ca
+            tlsca = config_override['tlsca'] = ca
 
         # Extract the expected certificate authority configuration.
         expected_certificate_authority = dict(

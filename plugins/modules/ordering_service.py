@@ -397,7 +397,7 @@ def main():
         system_channel_id=dict(type='str', default='testchainid'),
         certificate_authority=dict(type='raw'),
         enrollment_id=dict(type='str'),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         admins=dict(type='list', elements='str', aliases=['admin_certificates']),
         nodes=dict(type='int'),
         config=dict(type='list', elements='dict'),

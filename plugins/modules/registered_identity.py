@@ -192,7 +192,7 @@ def main():
         certificate_authority=dict(type='raw', required=True),
         registrar=dict(type='raw', required=True),
         enrollment_id=dict(type='str', required=True),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         max_enrollments=dict(type='int', default=-1),
         type=dict(type='str', default='client', choices=['admin', 'client', 'peer', 'orderer']),
         affiliation=dict(type='str', default=''),
