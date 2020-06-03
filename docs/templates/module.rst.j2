@@ -123,7 +123,7 @@ Examples
 
 {%     endfor %}
 {% if spec.returned %}
-    {{ "  " * level }}| **Returned**: {{ spec.returned }}
+    {{ "  " * level }}| **Returned**: {{ spec.returned | rst_ify }}
 {% endif %}
 {% if spec.type %}
     {{ "  " * level }}| **Type**: {{ spec.type }}
