@@ -281,7 +281,7 @@ RETURN = '''
 certificate_authority:
     description:
         - The certificate authority.
-    returned: on success
+    returned: when I(state) is C(present)
     type: dict
     contains:
         name:
