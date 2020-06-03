@@ -49,7 +49,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -65,6 +65,13 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Get the organization
+  ibm.blockchain_platform.organization_info:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1
 '''
 
 RETURN = '''
@@ -76,52 +83,61 @@ exists:
 organization:
     description:
         - The organization.
+    returned: if organization exists
     type: dict
     contains:
         name:
             description:
                 - The name of the organization.
             type: str
+            sample: Org1
         msp_id:
             description:
                 - The MSP ID for the organization.
             type: str
+            sample: Org1MSP
         root_certs:
             description:
                 - The list of root certificates for this organization.
                 - Root certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         intermediate_certs:
             description:
                 - The list of intermediate certificates for this organization.
                 - Intermediate certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         admins:
             description:
                 - The list of administrator certificates for this organization.
                 - Administrator certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         revocation_list:
             description:
                 - The list of revoked certificates for this organization.
                 - Revoked certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_root_certs:
             description:
                 - The list of TLS root certificates for this organization.
                 - TLS root certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_intermediate_certs:
             description:
                 - The list of TLS root certificates for this organization.
                 - TLS intermediate certificates must be supplied as base64 encoded PEM files.
             type: list
             elements: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         fabric_node_ous:
             description:
                 - Configuration specific to the identity classification.
@@ -130,8 +146,8 @@ organization:
                 enable:
                     description:
                         - True if identity classification is enabled for this organization, false otherwise.
-                    default: true
                     type: boolean
+                    sample: true
                 admin_ou_identifier:
                     description:
                         - Configuration specific to the admin identity classification.
@@ -142,11 +158,12 @@ organization:
                                 - The root or intermediate certificate for this identity classification.
                                 - Root or intermediate certificates must be supplied as base64 encoded PEM files.
                             type: str
+                            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
                         organizational_unit_identifier:
                             description:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
-                            default: admin
+                            sample: admin
                 client_ou_identifier:
                     description:
                         - Configuration specific to the client identity classification.
@@ -157,11 +174,12 @@ organization:
                                 - The root or intermediate certificate for this identity classification.
                                 - Root or intermediate certificates must be supplied as base64 encoded PEM files.
                             type: str
+                            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
                         organizational_unit_identifier:
                             description:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
-                            default: client
+                            sample: client
                 peer_ou_identifier:
                     description:
                         - Configuration specific to the peer identity classification.
@@ -172,11 +190,12 @@ organization:
                                 - The root or intermediate certificate for this identity classification.
                                 - Root or intermediate certificates must be supplied as base64 encoded PEM files.
                             type: str
+                            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
                         organizational_unit_identifier:
                             description:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
-                            default: peer
+                            sample: peer
                 orderer_ou_identifier:
                     description:
                         - Configuration specific to the orderer identity classification.
@@ -187,11 +206,12 @@ organization:
                                 - The root or intermediate certificate for this identity classification.
                                 - Root or intermediate certificates must be supplied as base64 encoded PEM files.
                             type: str
+                            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
                         organizational_unit_identifier:
                             description:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
-                            default: orderer
+                            sample: orderer
 '''
 
 
