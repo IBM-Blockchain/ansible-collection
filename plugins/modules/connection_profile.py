@@ -34,6 +34,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -41,10 +42,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -53,7 +56,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -77,22 +80,24 @@ options:
     name:
         description:
             - The name of this connection profile.
+            - Only required when I(state) is C(present).
         type: str
     path:
         description:
             - The path to the JSON file where the connection profile will be stored.
+        required: true
     organization:
         description:
             - The organization for this connection profile.
+            - Only required when I(state) is C(present).
     certificate_authority:
         description:
             - The certificate authority to reference in this connection profile.
-            - You can pass a string, which is the display names of a certificate authority registered
+            - You can pass a string, which is the display name of a certificate authority registered
               with the IBM Blockchain Platform console.
             - You can also pass a dictionary, which must match the result format of one of the
               M(certificate_authority_info) or M(certificate_authority) modules.
-        type: list
-        elements: raw
+        type: raw
     peers:
         description:
             - The peers to reference in this connection profile.
@@ -100,6 +105,7 @@ options:
               with the IBM Blockchain Platform console.
             - You can also pass dictionaries, which must match the result format of one of the
               M(peer_info) or M(peer) modules.
+            - Only required when I(state) is C(present).
         type: list
         elements: raw
 notes: []
@@ -107,6 +113,28 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Create a connection profile
+  ibm.blockchain_platform.connection_profile:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 Gateway
+    path: Org1 Gateway.json
+    organization: Org1
+    certificate_authority: Org1 CA
+    peers:
+      - Org1 Peer
+
+- name: Delete a connection profile
+  ibm.blockchain_platform.connection_profile:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    path: Org1 Gateway.json
 '''
 
 RETURN = '''
