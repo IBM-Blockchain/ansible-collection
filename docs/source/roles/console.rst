@@ -294,8 +294,3 @@ Examples
         wait_timeout: 3600
       roles:
         - ibm.blockchain_platform.console
-
-Return Values
--------------
-
-No values are returned by this role.

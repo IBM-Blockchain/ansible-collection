@@ -199,8 +199,3 @@ Examples
       wait_timeout: 3600
     roles:
       - ibm.blockchain_platform.ordering_organization
-
-Return Values
--------------
-
-No values are returned by this role.
