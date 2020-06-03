@@ -30,6 +30,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -37,10 +38,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -49,7 +52,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -78,6 +81,7 @@ options:
             - You can also pass a dictionary, which must match the result format of one of the
               M(certificate_authority_info) or M(certificate_authority) modules.
         type: raw
+        required: true
     registrar:
         description:
             - The identity to use when interacting with the certificate authority.
@@ -86,13 +90,16 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
+        required: true
     enrollment_id:
         description:
             - The enrollment ID, or user name, of the identity to register on the certificate authority.
         type: str
+        required: true
     enrollment_secret:
         description:
             - The enrollment secret, or password, of an identity to register on the certificate authority.
+            - Only required when I(state) is C(present).
         type: str
     max_enrollments:
         description:
@@ -132,6 +139,33 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Register a new identity
+  ibm.blockchain_platform.registered_identity:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    certificate_authority: Org1 CA
+    registrar: Org1 CA Admin.json
+    enrollment_id: org1app
+    enrollment_secret: org1apppw
+    max_enrollments: 10
+    type: client
+    attributes:
+      - name: "fabcar.admin"
+        value: "true"
+
+- name: Delete an existing identity
+  ibm.blockchain_platform.registered_identity:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    certificate_authority: Org1 CA
+    registrar: Org1 CA Admin.json
+    enrollment_id: org1app
 '''
 
 RETURN = '''
@@ -140,27 +174,33 @@ registered_identity:
     description:
         - The registered identity.
     type: dict
+    returned: when I(state) is C(present)
     contains:
         enrollment_id:
             description:
                 - The enrollment ID, or user name, of the identity.
             type: str
+            sample: org1admin
         enrollment_secret:
             description:
                 - The enrollment secret, or password, of an identity.
             type: str
+            sample: org1adminpw
         max_enrollments:
             description:
                 - The maximum number of times that this identity can be enrolled.
             type: int
+            sample: -1
         type:
             description:
                 - The type of this identity.
             type: str
+            sample: admin
         affiliation:
             description:
                 - The affiliation of this identity.
             type: str
+            sample: org1.department
         attributes:
             description:
                 - The attributes for this identity.
@@ -171,10 +211,12 @@ registered_identity:
                     description:
                         - The name of the attribute.
                     type: str
+                    sample: fabcar.admin
                 value:
                     description:
                         - The value of the attribute.
                     type: str
+                    sample: true
 '''
 
 
