@@ -23,109 +23,184 @@ This role works with the IBM Blockchain Platform managed service running in IBM 
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
-  api_authtype (optional, str, None)
+    | **Type**: str
+
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
-  api_key (optional, str, None)
+    | **Type**: str
+
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
-  api_secret (optional, str, None)
+    | **Type**: str
+
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
-  api_timeout (optional, integer, 60)
+    | **Type**: str
+
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+    | **Type**: int
+    | **Default value**: ``60``
+
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
-  state (optional, str, present)
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
+
+  state
     ``absent`` - All components for the ordering organization will be stopped and removed, if they exist.
 
     ``present`` - All components for the ordering organization will be created if they do not exist, or will be updated if their current configuration does not match the expected configuration.
 
-  organization_name (optional, str, None)
+    | **Type**: str
+    | **Default value**: ``present``
+
+  organization_name (required)
     The name of the ordering organization.
 
-  organization_msp_id (optional, str, None)
+    | **Type**: str
+
+  organization_msp_id (required)
     The MSP ID of the ordering organization.
 
-  ca_admin_enrollment_id (optional, str, None)
+    | **Type**: str
+
+  ca_admin_enrollment_id (required)
     The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
 
-  ca_admin_enrollment_secret (optional, str, None)
+    | **Type**: str
+
+  ca_admin_enrollment_secret (required)
     The enrollment secret, or password, of the identity registered as the administrator of the certificate authority.
 
-  ca_name (optional, str, *organization_name* CA)
+    | **Type**: str
+
+  ca_name
     The name of the certificate authority.
 
-  ca_resources (optional, dict, None)
+    By default, the certificate authority name is *organization_name* followed by `CA`, for example ``Org1 CA``.
+
+    | **Type**: str
+
+  ca_resources
     The Kubernetes resource configuration for the certificate authority.
 
     For more information, review the documentation for the *resources* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
 
-  ca_storage (optional, dict, None)
+    | **Type**: dict
+
+  ca_storage
     The Kubernetes storage configuration for the certificate authority.
 
     For more information, review the documentation for the *storage* parameter of the *certificate_authority* module: `certificate_authority <../modules/certificate_authority.html>`_
 
-  organization_admin_enrollment_id (optional, str, None)
-    The enrollment ID, or user name, of the identity registered as the administrator of the certificate authority.
+    | **Type**: dict
 
-  organization_admin_enrollment_secret (optional, str, None)
+  organization_admin_enrollment_id (required)
+    The enrollment ID, or user name, of the identity registered as the administrator of the organization.
+
+    | **Type**: str
+
+  organization_admin_enrollment_secret (required)
     The enrollment secret, or password, of the identity registered as the administrator of the organization.
 
-  ordering_service_enrollment_id (optional, str, None)
+    | **Type**: str
+
+  ordering_service_enrollment_id (required)
     The enrollment ID, or user name, of the identity registered for the ordering service.
 
-  ordering_service_enrollment_secret (optional, str, None)
+    | **Type**: str
+
+  ordering_service_enrollment_secret (required)
     The enrollment secret, or password, of the identity registered for the ordering service.
 
-  ordering_service_name (optional, str, Ordering Service)
+    | **Type**: str
+
+  ordering_service_name
     The name of the ordering service.
 
-  ordering_service_nodes (optional, integer, 1)
+    | **Type**: str
+    | **Default value**: ``Ordering Service``
+
+  ordering_service_nodes
     The number of ordering service nodes in the ordering service.
 
     For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.
 
-  ordering_service_resources (optional, dict, None)
+    | **Type**: int
+    | **Default value**: ``1``
+
+  ordering_service_resources
     The Kubernetes resource configuration for the ordering service.
 
     For more information, review the documentation for the *resources* parameter of the *ordering_service* module: `ordering_service <../modules/ordering_service.html>`_
 
-  ordering_service_storage (optional, dict, None)
+    | **Type**: dict
+
+  ordering_service_storage
     The Kubernetes storage configuration for the ordering service.
 
     For more information, review the documentation for the *storage* parameter of the *ordering_service* module: `ordering_service <../modules/ordering_service.html>`_
 
-  wait_timeout (optional, integer, 60)
+    | **Type**: dict
+
+  wait_timeout
     The timeout, in seconds, to wait until the certificate authority and the ordering service is available.
+
+    | **Type**: int
+    | **Default value**: ``60``
 
 Examples
 --------
 
 .. code-block:: yaml+jinja
 
+  - name: Create components for an ordering organization
+    vars:
+      state: present
+      api_endpoint: https://ibp-console.example.org:32000
+      api_authtype: basic
+      api_key: xxxxxxxx
+      api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      organization_name: Ordering Org
+      organization_msp_id: OrdererMSP
+      ca_admin_enrollment_id: admin
+      ca_admin_enrollment_secret: adminpw
+      organization_admin_enrollment_id: orderingorgadmin
+      organization_admin_enrollment_secret: orderingorgadminpw
+      ordering_service_enrollment_id: orderingorgorderer
+      ordering_service_enrollment_secret: orderingorgordererpw
+      wait_timeout: 3600
+    roles:
+      - ibm.blockchain_platform.ordering_organization
+
+  - name: Destroy components for an ordering organization
+    vars:
+      state: present
+      api_endpoint: https://ibp-console.example.org:32000
+      api_authtype: basic
+      api_key: xxxxxxxx
+      api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      organization_name: Ordering Org
+      wait_timeout: 3600
+    roles:
+      - ibm.blockchain_platform.ordering_organization
+
 Return Values
 -------------
 
-
-Status
-------
-
-- This is not guaranteed to have a backwards compatible interface. *[preview]*
-- This is maintained by community.
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
+No values are returned by this role.
