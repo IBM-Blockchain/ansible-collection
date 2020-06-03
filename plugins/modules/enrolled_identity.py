@@ -138,14 +138,14 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
         api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str', required=True),
-        api_secret=dict(type='str'),
+        api_key=dict(type='str', required=True, no_log=True),
+        api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         certificate_authority=dict(type='raw'),
         name=dict(type='str'),
         enrollment_id=dict(type='str'),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         path=dict(type='str', required=True)
     )
     required_if = [

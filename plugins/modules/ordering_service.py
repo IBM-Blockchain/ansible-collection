@@ -387,8 +387,8 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
         api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str', required=True),
-        api_secret=dict(type='str'),
+        api_key=dict(type='str', required=True, no_log=True),
+        api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
@@ -397,7 +397,7 @@ def main():
         system_channel_id=dict(type='str', default='testchainid'),
         certificate_authority=dict(type='raw'),
         enrollment_id=dict(type='str'),
-        enrollment_secret=dict(type='str'),
+        enrollment_secret=dict(type='str', no_log=True),
         admins=dict(type='list', elements='str', aliases=['admin_certificates']),
         nodes=dict(type='int'),
         config=dict(type='list', elements='dict'),
@@ -424,8 +424,8 @@ def main():
         )),
         hsm=dict(type='dict', options=dict(
             pkcs11endpoint=dict(type='str', required=True),
-            label=dict(type='str', required=True),
-            pin=dict(type='str', required=True)
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
         )),
         zone=dict(type='list', elements='str'),
         wait_timeout=dict(type='int', default=60)

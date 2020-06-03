@@ -165,8 +165,8 @@ def main():
     argument_spec = dict(
         api_endpoint=dict(type='str'),
         api_authtype=dict(type='str', choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str'),
-        api_secret=dict(type='str'),
+        api_key=dict(type='str', no_log=True),
+        api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         operation=dict(type='str', required=True, choices=['create', 'fetch', 'compute_update', 'sign_update', 'apply_update']),
