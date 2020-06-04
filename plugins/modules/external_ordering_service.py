@@ -183,7 +183,7 @@ ordering_service:
             description:
                 - The URL for the API of the ordering service node.
             type: str
-            sample: https://orderingservice1-api.example.org:32000
+            sample: grpcs://orderingservice1-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the ordering service node.
