@@ -31,6 +31,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -38,10 +39,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -50,7 +53,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -83,6 +86,7 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(peer_info) or M(peer) modules.
         type: raw
+        required: true
     identity:
         description:
             - The identity to use when interacting with the peer.
@@ -91,22 +95,27 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
+        required: true
     msp_id:
         description:
             - The MSP ID to use for interacting with the peer.
         type: str
+        required: true
     channel:
         description:
             - The name of the channel.
         type: str
+        required: true
     name:
         description:
             - The name of the chaincode.
         type: str
+        required: true
     version:
         description:
             - The version of the chaincode.
         type: str
+        required: true
     constructor:
         description:
             - The constructor for the chaincode.
@@ -145,6 +154,49 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Instantiate the chaincode on the channel
+  ibm.blockchain_platform.instantiated_chaincode:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    peer: Org1 Peer
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    channel: mychannel
+    name: fabcar
+    version: 1.0.0
+
+- name: Instantiate the chaincode on the channel with an endorsement policy and collection configuration
+  ibm.blockchain_platform.instantiated_chaincode:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    peer: Org1 Peer
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    channel: mychannel
+    name: fabcar
+    version: 1.0.0
+    endorsement_policy: AND('Org1MSP.peer', 'Org2MSP.peer')
+    collections_config: collections-config.json
+
+- name: Ensure the chaincode is not instantiated on the channel
+  ibm.blockchain_platform.instantiated_chaincode:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    peer: Org1 Peer
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    channel: mychannel
+    name: fabcar
+    version: 1.0.0
 '''
 
 RETURN = '''
@@ -153,27 +205,33 @@ instantiated_chaincode:
     description:
         - The instantiated chaincode.
     type: dict
+    returned: when I(state) is C(present)
     contains:
         channel:
             description:
                 - The name of the channel.
             type: str
+            sample: mychannel
         name:
             description:
                 - The name of the chaincode.
             type: str
+            sample: fabcar
         version:
             description:
                 - The version of the chaincode.
             type: str
+            sample: 1.0.0
         escc:
             description:
                 - The name of the endorsement system chaincode (ESCC) used by the chaincode.
             type: str
+            sample: escc
         vscc:
             description:
                 - The name of the validation system chaincode (VSCC) used by the chaincode.
             type: str
+            sample: vscc
 '''
 
 

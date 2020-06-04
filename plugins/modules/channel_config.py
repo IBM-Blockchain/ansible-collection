@@ -40,6 +40,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -47,10 +48,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -59,7 +62,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -77,6 +80,7 @@ options:
             - C(sign_update) - Sign a channel configuration update transaction.
             - C(apply_update) - Apply a channel configuration update transaction.
         type: str
+        required: true
     ordering_service:
         description:
             - The ordering service to use to manage the channel.
@@ -106,11 +110,13 @@ options:
         description:
             - The name of the channel.
         type: str
+        required: true
     path:
         description:
             - The path to the file where the channel configuration or the channel configuration
               update transaction will be stored.
         type: str
+        required: true
     original:
         description:
             - The path to the file where the original channel configuration is stored.
@@ -148,6 +154,63 @@ requirements: []
 '''
 
 EXAMPLES = '''
+- name: Create the configuration for a new channel
+  ibm.blockchain_platform.channel_config:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    operation: create
+    name: mychannel
+    path: channel_config_update.bin
+    organizations:
+      - Org1
+    policies:
+      Admins: admins-policy.json
+      Readers: readers-policy.json
+      Writers: writers-policy.json
+
+- name: Fetch the channel configuration
+  ibm.blockchain_platform.channel_config:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ordering_service: Ordering Service
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    operation: fetch
+    name: mychannel
+    path: channel_config.bin
+
+- name: Compute the configuration update for the channel
+  ibm.blockchain_platform.channel_config:
+    operation: compute_update
+    name: mychannel
+    original: original_channel_config.bin
+    updated: updated_channel_config.bin
+    path: channel_config_update.bin
+
+- name: Sign the configuration update for the channel
+  ibm.blockchain_platform.channel_config:
+    operation: sign_update
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    name: mychannel
+    path: channel_config_update.bin
+
+- name: Apply the configuration update for the channel
+  ibm.blockchain_platform.channel_config:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ordering_service: Ordering Service
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    operation: apply_update
+    name: mychannel
+    path: channel_config_update.bin
 '''
 
 RETURN = '''
@@ -157,6 +220,7 @@ path:
         - The path to the file where the channel configuration or the channel configuration
           update transaction is stored.
     type: str
+    returned: always
 '''
 
 

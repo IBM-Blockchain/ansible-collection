@@ -32,6 +32,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -39,10 +40,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -51,7 +54,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -74,8 +77,9 @@ options:
             - present
     name:
         description:
-            - The display name for the certificate authority.
+            - The name of the certificate authority.
         type: str
+        required: true
     config_override:
         description:
             - The configuration overrides for the root certificate authority and the TLS certificate authority.
@@ -164,13 +168,112 @@ options:
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
-        type: integer
+        type: int
         default: 60
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Create certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 CA
+    config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+          - name: admin
+            pass: adminpw
+            type: client
+            maxenrollments: -1
+            attrs:
+              hf.Registrar.Roles: "*"
+              hf.Registrar.DelegateRoles: "*"
+              hf.Revoker: true
+              hf.IntermediateCA: true
+              hf.GenCRL: true
+              hf.Registrar.Attributes: "*"
+              hf.AffiliationMgr: true
+
+- name: Create certificate authority with custom resources and storage
+  ibm.blockchain_platform.certificate_authority:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 CA
+    config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+          - name: admin
+            pass: adminpw
+            type: client
+            maxenrollments: -1
+            attrs:
+              hf.Registrar.Roles: "*"
+              hf.Registrar.DelegateRoles: "*"
+              hf.Revoker: true
+              hf.IntermediateCA: true
+              hf.GenCRL: true
+              hf.Registrar.Attributes: "*"
+              hf.AffiliationMgr: true
+    resources:
+      ca:
+        requests:
+          cpu: 200m
+          memory: 400M
+    storage:
+      ca:
+        size: 40Gi
+        class: ibmc-file-gold
+
+- name: Create certificate authority that uses an HSM
+  ibm.blockchain_platform.certificate_authority:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 CA
+    config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+          - name: admin
+            pass: adminpw
+            type: client
+            maxenrollments: -1
+            attrs:
+              hf.Registrar.Roles: "*"
+              hf.Registrar.DelegateRoles: "*"
+              hf.Revoker: true
+              hf.IntermediateCA: true
+              hf.GenCRL: true
+              hf.Registrar.Attributes: "*"
+              hf.AffiliationMgr: true
+    hsm:
+      pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+      label: Org1 CA label
+      pin: 12345678
+
+- name: Destroy certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 CA
 '''
 
 RETURN = '''
@@ -178,46 +281,56 @@ RETURN = '''
 certificate_authority:
     description:
         - The certificate authority.
+    returned: when I(state) is C(present)
     type: dict
     contains:
         name:
             description:
                 - The name of the certificate authority.
             type: str
+            sample: Org1 CA
         api_url:
             description:
                 - The URL for the API of the certificate authority.
             type: str
+            sample: https://org1ca-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the certificate authority.
             type: str
+            sample: https://org1ca-operations.example.org:32000
         ca_url:
             description:
                 - The URL for the API of the certificate authority.
             type: str
+            sample: https://org1ca-api.example.org:32000
         ca_name:
             description:
                 - The certificate authority name to use for enrollment requests.
             type: str
+            sample: ca
         tlsca_name:
             description:
                 - The certificate authority name to use for TLS enrollment requests.
             type: str
+            sample: tlsca
         location:
             description:
                 - The location of the certificate authority.
             type: str
+            sample: ibmcloud
         pem:
             description:
                 - The TLS certificate chain for the certificate authority.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate chain for the certificate authority.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 '''
 
 

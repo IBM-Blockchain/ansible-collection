@@ -29,6 +29,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -36,10 +37,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -48,7 +51,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -59,16 +62,24 @@ options:
     name:
         description:
             - The name of the certificate authority.
+        required: true
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
-        type: integer
+        type: int
         default: 60
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Get certificate authority
+  ibm.blockchain_platform.certificate_authority_info:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 CA
 '''
 
 RETURN = '''
@@ -76,50 +87,61 @@ RETURN = '''
 exists:
     description:
         - True if the certificate authority exists, false otherwise.
+    returned: always
     type: boolean
 certificate_authority:
     description:
         - The certificate authority.
+    returned: if certificate authority exists
     type: dict
     contains:
         name:
             description:
                 - The name of the certificate authority.
             type: str
+            sample: Org1 CA
         api_url:
             description:
                 - The URL for the API of the certificate authority.
             type: str
+            sample: https://org1ca-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the certificate authority.
             type: str
+            sample: https://org1ca-operations.example.org:32000
         ca_url:
             description:
                 - The URL for the API of the certificate authority.
             type: str
+            sample: https://org1ca-api.example.org:32000
         ca_name:
             description:
                 - The certificate authority name to use for enrollment requests.
             type: str
+            sample: ca
         tlsca_name:
             description:
                 - The certificate authority name to use for TLS enrollment requests.
             type: str
+            sample: tlsca
         location:
             description:
                 - The location of the certificate authority.
             type: str
+            sample: ibmcloud
         pem:
             description:
                 - The TLS certificate chain for the certificate authority.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate chain for the certificate authority.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 '''
 
 

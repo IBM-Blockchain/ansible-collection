@@ -35,6 +35,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -42,10 +43,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -54,7 +57,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -82,27 +85,53 @@ options:
               with the IBM Blockchain Platform console.
             - You can also pass a dictionary, which must match the result format of one of the
               M(certificate_authority_info) or M(certificate_authority) modules.
+            - Only required when I(state) is C(present).
         type: raw
     name:
         description:
             - The name of the enrolled identity.
+            - Only required when I(state) is C(present).
         type: str
     enrollment_id:
         description:
             - The enrollment ID, or user name, of an identity registered on the certificate authority for this peer.
+            - Only required when I(state) is C(present).
         type: str
     enrollment_secret:
         description:
             - The enrollment secret, or password, of an identity registered on the certificate authority for this peer.
+            - Only required when I(state) is C(present).
         type: str
     path:
         description:
             - The path to the JSON file where the enrolled identity will be stored.
+        required: true
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Enroll an identity
+  ibm.blockchain_platform.enrolled_identity:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    certificate_authority: Org1 CA
+    name: Org1 Admin
+    enrollment_id: org1admin
+    enrollment_secret: org1adminpw
+    path: Org1 Admin.json
+
+- name: Remove an enrolled identity
+  ibm.blockchain_platform.enrolled_identity:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    path: Org1 Admin.json
 '''
 
 RETURN = '''
@@ -111,23 +140,28 @@ enrolled_identity:
     description:
         - The enrolled identity.
     type: dict
+    returned: when I(state) is C(present)
     contains:
         name:
             description:
                 - The name of the enrolled identity.
             type: str
+            sample: Org1 Admin
         cert:
             description:
                 - The base64 encoded certificate of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         private_key:
             description:
                 - The base64 encoded private key of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t...
         ca:
             description:
                 - The base64 encoded CA certificate chain of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 '''
 
 

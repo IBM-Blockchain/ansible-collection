@@ -34,6 +34,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -41,10 +42,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -53,7 +56,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -78,9 +81,11 @@ options:
         description:
             - The name of the peer.
         type: str
+        required: true
     msp_id:
         description:
             - The MSP ID for this peer.
+            - Only required when I(state) is C(present).
         type: str
     state_db:
         description:
@@ -275,13 +280,79 @@ options:
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the peer is available.
-        type: integer
+        type: int
         default: 60
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Create peer
+  ibm.blockchain_platform.peer:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 Peer
+    msp_id: Org1MSP
+    certificate_authority: Org1 CA
+    enrollment_id: org1peer
+    enrollment_secret: org1peerpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+
+- name: Create peer with custom resources and storage
+  ibm.blockchain_platform.peer:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 Peer
+    msp_id: Org1MSP
+    certificate_authority: Org1 CA
+    enrollment_id: org1peer
+    enrollment_secret: org1peerpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+    resources:
+      peer:
+        requests:
+          cpu: 400m
+          memory: 2G
+    storage:
+      peer:
+        size: 200Gi
+        class: ibmc-file-gold
+
+- name: Create peer that uses an HSM
+  ibm.blockchain_platform.peer:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 Peer
+    msp_id: Org1MSP
+    certificate_authority: Org1 CA
+    enrollment_id: org1peer
+    enrollment_secret: org1peerpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+    hsm:
+      pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+      label: Org1 CA label
+      pin: 12345678
+
+- name: Destroy peer
+  ibm.blockchain_platform.peer:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Org1 Peer
 '''
 
 RETURN = '''
@@ -289,41 +360,50 @@ RETURN = '''
 peer:
     description: The peer.
     type: dict
+    returned: when I(state) is C(present)
     contains:
         name:
             description:
                 - The name of the peer.
             type: str
+            sample: Org1 Peer
         api_url:
             description:
                 - The URL for the API of the peer.
             type: str
+            sample: grpcs://org1peer-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the peer.
             type: str
+            sample: grpcs://org1peer-operations.example.org:32000
         grpcwp_url:
             description:
                 - The URL for the gRPC web proxy of the peer.
             type: str
+            sample: grpcs://org1peer-grpcwebproxy.example.org:32000
         msp_id:
             description:
                 - The MSP ID of the peer.
             type: str
+            sample: Org1MSP
         pem:
             description:
                 - The TLS certificate chain for the peer.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate chain for the peer.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         location:
             description:
                 - The location of the peer.
             type: str
+            sample: ibmcloud
 '''
 
 

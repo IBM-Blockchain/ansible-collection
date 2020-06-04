@@ -34,6 +34,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -41,10 +42,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -53,7 +56,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -78,9 +81,11 @@ options:
         description:
             - The name for the ordering service.
         type: str
+        required: true
     msp_id:
         description:
             - The MSP ID for this ordering service.
+            - Only required when I(state) is C(present).
         type: str
     orderer_type:
         description:
@@ -123,6 +128,7 @@ options:
     nodes:
         description:
             - The number of ordering service nodes in this ordering service.
+            - Only required when I(state) is C(present).
         type: int
     config:
         description:
@@ -233,13 +239,82 @@ options:
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the ordering service is available.
-        type: integer
+        type: int
         default: 60
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Create ordering service
+  ibm.blockchain_platform.ordering_service:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Ordering Service
+    msp_id: OrdererOrgMSP
+    nodes: 1
+    certificate_authority: Orderer Org CA
+    enrollment_id: orderingorgorderer
+    enrollment_secret: orderingorgordererpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+
+- name: Create five node ordering service with custom resources and storage
+  ibm.blockchain_platform.ordering_service:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Ordering Service
+    msp_id: OrdererOrgMSP
+    nodes: 5
+    certificate_authority: Orderer Org CA
+    enrollment_id: orderingorgorderer
+    enrollment_secret: orderingorgordererpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+    resources:
+      orderer:
+        requests:
+          cpu: 500m
+          memory: 1000M
+    storage:
+      orderer:
+        size: 200Gi
+        class: ibmc-file-gold
+
+- name: Create ordering service that uses an HSM
+  ibm.blockchain_platform.ordering_service:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Ordering Service
+    msp_id: OrdererOrgMSP
+    nodes: 5
+    certificate_authority: Orderer Org CA
+    enrollment_id: orderingorgorderer
+    enrollment_secret: orderingorgordererpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+    hsm:
+      pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+      label: Org1 CA label
+      pin: 12345678
+
+- name: Destroy ordering service
+  ibm.blockchain_platform.ordering_service:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Ordering Service
 '''
 
 RETURN = '''
@@ -249,61 +324,75 @@ ordering_service:
         - The ordering service, as a list of ordering service nodes.
     type: list
     elements: dict
+    returned: when I(state) is C(present)
     contains:
         name:
             description:
                 - The name of the ordering service node.
             type: str
+            sample: Ordering Service_1
         api_url:
             description:
                 - The URL for the API of the ordering service node.
             type: str
+            sample: grpcs://orderingservice1-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the ordering service node.
             type: str
+            sample: https://orderingservice1-operations.example.org:32000
         grpcwp_url:
             description:
                 - The URL for the gRPC web proxy of the ordering service node.
             type: str
+            sample: https://orderingservice1-grpcwebproxy.example.org:32000
         msp_id:
             description:
                 - The MSP ID of the ordering service node.
             type: str
+            sample: OrdererOrgMSP
         pem:
             description:
                 - The TLS certificate chain for the ordering service node.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate chain for the ordering service node.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         location:
             description:
                 - The location of the ordering service node.
             type: str
+            sample: ibmcloud
         system_channel_id:
             description:
                 - The name of the system channel for the ordering service node.
             type: str
+            sample: testchainid
         client_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         server_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         cluster_id:
             description:
                 - The unique ID of the ordering service cluster.
             type: str
+            sample: abcdefgh
         cluster_name:
             description:
                 - The name of the ordering service cluster.
             type: str
+            sample: Ordering Service
 '''
 
 

@@ -33,6 +33,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -40,10 +41,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -52,7 +55,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -64,6 +67,7 @@ options:
         description:
             - C(fetch) - Fetch the target block to the specified I(path).
         type: str
+        required: true
     ordering_service:
         description:
             - The ordering service to use to manage the channel.
@@ -73,6 +77,7 @@ options:
               M(ordering_service_info) or M(ordering_service) modules.
             - Only required when I(operation) is C(fetch) or C(apply_update).
         type: raw
+        required: true
     identity:
         description:
             - The identity to use when interacting with the ordering service or for signing
@@ -81,33 +86,49 @@ options:
               identity is stored.
             - You can also pass a dict, which must match the result format of one of the
               M(enrolled_identity_info) or M(enrolled_identity) modules.
-            - Only required when I(operation) is C(fetch), C(sign_update), or C(apply_update).
         type: raw
+        required: true
     msp_id:
         description:
             - The MSP ID to use for interacting with the ordering service or for signing
               channel configuration update transactions.
-            - Only required when I(operation) is C(fetch), C(sign), or C(apply_update).
         type: str
+        required: true
     name:
         description:
             - The name of the channel.
         type: str
+        required: true
     target:
         description:
             - The target block to fetch.
             - Can be the number of the block to fetch, or one of C(newest), C(oldest) or C(config).
         type: str
+        required: true
     path:
         description:
             - The path to the file where the channel configuration or the channel configuration
               update transaction will be stored.
         type: str
+        required: true
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Fetch the genesis block for the channel
+  ibm.blockchain_platform.channel_block:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    operation: fetch
+    ordering_service: Ordering Service
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    name: mychannel
+    target: "0"
+    path: channel_genesis_block.bin
 '''
 
 RETURN = '''
@@ -116,6 +137,7 @@ path:
     description:
         - The path to the file where the channel block is stored.
     type: str
+    returned: always
 '''
 
 

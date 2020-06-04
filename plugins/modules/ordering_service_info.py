@@ -48,7 +48,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -62,24 +62,32 @@ options:
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the ordering service is available.
-        type: integer
+        type: int
         default: 60
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Get the ordering service
+  ibm.blockchain_platform.ordering_service_info:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Ordering Service
 '''
 
 RETURN = '''
 ---
 exists:
     description:
-        - True if the peer exists, false otherwise.
+        - True if the ordering service exists, false otherwise.
     type: boolean
 ordering_service:
     description:
         - The ordering service, as a list of ordering service nodes.
+    returned: if ordering service exists
     type: list
     elements: dict
     contains:
@@ -87,56 +95,69 @@ ordering_service:
             description:
                 - The name of the ordering service node.
             type: str
+            sample: Ordering Service_1
         api_url:
             description:
                 - The URL for the API of the ordering service node.
             type: str
+            sample: grpcs://orderingservice1-api.example.org:32000
         operations_url:
             description:
                 - The URL for the operations service of the ordering service node.
             type: str
+            sample: https://orderingservice1-operations.example.org:32000
         grpcwp_url:
             description:
                 - The URL for the gRPC web proxy of the ordering service node.
             type: str
+            sample: https://orderingservice1-grpcwebproxy.example.org:32000
         msp_id:
             description:
                 - The MSP ID of the ordering service node.
             type: str
+            sample: OrdererOrgMSP
         pem:
             description:
                 - The TLS certificate chain for the ordering service node.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate chain for the ordering service node.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         location:
             description:
                 - The location of the ordering service node.
             type: str
+            sample: ibmcloud
         system_channel_id:
             description:
                 - The name of the system channel for the ordering service node.
             type: str
+            sample: testchainid
         client_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         server_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         cluster_id:
             description:
                 - The unique ID of the ordering service cluster.
             type: str
+            sample: abcdefgh
         cluster_name:
             description:
                 - The name of the ordering service cluster.
             type: str
+            sample: Ordering Service
 '''
 
 
