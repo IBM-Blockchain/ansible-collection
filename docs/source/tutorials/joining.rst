@@ -18,13 +18,13 @@ This tutorial builds upon the Hyperledger Fabric that is created as part of the 
 
 If you used separate IBM Blockchain Platform instances for each organization in the previous tutorial, you will need another IBM Blockchain Platform instance for the new organization created during this tutorial. Again, if you use separate IBM Blockchain Platform instances, then there are additional steps that you must follow which will be described below.
 
-You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorials directory:
+You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorial directory:
 
     .. highlight:: none
 
     ::
 
-        cd ansible-collection/tutorials
+        cd ansible-collection/tutorial
 
 Editing the variable file
 -------------------------
@@ -87,13 +87,13 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/join_network.sh join
+        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/join_network.sh join
 
 * Each organization has their own IBM Blockchain Platform instance:
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/join_network.sh -i join
+        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/join_network.sh -i join
 
 After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a ``PLAY RECAP`` section that details how many tasks have been executed, and how many of those tasks have failed.
 
@@ -261,13 +261,13 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/join_network.sh destroy
+        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/join_network.sh destroy
 
 * All organizations have their own IBM Blockchain Platform instance:
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/join_network.sh -i destroy
+        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/join_network.sh -i destroy
 
 After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a ``PLAY RECAP`` section that details how many tasks have been executed, and how many of those tasks have failed.
 
