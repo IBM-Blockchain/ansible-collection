@@ -28,43 +28,53 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  name (optional, any, None)
+  name (required)
     The name of the certificate authority.
 
 
-  wait_timeout (optional, integer, 60)
+  wait_timeout
     The timeout, in seconds, to wait until the certificate authority is available.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
 
 
@@ -79,79 +89,88 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Get certificate authority
+      ibm.blockchain_platform.certificate_authority_info:
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 CA
 
 
 
 Return Values
 -------------
 
-  exists (, boolean, )
+  exists
     True if the certificate authority exists, false otherwise.
 
+    | **Returned**: always
+    | **Type**: boolean
 
-  certificate_authority (, dict, )
+  certificate_authority
     The certificate authority.
 
+    | **Returned**: if certificate authority exists
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``Org1 CA``
 
-    api_url (, str, )
+    api_url
       The URL for the API of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-api.example.org:32000``
 
-    operations_url (, str, )
+    operations_url
       The URL for the operations service of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-operations.example.org:32000``
 
-    ca_url (, str, )
+    ca_url
       The URL for the API of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-api.example.org:32000``
 
-    ca_name (, str, )
+    ca_name
       The certificate authority name to use for enrollment requests.
 
+      | **Type**: str
+      | **Sample**: ``ca``
 
-    tlsca_name (, str, )
+    tlsca_name
       The certificate authority name to use for TLS enrollment requests.
 
+      | **Type**: str
+      | **Sample**: ``tlsca``
 
-    location (, str, )
+    location
       The location of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
 
-    pem (, str, )
+    pem
       The TLS certificate chain for the certificate authority.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert (, str, )
+    tls_cert
       The TLS certificate chain for the certificate authority.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

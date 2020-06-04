@@ -28,57 +28,73 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - A peer matching the specified name will be stopped and removed.
 
     ``present`` - Asserts that a peer matching the specified name and configuration exists. If no peer matches the specified name, a peer will be created. If a peer matches the specified name but the configuration does not match, then the peer will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  name (optional, str, None)
+  name (required)
     The name of the peer.
 
+    | **Type**: str
 
-  msp_id (optional, str, None)
+  msp_id
     The MSP ID for this peer.
 
+    Only required when *state* is ``present``.
 
-  state_db (optional, str, couchdb)
+    | **Type**: str
+
+  state_db
     ``couchdb`` - Use CouchDB as the state database for this peer.
 
     ``leveldb`` - Use LevelDB as the state database for this peer.
 
+    | **Type**: str
+    | **Default value**: ``couchdb``
 
-  certificate_authority (optional, raw, None)
+  certificate_authority
     The certificate authority to use to enroll the identity for this peer.
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
@@ -87,177 +103,227 @@ Parameters
 
     Only required when *config* is not specified.
 
+    | **Type**: raw
 
-  enrollment_id (optional, str, None)
+  enrollment_id
     The enrollment ID, or user name, of an identity registered on the certificate authority for this peer.
 
     Only required when *config* is not specified.
 
+    | **Type**: str
 
-  enrollment_secret (optional, str, None)
+  enrollment_secret
     The enrollment secret, or password, of an identity registered on the certificate authority for this peer.
 
     Only required when *config* is not specified.
 
+    | **Type**: str
 
-  admins (optional, list, None)
+  admins
     The list of administrator certificates for this peer.
 
     Administrator certificates must be supplied as base64 encoded PEM files.
 
     Only required when *config* is not specified.
 
+    | **Type**: list
+    | **Elements**: str
 
-  config (optional, dict, None)
+  config
     The initial configuration for the peer. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
 
     See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
 
+    | **Type**: dict
 
-  config_override (optional, dict, None)
+  config_override
     The configuration overrides for the peer.
 
     See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
 
+    | **Type**: dict
 
-  resources (optional, dict, None)
+  resources
     The Kubernetes resource configuration for the peer.
 
+    | **Type**: dict
 
-    peer (optional, dict, None)
+    peer
       The Kubernetes resource configuration for the peer container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the peer container.
 
+        | **Type**: str
 
-        cpu (optional, str, 200m)
+        cpu
           The Kubernetes CPU resource request for the peer container.
 
+          | **Type**: str
+          | **Default value**: ``200m``
 
-        memory (optional, str, 1G)
+        memory
           The Kubernetes memory resource request for the peer container.
 
+          | **Type**: str
+          | **Default value**: ``1G``
 
 
 
-    proxy (optional, dict, None)
+    proxy
       The Kubernetes resource configuration for the proxy container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the proxy container.
 
+        | **Type**: str
 
-        cpu (optional, str, 100m)
+        cpu
           The Kubernetes CPU resource request for the proxy container.
 
+          | **Type**: str
+          | **Default value**: ``100m``
 
-        memory (optional, str, 200M)
+        memory
           The Kubernetes memory resource request for the proxy container.
 
+          | **Type**: str
+          | **Default value**: ``200M``
 
 
 
-    couchdb (optional, dict, None)
+    couchdb
       The Kubernetes resource configuration for the CouchDB container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the CouchDB container.
 
+        | **Type**: str
 
-        cpu (optional, str, 200m)
+        cpu
           The Kubernetes CPU resource request for the CouchDB container.
 
+          | **Type**: str
+          | **Default value**: ``200m``
 
-        memory (optional, str, 400M)
+        memory
           The Kubernetes memory resource request for the CouchDB container.
 
+          | **Type**: str
+          | **Default value**: ``400M``
 
 
 
-    dind (optional, dict, None)
+    dind
       The Kubernetes resource configuration for the Docker in Docker (DinD) container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the Docker in Docker (DinD) container.
 
+        | **Type**: str
 
-        cpu (optional, str, 1)
+        cpu
           The Kubernetes CPU resource request for the Docker in Docker (DinD) container.
 
+          | **Type**: str
+          | **Default value**: ``1``
 
-        memory (optional, str, 1G)
+        memory
           The Kubernetes memory resource request for the Docker in Docker (DinD) container.
 
+          | **Type**: str
+          | **Default value**: ``1G``
 
 
 
 
-  storage (optional, dict, None)
+  storage
     The Kubernetes storage configuration for the peer.
 
+    | **Type**: dict
 
-    peer (optional, dict, None)
+    peer
       The Kubernetes storage configuration for the peer container.
 
+      | **Type**: dict
 
-      size (optional, str, 100Gi)
+      size
         The size of the Kubernetes persistent volume claim for the peer container.
 
+        | **Type**: str
+        | **Default value**: ``100Gi``
 
-      class (optional, str, default)
+      class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the peer container.
 
+        | **Type**: str
+        | **Default value**: ``default``
 
 
-    statedb (optional, dict, None)
+    statedb
       The Kubernetes storage configuration for the CouchDB container.
 
+      | **Type**: dict
 
-      size (optional, str, 100Gi)
+      size
         The size of the Kubernetes persistent volume claim for the CouchDB container.
 
+        | **Type**: str
+        | **Default value**: ``100Gi``
 
-      class (optional, str, default)
+      class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the CouchDB container.
 
+        | **Type**: str
+        | **Default value**: ``default``
 
 
 
-  hsm (optional, dict, None)
+  hsm
     The PKCS #11 compliant HSM configuration to use for the peer.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
+    | **Type**: dict
 
-    pkcs11endpoint (optional, str, None)
+    pkcs11endpoint
       The HSM proxy endpoint that the peer should use.
 
+      | **Type**: str
 
-    label (optional, str, None)
+    label
       The HSM label that the peer should use.
 
+      | **Type**: str
 
-    pin (optional, str, None)
+    pin
       The HSM pin that the peer should use.
 
+      | **Type**: str
 
 
-  zone (optional, str, None)
+  zone
     The Kubernetes zone for this peer.
 
     If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
 
     See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
+    | **Type**: str
 
-  wait_timeout (optional, integer, 60)
+  wait_timeout
     The timeout, in seconds, to wait until the peer is available.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
 
 
@@ -272,71 +338,135 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Create peer
+      ibm.blockchain_platform.peer:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 Peer
+        msp_id: Org1MSP
+        certificate_authority: Org1 CA
+        enrollment_id: org1peer
+        enrollment_secret: org1peerpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+
+    - name: Create peer with custom resources and storage
+      ibm.blockchain_platform.peer:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 Peer
+        msp_id: Org1MSP
+        certificate_authority: Org1 CA
+        enrollment_id: org1peer
+        enrollment_secret: org1peerpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        resources:
+          peer:
+            requests:
+              cpu: 400m
+              memory: 2G
+        storage:
+          peer:
+            size: 200Gi
+            class: ibmc-file-gold
+
+    - name: Create peer that uses an HSM
+      ibm.blockchain_platform.peer:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 Peer
+        msp_id: Org1MSP
+        certificate_authority: Org1 CA
+        enrollment_id: org1peer
+        enrollment_secret: org1peerpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        hsm:
+          pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+          label: Org1 CA label
+          pin: 12345678
+
+    - name: Destroy peer
+      ibm.blockchain_platform.peer:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 Peer
 
 
 
 Return Values
 -------------
 
-  peer (, dict, )
+  peer
     The peer.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the peer.
 
+      | **Type**: str
+      | **Sample**: ``Org1 Peer``
 
-    api_url (, str, )
+    api_url
       The URL for the API of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-api.example.org:32000``
 
-    operations_url (, str, )
+    operations_url
       The URL for the operations service of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-operations.example.org:32000``
 
-    grpcwp_url (, str, )
+    grpcwp_url
       The URL for the gRPC web proxy of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-grpcwebproxy.example.org:32000``
 
-    msp_id (, str, )
+    msp_id
       The MSP ID of the peer.
 
+      | **Type**: str
+      | **Sample**: ``Org1MSP``
 
-    pem (, str, )
+    pem
       The TLS certificate chain for the peer.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert (, str, )
+    tls_cert
       The TLS certificate chain for the peer.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    location (, str, )
+    location
       The location of the peer.
 
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

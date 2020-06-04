@@ -28,31 +28,36 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  state (optional, str, present)
+  state
     ``absent`` - An policy matching the specified name will be removed from the channel.
 
     ``present`` - Asserts that an policy matching the specified name and configuration exists in the channel. If no policy matches the specified name, the policy will be added to the channel. If an policy matches the specified name but the configuration does not match, then the policy in the channel will be updated.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  path (optional, str, None)
+  path
     Path to current the channel configuration file.
 
     This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
+    | **Type**: str
 
-  name (optional, str, None)
+  name
     The name of the policy to add, update, or remove from the channel.
 
+    | **Type**: str
 
-  policy (optional, raw, None)
+  policy
     The policy to add, update, or remove from the channel.
 
     You can pass a string, which is a path to a JSON file containing a [p;ocy] in the Hyperledger Fabric format (common.Policy).
 
     You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).
 
+    | **Type**: raw
 
 
 
@@ -69,24 +74,4 @@ Examples
     
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

@@ -30,37 +30,45 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  name (optional, any, None)
+  name
     The name of the organization.
 
 
@@ -77,152 +85,201 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Get the organization
+      ibm.blockchain_platform.organization_info:
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1
 
 
 
 Return Values
 -------------
 
-  exists (, boolean, )
+  exists
     True if the organization exists, false otherwise.
 
+    | **Type**: boolean
 
-  organization (, dict, )
+  organization
     The organization.
 
+    | **Returned**: if organization exists
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the organization.
 
+      | **Type**: str
+      | **Sample**: ``Org1``
 
-    msp_id (, str, )
+    msp_id
       The MSP ID for the organization.
 
+      | **Type**: str
+      | **Sample**: ``Org1MSP``
 
-    root_certs (, list, )
+    root_certs
       The list of root certificates for this organization.
 
       Root certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    intermediate_certs (, list, )
+    intermediate_certs
       The list of intermediate certificates for this organization.
 
       Intermediate certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    admins (, list, )
+    admins
       The list of administrator certificates for this organization.
 
       Administrator certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    revocation_list (, list, )
+    revocation_list
       The list of revoked certificates for this organization.
 
       Revoked certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_root_certs (, list, )
+    tls_root_certs
       The list of TLS root certificates for this organization.
 
       TLS root certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_intermediate_certs (, list, )
+    tls_intermediate_certs
       The list of TLS root certificates for this organization.
 
       TLS intermediate certificates must be supplied as base64 encoded PEM files.
 
+      | **Type**: list
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    fabric_node_ous (, dict, )
+    fabric_node_ous
       Configuration specific to the identity classification.
 
+      | **Type**: dict
 
-      enable (, boolean, )
+      enable
         True if identity classification is enabled for this organization, false otherwise.
 
+        | **Type**: boolean
+        | **Sample**: ``True``
 
-      admin_ou_identifier (, dict, )
+      admin_ou_identifier
         Configuration specific to the admin identity classification.
 
+        | **Type**: dict
 
-        certificate (, str, )
+        certificate
           The root or intermediate certificate for this identity classification.
 
           Root or intermediate certificates must be supplied as base64 encoded PEM files.
 
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-        organizational_unit_identifier (, str, )
+        organizational_unit_identifier
           The organizational unit (OU) identifier for this identity classification.
 
+          | **Type**: str
+          | **Sample**: ``admin``
 
 
-      client_ou_identifier (, dict, )
+      client_ou_identifier
         Configuration specific to the client identity classification.
 
+        | **Type**: dict
 
-        certificate (, str, )
+        certificate
           The root or intermediate certificate for this identity classification.
 
           Root or intermediate certificates must be supplied as base64 encoded PEM files.
 
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-        organizational_unit_identifier (, str, )
+        organizational_unit_identifier
           The organizational unit (OU) identifier for this identity classification.
 
+          | **Type**: str
+          | **Sample**: ``client``
 
 
-      peer_ou_identifier (, dict, )
+      peer_ou_identifier
         Configuration specific to the peer identity classification.
 
+        | **Type**: dict
 
-        certificate (, str, )
+        certificate
           The root or intermediate certificate for this identity classification.
 
           Root or intermediate certificates must be supplied as base64 encoded PEM files.
 
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-        organizational_unit_identifier (, str, )
+        organizational_unit_identifier
           The organizational unit (OU) identifier for this identity classification.
 
+          | **Type**: str
+          | **Sample**: ``peer``
 
 
-      orderer_ou_identifier (, dict, )
+      orderer_ou_identifier
         Configuration specific to the orderer identity classification.
 
+        | **Type**: dict
 
-        certificate (, str, )
+        certificate
           The root or intermediate certificate for this identity classification.
 
           Root or intermediate certificates must be supplied as base64 encoded PEM files.
 
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-        organizational_unit_identifier (, str, )
+        organizational_unit_identifier
           The organizational unit (OU) identifier for this identity classification.
 
+          | **Type**: str
+          | **Sample**: ``orderer``
 
 
 
+    organizational_unit_identifiers
+      The list of organizational unit identifiers for this organization.
+
+      | **Type**: list
+
+      certificate
+        The root or intermediate certificate for this organizational unit identifier.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+        | **Type**: str
+        | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+      organizational_unit_identifier
+        The organizational unit (OU) identifier.
+
+        | **Type**: str
+        | **Sample**: ``acctdept``
 
 
 
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

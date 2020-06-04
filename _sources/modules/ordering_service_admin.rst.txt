@@ -28,57 +28,69 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - An organization matching the specified name will be removed from the set of admins.
 
     ``present`` - Asserts that an organization matching the specified name and configuration exists in the set of admins. If no organization matches the specified name, the organization will be added to the set of admins. If an organization matches the specified name but the configuration does not match, then the organization in the set of admins will be updated.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  path (optional, str, None)
+  path (required)
     Path to current the system channel configuration file.
 
     This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
+    | **Type**: str
 
-  organization (optional, raw, None)
+  organization (required)
     The organization to add, update, or remove from the set of admins.
 
     You can pass a string, which is the display name of an organization registered with the IBM Blockchain Platform console.
 
     You can also pass a dictionary, which must match the result format of one of the :ref:`organization_info <organization_info_module>` or :ref:`organization[] <organization[]_module>` modules.
 
+    | **Type**: raw
 
 
 
@@ -93,26 +105,25 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Add the organization to the list of ordering service admins
+      ibm.blockchain_platform.ordering_service_admin:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        organization: Org1
+        path: system_channel_config.bin
+
+    - name: Remove the organization from the list of ordering service admins
+      ibm.blockchain_platform.ordering_service_admin:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        organization: Org1
+        path: system_channel_config.bin
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

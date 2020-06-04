@@ -28,136 +28,170 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - A certificate authority matching the specified name will be stopped and removed.
 
     ``present`` - Asserts that a certificate authority matching the specified name and configuration exists. If no certificate authority matches the specified name, a certificate authority will be created. If a certificate authority matches the specified name but the configuration does not match, then the certificate authority will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  name (optional, str, None)
-    The display name for the certificate authority.
+  name (required)
+    The name of the certificate authority.
 
+    | **Type**: str
 
-  config_override (optional, dict, None)
+  config_override
     The configuration overrides for the root certificate authority and the TLS certificate authority.
 
     If configuration overrides are provided for the root certificate authority, but not the TLS certificate authority, then the configuration overrides for the root certificate authority will be copied for the TLS certificate authority.
 
+    | **Type**: dict
 
-    ca (optional, dict, None)
+    ca
       The configuration overrides for the root certificate authority.
 
       See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html
 
+      | **Type**: dict
 
-    tlsca (optional, dict, None)
+    tlsca
       The configuration overrides for the TLS certificate authority.
 
       See the Hyperledger Fabric documentation for available options: https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html
 
+      | **Type**: dict
 
 
-  resources (optional, dict, None)
+  resources
     The Kubernetes resource configuration for the certificate authority.
 
+    | **Type**: dict
 
-    ca (optional, dict, None)
+    ca
       The Kubernetes resource configuration for the certificate authority container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the certificate authority container.
 
+        | **Type**: str
 
-        cpu (optional, str, 100m)
+        cpu
           The Kubernetes CPU resource request for the certificate authority container.
 
+          | **Type**: str
+          | **Default value**: ``100m``
 
-        memory (optional, str, 200M)
+        memory
           The Kubernetes memory resource request for the certificate authority container.
 
+          | **Type**: str
+          | **Default value**: ``200M``
 
 
 
 
-  storage (optional, dict, None)
+  storage
     The Kubernetes storage configuration for the certificate authority.
 
+    | **Type**: dict
 
-    ca (optional, dict, None)
+    ca
       The Kubernetes storage configuration for the certificate authority container.
 
+      | **Type**: dict
 
-      size (optional, str, 20Gi)
+      size
         The size of the Kubernetes persistent volume claim for the certificate authority container.
 
+        | **Type**: str
+        | **Default value**: ``20Gi``
 
-      class (optional, str, default)
+      class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
 
+        | **Type**: str
+        | **Default value**: ``default``
 
 
 
-  hsm (optional, dict, None)
+  hsm
     The PKCS #11 compliant HSM configuration to use for the certificate authority.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
+    | **Type**: dict
 
-    pkcs11endpoint (optional, str, None)
+    pkcs11endpoint
       The HSM proxy endpoint that the certificate authority should use.
 
+      | **Type**: str
 
-    label (optional, str, None)
+    label
       The HSM label that the certificate authority should use.
 
+      | **Type**: str
 
-    pin (optional, str, None)
+    pin
       The HSM pin that the certificate authority should use.
 
+      | **Type**: str
 
 
-  zone (optional, str, None)
+  zone
     The Kubernetes zone for this certificate authority.
 
     If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
 
     See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
+    | **Type**: str
 
-  wait_timeout (optional, integer, 60)
+  wait_timeout
     The timeout, in seconds, to wait until the certificate authority is available.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
 
 
@@ -172,75 +206,174 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Create certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 CA
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+              - name: admin
+                pass: adminpw
+                type: client
+                maxenrollments: -1
+                attrs:
+                  hf.Registrar.Roles: "*"
+                  hf.Registrar.DelegateRoles: "*"
+                  hf.Revoker: true
+                  hf.IntermediateCA: true
+                  hf.GenCRL: true
+                  hf.Registrar.Attributes: "*"
+                  hf.AffiliationMgr: true
+
+    - name: Create certificate authority with custom resources and storage
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 CA
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+              - name: admin
+                pass: adminpw
+                type: client
+                maxenrollments: -1
+                attrs:
+                  hf.Registrar.Roles: "*"
+                  hf.Registrar.DelegateRoles: "*"
+                  hf.Revoker: true
+                  hf.IntermediateCA: true
+                  hf.GenCRL: true
+                  hf.Registrar.Attributes: "*"
+                  hf.AffiliationMgr: true
+        resources:
+          ca:
+            requests:
+              cpu: 200m
+              memory: 400M
+        storage:
+          ca:
+            size: 40Gi
+            class: ibmc-file-gold
+
+    - name: Create certificate authority that uses an HSM
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 CA
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+              - name: admin
+                pass: adminpw
+                type: client
+                maxenrollments: -1
+                attrs:
+                  hf.Registrar.Roles: "*"
+                  hf.Registrar.DelegateRoles: "*"
+                  hf.Revoker: true
+                  hf.IntermediateCA: true
+                  hf.GenCRL: true
+                  hf.Registrar.Attributes: "*"
+                  hf.AffiliationMgr: true
+        hsm:
+          pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+          label: Org1 CA label
+          pin: 12345678
+
+    - name: Destroy certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 CA
 
 
 
 Return Values
 -------------
 
-  certificate_authority (, dict, )
+  certificate_authority
     The certificate authority.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``Org1 CA``
 
-    api_url (, str, )
+    api_url
       The URL for the API of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-api.example.org:32000``
 
-    operations_url (, str, )
+    operations_url
       The URL for the operations service of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-operations.example.org:32000``
 
-    ca_url (, str, )
+    ca_url
       The URL for the API of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``https://org1ca-api.example.org:32000``
 
-    ca_name (, str, )
+    ca_name
       The certificate authority name to use for enrollment requests.
 
+      | **Type**: str
+      | **Sample**: ``ca``
 
-    tlsca_name (, str, )
+    tlsca_name
       The certificate authority name to use for TLS enrollment requests.
 
+      | **Type**: str
+      | **Sample**: ``tlsca``
 
-    location (, str, )
+    location
       The location of the certificate authority.
 
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
 
-    pem (, str, )
+    pem
       The TLS certificate chain for the certificate authority.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert (, str, )
+    tls_cert
       The TLS certificate chain for the certificate authority.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

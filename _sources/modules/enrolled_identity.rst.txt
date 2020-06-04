@@ -28,63 +28,85 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - A certificate authority matching the specified name will be stopped and removed.
 
     ``present`` - Asserts that a certificate authority matching the specified name and configuration exists. If no certificate authority matches the specified name, a certificate authority will be created. If a certificate authority matches the specified name but the configuration does not match, then the certificate authority will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  certificate_authority (optional, raw, None)
+  certificate_authority
     The certificate authority to use to enroll this identity.
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
 
     You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
 
+    Only required when *state* is ``present``.
 
-  name (optional, str, None)
+    | **Type**: raw
+
+  name
     The name of the enrolled identity.
 
+    Only required when *state* is ``present``.
 
-  enrollment_id (optional, str, None)
+    | **Type**: str
+
+  enrollment_id
     The enrollment ID, or user name, of an identity registered on the certificate authority for this peer.
 
+    Only required when *state* is ``present``.
 
-  enrollment_secret (optional, str, None)
+    | **Type**: str
+
+  enrollment_secret
     The enrollment secret, or password, of an identity registered on the certificate authority for this peer.
 
+    Only required when *state* is ``present``.
 
-  path (optional, any, None)
+    | **Type**: str
+
+  path (required)
     The path to the JSON file where the enrolled identity will be stored.
 
 
@@ -101,51 +123,62 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Enroll an identity
+      ibm.blockchain_platform.enrolled_identity:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        certificate_authority: Org1 CA
+        name: Org1 Admin
+        enrollment_id: org1admin
+        enrollment_secret: org1adminpw
+        path: Org1 Admin.json
+
+    - name: Remove an enrolled identity
+      ibm.blockchain_platform.enrolled_identity:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        path: Org1 Admin.json
 
 
 
 Return Values
 -------------
 
-  enrolled_identity (, dict, )
+  enrolled_identity
     The enrolled identity.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the enrolled identity.
 
+      | **Type**: str
+      | **Sample**: ``Org1 Admin``
 
-    cert (, str, )
+    cert
       The base64 encoded certificate of the enrolled identity.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    private_key (, str, )
+    private_key
       The base64 encoded private key of the enrolled identity.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t...``
 
-    ca (, str, )
+    ca
       The base64 encoded CA certificate chain of the enrolled identity.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

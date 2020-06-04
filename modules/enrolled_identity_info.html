@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="external_ordering_service.html">external_ordering_service – Manage an external Hyperledger Fabric ordering service</a></li>
@@ -211,7 +210,6 @@
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
 <li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
@@ -223,7 +221,7 @@
 <h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl class="simple">
-<dt>path (optional, any, None)</dt><dd><p>The path to the JSON file where the enrolled identity is stored.</p>
+<dt>path</dt><dd><p>The path to the JSON file where the enrolled identity is stored.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -238,35 +236,40 @@
 <h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>exists (, boolean, )</dt><dd><p>True if the enrolled identity exists, false otherwise.</p>
+<dt>exists</dt><dd><p>True if the enrolled identity exists, false otherwise.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: boolean</div>
+</div>
 </dd>
-<dt>enrolled_identity (, dict, )</dt><dd><p>The enrolled identity.</p>
-<dl class="simple">
-<dt>name (, str, )</dt><dd><p>The name of the enrolled identity.</p>
+<dt>enrolled_identity</dt><dd><p>The enrolled identity.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>name</dt><dd><p>The name of the enrolled identity.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>cert (, str, )</dt><dd><p>The base64 encoded certificate of the enrolled identity.</p>
+<dt>cert</dt><dd><p>The base64 encoded certificate of the enrolled identity.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>private_key (, str, )</dt><dd><p>The base64 encoded private key of the enrolled identity.</p>
+<dt>private_key</dt><dd><p>The base64 encoded private key of the enrolled identity.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>ca (, str, )</dt><dd><p>The base64 encoded CA certificate chain of the enrolled identity.</p>
+<dt>ca</dt><dd><p>The base64 encoded CA certificate chain of the enrolled identity.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>This module is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
-<li><p>This module is maintained by community.</p></li>
-</ul>
-<div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Simon Stone (&#64;sstone1)</p></li>
-</ul>
-</div>
 </div>
 </div>
 
@@ -290,7 +293,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

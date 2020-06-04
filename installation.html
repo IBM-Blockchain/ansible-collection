@@ -216,9 +216,9 @@ If you install Python from the package manager for your operating system, you mu
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>Hyperledger Fabric v1.4.x binaries</strong></p>
+<p><strong>Hyperledger Fabric v1.4.3+ binaries</strong></p>
 <blockquote>
-<div><p>This Ansible collection uses the Hyperledger Fabric v1.4 binaries to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxgen</span></code>, <code class="docutils literal notranslate"><span class="pre">peer</span></code>, and <code class="docutils literal notranslate"><span class="pre">fabric-ca-client</span></code>.</p>
+<div><p>This Ansible collection requires use of the binaries from Hyperledger Fabric v1.4.3 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxlator</span></code> and <code class="docutils literal notranslate"><span class="pre">peer</span></code>.</p>
 <p>You can install these binaries by following the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html">https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html</a></p>
 <p>These binaries must be on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> of the system that will be used to run your Ansible Playbooks. You can check that the binaries are installed correctly by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">peer</span> <span class="n">version</span>
@@ -313,7 +313,7 @@ You can then use that Docker image to run your playbooks.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

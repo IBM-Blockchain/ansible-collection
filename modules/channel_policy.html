@@ -106,7 +106,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="connection_profile.html">connection_profile – Manage a connection profile for a Hyperledger Fabric network</a></li>
@@ -209,7 +208,6 @@
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id4">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
@@ -221,18 +219,31 @@
 <h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - An policy matching the specified name will be removed from the channel.</p>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - An policy matching the specified name will be removed from the channel.</p>
 <p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that an policy matching the specified name and configuration exists in the channel. If no policy matches the specified name, the policy will be added to the channel. If an policy matches the specified name but the configuration does not match, then the policy in the channel will be updated.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+</div>
 </dd>
-<dt>path (optional, str, None)</dt><dd><p>Path to current the channel configuration file.</p>
+<dt>path</dt><dd><p>Path to current the channel configuration file.</p>
 <p>This file can be fetched by using the <span class="xref std std-ref">channel_config</span> module.</p>
 <p>This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>name (optional, str, None)</dt><dd><p>The name of the policy to add, update, or remove from the channel.</p>
+<dt>name</dt><dd><p>The name of the policy to add, update, or remove from the channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>policy (optional, raw, None)</dt><dd><p>The policy to add, update, or remove from the channel.</p>
+<dt>policy</dt><dd><p>The policy to add, update, or remove from the channel.</p>
 <p>You can pass a string, which is a path to a JSON file containing a [p;ocy] in the Hyperledger Fabric format (common.Policy).</p>
 <p>You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: raw</div>
+</div>
 </dd>
 </dl>
 </div></blockquote>
@@ -241,19 +252,6 @@
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="status">
-<h2><a class="toc-backref" href="#id4">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>This module is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
-<li><p>This module is maintained by community.</p></li>
-</ul>
-<div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Simon Stone (&#64;sstone1)</p></li>
-</ul>
 </div>
 </div>
 </div>
@@ -278,7 +276,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

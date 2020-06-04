@@ -116,7 +116,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ordering_service_admin.html">ordering_service_admin – Manage an admin for a Hyperledger Fabric ordering service</a></li>
@@ -211,7 +210,6 @@
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
 <li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
@@ -223,121 +221,318 @@
 <h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>api_endpoint (optional, str, None)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
+<dt>api_endpoint (required)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_authtype (optional, str, None)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code> - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using <em>api_key</em>.</p>
+<dt>api_authtype (required)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code> - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using <em>api_key</em>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">basic</span></code> - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using <em>api_key</em> and API secret using <em>api_secret</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_key (optional, str, None)</dt><dd><p>The API key for the IBM Blockchain Platform console.</p>
+<dt>api_key (required)</dt><dd><p>The API key for the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_secret (optional, str, None)</dt><dd><p>The API secret for the IBM Blockchain Platform console.</p>
+<dt>api_secret</dt><dd><p>The API secret for the IBM Blockchain Platform console.</p>
 <p>Only required when <em>api_authtype</em> is <code class="docutils literal notranslate"><span class="pre">basic</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.</p>
+<dt>api_timeout</dt><dd><p>The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></div>
+</div>
 </dd>
-<dt>api_token_endpoint (optional, str, <a class="reference external" href="https://iam.cloud.ibm.com/identity/token">https://iam.cloud.ibm.com/identity/token</a>)</dt><dd><p>The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.</p>
+<dt>api_token_endpoint</dt><dd><p>The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.</p>
 <p>Only required when <em>api_authtype</em> is <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code>, and you are using IBM internal staging servers for testing.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">https://iam.cloud.ibm.com/identity/token</span></code></div>
+</div>
 </dd>
-<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - An ordering service matching the specified name will be stopped and removed.</p>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - An ordering service matching the specified name will be stopped and removed.</p>
 <p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that an ordering service matching the specified name and configuration exists. If no ordering service matches the specified name, an ordering service will be created. If an ordering service matches the specified name but the configuration does not match, then the ordering service will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+</div>
 </dd>
-<dt>name (optional, str, None)</dt><dd><p>The name for the ordering service.</p>
+<dt>name (required)</dt><dd><p>The name for the ordering service.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>msp_id (optional, str, None)</dt><dd><p>The MSP ID for this ordering service.</p>
+<dt>msp_id</dt><dd><p>The MSP ID for this ordering service.</p>
+<p>Only required when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>orderer_type (optional, str, raft)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">raft</span></code> - The ordering service will use the Raft consensus algorithm.</p>
+<dt>orderer_type</dt><dd><p><code class="docutils literal notranslate"><span class="pre">raft</span></code> - The ordering service will use the Raft consensus algorithm.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">raft</span></code></div>
+</div>
 </dd>
-<dt>system_channel_id (optional, str, testchainid)</dt><dd><p>The name of the system channel for this ordering service.</p>
+<dt>system_channel_id</dt><dd><p>The name of the system channel for this ordering service.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">testchainid</span></code></div>
+</div>
 </dd>
-<dt>certificate_authority (optional, raw, None)</dt><dd><p>The certificate authority to use to enroll the identity for this ordering service.</p>
+<dt>certificate_authority</dt><dd><p>The certificate authority to use to enroll the identity for this ordering service.</p>
 <p>You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.</p>
 <p>You can also pass a dictionary, which must match the result format of one of the <span class="xref std std-ref">certificate_authority_info</span> or <span class="xref std std-ref">certificate_authority</span> modules.</p>
 <p>Only required when <em>config</em> is not specified.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: raw</div>
+</div>
 </dd>
-<dt>enrollment_id (optional, str, None)</dt><dd><p>The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service.</p>
+<dt>enrollment_id</dt><dd><p>The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service.</p>
 <p>Only required when <em>config</em> is not specified.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>enrollment_secret (optional, str, None)</dt><dd><p>The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service.</p>
+<dt>enrollment_secret</dt><dd><p>The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service.</p>
 <p>Only required when <em>config</em> is not specified.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>admins (optional, list, None)</dt><dd><p>The list of administrator certificates for this ordering service.</p>
+<dt>admins</dt><dd><p>The list of administrator certificates for this ordering service.</p>
 <p>Administrator certificates must be supplied as base64 encoded PEM files.</p>
 <p>Only required when <em>config</em> is not specified.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
+</div>
 </dd>
-<dt>nodes (optional, int, None)</dt><dd><p>The number of ordering service nodes in this ordering service.</p>
+<dt>nodes</dt><dd><p>The number of ordering service nodes in this ordering service.</p>
+<p>Only required when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+</div>
 </dd>
-<dt>config (optional, list, None)</dt><dd><p>The initial configuration for the ordering service. This is only required if you need more advanced configuration than is provided by this module using <em>certificate_authority</em> and related options.</p>
+<dt>config</dt><dd><p>The initial configuration for the ordering service. This is only required if you need more advanced configuration than is provided by this module using <em>certificate_authority</em> and related options.</p>
 <p>You must provide initial configuration for each ordering service node in the ordering service, as defined by <em>nodes</em>.</p>
 <p>See the IBM Blockchain Platform documentation for available options: <a class="reference external" href="https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config">https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: dict</div>
+</div>
 </dd>
-<dt>config_override (optional, list, None)</dt><dd><p>The configuration overrides for the ordering service.</p>
+<dt>config_override</dt><dd><p>The configuration overrides for the ordering service.</p>
 <p>You must provide configuration overrides for each ordering service node in the ordering service, as defined by <em>nodes</em>.</p>
 <p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml">https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: dict</div>
+</div>
 </dd>
-<dt>resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the ordering service.</p>
+<dt>resources</dt><dd><p>The Kubernetes resource configuration for the ordering service.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>orderer (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the orderer container.</p>
+<dt>orderer</dt><dd><p>The Kubernetes resource configuration for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the orderer container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 250m)</dt><dd><p>The Kubernetes CPU resource request for the orderer container.</p>
-</dd>
-<dt>memory (optional, str, 500M)</dt><dd><p>The Kubernetes memory resource request for the orderer container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>proxy (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the proxy container.</p>
+<dt>requests</dt><dd><p>The Kubernetes resource requests for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 <dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the proxy container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 100m)</dt><dd><p>The Kubernetes CPU resource request for the proxy container.</p>
+<dt>cpu</dt><dd><p>The Kubernetes CPU resource request for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">250m</span></code></div>
+</div>
 </dd>
-<dt>memory (optional, str, 200M)</dt><dd><p>The Kubernetes memory resource request for the proxy container.</p>
+<dt>memory</dt><dd><p>The Kubernetes memory resource request for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">500M</span></code></div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd>
-</dl>
-</dd>
-<dt>storage (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the ordering service.</p>
+<dt>proxy</dt><dd><p>The Kubernetes resource configuration for the proxy container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>orderer (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the orderer container.</p>
-<dl class="simple">
-<dt>size (optional, str, 100Gi)</dt><dd><p>The size of the Kubernetes persistent volume claim for the orderer container.</p>
+<dt>requests</dt><dd><p>The Kubernetes resource requests for the proxy container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+<dl>
+<dt>cpu</dt><dd><p>The Kubernetes CPU resource request for the proxy container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">100m</span></code></div>
+</div>
 </dd>
-<dt>class (optional, str, default)</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.</p>
+<dt>memory</dt><dd><p>The Kubernetes memory resource request for the proxy container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">200M</span></code></div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd>
-<dt>hsm (optional, dict, None)</dt><dd><p>The PKCS #11 compliant HSM configuration to use for the ordering service.</p>
+</dl>
+</dd>
+<dt>storage</dt><dd><p>The Kubernetes storage configuration for the ordering service.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>orderer</dt><dd><p>The Kubernetes storage configuration for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>size</dt><dd><p>The size of the Kubernetes persistent volume claim for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">100Gi</span></code></div>
+</div>
+</dd>
+<dt>class</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">default</span></code></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>hsm</dt><dd><p>The PKCS #11 compliant HSM configuration to use for the ordering service.</p>
 <p>See the IBM Blockchain Platform documentation for more information: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm</a></p>
-<dl class="simple">
-<dt>pkcs11endpoint (optional, str, None)</dt><dd><p>The HSM proxy endpoint that the ordering service should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>pkcs11endpoint</dt><dd><p>The HSM proxy endpoint that the ordering service should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>label (optional, str, None)</dt><dd><p>The HSM label that the ordering service should use.</p>
+<dt>label</dt><dd><p>The HSM label that the ordering service should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>pin (optional, str, None)</dt><dd><p>The HSM pin that the ordering service should use.</p>
+<dt>pin</dt><dd><p>The HSM pin that the ordering service should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
 </dl>
 </dd>
-<dt>zone (optional, list, None)</dt><dd><p>The Kubernetes zones for this ordering service.</p>
+<dt>zone</dt><dd><p>The Kubernetes zones for this ordering service.</p>
 <p>If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by <em>nodes</em>.</p>
 <p>If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.</p>
 <p>See the Kubernetes documentation for more information: <a class="reference external" href="https://kubernetes.io/docs/setup/best-practices/multiple-zones/">https://kubernetes.io/docs/setup/best-practices/multiple-zones/</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
+</div>
 </dd>
-<dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the ordering service is available.</p>
+<dt>wait_timeout</dt><dd><p>The timeout, in seconds, to wait until the ordering service is available.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></div>
+</div>
 </dd>
 </dl>
 </div></blockquote>
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create ordering service</span>
+  <span class="nt">ibm.blockchain_platform.ordering_service</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
+    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OrdererOrgMSP</span>
+    <span class="nt">nodes</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">certificate_authority</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Orderer Org CA</span>
+    <span class="nt">enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgorderer</span>
+    <span class="nt">enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgordererpw</span>
+    <span class="nt">admin_certificates</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create five node ordering service with custom resources and storage</span>
+  <span class="nt">ibm.blockchain_platform.ordering_service</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
+    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OrdererOrgMSP</span>
+    <span class="nt">nodes</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="nt">certificate_authority</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Orderer Org CA</span>
+    <span class="nt">enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgorderer</span>
+    <span class="nt">enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgordererpw</span>
+    <span class="nt">admin_certificates</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span>
+    <span class="nt">resources</span><span class="p">:</span>
+      <span class="nt">orderer</span><span class="p">:</span>
+        <span class="nt">requests</span><span class="p">:</span>
+          <span class="nt">cpu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500m</span>
+          <span class="nt">memory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1000M</span>
+    <span class="nt">storage</span><span class="p">:</span>
+      <span class="nt">orderer</span><span class="p">:</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">200Gi</span>
+        <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibmc-file-gold</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create ordering service that uses an HSM</span>
+  <span class="nt">ibm.blockchain_platform.ordering_service</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
+    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OrdererOrgMSP</span>
+    <span class="nt">nodes</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="nt">certificate_authority</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Orderer Org CA</span>
+    <span class="nt">enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgorderer</span>
+    <span class="nt">enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgordererpw</span>
+    <span class="nt">admin_certificates</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span>
+    <span class="nt">hsm</span><span class="p">:</span>
+      <span class="nt">pkcs11endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tcp://pkcs11-proxy.example.org:2345</span>
+      <span class="nt">label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA label</span>
+      <span class="nt">pin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12345678</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Destroy ordering service</span>
+  <span class="nt">ibm.blockchain_platform.ordering_service</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
 </pre></div>
 </div>
 </div>
@@ -345,53 +540,96 @@
 <h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>ordering_service (, list, )</dt><dd><p>The ordering service, as a list of ordering service nodes.</p>
+<dt>ordering_service</dt><dd><p>The ordering service, as a list of ordering service nodes.</p>
+<div class="line-block">
+<div class="line"><strong>Returned</strong>: when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+<div class="line"><strong>Type</strong>: list</div>
+</div>
 <dl>
-<dt>name (, str, )</dt><dd><p>The name of the ordering service node.</p>
+<dt>name</dt><dd><p>The name of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">Ordering</span> <span class="pre">Service_1</span></code></div>
+</div>
 </dd>
-<dt>api_url (, str, )</dt><dd><p>The URL for the API of the ordering service node.</p>
+<dt>api_url</dt><dd><p>The URL for the API of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">grpcs://orderingservice1-api.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>operations_url (, str, )</dt><dd><p>The URL for the operations service of the ordering service node.</p>
+<dt>operations_url</dt><dd><p>The URL for the operations service of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">https://orderingservice1-operations.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>grpcwp_url (, str, )</dt><dd><p>The URL for the gRPC web proxy of the ordering service node.</p>
+<dt>grpcwp_url</dt><dd><p>The URL for the gRPC web proxy of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">https://orderingservice1-grpcwebproxy.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>msp_id (, str, )</dt><dd><p>The MSP ID of the ordering service node.</p>
+<dt>msp_id</dt><dd><p>The MSP ID of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">OrdererOrgMSP</span></code></div>
+</div>
 </dd>
-<dt>pem (, str, )</dt><dd><p>The TLS certificate chain for the ordering service node.</p>
+<dt>pem</dt><dd><p>The TLS certificate chain for the ordering service node.</p>
 <p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
-<dt>tls_cert (, str, )</dt><dd><p>The TLS certificate chain for the ordering service node.</p>
+<dt>tls_cert</dt><dd><p>The TLS certificate chain for the ordering service node.</p>
 <p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
-<dt>location (, str, )</dt><dd><p>The location of the ordering service node.</p>
+<dt>location</dt><dd><p>The location of the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code></div>
+</div>
 </dd>
-<dt>system_channel_id (, str, )</dt><dd><p>The name of the system channel for the ordering service node.</p>
+<dt>system_channel_id</dt><dd><p>The name of the system channel for the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">testchainid</span></code></div>
+</div>
 </dd>
-<dt>client_tls_cert (, str, )</dt><dd><p>The client TLS certificate for the ordering service node.</p>
+<dt>client_tls_cert</dt><dd><p>The client TLS certificate for the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
-<dt>server_tls_cert (, str, )</dt><dd><p>The client TLS certificate for the ordering service node.</p>
+<dt>server_tls_cert</dt><dd><p>The client TLS certificate for the ordering service node.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
-<dt>cluster_id (, str, )</dt><dd><p>The unique ID of the ordering service cluster.</p>
+<dt>cluster_id</dt><dd><p>The unique ID of the ordering service cluster.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">abcdefgh</span></code></div>
+</div>
 </dd>
-<dt>cluster_name (, str, )</dt><dd><p>The name of the ordering service cluster.</p>
+<dt>cluster_name</dt><dd><p>The name of the ordering service cluster.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">Ordering</span> <span class="pre">Service</span></code></div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>This module is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
-<li><p>This module is maintained by community.</p></li>
-</ul>
-<div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Simon Stone (&#64;sstone1)</p></li>
-</ul>
-</div>
 </div>
 </div>
 
@@ -415,7 +653,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

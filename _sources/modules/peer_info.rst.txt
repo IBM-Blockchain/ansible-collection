@@ -28,43 +28,53 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  name (optional, any, None)
+  name (required)
     The name of the peer.
 
 
-  wait_timeout (optional, integer, 60)
+  wait_timeout
     The timeout, in seconds, to wait until the peer is available.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
 
 
@@ -79,75 +89,81 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Get peer
+      ibm.blockchain_platform.peer_info:
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Org1 Peer
 
 
 
 Return Values
 -------------
 
-  exists (, boolean, )
+  exists
     True if the peer exists, false otherwise.
 
+    | **Type**: boolean
 
-  peer (, dict, )
+  peer
     The peer.
 
+    | **Returned**: if peer exists
+    | **Type**: dict
 
-    name (, str, )
+    name
       The name of the peer.
 
+      | **Type**: str
+      | **Sample**: ``Org1 Peer``
 
-    api_url (, str, )
+    api_url
       The URL for the API of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-api.example.org:32000``
 
-    operations_url (, str, )
+    operations_url
       The URL for the operations service of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-operations.example.org:32000``
 
-    grpcwp_url (, str, )
+    grpcwp_url
       The URL for the gRPC web proxy of the peer.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://org1peer-grpcwebproxy.example.org:32000``
 
-    msp_id (, str, )
+    msp_id
       The MSP ID of the peer.
 
+      | **Type**: str
+      | **Sample**: ``Org1MSP``
 
-    pem (, str, )
+    pem
       The TLS certificate chain for the peer.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert (, str, )
+    tls_cert
       The TLS certificate chain for the peer.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    location (, str, )
+    location
       The location of the peer.
 
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

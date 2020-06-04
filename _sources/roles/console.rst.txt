@@ -23,156 +23,274 @@ This role works with both Kubernetes clusters and Red Hat OpenShift clusters, ru
 Parameters
 ----------
 
-  state (optional, str, present)
+  state
     ``absent`` - All components for the console will be stopped and removed, if they exist.
 
     ``present`` - All components for the console will be created if they do not exist, or will be updated if their current configuration does not match the expected configuration.
 
-  target (required, str, None)
+    | **Type**: str
+    | **Default**: ``present``
+
+  target (required)
     ``k8s`` - Deploy the console into a Kubernetes cluster.
 
     ``openshift`` - Deploy the console into a Red Hat OpenShift cluster.
 
-  arch (required, str, None)
+    | **Type**: str
+
+  arch (required)
     ``amd64`` - Specify this if the architecture of the cluster is amd64.
 
     ``s390x`` - Specify this if the architecture of the cluster is s390x.
 
-  namespace (required, str, None)
+    | **Type**: str
+
+  namespace
     The name of the Kubernetes namespace to deploy the console to. The namespace will be created if it does not exist.
 
     Only required when *target* is ``k8s``.
 
-  project (required, str, None)
+    | **Type**: str
+
+  project
     The name of the Red Hat OpenShift project to deploy the console to. The project will be created if it does not exist.
 
     Only required when *target* is ``openshift``.
 
-  image_pull_secret (optional, str, docker-key-secret)
+    | **Type**: str
+
+  image_pull_secret
     The name of the image pull secret. The image pull secret will be used to pull all IBM Blockchain Platform images from the specified image registry.
 
-  image_registry (optional, str, cp.icr.io)
+    | **Type**: str
+    | **Default value**: ``docker-key-secret``
+
+  image_registry
     The image registry to pull images from. The image registry must contain the IBM Blockchain Platform images.
 
     The default image registry, ``cp.icr.io``, is the standard IBM Entitlement Registry.
 
     You only need to specify an alternative image registry if you are behind a firewall and cannot access the standard IBM Entitlement Registry.
 
-  image_registry_username (optional, str, cp)
+    | **Type**: str
+    | **Default value**: ``cp.icr.io``
+
+  image_registry_username
     The username for authenticating to the image registry.
 
     The default image registry username, ``cp``, is the username for the standard IBM Entitlement Registry.
 
     You only need to specify an alternative image registry username if you are using an alternative image registry.
 
-  image_registry_email (required, str, None)
+    | **Type**: str
+    | **Default value**: ``cp``
+
+  image_registry_email (required)
     The email address for authenticating to the image registry.
 
     If you are using the default image registry, this is the email address you use to log in to the My IBM dashboard.
 
-  image_registry_password (required, str, None)
+    | **Type**: str
+
+  image_registry_password (required)
     The password for authenticating to the image registry.
 
     If you are using the default image registry, this is the entitlement key that you can obtain from the My IBM dashboard.
 
-  image_repository (optional, str, cp)
+    | **Type**: str
+
+  image_repository
     The image repository on the image registry to pull images from.
 
     The default image repository, ``cp``, is the image repository for the standard IBM Entitlement Registry.
 
     You only need to specify an alternative image repository if you are using an alternative image registry.
 
-  cluster_role (optional, str, None)
+    | **Type**: str
+    | **Default value**: ``cp``
+
+  cluster_role
     The name of the cluster role.
 
     By default, the cluster role has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
-  cluster_role_binding (optional, str, None)
+    | **Type**: str
+
+  cluster_role_binding
     The name of the cluster role binding.
 
     By default, the cluster role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
-  pod_security_policy (optional, str, None)
+    | **Type**: str
+
+  pod_security_policy
     The name of the pod security policy.
 
     By default, the pod security policy has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
     Only required when *target* is ``k8s``.
 
-  role_binding (optional, str, None)
+    | **Type**: str
+
+  role_binding
     The name of the role binding.
 
     By default, the role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
     Only required when *target* is ``k8s``.
 
-  security_context_constraints (optional, str, None)
+    | **Type**: str
+
+  security_context_constraints
     The name of the security context constraints.
 
     By default, the security context contraints have the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
 
     Only required when *target* is ``openshift``.
 
-  service_account (optional, str, default)
+    | **Type**: str
+
+  service_account
     The name of the service account to use.
 
-  operator (optional, str, ibp-operator)
+    | **Type**: str
+    | **Default value**: ``default``
+
+  operator
     The name of the operator.
 
-  console (optional, str, ibp-console)
+    | **Type**: str
+    | **Default value**: ``ibp-operator``
+
+  console
     The name of the console.
 
-  console_domain (required, str, None)
+    | **Type**: str
+    | **Default value**: ``ibp-console``
+
+  console_domain (required)
     The DNS domain for the console.
 
     This DNS domain will be used as the base DNS domain for the console, as well as any certificate authorities, peers, and ordering services created using the console.
 
-  console_email (required, str, None)
+    | **Type**: str
+
+  console_email (required)
     The email address of the default console user.
 
-  console_default_password (required, str, None)
+    | **Type**: str
+
+  console_default_password (required)
     The default password for all console users, including the default console user.
 
-  console_storage_class (optional, str, default)
+    | **Type**: str
+
+  console_storage_class
     The storage class to use for the console.
 
-  console_storage_size (optional, str, 10Gi)
+    | **Type**: str
+    | **Default value**: ``default``
+
+  console_storage_size
     The storage size to use for the console.
 
-  console_tls_secret (optional, str, None)
+    | **Type**: str
+    | **Default value**: ``10Gi``
+
+  console_tls_secret
     The TLS secret name to use for the console.
 
     If specified this secret must already exist in the specified Kubernetes namespace or Red Hat OpenShift project and must contain the TLS certificate and private key that the console will use.
 
-    If not specified the console will generate it's own self-signed certificates
+    If not specified the console will generate it's own self-signed certificates.
 
-  product_version (optional, str, 2.1.3)
+    | **Type**: str
+
+  product_version
     The version of IBM Blockchain Platform to use.
 
-  operator_version (optional, str, 20200520)
+    | **Type**: str
+    | **Default value**: ``2.1.3``
+
+  operator_version
     The version of the IBM Blockchain Platform operator to use.
 
     The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.1.3-20200416-amd64``.
 
-  wait_timeout (optional, str, 60)
+    | **Type**: str
+    | **Default value**: ``20200520``
+
+  zones
+    The list of Kubernetes zones that this console can deploy components into.
+
+    If you do not specify a list of Kubernetes zones, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you when you attempt to create any components.
+
+    See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
+
+    | **Type**: list
+    | **Elements**: str
+
+  wait_timeout
     The timeout, in seconds, to wait until the console is available.
+
+    | **Type**: int
+    | **Default value**: ``60``
 
 Examples
 --------
 
 .. code-block:: yaml+jinja
 
-Return Values
--------------
+    - name: Deploy IBM Blockchain Platform console on Kubernetes
+      hosts: localhost
+      vars:
+        state: present
+        target: k8s
+        arch: amd64
+        namespace: my-namespace
+        image_registry_password: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        image_registry_email: admin@example.org
+        console_domain: example.org
+        console_email: admin@example.org
+        console_default_password: passw0rd
+        wait_timeout: 3600
+      roles:
+        - ibm.blockchain_platform.console
 
+    - name: Deploy IBM Blockchain Platform console on Red Hat OpenShift
+      hosts: localhost
+      vars:
+        state: present
+        target: openshift
+        arch: amd64
+        project: my-project
+        image_registry_password: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        image_registry_email: admin@example.org
+        console_domain: example.org
+        console_email: admin@example.org
+        console_default_password: passw0rd
+        wait_timeout: 3600
+      roles:
+        - ibm.blockchain_platform.console
 
-Status
-------
+    - name: Remove IBM Blockchain Platform console from Kubernetes
+      hosts: localhost
+      vars:
+        state: absent
+        target: k8s
+        arch: amd64
+        namespace: my-namespace
+        wait_timeout: 3600
+      roles:
+        - ibm.blockchain_platform.console
 
-- This is not guaranteed to have a backwards compatible interface. *[preview]*
-- This is maintained by community.
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
+    - name: Remove IBM Blockchain Platform console from Red Hat OpenShift
+      hosts: localhost
+      vars:
+        state: absent
+        target: openshift
+        arch: amd64
+        project: my-project
+        wait_timeout: 3600
+      roles:
+        - ibm.blockchain_platform.console

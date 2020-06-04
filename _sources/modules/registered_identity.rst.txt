@@ -28,89 +28,114 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - If an identity is registered matching the specified enrollment ID, the identity will be removed. Note that this operation is unsupported by default and must be enabled by the certificate authority.
 
     ``present`` - Asserts that an identity matching the specified enrollment ID and configuration is registered. If no identity matches the specified enrollment ID, the identity will be created. If an identity matches the specified enrollment ID but the configuration does not match, then the identity will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  certificate_authority (optional, raw, None)
+  certificate_authority (required)
     The certificate authority to use to register this identity.
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
 
     You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
 
+    | **Type**: raw
 
-  registrar (optional, raw, None)
+  registrar (required)
     The identity to use when interacting with the certificate authority.
 
     You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
 
     You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
 
+    | **Type**: raw
 
-  enrollment_id (optional, str, None)
+  enrollment_id (required)
     The enrollment ID, or user name, of the identity to register on the certificate authority.
 
+    | **Type**: str
 
-  enrollment_secret (optional, str, None)
+  enrollment_secret
     The enrollment secret, or password, of an identity to register on the certificate authority.
 
+    Only required when *state* is ``present``.
 
-  max_enrollments (optional, int, -1)
+    | **Type**: str
+
+  max_enrollments
     The maximum number of times that this identity can be enrolled.
 
+    | **Type**: int
+    | **Default value**: ``-1``
 
-  type (optional, str, client)
+  type
     The type of this identity.
 
+    | **Type**: str
+    | **Default value**: ``client``
 
-  affiliation (optional, str, None)
+  affiliation
     The affiliation of this identity.
 
+    | **Type**: str
 
-  attributes (optional, list, None)
+  attributes
     The attributes for this identity.
 
+    | **Type**: list
+    | **Elements**: dict
 
-    name (optional, str, None)
+    name
       The name of the attribute.
 
+      | **Type**: str
 
-    value (optional, str, None)
+    value
       The value of the attribute.
 
+      | **Type**: str
 
 
 
@@ -126,68 +151,92 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Register a new identity
+      ibm.blockchain_platform.registered_identity:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        certificate_authority: Org1 CA
+        registrar: Org1 CA Admin.json
+        enrollment_id: org1app
+        enrollment_secret: org1apppw
+        max_enrollments: 10
+        type: client
+        attributes:
+          - name: "fabcar.admin"
+            value: "true"
+
+    - name: Delete an existing identity
+      ibm.blockchain_platform.registered_identity:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        certificate_authority: Org1 CA
+        registrar: Org1 CA Admin.json
+        enrollment_id: org1app
 
 
 
 Return Values
 -------------
 
-  registered_identity (, dict, )
+  registered_identity
     The registered identity.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
 
-    enrollment_id (, str, )
+    enrollment_id
       The enrollment ID, or user name, of the identity.
 
+      | **Type**: str
+      | **Sample**: ``org1admin``
 
-    enrollment_secret (, str, )
+    enrollment_secret
       The enrollment secret, or password, of an identity.
 
+      | **Type**: str
+      | **Sample**: ``org1adminpw``
 
-    max_enrollments (, int, )
+    max_enrollments
       The maximum number of times that this identity can be enrolled.
 
+      | **Type**: int
+      | **Sample**: ``-1``
 
-    type (, str, )
+    type
       The type of this identity.
 
+      | **Type**: str
+      | **Sample**: ``admin``
 
-    affiliation (, str, )
+    affiliation
       The affiliation of this identity.
 
+      | **Type**: str
+      | **Sample**: ``org1.department``
 
-    attributes (, list, )
+    attributes
       The attributes for this identity.
 
+      | **Type**: list
 
-      name (, str, )
+      name
         The name of the attribute.
 
+        | **Type**: str
+        | **Sample**: ``fabcar.admin``
 
-      value (, str, )
+      value
         The value of the attribute.
 
+        | **Type**: str
+        | **Sample**: ``True``
 
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

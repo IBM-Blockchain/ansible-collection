@@ -102,7 +102,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
@@ -211,7 +210,6 @@
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
 <li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
@@ -223,88 +221,272 @@
 <h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>api_endpoint (optional, str, None)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
+<dt>api_endpoint (required)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_authtype (optional, str, None)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code> - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using <em>api_key</em>.</p>
+<dt>api_authtype (required)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code> - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using <em>api_key</em>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">basic</span></code> - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using <em>api_key</em> and API secret using <em>api_secret</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_key (optional, str, None)</dt><dd><p>The API key for the IBM Blockchain Platform console.</p>
+<dt>api_key (required)</dt><dd><p>The API key for the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_secret (optional, str, None)</dt><dd><p>The API secret for the IBM Blockchain Platform console.</p>
+<dt>api_secret</dt><dd><p>The API secret for the IBM Blockchain Platform console.</p>
 <p>Only required when <em>api_authtype</em> is <code class="docutils literal notranslate"><span class="pre">basic</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>api_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.</p>
+<dt>api_timeout</dt><dd><p>The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></div>
+</div>
 </dd>
-<dt>api_token_endpoint (optional, str, <a class="reference external" href="https://iam.cloud.ibm.com/identity/token">https://iam.cloud.ibm.com/identity/token</a>)</dt><dd><p>The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.</p>
+<dt>api_token_endpoint</dt><dd><p>The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.</p>
 <p>Only required when <em>api_authtype</em> is <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code>, and you are using IBM internal staging servers for testing.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">https://iam.cloud.ibm.com/identity/token</span></code></div>
+</div>
 </dd>
-<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - A certificate authority matching the specified name will be stopped and removed.</p>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - A certificate authority matching the specified name will be stopped and removed.</p>
 <p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that a certificate authority matching the specified name and configuration exists. If no certificate authority matches the specified name, a certificate authority will be created. If a certificate authority matches the specified name but the configuration does not match, then the certificate authority will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+</div>
 </dd>
-<dt>name (optional, str, None)</dt><dd><p>The display name for the certificate authority.</p>
+<dt>name (required)</dt><dd><p>The name of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>config_override (optional, dict, None)</dt><dd><p>The configuration overrides for the root certificate authority and the TLS certificate authority.</p>
+<dt>config_override</dt><dd><p>The configuration overrides for the root certificate authority and the TLS certificate authority.</p>
 <p>If configuration overrides are provided for the root certificate authority, but not the TLS certificate authority, then the configuration overrides for the root certificate authority will be copied for the TLS certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>ca (optional, dict, None)</dt><dd><p>The configuration overrides for the root certificate authority.</p>
+<dt>ca</dt><dd><p>The configuration overrides for the root certificate authority.</p>
 <p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html">https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 </dd>
-<dt>tlsca (optional, dict, None)</dt><dd><p>The configuration overrides for the TLS certificate authority.</p>
+<dt>tlsca</dt><dd><p>The configuration overrides for the TLS certificate authority.</p>
 <p>See the Hyperledger Fabric documentation for available options: <a class="reference external" href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html">https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 </dd>
 </dl>
 </dd>
-<dt>resources (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the certificate authority.</p>
+<dt>resources</dt><dd><p>The Kubernetes resource configuration for the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>ca (optional, dict, None)</dt><dd><p>The Kubernetes resource configuration for the certificate authority container.</p>
+<dt>ca</dt><dd><p>The Kubernetes resource configuration for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>requests (optional, str, None)</dt><dd><p>The Kubernetes resource requests for the certificate authority container.</p>
-<dl class="simple">
-<dt>cpu (optional, str, 100m)</dt><dd><p>The Kubernetes CPU resource request for the certificate authority container.</p>
-</dd>
-<dt>memory (optional, str, 200M)</dt><dd><p>The Kubernetes memory resource request for the certificate authority container.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>storage (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the certificate authority.</p>
+<dt>requests</dt><dd><p>The Kubernetes resource requests for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 <dl>
-<dt>ca (optional, dict, None)</dt><dd><p>The Kubernetes storage configuration for the certificate authority container.</p>
-<dl class="simple">
-<dt>size (optional, str, 20Gi)</dt><dd><p>The size of the Kubernetes persistent volume claim for the certificate authority container.</p>
+<dt>cpu</dt><dd><p>The Kubernetes CPU resource request for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">100m</span></code></div>
+</div>
 </dd>
-<dt>class (optional, str, default)</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.</p>
+<dt>memory</dt><dd><p>The Kubernetes memory resource request for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">200M</span></code></div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd>
-<dt>hsm (optional, dict, None)</dt><dd><p>The PKCS #11 compliant HSM configuration to use for the certificate authority.</p>
+</dl>
+</dd>
+<dt>storage</dt><dd><p>The Kubernetes storage configuration for the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>ca</dt><dd><p>The Kubernetes storage configuration for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>size</dt><dd><p>The size of the Kubernetes persistent volume claim for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">20Gi</span></code></div>
+</div>
+</dd>
+<dt>class</dt><dd><p>The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">default</span></code></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>hsm</dt><dd><p>The PKCS #11 compliant HSM configuration to use for the certificate authority.</p>
 <p>See the IBM Blockchain Platform documentation for more information: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm</a></p>
-<dl class="simple">
-<dt>pkcs11endpoint (optional, str, None)</dt><dd><p>The HSM proxy endpoint that the certificate authority should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>pkcs11endpoint</dt><dd><p>The HSM proxy endpoint that the certificate authority should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>label (optional, str, None)</dt><dd><p>The HSM label that the certificate authority should use.</p>
+<dt>label</dt><dd><p>The HSM label that the certificate authority should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>pin (optional, str, None)</dt><dd><p>The HSM pin that the certificate authority should use.</p>
+<dt>pin</dt><dd><p>The HSM pin that the certificate authority should use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
 </dl>
 </dd>
-<dt>zone (optional, str, None)</dt><dd><p>The Kubernetes zone for this certificate authority.</p>
+<dt>zone</dt><dd><p>The Kubernetes zone for this certificate authority.</p>
 <p>If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.</p>
 <p>See the Kubernetes documentation for more information: <a class="reference external" href="https://kubernetes.io/docs/setup/best-practices/multiple-zones/">https://kubernetes.io/docs/setup/best-practices/multiple-zones/</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>wait_timeout (optional, integer, 60)</dt><dd><p>The timeout, in seconds, to wait until the certificate authority is available.</p>
+<dt>wait_timeout</dt><dd><p>The timeout, in seconds, to wait until the certificate authority is available.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></div>
+</div>
 </dd>
 </dl>
 </div></blockquote>
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create certificate authority</span>
+  <span class="nt">ibm.blockchain_platform.certificate_authority</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA</span>
+    <span class="nt">config_override</span><span class="p">:</span>
+      <span class="nt">ca</span><span class="p">:</span>
+        <span class="nt">registry</span><span class="p">:</span>
+          <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+          <span class="nt">identities</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
+            <span class="nt">pass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adminpw</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">client</span>
+            <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+            <span class="nt">attrs</span><span class="p">:</span>
+              <span class="nt">hf.Registrar.Roles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Registrar.DelegateRoles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Revoker</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.IntermediateCA</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.GenCRL</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.Registrar.Attributes</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.AffiliationMgr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create certificate authority with custom resources and storage</span>
+  <span class="nt">ibm.blockchain_platform.certificate_authority</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA</span>
+    <span class="nt">config_override</span><span class="p">:</span>
+      <span class="nt">ca</span><span class="p">:</span>
+        <span class="nt">registry</span><span class="p">:</span>
+          <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+          <span class="nt">identities</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
+            <span class="nt">pass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adminpw</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">client</span>
+            <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+            <span class="nt">attrs</span><span class="p">:</span>
+              <span class="nt">hf.Registrar.Roles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Registrar.DelegateRoles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Revoker</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.IntermediateCA</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.GenCRL</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.Registrar.Attributes</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.AffiliationMgr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">resources</span><span class="p">:</span>
+      <span class="nt">ca</span><span class="p">:</span>
+        <span class="nt">requests</span><span class="p">:</span>
+          <span class="nt">cpu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">200m</span>
+          <span class="nt">memory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">400M</span>
+    <span class="nt">storage</span><span class="p">:</span>
+      <span class="nt">ca</span><span class="p">:</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">40Gi</span>
+        <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibmc-file-gold</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create certificate authority that uses an HSM</span>
+  <span class="nt">ibm.blockchain_platform.certificate_authority</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA</span>
+    <span class="nt">config_override</span><span class="p">:</span>
+      <span class="nt">ca</span><span class="p">:</span>
+        <span class="nt">registry</span><span class="p">:</span>
+          <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+          <span class="nt">identities</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
+            <span class="nt">pass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adminpw</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">client</span>
+            <span class="nt">maxenrollments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+            <span class="nt">attrs</span><span class="p">:</span>
+              <span class="nt">hf.Registrar.Roles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Registrar.DelegateRoles</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.Revoker</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.IntermediateCA</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.GenCRL</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+              <span class="nt">hf.Registrar.Attributes</span><span class="p">:</span> <span class="s">&quot;*&quot;</span>
+              <span class="nt">hf.AffiliationMgr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">hsm</span><span class="p">:</span>
+      <span class="nt">pkcs11endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tcp://pkcs11-proxy.example.org:2345</span>
+      <span class="nt">label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA label</span>
+      <span class="nt">pin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12345678</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Destroy certificate authority</span>
+  <span class="nt">ibm.blockchain_platform.certificate_authority</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 CA</span>
 </pre></div>
 </div>
 </div>
@@ -312,45 +494,72 @@
 <h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>certificate_authority (, dict, )</dt><dd><p>The certificate authority.</p>
+<dt>certificate_authority</dt><dd><p>The certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Returned</strong>: when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
 <dl>
-<dt>name (, str, )</dt><dd><p>The name of the certificate authority.</p>
+<dt>name</dt><dd><p>The name of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">Org1</span> <span class="pre">CA</span></code></div>
+</div>
 </dd>
-<dt>api_url (, str, )</dt><dd><p>The URL for the API of the certificate authority.</p>
+<dt>api_url</dt><dd><p>The URL for the API of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">https://org1ca-api.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>operations_url (, str, )</dt><dd><p>The URL for the operations service of the certificate authority.</p>
+<dt>operations_url</dt><dd><p>The URL for the operations service of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">https://org1ca-operations.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>ca_url (, str, )</dt><dd><p>The URL for the API of the certificate authority.</p>
+<dt>ca_url</dt><dd><p>The URL for the API of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">https://org1ca-api.example.org:32000</span></code></div>
+</div>
 </dd>
-<dt>ca_name (, str, )</dt><dd><p>The certificate authority name to use for enrollment requests.</p>
+<dt>ca_name</dt><dd><p>The certificate authority name to use for enrollment requests.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">ca</span></code></div>
+</div>
 </dd>
-<dt>tlsca_name (, str, )</dt><dd><p>The certificate authority name to use for TLS enrollment requests.</p>
+<dt>tlsca_name</dt><dd><p>The certificate authority name to use for TLS enrollment requests.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">tlsca</span></code></div>
+</div>
 </dd>
-<dt>location (, str, )</dt><dd><p>The location of the certificate authority.</p>
+<dt>location</dt><dd><p>The location of the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code></div>
+</div>
 </dd>
-<dt>pem (, str, )</dt><dd><p>The TLS certificate chain for the certificate authority.</p>
+<dt>pem</dt><dd><p>The TLS certificate chain for the certificate authority.</p>
 <p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
-<dt>tls_cert (, str, )</dt><dd><p>The TLS certificate chain for the certificate authority.</p>
+<dt>tls_cert</dt><dd><p>The TLS certificate chain for the certificate authority.</p>
 <p>The TLS certificate chain is returned as a base64 encoded PEM.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
+</div>
 </dd>
 </dl>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>This module is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
-<li><p>This module is maintained by community.</p></li>
-</ul>
-<div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Simon Stone (&#64;sstone1)</p></li>
-</ul>
-</div>
 </div>
 </div>
 
@@ -374,7 +583,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

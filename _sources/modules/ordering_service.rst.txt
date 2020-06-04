@@ -28,59 +28,77 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - An ordering service matching the specified name will be stopped and removed.
 
     ``present`` - Asserts that an ordering service matching the specified name and configuration exists. If no ordering service matches the specified name, an ordering service will be created. If an ordering service matches the specified name but the configuration does not match, then the ordering service will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  name (optional, str, None)
+  name (required)
     The name for the ordering service.
 
+    | **Type**: str
 
-  msp_id (optional, str, None)
+  msp_id
     The MSP ID for this ordering service.
 
+    Only required when *state* is ``present``.
 
-  orderer_type (optional, str, raft)
+    | **Type**: str
+
+  orderer_type
     ``raft`` - The ordering service will use the Raft consensus algorithm.
 
+    | **Type**: str
+    | **Default value**: ``raft``
 
-  system_channel_id (optional, str, testchainid)
+  system_channel_id
     The name of the system channel for this ordering service.
 
+    | **Type**: str
+    | **Default value**: ``testchainid``
 
-  certificate_authority (optional, raw, None)
+  certificate_authority
     The certificate authority to use to enroll the identity for this ordering service.
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
@@ -89,126 +107,161 @@ Parameters
 
     Only required when *config* is not specified.
 
+    | **Type**: raw
 
-  enrollment_id (optional, str, None)
+  enrollment_id
     The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service.
 
     Only required when *config* is not specified.
 
+    | **Type**: str
 
-  enrollment_secret (optional, str, None)
+  enrollment_secret
     The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service.
 
     Only required when *config* is not specified.
 
+    | **Type**: str
 
-  admins (optional, list, None)
+  admins
     The list of administrator certificates for this ordering service.
 
     Administrator certificates must be supplied as base64 encoded PEM files.
 
     Only required when *config* is not specified.
 
+    | **Type**: list
+    | **Elements**: str
 
-  nodes (optional, int, None)
+  nodes
     The number of ordering service nodes in this ordering service.
 
+    Only required when *state* is ``present``.
 
-  config (optional, list, None)
+    | **Type**: int
+
+  config
     The initial configuration for the ordering service. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
 
     You must provide initial configuration for each ordering service node in the ordering service, as defined by *nodes*.
 
     See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
 
+    | **Type**: list
+    | **Elements**: dict
 
-  config_override (optional, list, None)
+  config_override
     The configuration overrides for the ordering service.
 
     You must provide configuration overrides for each ordering service node in the ordering service, as defined by *nodes*.
 
     See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
 
+    | **Type**: list
+    | **Elements**: dict
 
-  resources (optional, dict, None)
+  resources
     The Kubernetes resource configuration for the ordering service.
 
+    | **Type**: dict
 
-    orderer (optional, dict, None)
+    orderer
       The Kubernetes resource configuration for the orderer container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the orderer container.
 
+        | **Type**: str
 
-        cpu (optional, str, 250m)
+        cpu
           The Kubernetes CPU resource request for the orderer container.
 
+          | **Type**: str
+          | **Default value**: ``250m``
 
-        memory (optional, str, 500M)
+        memory
           The Kubernetes memory resource request for the orderer container.
 
+          | **Type**: str
+          | **Default value**: ``500M``
 
 
 
-    proxy (optional, dict, None)
+    proxy
       The Kubernetes resource configuration for the proxy container.
 
+      | **Type**: dict
 
-      requests (optional, str, None)
+      requests
         The Kubernetes resource requests for the proxy container.
 
+        | **Type**: str
 
-        cpu (optional, str, 100m)
+        cpu
           The Kubernetes CPU resource request for the proxy container.
 
+          | **Type**: str
+          | **Default value**: ``100m``
 
-        memory (optional, str, 200M)
+        memory
           The Kubernetes memory resource request for the proxy container.
 
+          | **Type**: str
+          | **Default value**: ``200M``
 
 
 
 
-  storage (optional, dict, None)
+  storage
     The Kubernetes storage configuration for the ordering service.
 
+    | **Type**: dict
 
-    orderer (optional, dict, None)
+    orderer
       The Kubernetes storage configuration for the orderer container.
 
+      | **Type**: dict
 
-      size (optional, str, 100Gi)
+      size
         The size of the Kubernetes persistent volume claim for the orderer container.
 
+        | **Type**: str
+        | **Default value**: ``100Gi``
 
-      class (optional, str, default)
+      class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
 
+        | **Type**: str
+        | **Default value**: ``default``
 
 
 
-  hsm (optional, dict, None)
+  hsm
     The PKCS #11 compliant HSM configuration to use for the ordering service.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
+    | **Type**: dict
 
-    pkcs11endpoint (optional, str, None)
+    pkcs11endpoint
       The HSM proxy endpoint that the ordering service should use.
 
+      | **Type**: str
 
-    label (optional, str, None)
+    label
       The HSM label that the ordering service should use.
 
+      | **Type**: str
 
-    pin (optional, str, None)
+    pin
       The HSM pin that the ordering service should use.
 
+      | **Type**: str
 
 
-  zone (optional, list, None)
+  zone
     The Kubernetes zones for this ordering service.
 
     If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by *nodes*.
@@ -217,10 +270,14 @@ Parameters
 
     See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
+    | **Type**: list
+    | **Elements**: str
 
-  wait_timeout (optional, integer, 60)
+  wait_timeout
     The timeout, in seconds, to wait until the ordering service is available.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
 
 
@@ -235,91 +292,168 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Create ordering service
+      ibm.blockchain_platform.ordering_service:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Ordering Service
+        msp_id: OrdererOrgMSP
+        nodes: 1
+        certificate_authority: Orderer Org CA
+        enrollment_id: orderingorgorderer
+        enrollment_secret: orderingorgordererpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+
+    - name: Create five node ordering service with custom resources and storage
+      ibm.blockchain_platform.ordering_service:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Ordering Service
+        msp_id: OrdererOrgMSP
+        nodes: 5
+        certificate_authority: Orderer Org CA
+        enrollment_id: orderingorgorderer
+        enrollment_secret: orderingorgordererpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        resources:
+          orderer:
+            requests:
+              cpu: 500m
+              memory: 1000M
+        storage:
+          orderer:
+            size: 200Gi
+            class: ibmc-file-gold
+
+    - name: Create ordering service that uses an HSM
+      ibm.blockchain_platform.ordering_service:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Ordering Service
+        msp_id: OrdererOrgMSP
+        nodes: 5
+        certificate_authority: Orderer Org CA
+        enrollment_id: orderingorgorderer
+        enrollment_secret: orderingorgordererpw
+        admin_certificates:
+          - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        hsm:
+          pkcs11endpoint: tcp://pkcs11-proxy.example.org:2345
+          label: Org1 CA label
+          pin: 12345678
+
+    - name: Destroy ordering service
+      ibm.blockchain_platform.ordering_service:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Ordering Service
 
 
 
 Return Values
 -------------
 
-  ordering_service (, list, )
+  ordering_service
     The ordering service, as a list of ordering service nodes.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: list
 
-    name (, str, )
+    name
       The name of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``Ordering Service_1``
 
-    api_url (, str, )
+    api_url
       The URL for the API of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``grpcs://orderingservice1-api.example.org:32000``
 
-    operations_url (, str, )
+    operations_url
       The URL for the operations service of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``https://orderingservice1-operations.example.org:32000``
 
-    grpcwp_url (, str, )
+    grpcwp_url
       The URL for the gRPC web proxy of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``https://orderingservice1-grpcwebproxy.example.org:32000``
 
-    msp_id (, str, )
+    msp_id
       The MSP ID of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``OrdererOrgMSP``
 
-    pem (, str, )
+    pem
       The TLS certificate chain for the ordering service node.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert (, str, )
+    tls_cert
       The TLS certificate chain for the ordering service node.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    location (, str, )
+    location
       The location of the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
 
-    system_channel_id (, str, )
+    system_channel_id
       The name of the system channel for the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``testchainid``
 
-    client_tls_cert (, str, )
+    client_tls_cert
       The client TLS certificate for the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    server_tls_cert (, str, )
+    server_tls_cert
       The client TLS certificate for the ordering service node.
 
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    cluster_id (, str, )
+    cluster_id
       The unique ID of the ordering service cluster.
 
+      | **Type**: str
+      | **Sample**: ``abcdefgh``
 
-    cluster_name (, str, )
+    cluster_name
       The name of the ordering service cluster.
 
+      | **Type**: str
+      | **Sample**: ``Ordering Service``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 

@@ -102,8 +102,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
@@ -190,8 +188,6 @@
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
-<li><p><a class="reference internal" href="#status" id="id5">Status</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
@@ -203,110 +199,251 @@
 <h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl>
-<dt>state (optional, str, present)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - All components for the console will be stopped and removed, if they exist.</p>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - All components for the console will be stopped and removed, if they exist.</p>
 <p><code class="docutils literal notranslate"><span class="pre">present</span></code> - All components for the console will be created if they do not exist, or will be updated if their current configuration does not match the expected configuration.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+</div>
 </dd>
-<dt>target (required, str, None)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">k8s</span></code> - Deploy the console into a Kubernetes cluster.</p>
+<dt>target (required)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">k8s</span></code> - Deploy the console into a Kubernetes cluster.</p>
 <p><code class="docutils literal notranslate"><span class="pre">openshift</span></code> - Deploy the console into a Red Hat OpenShift cluster.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>arch (required, str, None)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">amd64</span></code> - Specify this if the architecture of the cluster is amd64.</p>
+<dt>arch (required)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">amd64</span></code> - Specify this if the architecture of the cluster is amd64.</p>
 <p><code class="docutils literal notranslate"><span class="pre">s390x</span></code> - Specify this if the architecture of the cluster is s390x.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>namespace (required, str, None)</dt><dd><p>The name of the Kubernetes namespace to deploy the console to. The namespace will be created if it does not exist.</p>
+<dt>namespace</dt><dd><p>The name of the Kubernetes namespace to deploy the console to. The namespace will be created if it does not exist.</p>
 <p>Only required when <em>target</em> is <code class="docutils literal notranslate"><span class="pre">k8s</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>project (required, str, None)</dt><dd><p>The name of the Red Hat OpenShift project to deploy the console to. The project will be created if it does not exist.</p>
+<dt>project</dt><dd><p>The name of the Red Hat OpenShift project to deploy the console to. The project will be created if it does not exist.</p>
 <p>Only required when <em>target</em> is <code class="docutils literal notranslate"><span class="pre">openshift</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>image_pull_secret (optional, str, docker-key-secret)</dt><dd><p>The name of the image pull secret. The image pull secret will be used to pull all IBM Blockchain Platform images from the specified image registry.</p>
+<dt>image_pull_secret</dt><dd><p>The name of the image pull secret. The image pull secret will be used to pull all IBM Blockchain Platform images from the specified image registry.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">docker-key-secret</span></code></div>
+</div>
 </dd>
-<dt>image_registry (optional, str, cp.icr.io)</dt><dd><p>The image registry to pull images from. The image registry must contain the IBM Blockchain Platform images.</p>
+<dt>image_registry</dt><dd><p>The image registry to pull images from. The image registry must contain the IBM Blockchain Platform images.</p>
 <p>The default image registry, <code class="docutils literal notranslate"><span class="pre">cp.icr.io</span></code>, is the standard IBM Entitlement Registry.</p>
 <p>You only need to specify an alternative image registry if you are behind a firewall and cannot access the standard IBM Entitlement Registry.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">cp.icr.io</span></code></div>
+</div>
 </dd>
-<dt>image_registry_username (optional, str, cp)</dt><dd><p>The username for authenticating to the image registry.</p>
+<dt>image_registry_username</dt><dd><p>The username for authenticating to the image registry.</p>
 <p>The default image registry username, <code class="docutils literal notranslate"><span class="pre">cp</span></code>, is the username for the standard IBM Entitlement Registry.</p>
 <p>You only need to specify an alternative image registry username if you are using an alternative image registry.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">cp</span></code></div>
+</div>
 </dd>
-<dt>image_registry_email (required, str, None)</dt><dd><p>The email address for authenticating to the image registry.</p>
+<dt>image_registry_email (required)</dt><dd><p>The email address for authenticating to the image registry.</p>
 <p>If you are using the default image registry, this is the email address you use to log in to the My IBM dashboard.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>image_registry_password (required, str, None)</dt><dd><p>The password for authenticating to the image registry.</p>
+<dt>image_registry_password (required)</dt><dd><p>The password for authenticating to the image registry.</p>
 <p>If you are using the default image registry, this is the entitlement key that you can obtain from the My IBM dashboard.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>image_repository (optional, str, cp)</dt><dd><p>The image repository on the image registry to pull images from.</p>
+<dt>image_repository</dt><dd><p>The image repository on the image registry to pull images from.</p>
 <p>The default image repository, <code class="docutils literal notranslate"><span class="pre">cp</span></code>, is the image repository for the standard IBM Entitlement Registry.</p>
 <p>You only need to specify an alternative image repository if you are using an alternative image registry.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">cp</span></code></div>
+</div>
 </dd>
-<dt>cluster_role (optional, str, None)</dt><dd><p>The name of the cluster role.</p>
+<dt>cluster_role</dt><dd><p>The name of the cluster role.</p>
 <p>By default, the cluster role has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>cluster_role_binding (optional, str, None)</dt><dd><p>The name of the cluster role binding.</p>
+<dt>cluster_role_binding</dt><dd><p>The name of the cluster role binding.</p>
 <p>By default, the cluster role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>pod_security_policy (optional, str, None)</dt><dd><p>The name of the pod security policy.</p>
+<dt>pod_security_policy</dt><dd><p>The name of the pod security policy.</p>
 <p>By default, the pod security policy has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.</p>
 <p>Only required when <em>target</em> is <code class="docutils literal notranslate"><span class="pre">k8s</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>role_binding (optional, str, None)</dt><dd><p>The name of the role binding.</p>
+<dt>role_binding</dt><dd><p>The name of the role binding.</p>
 <p>By default, the role binding has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.</p>
 <p>Only required when <em>target</em> is <code class="docutils literal notranslate"><span class="pre">k8s</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>security_context_constraints (optional, str, None)</dt><dd><p>The name of the security context constraints.</p>
+<dt>security_context_constraints</dt><dd><p>The name of the security context constraints.</p>
 <p>By default, the security context contraints have the same name as the specified Kubernetes namespace or Red Hat OpenShift project.</p>
 <p>Only required when <em>target</em> is <code class="docutils literal notranslate"><span class="pre">openshift</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>service_account (optional, str, default)</dt><dd><p>The name of the service account to use.</p>
+<dt>service_account</dt><dd><p>The name of the service account to use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">default</span></code></div>
+</div>
 </dd>
-<dt>operator (optional, str, ibp-operator)</dt><dd><p>The name of the operator.</p>
+<dt>operator</dt><dd><p>The name of the operator.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">ibp-operator</span></code></div>
+</div>
 </dd>
-<dt>console (optional, str, ibp-console)</dt><dd><p>The name of the console.</p>
+<dt>console</dt><dd><p>The name of the console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">ibp-console</span></code></div>
+</div>
 </dd>
-<dt>console_domain (required, str, None)</dt><dd><p>The DNS domain for the console.</p>
+<dt>console_domain (required)</dt><dd><p>The DNS domain for the console.</p>
 <p>This DNS domain will be used as the base DNS domain for the console, as well as any certificate authorities, peers, and ordering services created using the console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>console_email (required, str, None)</dt><dd><p>The email address of the default console user.</p>
+<dt>console_email (required)</dt><dd><p>The email address of the default console user.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>console_default_password (required, str, None)</dt><dd><p>The default password for all console users, including the default console user.</p>
+<dt>console_default_password (required)</dt><dd><p>The default password for all console users, including the default console user.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>console_storage_class (optional, str, default)</dt><dd><p>The storage class to use for the console.</p>
+<dt>console_storage_class</dt><dd><p>The storage class to use for the console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">default</span></code></div>
+</div>
 </dd>
-<dt>console_storage_size (optional, str, 10Gi)</dt><dd><p>The storage size to use for the console.</p>
+<dt>console_storage_size</dt><dd><p>The storage size to use for the console.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">10Gi</span></code></div>
+</div>
 </dd>
-<dt>console_tls_secret (optional, str, None)</dt><dd><p>The TLS secret name to use for the console.</p>
+<dt>console_tls_secret</dt><dd><p>The TLS secret name to use for the console.</p>
 <p>If specified this secret must already exist in the specified Kubernetes namespace or Red Hat OpenShift project and must contain the TLS certificate and private key that the console will use.</p>
-<p>If not specified the console will generate it’s own self-signed certificates</p>
+<p>If not specified the console will generate it’s own self-signed certificates.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
 </dd>
-<dt>product_version (optional, str, 2.1.3)</dt><dd><p>The version of IBM Blockchain Platform to use.</p>
+<dt>product_version</dt><dd><p>The version of IBM Blockchain Platform to use.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">2.1.3</span></code></div>
+</div>
 </dd>
-<dt>operator_version (optional, str, 20200520)</dt><dd><p>The version of the IBM Blockchain Platform operator to use.</p>
+<dt>operator_version</dt><dd><p>The version of the IBM Blockchain Platform operator to use.</p>
 <p>The image tag used for the IBM Blockchain Platform operator is <em>product_version</em>-<em>operator_version</em>-<em>arch</em>, for example <code class="docutils literal notranslate"><span class="pre">2.1.3-20200416-amd64</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">20200520</span></code></div>
+</div>
 </dd>
-<dt>wait_timeout (optional, str, 60)</dt><dd><p>The timeout, in seconds, to wait until the console is available.</p>
+<dt>zones</dt><dd><p>The list of Kubernetes zones that this console can deploy components into.</p>
+<p>If you do not specify a list of Kubernetes zones, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you when you attempt to create any components.</p>
+<p>See the Kubernetes documentation for more information: <a class="reference external" href="https://kubernetes.io/docs/setup/best-practices/multiple-zones/">https://kubernetes.io/docs/setup/best-practices/multiple-zones/</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
+</div>
+</dd>
+<dt>wait_timeout</dt><dd><p>The timeout, in seconds, to wait until the console is available.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></div>
+</div>
 </dd>
 </dl>
 </div></blockquote>
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Kubernetes</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-namespace</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+    <span class="nt">console_domain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">example.org</span>
+    <span class="nt">console_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+    <span class="nt">console_default_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">passw0rd</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Red Hat OpenShift</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-project</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+    <span class="nt">console_domain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">example.org</span>
+    <span class="nt">console_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+    <span class="nt">console_default_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">passw0rd</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Kubernetes</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-namespace</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Red Hat OpenShift</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-project</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="return-values">
-<h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="status">
-<h2><a class="toc-backref" href="#id5">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>This is not guaranteed to have a backwards compatible interface. <em>[preview]</em></p></li>
-<li><p>This is maintained by community.</p></li>
-</ul>
-<div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Simon Stone (&#64;sstone1)</p></li>
-</ul>
 </div>
 </div>
 </div>
@@ -331,7 +468,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Simon Stone
+        &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>

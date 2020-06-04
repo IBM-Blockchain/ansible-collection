@@ -28,102 +28,128 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  api_endpoint (optional, str, None)
+  api_endpoint (required)
     The URL for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_authtype (optional, str, None)
+  api_authtype (required)
     ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
 
     ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
 
+    | **Type**: str
 
-  api_key (optional, str, None)
+  api_key (required)
     The API key for the IBM Blockchain Platform console.
 
+    | **Type**: str
 
-  api_secret (optional, str, None)
+  api_secret
     The API secret for the IBM Blockchain Platform console.
 
     Only required when *api_authtype* is ``basic``.
 
+    | **Type**: str
 
-  api_timeout (optional, integer, 60)
+  api_timeout
     The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
 
+    | **Type**: int
+    | **Default value**: ``60``
 
-  api_token_endpoint (optional, str, https://iam.cloud.ibm.com/identity/token)
+  api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
     Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
 
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  state (optional, str, present)
+  state
     ``absent`` - If a chaincode matching the specified name and version is instantiated, then an error will be thrown, as it is not possible to uninstantiate chaincode.
 
     ``present`` - Asserts that a chaincode matching the specified name and version is instantiated on the specified channel. If it is not instantiated, then the chaincode with the specified name and version is instantiated on the specified channel. If it is instantiated with a different version, then the chaincode is upgraded on the specified channel. Otherwise, the instantiated chaincode is checked to ensure that it matches the specified ESCC and VSCC. It is not possible to check that the instantiated chaincode matches the specified endorsement policy and collections configuration. If the instantiated chaincode does not match, then an error will be thrown, as it is not possible to update instantiated chaincode without upgrading to a new version.
 
+    | **Type**: str
+    | **Default value**: ``present``
 
-  peer (optional, raw, None)
+  peer (required)
     The peer to use to manage the instantiated chaincode.
 
     You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.
 
     You can also pass a dict, which must match the result format of one of the :ref:`peer_info <peer_info_module>` or :ref:`peer <peer_module>` modules.
 
+    | **Type**: raw
 
-  identity (optional, raw, None)
+  identity (required)
     The identity to use when interacting with the peer.
 
     You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
 
     You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
 
+    | **Type**: raw
 
-  msp_id (optional, str, None)
+  msp_id (required)
     The MSP ID to use for interacting with the peer.
 
+    | **Type**: str
 
-  channel (optional, str, None)
+  channel (required)
     The name of the channel.
 
+    | **Type**: str
 
-  name (optional, str, None)
+  name (required)
     The name of the chaincode.
 
+    | **Type**: str
 
-  version (optional, str, None)
+  version (required)
     The version of the chaincode.
 
+    | **Type**: str
 
-  constructor (optional, dict, None)
+  constructor
     The constructor for the chaincode.
 
+    | **Type**: dict
 
-    function (optional, str, None)
+    function
       The function name to call in the chaincode.
 
+      | **Type**: str
 
-    args (optional, list, None)
+    args
       The arguments to pass to the chaincode function.
 
+      | **Type**: list
+      | **Elements**: str
 
 
-  endorsement_policy (optional, str, None)
+  endorsement_policy
     The endorsement policy for the chaincode.
 
+    | **Type**: str
 
-  collections_config (optional, str, None)
+  collections_config
     The path to the collections configuration file for the chaincode.
 
+    | **Type**: str
 
-  escc (optional, str, escc)
+  escc
     The name of the endorsement system chaincode (ESCC) to use for the chaincode.
 
+    | **Type**: str
+    | **Default value**: ``escc``
 
-  vscc (optional, str, vscc)
+  vscc
     The name of the validation system chaincode (VSCC) to use for the chaincode.
 
+    | **Type**: str
+    | **Default value**: ``vscc``
 
 
 
@@ -138,55 +164,90 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Instantiate the chaincode on the channel
+      ibm.blockchain_platform.instantiated_chaincode:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
+
+    - name: Instantiate the chaincode on the channel with an endorsement policy and collection configuration
+      ibm.blockchain_platform.instantiated_chaincode:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
+        endorsement_policy: AND('Org1MSP.peer', 'Org2MSP.peer')
+        collections_config: collections-config.json
+
+    - name: Ensure the chaincode is not instantiated on the channel
+      ibm.blockchain_platform.instantiated_chaincode:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
 
 
 
 Return Values
 -------------
 
-  instantiated_chaincode (, dict, )
+  instantiated_chaincode
     The instantiated chaincode.
 
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
 
-    channel (, str, )
+    channel
       The name of the channel.
 
+      | **Type**: str
+      | **Sample**: ``mychannel``
 
-    name (, str, )
+    name
       The name of the chaincode.
 
+      | **Type**: str
+      | **Sample**: ``fabcar``
 
-    version (, str, )
+    version
       The version of the chaincode.
 
+      | **Type**: str
+      | **Sample**: ``1.0.0``
 
-    escc (, str, )
+    escc
       The name of the endorsement system chaincode (ESCC) used by the chaincode.
 
+      | **Type**: str
+      | **Sample**: ``escc``
 
-    vscc (, str, )
+    vscc
       The name of the validation system chaincode (VSCC) used by the chaincode.
 
+      | **Type**: str
+      | **Sample**: ``vscc``
 
 
-
-
-
-Status
-------
-
-
-
-
-- This module is not guaranteed to have a backwards compatible interface. *[preview]*
-
-
-- This module is maintained by community.
-
-
-
-Authors
-~~~~~~~
-
-- Simon Stone (@sstone1)
 
