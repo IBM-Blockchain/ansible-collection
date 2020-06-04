@@ -30,6 +30,7 @@ options:
         description:
             - The URL for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_authtype:
         description:
             - C(ibmcloud) - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication.
@@ -37,10 +38,12 @@ options:
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
         type: str
+        required: true
     api_key:
         description:
             - The API key for the IBM Blockchain Platform console.
         type: str
+        required: true
     api_secret:
         description:
             - The API secret for the IBM Blockchain Platform console.
@@ -49,7 +52,7 @@ options:
     api_timeout:
         description:
             - The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
-        type: integer
+        type: int
         default: 60
     api_token_endpoint:
         description:
@@ -61,6 +64,7 @@ options:
         description:
             - C(join) - Join the specified I(peer) to the channel with the genesis block specified in I(path).
         type: str
+        required: true
     peer:
         description:
             - The peer to join to the channel.
@@ -69,6 +73,7 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(peer_info) or M(peer) modules.
         type: raw
+        required: true
     identity:
         description:
             - The identity to use when interacting with the peer.
@@ -77,19 +82,33 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
+        required: true
     msp_id:
         description:
             - The MSP ID to use for interacting with the peer.
         type: str
+        required: true
     path:
         description:
             - The path to the file where the channel genesis block is stored.
         type: str
+        required: true
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Join the peer to the channel
+  ibm.blockchain_platform.peer_channel:
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    operation: join
+    peer: Org1 Peer
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    path: channel_genesis_block.bin
 '''
 
 RETURN = '''
