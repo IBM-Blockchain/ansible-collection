@@ -212,6 +212,23 @@ organization:
                                 - The organizational unit (OU) identifier for this identity classification.
                             type: str
                             sample: orderer
+        organizational_unit_identifiers:
+            description:
+                - The list of organizational unit identifiers for this organization.
+            type: list
+            elements: dict
+            contains:
+                certificate:
+                    description:
+                        - The root or intermediate certificate for this organizational unit identifier.
+                        - Root or intermediate certificates must be supplied as base64 encoded PEM files.
+                    type: str
+                    sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+                organizational_unit_identifier:
+                    description:
+                        - The organizational unit (OU) identifier.
+                    type: str
+                    sample: acctdept
 '''
 
 
