@@ -36,7 +36,7 @@ Parameters
     | **Type**: str
     | **Default value**: ``present``
 
-  path
+  path (required)
     Path to current the channel configuration file.
 
     This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
@@ -45,17 +45,19 @@ Parameters
 
     | **Type**: str
 
-  name
+  name (required)
     The name of the policy to add, update, or remove from the channel.
 
     | **Type**: str
 
-  policy
+  policy (required)
     The policy to add, update, or remove from the channel.
 
-    You can pass a string, which is a path to a JSON file containing a [p;ocy] in the Hyperledger Fabric format (common.Policy).
+    You can pass a string, which is a path to a JSON file containing a policy in the Hyperledger Fabric format (common.Policy).
 
     You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).
+
+    Only required when *state* is ``present``.
 
     | **Type**: raw
 
@@ -72,6 +74,26 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Add the policy to the channel
+      ibm.blockchain_platform.channel_policy:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Admins
+        policy: admins-policy.json
+        path: channel_config.bin
+
+    - name: Remove the policy to the channel
+      ibm.blockchain_platform.channel_policy:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Admins
+        path: channel_config.bin
 
 
 

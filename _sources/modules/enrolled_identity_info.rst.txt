@@ -28,7 +28,7 @@ This module works with the IBM Blockchain Platform managed service running in IB
 Parameters
 ----------
 
-  path
+  path (required)
     The path to the JSON file where the enrolled identity is stored.
 
 
@@ -45,6 +45,9 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    - name: Get enrolled identity
+      ibm.blockchain_platform.enrolled_identity_info:
+        path: Org1 Admin.json
 
 
 
@@ -59,27 +62,32 @@ Return Values
   enrolled_identity
     The enrolled identity.
 
+    | **Returned**: if enrolled identity exists
     | **Type**: dict
 
     name
       The name of the enrolled identity.
 
       | **Type**: str
+      | **Sample**: ``Org1 Admin``
 
     cert
       The base64 encoded certificate of the enrolled identity.
 
       | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     private_key
       The base64 encoded private key of the enrolled identity.
 
       | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t...``
 
     ca
       The base64 encoded CA certificate chain of the enrolled identity.
 
       | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
 
 

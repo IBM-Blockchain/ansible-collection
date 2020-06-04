@@ -226,21 +226,22 @@
 <div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
 </div>
 </dd>
-<dt>path</dt><dd><p>Path to current the channel configuration file.</p>
+<dt>path (required)</dt><dd><p>Path to current the channel configuration file.</p>
 <p>This file can be fetched by using the <span class="xref std std-ref">channel_config</span> module.</p>
 <p>This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
 </div>
 </dd>
-<dt>name</dt><dd><p>The name of the policy to add, update, or remove from the channel.</p>
+<dt>name (required)</dt><dd><p>The name of the policy to add, update, or remove from the channel.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
 </div>
 </dd>
-<dt>policy</dt><dd><p>The policy to add, update, or remove from the channel.</p>
-<p>You can pass a string, which is a path to a JSON file containing a [p;ocy] in the Hyperledger Fabric format (common.Policy).</p>
+<dt>policy (required)</dt><dd><p>The policy to add, update, or remove from the channel.</p>
+<p>You can pass a string, which is a path to a JSON file containing a policy in the Hyperledger Fabric format (common.Policy).</p>
 <p>You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).</p>
+<p>Only required when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code>.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: raw</div>
 </div>
@@ -250,7 +251,26 @@
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Add the policy to the channel</span>
+  <span class="nt">ibm.blockchain_platform.channel_policy</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Admins</span>
+    <span class="nt">policy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admins-policy.json</span>
+    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Remove the policy to the channel</span>
+  <span class="nt">ibm.blockchain_platform.channel_policy</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Admins</span>
+    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
 </pre></div>
 </div>
 </div>
