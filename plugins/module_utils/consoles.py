@@ -579,6 +579,12 @@ class Console:
     def is_free_cluster(self):
         return self.settings.get('CLUSTER_DATA', dict()).get('type', None) == 'free'
 
+    def is_saas(self):
+        return self.settings.get('AUTH_SCHEME', None) == 'iam'
+
+    def is_software(self):
+        return self.settings.get('AUTH_SCHEME', None) == 'couchdb'
+
     def get_host_url(self):
         split_url = urllib.parse.urlsplit(self.api_endpoint)
         scheme = split_url.scheme
@@ -592,3 +598,109 @@ class Console:
             else:
                 raise Exception(f'Invalid scheme {scheme} in console URL {self.api_endpoint}')
         return urllib.parse.urlunsplit((scheme, f'{hostname}:{port}', '', '', ''))
+
+    def get_users(self):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        for attempt in range(self.retries):
+            try:
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                break
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to get the list of console users', e)
+        data = json.load(response)
+        result = list()
+        for uuid in data['users']:
+            user = data['users'][uuid]
+            user['uuid'] = uuid
+            result.append(user)
+        return result
+
+    def get_user(self, email):
+        users = self.get_users()
+        for user in users:
+            if user['email'] == email:
+                return user
+        return None
+
+    def create_user(self, email, roles):
+        user = self.get_user(email)
+        if user is not None:
+            raise Exception(f'The specified user {email} already exists')
+        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = {
+            'users': {
+                email: {
+                    'roles': roles
+                }
+            }
+        }
+        data = json.dumps(data)
+        for attempt in range(self.retries):
+            try:
+                open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                break
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to create console user', e)
+        return self.get_user(email)
+
+    def update_user(self, email, roles):
+        user = self.get_user(email)
+        if user is None:
+            raise Exception(f'The specified user {email} does not exist')
+        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = {
+            'uuids': {
+                user['uuid']: {
+                    'roles': roles
+                }
+            }
+        }
+        data = json.dumps(data)
+        for attempt in range(self.retries):
+            try:
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                break
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to update console user', e)
+        return self.get_user(email)
+
+    def delete_user(self, email):
+        user = self.get_user(email)
+        if user is None:
+            raise Exception(f'The specified user {email} does not exist')
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/permissions/users?uuids={json.dumps([user["uuid"]])}')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        for attempt in range(self.retries):
+            try:
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                return
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to delete console user', e)
