@@ -180,9 +180,9 @@
 <h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial builds upon the Hyperledger Fabric that is created as part of the <a class="reference external" href="./building.html">Building a network</a> tutorial. Ensure that you have followed this tutorial, and that you have the network up and running.</p>
 <p>If you used separate IBM Blockchain Platform instances for each organization in the previous tutorial, you will need another IBM Blockchain Platform instance for the new organization created during this tutorial. Again, if you use separate IBM Blockchain Platform instances, then there are additional steps that you must follow which will be described below.</p>
-<p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorials directory:</p>
+<p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorial directory:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/tutorials
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/tutorial
 </pre></div>
 </div>
 </div></blockquote>
@@ -243,14 +243,14 @@
 <ul>
 <li><p>Both organizations use the same IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/join_network.sh join
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorial&quot; mydockerorg/ansible /tutorial/join_network.sh join
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Each organization has their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/join_network.sh -i join
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorial&quot; mydockerorg/ansible /tutorial/join_network.sh -i join
 </pre></div>
 </div>
 </div></blockquote>
@@ -450,14 +450,14 @@
 <ul>
 <li><p>All organizations use the same IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/join_network.sh destroy
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorial&quot; mydockerorg/ansible /tutorial/join_network.sh destroy
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>All organizations have their own IBM Blockchain Platform instance:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorials&quot; mydockerorg/ansible /tutorials/join_network.sh -i destroy
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker run --rm -v &quot;$PWD:/tutorial&quot; mydockerorg/ansible /tutorial/join_network.sh -i destroy
 </pre></div>
 </div>
 </div></blockquote>

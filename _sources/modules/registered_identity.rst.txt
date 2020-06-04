@@ -224,6 +224,7 @@ Return Values
       The attributes for this identity.
 
       | **Type**: list
+      | **Elements**: dict
 
       name
         The name of the attribute.

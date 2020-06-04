@@ -127,6 +127,7 @@ Return Values
       Root certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     intermediate_certs
@@ -135,6 +136,7 @@ Return Values
       Intermediate certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     admins
@@ -143,6 +145,7 @@ Return Values
       Administrator certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     revocation_list
@@ -151,6 +154,7 @@ Return Values
       Revoked certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     tls_root_certs
@@ -159,6 +163,7 @@ Return Values
       TLS root certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     tls_intermediate_certs
@@ -167,6 +172,7 @@ Return Values
       TLS intermediate certificates must be supplied as base64 encoded PEM files.
 
       | **Type**: list
+      | **Elements**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
     fabric_node_ous
@@ -265,6 +271,7 @@ Return Values
       The list of organizational unit identifiers for this organization.
 
       | **Type**: list
+      | **Elements**: dict
 
       certificate
         The root or intermediate certificate for this organizational unit identifier.

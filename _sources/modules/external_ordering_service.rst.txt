@@ -200,6 +200,7 @@ Return Values
 
     | **Returned**: when *state* is ``present``
     | **Type**: list
+    | **Elements**: dict
 
     name
       The name of the ordering service node.

@@ -16,13 +16,13 @@ Before you start
 
 This tutorial builds upon the Hyperledger Fabric that is created as part of the `Building a network <./building.html>`_ and the `Joining a network <./joining.html>`_ tutorials. Ensure that you have followed these tutorials, and that you have the network up and running.
 
-You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorials directory:
+You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorial directory:
 
     .. highlight:: none
 
     ::
 
-        cd ansible-collection/tutorials
+        cd ansible-collection/tutorial
 
 Deploying the smart contract
 ----------------------------
@@ -41,7 +41,7 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorials" mydockerorg/ansible /tutorials/deploy_smart_contract.sh
+        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/deploy_smart_contract.sh
 
 Exploring the network
 ---------------------

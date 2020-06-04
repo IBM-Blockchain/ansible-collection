@@ -112,6 +112,7 @@ Return Values
 
     | **Returned**: if ordering service exists
     | **Type**: list
+    | **Elements**: dict
 
     name
       The name of the ordering service node.

@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="channel_member.html">channel_member – Manage a member for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_policy.html">channel_policy – Manage a policy for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="connection_profile.html">connection_profile – Manage a connection profile for a Hyperledger Fabric network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="console_user.html">console_user – Manage the list of users for an IBM Blockchain Platform console</a></li>
 <li class="toctree-l3"><a class="reference internal" href="consortium_member.html">consortium_member – Manage a consortium member for a Hyperledger Fabric ordering service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enrolled_identity.html">enrolled_identity – Manage an enrolled Hyperledger Fabric identity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enrolled_identity_info.html">enrolled_identity_info – Get information about an enrolled Hyperledger Fabric identity</a></li>
@@ -517,6 +518,7 @@
 <p>Root certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -524,6 +526,7 @@
 <p>Intermediate certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -531,6 +534,7 @@
 <p>Administrator certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -538,6 +542,7 @@
 <p>Revoked certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -545,6 +550,7 @@
 <p>TLS root certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -552,6 +558,7 @@
 <p>TLS intermediate certificates must be supplied as base64 encoded PEM files.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span></code></div>
 </div>
 </dd>
@@ -651,6 +658,7 @@
 <dt>organizational_unit_identifiers</dt><dd><p>The list of organizational unit identifiers for this organization.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: dict</div>
 </div>
 <dl>
 <dt>certificate</dt><dd><p>The root or intermediate certificate for this organizational unit identifier.</p>
