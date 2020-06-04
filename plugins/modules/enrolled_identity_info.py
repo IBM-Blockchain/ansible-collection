@@ -32,11 +32,15 @@ options:
     path:
         description:
             - The path to the JSON file where the enrolled identity is stored.
+        required: true
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Get enrolled identity
+  ibm.blockchain_platform.enrolled_identity_info:
+    path: Org1 Admin.json
 '''
 
 RETURN = '''
@@ -49,23 +53,28 @@ enrolled_identity:
     description:
         - The enrolled identity.
     type: dict
+    returned: if enrolled identity exists
     contains:
         name:
             description:
                 - The name of the enrolled identity.
             type: str
+            sample: Org1 Admin
         cert:
             description:
                 - The base64 encoded certificate of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         private_key:
             description:
                 - The base64 encoded private key of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0t...
         ca:
             description:
                 - The base64 encoded CA certificate chain of the enrolled identity.
             type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 '''
 
 

@@ -47,23 +47,47 @@ options:
             - This file will be updated in place. You will need to keep a copy of the original file for computing the configuration
               update.
         type: str
+        required: true
     name:
         description:
             - The name of the policy to add, update, or remove from the channel.
         type: str
+        required: true
     policy:
         description:
             - The policy to add, update, or remove from the channel.
-            - You can pass a string, which is a path to a JSON file containing a [p;ocy]
+            - You can pass a string, which is a path to a JSON file containing a policy
               in the Hyperledger Fabric format (common.Policy).
             - You can also pass a dict, which must correspond to a parsed policy in the
               Hyperledger Fabric format (common.Policy).
+            - Only required when I(state) is C(present).
         type: raw
+        required: true
 notes: []
 requirements: []
 '''
 
 EXAMPLES = '''
+- name: Add the policy to the channel
+  ibm.blockchain_platform.channel_policy:
+    state: present
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Admins
+    policy: admins-policy.json
+    path: channel_config.bin
+
+- name: Remove the policy to the channel
+  ibm.blockchain_platform.channel_policy:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    name: Admins
+    path: channel_config.bin
 '''
 
 RETURN = '''
