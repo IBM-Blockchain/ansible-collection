@@ -3,9 +3,9 @@
 #
 
 # In the first stage, install all the development packages, so we can build the native Python modules.
-FROM alpine:3.11 AS builder
-RUN apk add --no-cache build-base curl libffi-dev openssl-dev python3 python3-dev
-RUN pip3 install --user ansible fabric-sdk-py python-pkcs11 openshift
+FROM registry.access.redhat.com/ubi8/ubi-minimal AS builder
+RUN microdnf install gcc gzip python38 python38-devel tar
+RUN pip3.8 install --user ansible fabric-sdk-py python-pkcs11 openshift
 ENV PATH=/root/.local/bin:$PATH
 RUN ansible-galaxy collection install ibm.blockchain_platform
 RUN mkdir /opt/fabric \
@@ -13,10 +13,8 @@ RUN mkdir /opt/fabric \
     && curl -sSL https://github.com/hyperledger/fabric-ca/releases/download/v1.4.7/hyperledger-fabric-ca-linux-amd64-1.4.7.tar.gz | tar xvzf - -C /opt/fabric
 
 # In the second stage, copy all the installed Python modules across from the first stage.
-FROM alpine:3.11
-RUN apk add --no-cache bash python3 \
-    && mkdir /lib64 \
-    && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+RUN microdnf install python38
 COPY --from=builder /root/.local /root/.local
 COPY --from=builder /root/.ansible /root/.ansible
 COPY --from=builder /opt/fabric /opt/fabric
