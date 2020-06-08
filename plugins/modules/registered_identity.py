@@ -91,6 +91,24 @@ options:
               M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
         required: true
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for digital signatures."
+            - Only required if the identity specified in I(registrar) was enrolled using an HSM.
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for digital signatures."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for digital signatures.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for digital signatures.
+                type: str
     enrollment_id:
         description:
             - The enrollment ID, or user name, of the identity to register on the certificate authority.
@@ -241,12 +259,21 @@ def main():
         attributes=dict(type='list', elements='dict', default=list(), options=dict(
             name=dict(type='str', required=True),
             value=dict(type='str', required=True)
+        )),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
         ))
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
 
     # Ensure all exceptions are caught.
     try:
@@ -259,7 +286,8 @@ def main():
         registrar = get_identity_by_module(module, 'registrar')
 
         # Connect to the certificate authority.
-        with certificate_authority.connect() as connection:
+        hsm = module.params['hsm']
+        with certificate_authority.connect(hsm) as connection:
 
             # Determine if the identity is registered.
             enrollment_id = module.params['enrollment_id']

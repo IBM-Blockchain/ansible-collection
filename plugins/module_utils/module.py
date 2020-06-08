@@ -28,6 +28,22 @@ except ImportError as e:
     HAS_CRYPTOGRAPHY = False
     CRYPTOGRAPHY_IMPORT_ERR = str(e)
 
+PKCS11_IMPORT_ERR = None
+try:
+    import pkcs11  # noqa: F401
+    HAS_PKCS11 = True
+except ImportError as e:
+    HAS_PKCS11 = False
+    PKCS11_IMPORT_ERR = str(e)
+
+ASN1CRYPTO_IMPORT_ERR = None
+try:
+    import asn1crypto  # noqa: F401
+    HAS_ASN1CRYPTO = True
+except ImportError as e:
+    HAS_ASN1CRYPTO = False
+    ASN1CRYPTO_IMPORT_ERR = str(e)
+
 
 def missing_required_bin(binary, reason=None, url=None):
     hostname = platform.node()
@@ -85,3 +101,10 @@ class BlockchainModule(AnsibleModule):
             version = m.group(1)
             if not LooseVersion(version) >= LooseVersion('1.4.3'):
                 self.fail_json(msg=wrong_version_bin(binary, version, '>= 1.4.3', url=url), rc=process.returncode, stdout=process.stdout, stderr=process.stderr, cmd=f'{binary} version')
+
+    def check_for_missing_hsm_libs(self):
+        url = 'https://ibm-blockchain.github.io/ansible-collection/installation.html#requirements'
+        if not HAS_PKCS11:
+            self.fail_json(msg=missing_required_lib("python-pkcs11", url=url), exception=PKCS11_IMPORT_ERR)
+        if not HAS_ASN1CRYPTO:
+            self.fail_json(msg=missing_required_lib("asn1crypto", url=url), exception=ASN1CRYPTO_IMPORT_ERR)

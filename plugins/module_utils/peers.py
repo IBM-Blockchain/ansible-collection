@@ -99,16 +99,21 @@ class Peer:
         if not started:
             raise Exception(f'Peer failed to start within {timeout} seconds')
 
-    def connect(self, identity, msp_id):
-        return PeerConnection(self, identity, msp_id)
+    def connect(self, identity, msp_id, hsm):
+        return PeerConnection(self, identity, msp_id, hsm)
 
 
 class PeerConnection:
 
-    def __init__(self, peer, identity, msp_id):
+    def __init__(self, peer, identity, msp_id, hsm):
+        if hsm and not identity.hsm:
+            raise Exception('HSM configuration specified, but specified identity does not use HSM')
+        elif not hsm and identity.hsm:
+            raise Exception('Specified identity uses HSM, but no HSM configuration specified')
         self.peer = peer
         self.identity = identity
         self.msp_id = msp_id
+        self.hsm = hsm
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -268,6 +273,14 @@ class PeerConnection:
         env['CORE_PEER_TLS_ENABLED'] = 'true'
         env['CORE_PEER_TLS_ROOTCERT_FILE'] = self.pem_path
         env['FABRIC_CFG_PATH'] = self.fabric_cfg_path
+        if self.identity.hsm:
+            env['CORE_PEER_BCCSP_DEFAULT'] = 'PKCS11'
+            env['CORE_PEER_BCCSP_PKCS11_LIBRARY'] = self.hsm['pkcs11library']
+            env['CORE_PEER_BCCSP_PKCS11_LABEL'] = self.hsm['label']
+            env['CORE_PEER_BCCSP_PKCS11_PIN'] = self.hsm['pin']
+            env['CORE_PEER_BCCSP_PKCS11_HASH'] = 'SHA2'
+            env['CORE_PEER_BCCSP_PKCS11_SECURITY'] = '256'
+            env['CORE_PEER_BCCSP_PKCS11_FILEKEYSTORE_KEYSTORE'] = os.path.join(self.msp_path, 'keystore')
         return env
 
     def _get_ordering_service(self, channel):

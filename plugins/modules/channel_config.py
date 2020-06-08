@@ -106,6 +106,25 @@ options:
               channel configuration update transactions.
             - Only required when I(operation) is C(fetch), C(sign), or C(apply_update).
         type: str
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for digital signatures."
+            - Only required if the identity specified in I(identity) was enrolled using an HSM,
+              and when I(operation) is C(fetch), C(sign), or C(apply_update).
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for digital signatures."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for digital signatures.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for digital signatures.
+                type: str
     name:
         description:
             - The name of the channel.
@@ -350,6 +369,7 @@ def fetch(module):
     # Get the identity.
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
+    hsm = module.params['hsm']
 
     # Get the channel and target path.
     name = module.params['name']
@@ -360,7 +380,7 @@ def fetch(module):
     try:
 
         # Fetch the block.
-        with ordering_service.connect(identity, msp_id) as connection:
+        with ordering_service.connect(identity, msp_id, hsm) as connection:
             connection.fetch(name, 'config', block_proto_path)
 
         # Convert it into JSON.
@@ -471,6 +491,7 @@ def sign_update(module):
     # Get the identity and MSP ID.
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
+    hsm = module.params['hsm']
 
     # Load in the existing config update file and see if we've already signed it.
     with open(path, 'rb') as file:
@@ -488,6 +509,14 @@ def sign_update(module):
         env['CORE_PEER_MSPCONFIGPATH'] = msp_path
         env['CORE_PEER_LOCALMSPID'] = msp_id
         env['FABRIC_CFG_PATH'] = fabric_cfg_path
+        if hsm:
+            env['CORE_PEER_BCCSP_DEFAULT'] = 'PKCS11'
+            env['CORE_PEER_BCCSP_PKCS11_LIBRARY'] = hsm['pkcs11library']
+            env['CORE_PEER_BCCSP_PKCS11_LABEL'] = hsm['label']
+            env['CORE_PEER_BCCSP_PKCS11_PIN'] = hsm['pin']
+            env['CORE_PEER_BCCSP_PKCS11_HASH'] = 'SHA2'
+            env['CORE_PEER_BCCSP_PKCS11_SECURITY'] = '256'
+            env['CORE_PEER_BCCSP_PKCS11_FILEKEYSTORE_KEYSTORE'] = os.path.join(msp_path, 'keystore')
         subprocess.run([
             'peer', 'channel', 'signconfigtx', '-f', path
         ], env=env, text=True, close_fds=True, check=True, capture_output=True)
@@ -514,7 +543,8 @@ def apply_update(module):
     path = module.params['path']
 
     # Update the channel.
-    with ordering_service.connect(identity, msp_id) as connection:
+    hsm = module.params['hsm']
+    with ordering_service.connect(identity, msp_id, hsm) as connection:
         connection.update(name, path)
     module.exit_json(changed=True)
 
@@ -533,6 +563,11 @@ def main():
         ordering_service=dict(type='str'),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
+        )),
         name=dict(type='str'),
         path=dict(type='str'),
         original=dict(type='str'),
@@ -549,6 +584,10 @@ def main():
         ('operation', 'apply_update', ['api_endpoint', 'api_authtype', 'api_key', 'ordering_service', 'identity', 'msp_id', 'name', 'path'])
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
 
     # Ensure all exceptions are caught.
     try:

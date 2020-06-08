@@ -53,8 +53,9 @@ def convert_identity_to_msp_path(identity):
     # Create the key store directory.
     keystore_path = os.path.join(msp_path, 'keystore')
     os.mkdir(keystore_path)
-    with open(os.path.join(keystore_path, 'key.pem'), 'wb') as file:
-        file.write(identity.private_key)
+    if identity.private_key:
+        with open(os.path.join(keystore_path, 'key.pem'), 'wb') as file:
+            file.write(identity.private_key)
 
     # Return the temporary directory (user must delete).
     return msp_path
