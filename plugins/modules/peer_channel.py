@@ -88,6 +88,24 @@ options:
             - The MSP ID to use for interacting with the peer.
         type: str
         required: true
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for digital signatures."
+            - Only required if the identity specified in I(identity) was enrolled using an HSM.
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for digital signatures."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for digital signatures.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for digital signatures.
+                type: str
     path:
         description:
             - The path to the file where the channel genesis block is stored.
@@ -128,12 +146,13 @@ def join(module):
     # Get the identity.
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
+    hsm = module.params['hsm']
 
     # Get the channel and target path.
     path = module.params['path']
 
     # Connect to the peer.
-    with peer.connect(identity, msp_id) as connection:
+    with peer.connect(identity, msp_id, hsm) as connection:
 
         # Get the list of channels the peer has joined.
         channels = connection.list_channels()
@@ -167,6 +186,11 @@ def main():
         peer=dict(type='raw'),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
+        )),
         path=dict(type='str')
     )
     required_if = [
@@ -174,6 +198,10 @@ def main():
         ('operation', 'join', ['api_endpoint', 'api_authtype', 'api_key', 'peer', 'identity', 'msp_id', 'path']),
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
 
     # Ensure all exceptions are caught.
     try:

@@ -106,6 +106,23 @@ options:
         description:
             - The path to the JSON file where the enrolled identity will be stored.
         required: true
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for generating and storing the private key."
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for generating and storing the private key."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for generating and storing the private key.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for generating and storing the private key.
+                type: str
 notes: []
 requirements: []
 '''
@@ -180,13 +197,22 @@ def main():
         name=dict(type='str'),
         enrollment_id=dict(type='str'),
         enrollment_secret=dict(type='str', no_log=True),
-        path=dict(type='str', required=True)
+        path=dict(type='str', required=True),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
+        ))
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
         ('state', 'present', ['certificate_authority', 'name', 'enrollment_id', 'enrollment_secret'])
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
 
     # Ensure all exceptions are caught.
     try:
@@ -204,10 +230,11 @@ def main():
 
             # Enroll the identity.
             certificate_authority = get_certificate_authority_by_module(console, module)
+            hsm = module.params['hsm']
             name = module.params['name']
             enrollment_id = module.params['enrollment_id']
             enrollment_secret = module.params['enrollment_secret']
-            with certificate_authority.connect() as connection:
+            with certificate_authority.connect(hsm) as connection:
                 identity = connection.enroll(name, enrollment_id, enrollment_secret)
             with open(path, 'w') as file:
                 json.dump(identity.to_json(), file, indent=4)
@@ -227,7 +254,8 @@ def main():
             # The certificate may no longer be valid (revoked, expired, new certificate authority).
             # If this is the case, we want to try re-enrolling it.
             certificate_authority = get_certificate_authority_by_module(console, module)
-            with certificate_authority.connect() as connection:
+            hsm = module.params['hsm']
+            with certificate_authority.connect(hsm) as connection:
 
                 # Determine if the certificate is valid.
                 enrollment_id = module.params['enrollment_id']

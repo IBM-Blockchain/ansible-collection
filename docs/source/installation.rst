@@ -76,6 +76,16 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install fabric-sdk-py
 
+**PKCS #11/Cryptoki for Python v0.6.0+**
+
+    Optional: only required if you wish to store enrolled identities in a PKCS #11 compliant HSM.
+
+    You can install this SDK using ``pip``, the package manager for Python:
+
+    ::
+
+        pip install python-pkcs11
+
 **OpenShift client for Python v0.10.3+**
 
     This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform software.

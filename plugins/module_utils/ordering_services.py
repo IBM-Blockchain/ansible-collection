@@ -121,16 +121,21 @@ class OrderingServiceNode:
         if not started:
             raise Exception(f'Ordering service node failed to start within {timeout} seconds')
 
-    def connect(self, identity, msp_id):
-        return OrderingServiceNodeConnection(self, identity, msp_id)
+    def connect(self, identity, msp_id, hsm):
+        return OrderingServiceNodeConnection(self, identity, msp_id, hsm)
 
 
 class OrderingServiceNodeConnection:
 
-    def __init__(self, ordering_service_node, identity, msp_id):
+    def __init__(self, ordering_service_node, identity, msp_id, hsm):
+        if hsm and not identity.hsm:
+            raise Exception('HSM configuration specified, but specified identity does not use HSM')
+        elif not hsm and identity.hsm:
+            raise Exception('Specified identity uses HSM, but no HSM configuration specified')
         self.ordering_service_node = ordering_service_node
         self.identity = identity
         self.msp_id = msp_id
+        self.hsm = hsm
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -177,6 +182,14 @@ class OrderingServiceNodeConnection:
         env['CORE_PEER_MSPCONFIGPATH'] = self.msp_path
         env['CORE_PEER_LOCALMSPID'] = self.msp_id
         env['FABRIC_CFG_PATH'] = self.fabric_cfg_path
+        if self.identity.hsm:
+            env['CORE_PEER_BCCSP_DEFAULT'] = 'PKCS11'
+            env['CORE_PEER_BCCSP_PKCS11_LIBRARY'] = self.hsm['pkcs11library']
+            env['CORE_PEER_BCCSP_PKCS11_LABEL'] = self.hsm['label']
+            env['CORE_PEER_BCCSP_PKCS11_PIN'] = self.hsm['pin']
+            env['CORE_PEER_BCCSP_PKCS11_HASH'] = 'SHA2'
+            env['CORE_PEER_BCCSP_PKCS11_SECURITY'] = '256'
+            env['CORE_PEER_BCCSP_PKCS11_FILEKEYSTORE_KEYSTORE'] = os.path.join(self.msp_path, 'keystore')
         return env
 
 
@@ -223,16 +236,21 @@ class OrderingService:
                 pass
         raise Exception(f'Ordering service failed to start within {timeout} seconds')
 
-    def connect(self, identity, msp_id):
-        return OrderingServiceConnection(self, identity, msp_id)
+    def connect(self, identity, msp_id, hsm):
+        return OrderingServiceConnection(self, identity, msp_id, hsm)
 
 
 class OrderingServiceConnection:
 
-    def __init__(self, ordering_service, identity, msp_id):
+    def __init__(self, ordering_service, identity, msp_id, hsm):
+        if hsm and not identity.hsm:
+            raise Exception('HSM configuration specified, but specified identity does not use HSM')
+        elif not hsm and identity.hsm:
+            raise Exception('Specified identity uses HSM, but no HSM configuration specified')
         self.ordering_service = ordering_service
         self.identity = identity
         self.msp_id = msp_id
+        self.hsm = hsm
 
     def __enter__(self):
         return self
@@ -244,7 +262,7 @@ class OrderingServiceConnection:
         last_e = None
         for node in self.ordering_service.nodes:
             try:
-                with node.connect(self.identity, self.msp_id) as connection:
+                with node.connect(self.identity, self.msp_id, self.hsm) as connection:
                     connection.fetch(channel, target, path)
                 return
             except Exception as e:
@@ -255,7 +273,7 @@ class OrderingServiceConnection:
         last_e = None
         for node in self.ordering_service.nodes:
             try:
-                with node.connect(self.identity, self.msp_id) as connection:
+                with node.connect(self.identity, self.msp_id, self.hsm) as connection:
                     connection.update(channel, path)
                 return
             except Exception as e:

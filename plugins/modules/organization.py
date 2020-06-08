@@ -108,6 +108,24 @@ options:
             - You can also pass a dict, which must match the result format of one of the
               M(enrolled_identity_info) or M(enrolled_identity) modules.
         type: raw
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for digital signatures."
+            - Only required if the identity specified in I(registrar) was enrolled using an HSM.
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for digital signatures."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for digital signatures.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for digital signatures.
+                type: str
     root_certs:
         description:
             - The list of root certificates for this organization.
@@ -467,7 +485,8 @@ def get_from_certificate_authority(console, module):
     # Generate a revocation list if a registrar has been provided.
     if module.params['registrar']:
         registrar = get_identity_by_module(module, 'registrar')
-        with certificate_authority.connect() as connection:
+        hsm = module.params['hsm']
+        with certificate_authority.connect(hsm) as connection:
             revocation_list = connection.generate_crl(registrar)
             result['revocation_list'] = [revocation_list]
 
@@ -518,6 +537,11 @@ def main():
         organizational_unit_identifiers=dict(type='list', elements='dict', default=list(), options=dict(
             certificate=dict(type='str', required=True),
             organizational_unit_identifier=dict(type='str', required=True)
+        )),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
         ))
     )
     required_if = [
@@ -528,6 +552,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if)
+
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
 
     # Ensure all exceptions are caught.
     try:

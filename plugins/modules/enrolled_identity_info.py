@@ -75,6 +75,11 @@ enrolled_identity:
                 - The base64 encoded CA certificate chain of the enrolled identity.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        hsm:
+            description:
+                - True if the private key is stored in a PKCS #11 compliant HSM, false otherwise.
+            type: boolean
+            sample: false
 '''
 
 

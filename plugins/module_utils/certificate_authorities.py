@@ -7,18 +7,21 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from .enrolled_identities import EnrolledIdentity
+from .pkcs11.crypto import PKCS11Crypto
 
 from ansible.module_utils.urls import open_url
 
 try:
+    from cryptography import x509
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
-    from hfc.fabric_ca.caservice import ca_service, Enrollment
+    from hfc.fabric_ca.caservice import ca_service, Enrollment, ecies
 except ImportError:
     # Missing dependencies are handled elsewhere.
     pass
 
 import base64
+import hashlib
 import json
 import os
 import tempfile
@@ -113,21 +116,26 @@ class CertificateAuthority:
         if not started:
             raise Exception(f'Certificate authority failed to start within {timeout} seconds')
 
-    def connect(self):
-        return CertificateAuthorityConnection(self)
+    def connect(self, hsm):
+        return CertificateAuthorityConnection(self, hsm)
 
 
 class CertificateAuthorityConnection:
 
-    def __init__(self, certificate_authority):
+    def __init__(self, certificate_authority, hsm):
         self.certificate_authority = certificate_authority
+        self.hsm = hsm
 
     def __enter__(self):
         temp = tempfile.mkstemp()
         os.write(temp[0], base64.b64decode(self.certificate_authority.pem))
         os.close(temp[0])
         self.pem_path = temp[1]
-        self.ca_service = ca_service(self.certificate_authority.api_url, self.pem_path, ca_name=self.certificate_authority.ca_name)
+        if self.hsm:
+            self.crypto = PKCS11Crypto(self.hsm['pkcs11library'], self.hsm['label'], self.hsm['pin'])
+        else:
+            self.crypto = ecies()
+        self.ca_service = ca_service(self.certificate_authority.api_url, self.pem_path, ca_name=self.certificate_authority.ca_name, crypto=self.crypto)
         self.identity_service = self.ca_service.newIdentityService()
         self.certificate_service = self.ca_service.newCertificateService()
         return self
@@ -138,17 +146,23 @@ class CertificateAuthorityConnection:
     def enroll(self, name, enrollment_id, enrollment_secret):
         enrollment = self.ca_service.enroll(enrollment_id, enrollment_secret)
         cert = enrollment.cert
-        private_key = enrollment.private_key.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
-        )
+        if self.hsm:
+            hsm = True
+            private_key = None
+        else:
+            hsm = False
+            private_key = enrollment.private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption()
+            )
         ca = enrollment.caCert
         return EnrolledIdentity(
             name=name,
             cert=cert,
             private_key=private_key,
-            ca=ca
+            ca=ca,
+            hsm=hsm
         )
 
     def is_registered(self, registrar, enrollment_id):
@@ -190,5 +204,16 @@ class CertificateAuthorityConnection:
         return self.ca_service.generateCRL(None, None, None, None, self._get_enrollment(registrar))
 
     def _get_enrollment(self, identity):
-        private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
+        if self.hsm and not identity.hsm:
+            raise Exception('HSM configuration specified, but specified identity does not use HSM')
+        elif not self.hsm and identity.hsm:
+            raise Exception('Specified identity uses HSM, but no HSM configuration specified')
+        elif self.hsm:
+            cert = x509.load_pem_x509_certificate(identity.cert, default_backend())
+            ecpt = cert.public_key().public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+            hash = hashlib.sha256(ecpt)
+            ski = hash.digest()
+            private_key = self.crypto.get_private_key(ski)
+        else:
+            private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
         return Enrollment(private_key, identity.cert, service=self.ca_service)

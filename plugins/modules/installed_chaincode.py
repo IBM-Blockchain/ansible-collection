@@ -100,6 +100,24 @@ options:
             - The MSP ID to use for interacting with the peer.
         type: str
         required: true
+    hsm:
+        description:
+            - "The PKCS #11 compliant HSM configuration to use for digital signatures."
+            - Only required if the identity specified in I(identity) was enrolled using an HSM.
+        type: dict
+        suboptions:
+            pkcs11library:
+                description:
+                    - "The PKCS #11 library that should be used for digital signatures."
+                type: str
+            label:
+                description:
+                    - The HSM label that should be used for digital signatures.
+                type: str
+            pin:
+                description:
+                    - The HSM pin that should be used for digital signatures.
+                type: str
     name:
         description:
             - The name of the chaincode.
@@ -187,6 +205,11 @@ def main():
         peer=dict(type='raw', required=True),
         identity=dict(type='raw', required=True),
         msp_id=dict(type='str', required=True),
+        hsm=dict(type='dict', options=dict(
+            pkcs11library=dict(type='str', required=True),
+            label=dict(type='str', required=True, no_log=True),
+            pin=dict(type='str', required=True, no_log=True)
+        )),
         name=dict(type='str'),
         version=dict(type='str'),
         path=dict(type='str')
@@ -206,6 +229,10 @@ def main():
         required_if=required_if,
         mutually_exclusive=mutually_exclusive)
 
+    # Validate HSM requirements if HSM is specified.
+    if module.params['hsm']:
+        module.check_for_missing_hsm_libs()
+
     # Ensure all exceptions are caught.
     try:
 
@@ -216,6 +243,7 @@ def main():
         peer = get_peer_by_module(console, module)
         identity = get_identity_by_module(module)
         msp_id = module.params['msp_id']
+        hsm = module.params['hsm']
 
         # Extract the chaincode information.
         name = module.params['name']
@@ -239,7 +267,7 @@ def main():
             id = hasher.hexdigest()
 
         # Determine the chaincodes installed on the peer.
-        with peer.connect(identity, msp_id) as peer_connection:
+        with peer.connect(identity, msp_id, hsm) as peer_connection:
             installed_chaincodes = peer_connection.list_installed_chaincodes()
 
         # Find a matching chaincode, if one exists.
@@ -271,7 +299,7 @@ def main():
         else:
 
             # Install the chaincode.
-            with peer.connect(identity, msp_id) as peer_connection:
+            with peer.connect(identity, msp_id, hsm) as peer_connection:
                 peer_connection.install_chaincode(path)
             return module.exit_json(changed=True, installed_chaincode=dict(name=name, version=version, id=id))
 
