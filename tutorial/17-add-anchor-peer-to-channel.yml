@@ -57,14 +57,6 @@
 
     - name: Compute the channel configuration update
       ibm.blockchain_platform.channel_config:
-        api_endpoint: "{{ api_endpoint }}"
-        api_authtype: "{{ api_authtype }}"
-        api_key: "{{ api_key }}"
-        api_secret: "{{ api_secret | default(omit) }}"
-        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
-        ordering_service: "{{ ordering_service_name }}"
-        identity: "{{ org2_name }} Admin.json"
-        msp_id: "{{ org2_msp_id }}"
         operation: compute_update
         name: "{{ channel_name }}"
         original: original_config.bin
