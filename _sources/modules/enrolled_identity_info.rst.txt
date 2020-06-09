@@ -89,5 +89,10 @@ Return Values
       | **Type**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
+    hsm
+      True if the private key is stored in a PKCS
+
+      | **Type**: boolean
+
 
 

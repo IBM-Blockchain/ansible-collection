@@ -97,6 +97,29 @@ Parameters
 
     | **Type**: str
 
+  hsm
+    The PKCS #11 compliant HSM configuration to use for digital signatures.
+
+    Only required if the identity specified in *identity* was enrolled using an HSM.
+
+    | **Type**: dict
+
+    pkcs11library
+      The PKCS #11 library that should be used for digital signatures.
+
+      | **Type**: str
+
+    label
+      The HSM label that should be used for digital signatures.
+
+      | **Type**: str
+
+    pin
+      The HSM pin that should be used for digital signatures.
+
+      | **Type**: str
+
+
   name
     The name of the chaincode.
 

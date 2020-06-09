@@ -110,6 +110,27 @@ Parameters
     The path to the JSON file where the enrolled identity will be stored.
 
 
+  hsm
+    The PKCS #11 compliant HSM configuration to use for generating and storing the private key.
+
+    | **Type**: dict
+
+    pkcs11library
+      The PKCS #11 library that should be used for generating and storing the private key.
+
+      | **Type**: str
+
+    label
+      The HSM label that should be used for generating and storing the private key.
+
+      | **Type**: str
+
+    pin
+      The HSM pin that should be used for generating and storing the private key.
+
+      | **Type**: str
+
+
 
 
 

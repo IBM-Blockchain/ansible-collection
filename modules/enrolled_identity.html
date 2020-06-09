@@ -292,6 +292,28 @@
 </dd>
 <dt>path (required)</dt><dd><p>The path to the JSON file where the enrolled identity will be stored.</p>
 </dd>
+<dt>hsm</dt><dd><p>The PKCS #11 compliant HSM configuration to use for generating and storing the private key.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>pkcs11library</dt><dd><p>The PKCS #11 library that should be used for generating and storing the private key.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>label</dt><dd><p>The HSM label that should be used for generating and storing the private key.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>pin</dt><dd><p>The HSM pin that should be used for generating and storing the private key.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+</dl>
+</dd>
 </dl>
 </div></blockquote>
 </div>
