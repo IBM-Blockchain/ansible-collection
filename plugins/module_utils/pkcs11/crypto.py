@@ -21,6 +21,8 @@ try:
     from pkcs11.util.ec import encode_named_curve_parameters, encode_ec_public_key, encode_ecdsa_signature
 except ImportError:
     # Missing dependencies are handled elsewhere.
+    # Ensure Crypto is defined, otherwise it causes a syntax error below.
+    Crypto = object
     pass
 
 import hashlib
