@@ -98,24 +98,29 @@
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/console.yml.j2') }}"
     apply: yes
+  register: create_console
 
-- name: Delete console config map if it is being upgraded
+- name: Delete console config maps if it is being modified or upgraded
   k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
     kind: ConfigMap
-    name: "{{ console }}-deployer"
-  when: operator_upgrade and existing_console.resources
+    name: "{{ item }}"
+  loop:
+    - "{{ console }}"
+    - "{{ console }}-console"
+    - "{{ console }}-deployer"
+  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa 503
 
-- name: Delete console deployment if it is being upgraded
+- name: Delete console deployment if it is being modified or upgraded
   k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
-  when: operator_upgrade and existing_console.resources
+  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa 503
 
 - name: Wait for console deployment to exist
   k8s_info:
