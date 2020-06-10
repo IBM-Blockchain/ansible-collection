@@ -7,6 +7,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal AS builder
 RUN microdnf install gcc gzip python38 python38-devel tar
 RUN pip3.8 install --user ansible fabric-sdk-py python-pkcs11 openshift
 ENV PATH=/root/.local/bin:$PATH
+ADD https://galaxy.ansible.com/api/v2/collections/ibm/blockchain_platform /root/galaxy.json
 RUN ansible-galaxy collection install ibm.blockchain_platform
 
 # In the second stage, build the Hyperledger Fabric binaries with HSM enabled (this is not the default).
