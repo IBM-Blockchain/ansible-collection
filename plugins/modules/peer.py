@@ -678,6 +678,12 @@ def main():
                 if change not in permitted_changes:
                     raise Exception(f'{change} cannot be changed from {peer[change]} to {new_peer[change]} for existing peer')
 
+            # HACK: if the version has not changed, do not send it in. The current
+            # version may not be supported by the current version of IBP.
+            if peer['version'] == new_peer['version']:
+                del peer['version']
+                del new_peer['version']
+
             # If the peer has changed, apply the changes.
             peer_changed = not equal_dicts(peer, new_peer)
             if peer_changed:

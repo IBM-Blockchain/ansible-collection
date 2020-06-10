@@ -518,6 +518,12 @@ def main():
                 if change not in permitted_changes:
                     raise Exception(f'{change} cannot be changed from {certificate_authority[change]} to {new_certificate_authority[change]} for existing certificate authority')
 
+            # HACK: if the version has not changed, do not send it in. The current
+            # version may not be supported by the current version of IBP.
+            if certificate_authority['version'] == new_certificate_authority['version']:
+                del certificate_authority['version']
+                del new_certificate_authority['version']
+
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
             if certificate_authority_changed:
