@@ -734,6 +734,12 @@ def main():
                     if change not in permitted_changes:
                         raise Exception(f'{change} cannot be changed from {ordering_service_node[change]} to {new_ordering_service_node[change]} for existing ordering service node')
 
+                # HACK: if the version has not changed, do not send it in. The current
+                # version may not be supported by the current version of IBP.
+                if ordering_service_node['version'] == new_ordering_service_node['version']:
+                    del ordering_service_node['version']
+                    del new_ordering_service_node['version']
+
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
                 if ordering_service_node_changed:
