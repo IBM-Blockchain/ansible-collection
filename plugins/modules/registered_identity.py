@@ -345,11 +345,12 @@ def main():
 
                     # First, transform both lists into dictionaries, and compare those.
                     actual_attrs_as_dict = dict()
-                    actual_attrs = actual_registration.get('attrs', list())
-                    for attr in actual_attrs:
-                        name = attr['name']
-                        value = attr['value']
-                        actual_attrs_as_dict[name] = value
+                    actual_attrs = actual_registration.get('attrs', None)
+                    if actual_attrs:
+                        for attr in actual_attrs:
+                            name = attr['name']
+                            value = attr['value']
+                            actual_attrs_as_dict[name] = value
                     expected_attrs_as_dict = dict()
                     if attributes:
                         for attr in attributes:
