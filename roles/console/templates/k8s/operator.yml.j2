@@ -52,7 +52,7 @@ spec:
         - name: "{{ image_pull_secret }}"
       containers:
         - name: ibp-operator
-          image: "{{ image_registry }}/{{ image_repository }}/ibp-operator:{{ product_version }}-{{ operator_version }}-{{ arch }}"
+          image: "{{ operator_image }}:{{ operator_tag }}"
           command:
           - ibp-operator
           imagePullPolicy: Always
