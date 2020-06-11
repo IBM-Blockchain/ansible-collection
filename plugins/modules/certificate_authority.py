@@ -173,6 +173,13 @@ options:
             - If you want to use more than one replica, you must also use PostgreSQL as the database for this certificate authority.
             - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-ha-ca"
         type: int
+    version:
+        description:
+            - The version of Hyperledger Fabric to use for this certificate authority.
+            - If you do not specify a version, the default Hyperledger Fabric version will be used for a new certificate authority.
+            - If you do not specify a version, an existing certificate authority will not be upgraded.
+            - If you specify a new version, an existing certificate authority will be automatically upgraded.
+        type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
@@ -379,6 +386,7 @@ def main():
         )),
         zone=dict(type='str'),
         replicas=dict(type='int'),
+        version=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -478,6 +486,11 @@ def main():
             if replicas > 1 and (ca_db != 'postgres' or tlsca_db != 'postgres'):
                 raise Exception('Certificate authority must use PostgreSQL in order to have multiple replicas')
             expected_certificate_authority['replicas'] = replicas
+
+        # Add the version if it is specified.
+        version = module.params['version']
+        if version is not None:
+            expected_certificate_authority['version'] = version
 
         # If the certificate authority is corrupt, delete it first. This may happen if somebody imported an external certificate
         # authority with the same name, or if somebody deleted the Kubernetes resources directly.
