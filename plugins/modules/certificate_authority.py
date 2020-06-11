@@ -14,6 +14,8 @@ from ..module_utils.utils import get_console
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
 
+import copy
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -165,6 +167,12 @@ options:
             - If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
             - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
         type: str
+    replicas:
+        description:
+            - The number of replicas that the Kubernetes deployment should have for this certificate authority.
+            - If you want to use more than one replica, you must also use PostgreSQL as the database for this certificate authority.
+            - "See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-ha-ca"
+        type: int
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
@@ -370,6 +378,7 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         zone=dict(type='str'),
+        replicas=dict(type='int'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -461,6 +470,15 @@ def main():
         if zone is not None:
             expected_certificate_authority['zone'] = zone
 
+        # Add the number of replicas if it is specified.
+        replicas = module.params['replicas']
+        if replicas is not None:
+            ca_db = expected_certificate_authority.get('config_override', dict()).get('ca', dict()).get('db', dict()).get('type', 'sqlite3')
+            tlsca_db = expected_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('db', dict()).get('type', 'sqlite3')
+            if replicas > 1 and (ca_db != 'postgres' or tlsca_db != 'postgres'):
+                raise Exception('Certificate authority must use PostgreSQL in order to have multiple replicas')
+            expected_certificate_authority['replicas'] = replicas
+
         # If the certificate authority is corrupt, delete it first. This may happen if somebody imported an external certificate
         # authority with the same name, or if somebody deleted the Kubernetes resources directly.
         changed = False
@@ -496,19 +514,20 @@ def main():
             merge_dicts(new_certificate_authority, expected_certificate_authority)
 
             # You can't change the registry after creation, but the remote names and secrets are redacted.
-            # In order to diff properly, we need to redact the incoming secrets.
-            identities = new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict()).get('identities', list())
-            for identity in identities:
-                if 'name' in identity:
-                    identity['name'] = '[redacted]'
-                if 'pass' in identity:
-                    identity['pass'] = '[redacted]'
-            identities = new_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('registry', dict()).get('identities', list())
-            for identity in identities:
-                if 'name' in identity:
-                    identity['name'] = '[redacted]'
-                if 'pass' in identity:
-                    identity['pass'] = '[redacted]'
+            # In order to diff properly, we need to redact the incoming secrets. We need to restore the
+            # unredacted versions before sending them to the API though!
+            expected_ca_identities = new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict()).get('identities', list())
+            expected_tlsca_identities = new_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('registry', dict()).get('identities', list())
+            original_expected_ca_identities = copy.deepcopy(expected_ca_identities)
+            original_expected_tlsca_identities = copy.deepcopy(expected_tlsca_identities)
+            for certificate_authority_to_update in [certificate_authority, new_certificate_authority]:
+                for ca in ['ca', 'tlsca']:
+                    identities = certificate_authority_to_update.get('config_override', dict()).get(ca, dict()).get('registry', dict()).get('identities', list())
+                    for identity in identities:
+                        if 'name' in identity:
+                            identity['name'] = '[redacted]'
+                        if 'pass' in identity:
+                            identity['pass'] = '[redacted]'
 
             # Check to see if any banned changes have been made.
             # HACK: zone is documented as a permitted change, but it has no effect.
@@ -517,6 +536,25 @@ def main():
             for change in diff:
                 if change not in permitted_changes:
                     raise Exception(f'{change} cannot be changed from {certificate_authority[change]} to {new_certificate_authority[change]} for existing certificate authority')
+
+            # HACK: we can't send in certain config override changes, even if they haven't
+            # changed, so we need to check those and then remove them.
+            banned_changes = ['db']
+            for change in banned_changes:
+                for ca in ['ca', 'tlsca']:
+                    expected_config_override = new_certificate_authority.get('config_override', dict()).get(ca, dict()).get(change, None)
+                    actual_config_override = certificate_authority.get('config_override', dict()).get(ca, dict()).get(change, None)
+                    if expected_config_override and not actual_config_override:
+                        # HACK: ignore this case; it can be missing but still present.
+                        pass
+                    elif not expected_config_override and actual_config_override:
+                        # Cannot unset.
+                        raise Exception(f'config_override.{ca}.{change} cannot be changed from {actual_config_override} to {expected_config_override} for existing certificate authority')
+                    elif not equal_dicts(expected_config_override, actual_config_override):
+                        # Cannot modify.
+                        raise Exception(f'config_override.{ca}.{change} cannot be changed from {actual_config_override} to {expected_config_override} for existing certificate authority')
+                    new_certificate_authority.get('config_override', dict()).get(ca, dict()).pop(change, None)
+                    certificate_authority.get('config_override', dict()).get(ca, dict()).pop(change, None)
 
             # HACK: if the version has not changed, do not send it in. The current
             # version may not be supported by the current version of IBP.
@@ -527,6 +565,8 @@ def main():
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
             if certificate_authority_changed:
+                new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict())['identities'] = original_expected_ca_identities
+                new_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('registry', dict())['identities'] = original_expected_tlsca_identities
                 certificate_authority = console.update_ca(new_certificate_authority['id'], new_certificate_authority)
                 changed = True
 
