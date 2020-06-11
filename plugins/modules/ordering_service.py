@@ -10,6 +10,7 @@ from ..module_utils.ordering_services import OrderingService
 from ..module_utils.dict_utils import merge_dicts, equal_dicts, copy_dict, diff_dicts
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
+from ..module_utils.cert_utils import normalize_whitespace
 
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
@@ -745,6 +746,20 @@ def main():
                 if ordering_service_node_changed:
                     ordering_service[i] = console.update_ordering_service_node(new_ordering_service_node['id'], new_ordering_service_node)
                     changed = True
+
+                # Now need to compare the list of admin certs.
+                # HACK: if the admin certs did not get returned, we're running on IBP v2.1.3
+                # and it does not support this feature.
+                expected_admins = module.params['admins']
+                expected_admins_set = set(map(normalize_whitespace, expected_admins))
+                actual_admins = ordering_service_node.get('admin_certs', None)
+                if actual_admins is not None:
+                    actual_admins_set = set(map(normalize_whitespace, actual_admins))
+                    append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
+                    remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
+                    if append_admin_certs or remove_admin_certs:
+                        console.edit_admin_certs(ordering_service_node['id'], append_admin_certs, remove_admin_certs)
+                        changed = True
 
                 # Move to the next ordering service node.
                 i = i + 1
