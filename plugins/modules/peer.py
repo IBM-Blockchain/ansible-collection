@@ -10,6 +10,7 @@ from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_
 from ..module_utils.module import BlockchainModule
 from ..module_utils.peers import Peer
 from ..module_utils.utils import get_console, get_certificate_authority_by_module
+from ..module_utils.cert_utils import normalize_whitespace
 
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
@@ -689,6 +690,20 @@ def main():
             if peer_changed:
                 peer = console.update_peer(new_peer['id'], new_peer)
                 changed = True
+
+            # Now need to compare the list of admin certs.
+            # HACK: if the admin certs did not get returned, we're running on IBP v2.1.3
+            # and it does not support this feature.
+            expected_admins = module.params['admins']
+            expected_admins_set = set(map(normalize_whitespace, expected_admins))
+            actual_admins = peer.get('admin_certs', None)
+            if actual_admins is not None:
+                actual_admins_set = set(map(normalize_whitespace, actual_admins))
+                append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
+                remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
+                if append_admin_certs or remove_admin_certs:
+                    console.edit_admin_certs(peer['id'], append_admin_certs, remove_admin_certs)
+                    changed = True
 
         # Wait for the peer to start.
         peer = Peer.from_json(console.extract_peer_info(peer))

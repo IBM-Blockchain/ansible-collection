@@ -490,6 +490,28 @@ class Console:
                     continue
                 return self.handle_error('Failed to delete external ordering service node', e)
 
+    def edit_admin_certs(self, id, append_admin_certs, remove_admin_certs):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}/certs')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = {
+            'append_admin_certs': append_admin_certs,
+            'remove_admin_certs': remove_admin_certs
+        }
+        data = json.dumps(data)
+        for attempt in range(self.retries):
+            try:
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                return
+            except Exception as e:
+                if self.should_retry_error(e):
+                    continue
+                return self.handle_error('Failed to edit admin certificates', e)
+
     def create_organization(self, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/components/msp')

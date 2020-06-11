@@ -88,3 +88,12 @@ def hash_crl(crl):
 
 def equal_crls(crl1, crl2):
     return hash_crl(crl1) == hash_crl(crl2)
+
+
+def normalize_whitespace(cert):
+    # Load and save the certificate. This will format the certificate
+    # as per the cryptography module rules, rather than whatever it was
+    # passed in as - this is needed so we can compare certificates.
+    loaded_cert = load_cert(cert)
+    pem = loaded_cert.public_bytes(Encoding.PEM)
+    return base64.b64encode(pem).decode('utf-8')
