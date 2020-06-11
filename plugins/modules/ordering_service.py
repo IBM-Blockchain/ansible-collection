@@ -237,6 +237,13 @@ options:
             - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
         type: list
         elements: str
+    version:
+        description:
+            - The version of Hyperledger Fabric to use for this ordering service.
+            - If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.
+            - If you do not specify a version, an existing ordering service will not be upgraded.
+            - If you specify a new version, an existing ordering service will be automatically upgraded.
+        type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the ordering service is available.
@@ -518,6 +525,7 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         zone=dict(type='list', elements='str'),
+        version=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -666,6 +674,11 @@ def main():
                     raise Exception(f'Number of nodes is {nodes}, but only {len(zone_list)} zones provided')
                 expected_ordering_service['zone'] = zone_list
 
+            # Add the version if it is specified.
+            version = module.params['version']
+            if version is not None:
+                expected_ordering_service['version'] = version
+
             # Create the ordering service.
             ordering_service = console.create_ordering_service(expected_ordering_service)
             changed = True
@@ -722,6 +735,11 @@ def main():
                 zone_list = module.params['zone']
                 if zone_list is not None:
                     expected_ordering_service_node['zone'] = zone_list[i]
+
+                # Add the version if it is specified.
+                version = module.params['version']
+                if version is not None:
+                    expected_ordering_service_node['version'] = version
 
                 # Update the ordering service node configuration.
                 new_ordering_service_node = copy_dict(ordering_service_node)
