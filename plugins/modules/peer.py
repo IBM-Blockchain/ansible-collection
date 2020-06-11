@@ -278,6 +278,13 @@ options:
             - If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
             - "See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/"
         type: str
+    version:
+        description:
+            - The version of Hyperledger Fabric to use for this peer.
+            - If you do not specify a version, the default Hyperledger Fabric version will be used for a new peer.
+            - If you do not specify a version, an existing peer will not be upgraded.
+            - If you specify a new version, an existing peer will be automatically upgraded.
+        type: str
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the peer is available.
@@ -532,6 +539,7 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         zone=dict(type='str'),
+        version=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -628,6 +636,11 @@ def main():
         zone = module.params['zone']
         if zone is not None:
             expected_peer['zone'] = zone
+
+        # Add the version if it is specified.
+        version = module.params['version']
+        if version is not None:
+            expected_peer['version'] = version
 
         # If the peer is corrupt, delete it first. This may happen if somebody imported an external peer
         # with the same name, or if somebody deleted the Kubernetes resources directly.
