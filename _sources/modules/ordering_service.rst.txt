@@ -273,6 +273,17 @@ Parameters
     | **Type**: list
     | **Elements**: str
 
+  version
+    The version of Hyperledger Fabric to use for this ordering service.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.
+
+    If you do not specify a version, an existing ordering service will not be upgraded.
+
+    If you specify a new version, an existing ordering service will be automatically upgraded.
+
+    | **Type**: str
+
   wait_timeout
     The timeout, in seconds, to wait until the ordering service is available.
 

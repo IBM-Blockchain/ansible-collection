@@ -319,6 +319,17 @@ Parameters
 
     | **Type**: str
 
+  version
+    The version of Hyperledger Fabric to use for this peer.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new peer.
+
+    If you do not specify a version, an existing peer will not be upgraded.
+
+    If you specify a new version, an existing peer will be automatically upgraded.
+
+    | **Type**: str
+
   wait_timeout
     The timeout, in seconds, to wait until the peer is available.
 
