@@ -1,0 +1,92 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if namespace not specified
+  fail:
+    msg: namespace not specified
+  when: not namespace is defined
+
+- name: Determine if namespace exists
+  k8s_info:
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  register: namespace_info
+
+- name: Delete custom resource definitions
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: apiextensions.k8s.io/v1beta1
+    kind: CustomResourceDefinition
+    name: "{{ item }}"
+  loop:
+    - ibpcas.ibp.com
+    - ibpconsoles.ibp.com
+    - ibporderers.ibp.com
+    - ibppeers.ibp.com
+  when: namespace_info.resources
+
+- name: Delete service
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: v1
+    kind: Service
+    name: "{{ webhook }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+  when: namespace_info.resources
+
+- name: Delete deployment
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: v1
+    kind: Deployment
+    name: "{{ webhook }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+  when: namespace_info.resources
+
+- name: Delete secrets
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: v1
+    kind: Secret
+    name: "{{ item }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+  loop:
+    - webhook-tls-cert
+    - webhook-tls-key
+  when: namespace_info.resources
+
+- name: Delete role binding
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    name: "{{ role_binding }}"
+  when: namespace_info.resources
+
+- name: Delete role
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: rbac.authorization.k8s.io/v1
+    kind: Role
+    name: "{{ role }}"
+  when: namespace_info.resources
+
+- name: Delete image secret
+  k8s:
+    state: absent
+    namespace: "{{ namespace }}"
+    api_version: v1
+    kind: Secret
+    name: "{{ image_pull_secret }}"
+  when: namespace_info.resources
