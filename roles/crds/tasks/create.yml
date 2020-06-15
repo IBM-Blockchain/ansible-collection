@@ -1,0 +1,21 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if architecture not specified
+  fail:
+    msg: arch not specified or is not one of "amd64" or "s390x"
+  when: not arch is defined or not arch in ("amd64", "s390x")
+
+- name: Fail if image registry email not specified
+  fail:
+    msg: image_registry_email not specified
+  when: not image_registry_email is defined
+
+- name: Fail if image registry password not specified
+  fail:
+    msg: image_registry_password not specified
+  when: not image_registry_password is defined
+
+- name: Create custom resource definitions
+  include_tasks: "{{ target }}/create.yml"

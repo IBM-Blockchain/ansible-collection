@@ -1,0 +1,82 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if namespace not specified
+  fail:
+    msg: namespace not specified
+  when: not namespace is defined
+
+- name: Determine if namespace exists
+  k8s_info:
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  register: namespace_info
+
+- name: Create namespace
+  k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  when: not namespace_info.resources
+
+- name: Create image secret
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/image_pull_secret.yml.j2') }}"
+
+- name: Create role
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/role.yml.j2') }}"
+
+- name: Create role binding
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/role_binding.yml.j2') }}"
+
+- name: Create deployment
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/deployment.yml.j2') }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+
+- name: Create service
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/service.yml.j2') }}"
+
+- name: Wait for secret to exist
+  k8s_info:
+    namespace: "{{ namespace }}"
+    api_version: v1
+    kind: Secret
+    name: webhook-tls-cert
+  register: webhook_secret
+  until: webhook_secret.resources
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Extract TLS certificate from secret
+  set_fact:
+    webhook_tls_cert: "{{ webhook_secret.resources[0].data['cert.pem'] }}"
+
+- name: Create custom resource definitions
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', item) }}"
+    apply: yes
+  loop:
+    - ibpca-crd.yml.j2
+    - ibpconsole-crd.yml.j2
+    - ibporderer-crd.yml.j2
+    - ibppeer-crd.yml.j2
