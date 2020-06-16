@@ -24,16 +24,12 @@ steps:
     displayName: Install Python dependencies
   - script: |
       set -ex
-      wget -qO fabric-bins.tar.gz https://github.com/hyperledger/fabric/releases/download/v1.4.6/hyperledger-fabric-linux-amd64-1.4.6.tar.gz
-      sudo tar xvf fabric-bins.tar.gz -C /usr/local
-      rm fabric-bins.tar.gz
-    displayName: Download Fabric CLI
-  - script: |
-      set -ex
-      wget -qO fabric-ca-bins.tar.gz https://github.com/hyperledger/fabric-ca/releases/download/v1.4.6/hyperledger-fabric-ca-linux-amd64-1.4.6.tar.gz
-      sudo tar xvf fabric-ca-bins.tar.gz -C /usr/local
-      rm fabric-ca-bins.tar.gz
-    displayName: Download Fabric CA CLI
+      curl -sL https://ibm.biz/idt-installer | bash
+      ibmcloud config --check-version=false
+      ibmcloud version
+      ibmcloud plugin list
+      curl -sSL https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz | sudo tar xzf - -C /usr/local/bin
+    displayName: Install IBM Cloud and OpenShift CLI
   - script: |
       set -ex
       ansible-galaxy collection build
@@ -57,6 +53,13 @@ steps:
       shellcheck tutorial/*.sh
       yamllint .
     displayName: Lint collection
+  - script: |
+      set -ex
+      ibmcloud login --apikey $(IBM Cloud API Key)
+      ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
+      oc login -u apikey -p $(IBM Cloud API Key)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: Log in to IBM Cloud
   - script: |
       set -ex
       VERSION=$(yq -r .version galaxy.yml)
