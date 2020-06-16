@@ -229,7 +229,7 @@ options:
                 description:
                     - The HSM pin that the ordering service should use.
                 type: str
-    zone:
+    zones:
         description:
             - The Kubernetes zones for this ordering service.
             - If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by I(nodes).
@@ -524,7 +524,7 @@ def main():
             label=dict(type='str', required=True, no_log=True),
             pin=dict(type='str', required=True, no_log=True)
         )),
-        zone=dict(type='list', elements='str'),
+        zones=dict(type='list', elements='str', aliases=['zone']),
         version=dict(type='str'),
         wait_timeout=dict(type='int', default=60)
     )
@@ -668,11 +668,11 @@ def main():
                     merge_dicts(config_override, hsm_config_override)
 
             # Add the zones if they are specified.
-            zone_list = module.params['zone']
-            if zone_list is not None:
-                if len(zone_list) != nodes:
-                    raise Exception(f'Number of nodes is {nodes}, but only {len(zone_list)} zones provided')
-                expected_ordering_service['zone'] = zone_list
+            zones = module.params['zones']
+            if zones is not None:
+                if len(zones) != nodes:
+                    raise Exception(f'Number of nodes is {nodes}, but only {len(zones)} zones provided')
+                expected_ordering_service['zone'] = zones
 
             # Add the version if it is specified.
             version = module.params['version']
@@ -688,7 +688,7 @@ def main():
             # Check to see if the number of ordering service nodes has changed.
             nodes = module.params['nodes']
             if nodes != len(ordering_service):
-                raise Exception(f'nodes cannot be changed from {len(ordering_service)} to {nodes} for existing ordering service')
+                raise Exception(f'Number of nodes cannot be changed from {len(ordering_service)} to {nodes} for existing ordering service')
             config_override_list = module.params['config_override']
             if config_override_list is not None:
                 if len(config_override_list) != nodes:
@@ -732,9 +732,11 @@ def main():
                     merge_dicts(config_override, hsm_config_override)
 
                 # Add the zone if it is specified.
-                zone_list = module.params['zone']
-                if zone_list is not None:
-                    expected_ordering_service_node['zone'] = zone_list[i]
+                zones = module.params['zones']
+                if zones is not None:
+                    if len(zones) != nodes:
+                        raise Exception(f'Number of nodes is {nodes}, but only {len(zones)} zones provided')
+                    expected_ordering_service_node['zone'] = zones[i]
 
                 # Add the version if it is specified.
                 version = module.params['version']
