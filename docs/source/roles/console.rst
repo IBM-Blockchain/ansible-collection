@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/endorsing_organization.rst
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/console.rst
 
 
 console -- Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift
@@ -210,15 +210,15 @@ Parameters
     The version of IBM Blockchain Platform to use.
 
     | **Type**: str
-    | **Default value**: ``2.1.3``
+    | **Default value**: ``2.5.0``
 
   operator_version
     The version of the IBM Blockchain Platform operator to use.
 
-    The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.1.3-20200416-amd64``.
+    The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.5.0-20200618-amd64``.
 
     | **Type**: str
-    | **Default value**: ``20200520``
+    | **Default value**: ``20200618``
 
   zones
     The list of Kubernetes zones that this console can deploy components into.
