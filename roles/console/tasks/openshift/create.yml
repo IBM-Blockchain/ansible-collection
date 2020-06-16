@@ -46,19 +46,6 @@
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/image_pull_secret.yml.j2') }}"
 
-- name: Create custom resource definitions (>= 2.5.0)
-  k8s:
-    state: present
-    namespace: "{{ project }}"
-    resource_definition: "{{ lookup('file', '2.5.0/' + item) }}"
-    apply: yes
-  loop:
-    - ibpca-crd.yml
-    - ibpconsole-crd.yml
-    - ibporderer-crd.yml
-    - ibppeer-crd.yml
-  when: product_version is version('2.5.0', '>=')
-
 - name: Determine if operator exists
   k8s_info:
     namespace: "{{ project }}"
@@ -94,7 +81,7 @@
 - name: Determine if console exists
   k8s_info:
     namespace: "{{ project }}"
-    api_version: ibp.com/v1alpha1
+    api_version: "{{ 'ibp.com/v1alpha2' if product_version is version('2.5.0', '>=') else 'ibp.com/v1alpha1' }}"
     kind: IBPConsole
     name: "{{ console }}"
   register: existing_console
