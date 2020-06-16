@@ -55,7 +55,7 @@ steps:
     displayName: Lint collection
   - script: |
       set -ex
-      ibmcloud login --apikey $(IBM Cloud API Key)
+      ibmcloud login --apikey $(IBM Cloud API Key) -c $(IBM Cloud Account) -r $(IBM Cloud Region)
       ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
       oc login -u apikey -p $(IBM Cloud API Key)
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
