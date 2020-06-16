@@ -5,7 +5,6 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   name: "{{ cluster_role }}"
 rules:
 - apiGroups:
@@ -20,6 +19,9 @@ rules:
   - "*"
   resources:
   - pods
+{%+ if product_version is version('2.5.0', '>=') %}
+  - pod/logs
+{% endif %}
   - services
   - endpoints
   - persistentvolumeclaims
@@ -44,9 +46,19 @@ rules:
 - apiGroups:
   - apiextensions.k8s.io
   resources:
+{%+ if product_version is version('2.5.0', '>=') %}
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+{% endif %}
   - persistentvolumeclaims
   - persistentvolumes
+{%+ if product_version is version('2.5.0', '<') %}
   - customresourcedefinitions
+{% endif %}
   verbs:
   - '*'
 - apiGroups:

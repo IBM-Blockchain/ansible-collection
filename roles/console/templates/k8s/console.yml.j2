@@ -2,7 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
+{%+ if product_version is version('2.5.0', '>=') %}
+apiVersion: ibp.com/v1alpha2
+{%+ else %}
 apiVersion: ibp.com/v1alpha1
+{% endif %}
 kind: IBPConsole
 metadata:
   name: "{{ console }}"

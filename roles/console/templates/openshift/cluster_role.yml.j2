@@ -12,13 +12,27 @@ rules:
   resources:
   - persistentvolumeclaims
   - persistentvolumes
-  - customresourcedefinitions
+{%+ if product_version is version('2.5.0', '>=') %}
   verbs:
   - '*'
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+{% endif %}
+  - customresourcedefinitions
+  verbs:
+{%+ if product_version is version('2.5.0', '>=') %}
+  - 'get'
+{%+ else %}
+  - '*'
+{%endif %}
 - apiGroups:
   - "*"
   resources:
   - pods
+{%+ if product_version is version('2.5.0', '>=') %}
+  - pods/log
+{% endif %}
   - services
   - endpoints
   - persistentvolumeclaims
@@ -70,6 +84,7 @@ rules:
   - ibp.com
   resources:
   - '*'
+{%+ if product_version is version('2.5.0', '<') %}
   - ibpservices
   - ibpcas
   - ibppeers
@@ -81,6 +96,7 @@ rules:
   - ibp.com
   resources:
   - '*'
+{% endif %}
   verbs:
   - '*'
 - apiGroups:

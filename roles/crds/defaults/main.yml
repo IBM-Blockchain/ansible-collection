@@ -23,7 +23,7 @@ webhook: ibp-webhook
 
 wait_timeout: 60
 
-product_version: "2.1.3"
-webhook_version: "20200520"
+product_version: "2.5.0"
+webhook_version: "20200618"
 webhook_image: "{{ image_registry_url }}/ibp-crdwebhook"
 webhook_tag: "{{ product_version }}-{{ webhook_version }}-{{ arch }}"
