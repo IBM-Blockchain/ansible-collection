@@ -1,0 +1,103 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Set test facts
+  set_fact:
+    ibp_connection_info: &ibp_connection_info
+      api_endpoint: "{{ api_endpoint | mandatory }}"
+      api_authtype: "{{ api_authtype | mandatory }}"
+      api_key: "{{ api_key | mandatory }}"
+      api_secret: "{{ api_secret | mandatory }}"
+    ca_name: "Test CA {{ short_test_run_id }}"
+    ca_config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+            - name: admin
+              pass: adminpw
+              type: client
+              maxenrollments: -1
+              attrs:
+                hf.Registrar.Roles: "*"
+                hf.Registrar.DelegateRoles: "*"
+                hf.Revoker: true
+                hf.IntermediateCA: true
+                hf.GenCRL: true
+                hf.Registrar.Attributes: "*"
+                hf.AffiliationMgr: true
+    k8s_namespace: "{{ k8s_namespace | mandatory }}"
+    k8s_name: "testca{{ short_test_run_id }}"
+    wait_timeout: 600
+
+- name: Run tests
+  block:
+    - name: Create certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        <<: *ibp_connection_info
+        name: "{{ ca_name }}"
+        config_override: "{{ ca_config_override }}"
+        wait_timeout: "{{ wait_timeout }}"
+      register: result
+
+    - include_tasks: assertions.yml
+      vars:
+        expected_change: yes
+        expected_enrollment_id: admin
+        expected_enrollment_secret: adminpw
+        expected_cpu: 100m
+        expected_memory: 200M
+        expected_storage_class: default
+        expected_storage_size: 20Gi
+
+    - name: Ensure idempotency
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        <<: *ibp_connection_info
+        name: "{{ ca_name }}"
+        config_override: "{{ ca_config_override }}"
+        wait_timeout: "{{ wait_timeout }}"
+      register: result
+
+    - include_tasks: assertions.yml
+      vars:
+        expected_change: no
+        expected_enrollment_id: admin
+        expected_enrollment_secret: adminpw
+        expected_cpu: 100m
+        expected_memory: 200M
+        expected_storage_class: default
+        expected_storage_size: 20Gi
+
+    - name: Change resources
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        <<: *ibp_connection_info
+        name: "{{ ca_name }}"
+        config_override: "{{ ca_config_override }}"
+        resources:
+          ca:
+            requests:
+              cpu: 200m
+              memory: 400M
+        wait_timeout: "{{ wait_timeout }}"
+      register: result
+
+    - include_tasks: assertions.yml
+      vars:
+        expected_change: yes
+        expected_enrollment_id: admin
+        expected_enrollment_secret: adminpw
+        expected_cpu: 200m
+        expected_memory: 400M
+        expected_storage_class: default
+        expected_storage_size: 20Gi
+
+  always:
+    - name: Delete certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: absent
+        <<: *ibp_connection_info
+        name: "{{ ca_name }}"

@@ -1,0 +1,11 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+k8s_namespace: ibp
+test_run_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+short_test_run_id: xxxxxxxx
