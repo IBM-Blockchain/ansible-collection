@@ -143,3 +143,6 @@ ibm-blockchain_platform-*.tar.gz
 
 # generated documentation
 docs/source/modules/*.rst
+
+# test output
+tests/output
