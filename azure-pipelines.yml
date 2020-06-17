@@ -20,7 +20,7 @@ steps:
     inputs:
       versionSpec: "3.x"
     displayName: Use Python 3.x
-  - script: pip install ansible ansible-doc-extractor ansible-lint flake8 sphinx sphinx-rtd-theme yamllint yq
+  - script: pip install ansible ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 sphinx sphinx-rtd-theme yamllint yq
     displayName: Install Python dependencies
   - script: |
       set -ex
@@ -58,7 +58,7 @@ steps:
       ibmcloud login --apikey $(IBM Cloud API Key) -c $(IBM Cloud Account) -r $(IBM Cloud Region)
       ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
       oc login -u apikey -p $(IBM Cloud API Key)
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: Log in to IBM Cloud
   - script: |
       set -ex
@@ -73,7 +73,7 @@ steps:
       yq -yi .test_run_id=\"${TEST_RUN_ID}\" tests/integration/integration_config.yml
       yq -yi .short_test_run_id=\"${SHORT_TEST_RUN_ID}\" tests/integration/integration_config.yml
       ansible-test integration
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: Run tests
   - script: |
       set -ex
