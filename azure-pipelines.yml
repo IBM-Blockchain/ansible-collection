@@ -62,7 +62,7 @@ steps:
     displayName: Log in to IBM Cloud
   - script: |
       set -ex
-      ibmcloud oc cluster get -c $(IBM Cloud OpenShift Cluster ID) --json > cluster.json
+      cd ~/.ansible/collections/ansible_collections/ibm/blockchain_platform
       export TEST_RUN_ID=$(dd if=/dev/urandom bs=4096 count=1 2>/dev/null | shasum | awk '{print $1}')
       export SHORT_TEST_RUN_ID=$(echo ${TEST_RUN_ID} | awk '{print substr($1,1,8)}')
       yq -yi '.api_endpoint="$(IBM Blockchain Platform API Endpoint)"' tests/integration/integration_config.yml
