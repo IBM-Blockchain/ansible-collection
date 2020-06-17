@@ -22,6 +22,8 @@ steps:
     displayName: Use Python 3.x
   - script: pip install ansible ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 sphinx sphinx-rtd-theme yamllint yq
     displayName: Install Python dependencies
+  - script: curl -sSL https://github.com/hyperledger/fabric/releases/download/v1.4.7/hyperledger-fabric-linux-amd64-1.4.7.tar.gz | sudo tar xzf - -C /usr/local
+    displayName: Install Fabric CLI
   - script: |
       set -ex
       curl -sL https://ibm.biz/idt-installer | bash
@@ -30,9 +32,7 @@ steps:
       ibmcloud plugin list
       curl -sSL https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz | sudo tar xzf - -C /usr/local/bin
     displayName: Install IBM Cloud and OpenShift CLI
-  - script: |
-      set -ex
-      ansible-galaxy collection build
+  - script: ansible-galaxy collection build
     displayName: Build collection artifact
   - script: |
       set -ex
