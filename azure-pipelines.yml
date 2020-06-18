@@ -20,8 +20,10 @@ steps:
     inputs:
       versionSpec: "3.x"
     displayName: Use Python 3.x
-  - script: pip install ansible ansible-doc-extractor ansible-lint flake8 sphinx sphinx-rtd-theme yamllint yq
+  - script: pip install ansible ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 sphinx sphinx-rtd-theme yamllint yq
     displayName: Install Python dependencies
+  - script: curl -sSL https://github.com/hyperledger/fabric/releases/download/v1.4.7/hyperledger-fabric-linux-amd64-1.4.7.tar.gz | sudo tar xzf - -C /usr/local
+    displayName: Install Fabric CLI
   - script: |
       set -ex
       curl -sL https://ibm.biz/idt-installer | bash
@@ -32,7 +34,11 @@ steps:
     displayName: Install IBM Cloud and OpenShift CLI
   - script: |
       set -ex
-      ansible-galaxy collection build
+      ibmcloud login --apikey $(IBM Cloud API Key) -c $(IBM Cloud Account) -r $(IBM Cloud Region)
+      ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
+      oc login -u apikey -p $(IBM Cloud API Key)
+    displayName: Log in to IBM Cloud
+  - script: ansible-galaxy collection build
     displayName: Build collection artifact
   - script: |
       set -ex
@@ -55,13 +61,6 @@ steps:
     displayName: Lint collection
   - script: |
       set -ex
-      ibmcloud login --apikey $(IBM Cloud API Key) -c $(IBM Cloud Account) -r $(IBM Cloud Region)
-      ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
-      oc login -u apikey -p $(IBM Cloud API Key)
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    displayName: Log in to IBM Cloud
-  - script: |
-      set -ex
       cd ~/.ansible/collections/ansible_collections/ibm/blockchain_platform
       export TEST_RUN_ID=$(dd if=/dev/urandom bs=4096 count=1 2>/dev/null | shasum | awk '{print $1}')
       export SHORT_TEST_RUN_ID=$(echo ${TEST_RUN_ID} | awk '{print substr($1,1,8)}')
@@ -73,7 +72,6 @@ steps:
       yq -yi .test_run_id=\"${TEST_RUN_ID}\" tests/integration/integration_config.yml
       yq -yi .short_test_run_id=\"${SHORT_TEST_RUN_ID}\" tests/integration/integration_config.yml
       ansible-test integration
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: Run tests
   - script: |
       set -ex
