@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,6 +11,10 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   
@@ -19,7 +22,9 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -31,10 +36,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Building a network" href="building.html" />
@@ -52,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Ansible Collection
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ansible Collection
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -107,6 +109,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -145,7 +148,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Installing the IBM Blockchain Platform</li>
     
@@ -171,11 +174,11 @@
   <div class="section" id="installing-the-ibm-blockchain-platform">
 <h1>Installing the IBM Blockchain Platform<a class="headerlink" href="#installing-the-ibm-blockchain-platform" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the installation of the IBM Blockchain Platform software into a Kubernetes or Red Hat OpenShift cluster.</p>
-<p>This tutorial uses the <code class="docutils literal notranslate"><span class="pre">ibm.blockchain_platform.console</span></code> role to install the IBM Blockchain Platform. You can review the documentation for this role to find all of the options that are available to customize the installation process: <a class="reference external" href="../roles/console.html">console</a></p>
+<p>This tutorial uses the Ansible roles <a class="reference external" href="../roles/crds.html">crds</a> and <a class="reference external" href="../roles/console.html">console</a> to install the IBM Blockchain Platform software. If you wish to customize the installation process, then you should review the documentation for these roles.</p>
 <div class="section" id="before-you-start">
 <h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
 <p>Ensure that you have installed all of the pre-requisite software described in <a class="reference external" href="../installation.html">Installation</a>.</p>
-<p>You must have access to a Kubernetes or Red Hat OpenShift cluster that is supported for use with the IBM Blockchain Platform. Review the list of supported platforms in the IBM Blockchain Platform documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-213?topic=blockchain-sw-213-console-ocp-about#console-ocp-about-prerequisites">Supported Platforms</a></p>
+<p>You must have access to a Kubernetes or Red Hat OpenShift cluster that is supported for use with the IBM Blockchain Platform. Review the list of supported platforms in the IBM Blockchain Platform documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-prerequisites">Supported Platforms</a></p>
 <p>If you have a Kubernetes cluster, you must have the Kubernetes CLI (<code class="docutils literal notranslate"><span class="pre">kubectl</span></code>) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:</p>
 <blockquote>
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">get</span> <span class="n">nodes</span>
@@ -188,8 +191,11 @@
 </pre></div>
 </div>
 </div></blockquote>
-<p>The IBM Blockchain Platform must be installed into a Kubernetes namespace or Red Hat OpenShift project. If you do not have permissions to create a namespace or project, then ask your administrator to create it for you.</p>
-<p>Finally, you must have purchased an entitlement to use the IBM Blockchain Platform. You will need your entitlement key in order to complete this tutorial. For more information, see the IBM Blockchain Platform documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-213?topic=blockchain-sw-213-console-ocp-about#console-ocp-about-license">License and pricing</a></p>
+<p>The IBM Blockchain Platform software should be installed into two Kubernetes namespaces or Red Hat OpenShift projects.</p>
+<p>The first namespace or project will contain the IBM Blockchain Platform webhook and custom resource definitions. A single instance of the webhook and custom resource definitions are required per cluster. The webhook automatically handles migration between different versions of the custom resource definitions, allowing different versions of the IBM Blockchain Platform to coexist in the same cluster. It is recommended that you call this namespace or project <code class="docutils literal notranslate"><span class="pre">ibpinfra</span></code>.</p>
+<p>The second namespace or project will contain the IBM Blockchain Platform operator and console.</p>
+<p>The Ansible collection will attempt to automatically create both of these namespaces or projects for you. If you do not have permissions to create a namespace or project, then ask your administrator to create them for you.</p>
+<p>Finally, you must have purchased an entitlement to use the IBM Blockchain Platform. You will need your entitlement key in order to complete this tutorial. For more information, see the IBM Blockchain Platform documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-license">License and pricing</a></p>
 </div>
 <div class="section" id="creating-the-playbook">
 <h2>Creating the playbook<a class="headerlink" href="#creating-the-playbook" title="Permalink to this headline">¶</a></h2>
@@ -197,6 +203,19 @@
 <p><strong>Kubernetes</strong></p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibpinfra</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span>
+
 <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span>
   <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="nt">vars</span><span class="p">:</span>
@@ -218,6 +237,19 @@
 <p><strong>Red Hat OpenShift</strong></p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibpinfra</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span>
+
 <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span>
   <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="nt">vars</span><span class="p">:</span>
@@ -237,7 +269,7 @@
 </div>
 </div></blockquote>
 <p>Next, you will need to replace the variable placeholders with the required values.</p>
-<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> with the name of the Kubernetes namespace, or <code class="docutils literal notranslate"><span class="pre">&lt;project&gt;</span></code> with the name of the Red Hat OpenShift project, that you are installing the IBM Blockchain Platform into.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> with the name of the Kubernetes namespace, or <code class="docutils literal notranslate"><span class="pre">&lt;project&gt;</span></code> with the name of the Red Hat OpenShift project that you are installing the IBM Blockchain Platform operator and console into.</p>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;image_registry_password&gt;</span></code> with your IBM Blockchain Platform entitlement key.</p>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;image_registry_email&gt;</span></code> with the email address of your IBMid account that you use to access the My IBM dashboard.</p>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;console_domain&gt;</span></code> with the domain name of your Kubernetes cluster or Red Hat OpenShift cluster. This domain name is used as the base domain name for all ingress or routes created by the IBM Blockchain Platform.</p>
@@ -298,11 +330,19 @@ localhost                  : ok=19   changed=4    unreachable=0    failed=0    s
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright IBM Corporation 2020
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -313,7 +353,6 @@ localhost                  : ok=19   changed=4    unreachable=0    failed=0    s
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

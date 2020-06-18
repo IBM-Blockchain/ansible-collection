@@ -261,7 +261,7 @@ Parameters
       | **Type**: str
 
 
-  zone
+  zones
     The Kubernetes zones for this ordering service.
 
     If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by *nodes*.
