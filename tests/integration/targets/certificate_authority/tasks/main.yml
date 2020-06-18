@@ -9,6 +9,7 @@
       api_authtype: "{{ api_authtype | mandatory }}"
       api_key: "{{ api_key | mandatory }}"
       api_secret: "{{ api_secret | mandatory }}"
+      api_timeout: "{{ api_timeout | mandatory }}"
     ca_name: "Test CA {{ short_test_run_id }}"
     ca_config_override:
       ca:
@@ -29,7 +30,7 @@
                 hf.AffiliationMgr: true
     k8s_namespace: "{{ k8s_namespace | mandatory }}"
     k8s_name: "testca{{ short_test_run_id }}"
-    wait_timeout: 600
+    wait_timeout: "{{ wait_timeout | mandatory }}"
 
 - name: Run tests
   block:
@@ -88,6 +89,30 @@
     - include_tasks: assertions.yml
       vars:
         expected_change: yes
+        expected_enrollment_id: admin
+        expected_enrollment_secret: adminpw
+        expected_cpu: 200m
+        expected_memory: 400M
+        expected_storage_class: default
+        expected_storage_size: 20Gi
+
+    - name: Ensure idempotency
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        <<: *ibp_connection_info
+        name: "{{ ca_name }}"
+        config_override: "{{ ca_config_override }}"
+        resources:
+          ca:
+            requests:
+              cpu: 200m
+              memory: 400M
+        wait_timeout: "{{ wait_timeout }}"
+      register: result
+
+    - include_tasks: assertions.yml
+      vars:
+        expected_change: no
         expected_enrollment_id: admin
         expected_enrollment_secret: adminpw
         expected_cpu: 200m
