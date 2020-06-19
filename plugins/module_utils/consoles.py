@@ -121,15 +121,25 @@ class Console:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
+                # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
+                # console, but not in Kubernetes. Try again without requesting the deployment attributes, and
+                # add a value to the result that will trigger the calling module to delete the component.
+                if isinstance(e, urllib.error.HTTPError) and deployment_attrs == 'included':
+                    is_404 = e.code == 404
+                    # Sometimes the HTTP 404 Not Found is buried in a HTTP 503 Service Unavailable message, so
+                    # we need to check for that as well.
+                    if e.code == 503:
+                        try:
+                            error = json.load(e)
+                            is_404 = error.get('response', dict()).get('status', 0) == 404
+                        except Exception:
+                            pass
+                    if is_404:
+                        result = self.get_component_by_id(id, 'omitted')
+                        result['deployment_attrs_missing'] = True
+                        return result
                 if self.should_retry_error(e, attempt):
                     continue
-                elif isinstance(e, urllib.error.HTTPError) and e.code == 404 and deployment_attrs == 'included':
-                    # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
-                    # console, but not in Kubernetes. Try again without requesting the deployment attributes, and
-                    # add a value to the result that will trigger the calling module to delete the component.
-                    result = self.get_component_by_id(id, 'omitted')
-                    result['deployment_attrs_missing'] = True
-                    return result
                 return self.handle_error('Failed to get component by ID', e)
 
     def get_component_by_display_name(self, display_name, deployment_attrs='omitted'):

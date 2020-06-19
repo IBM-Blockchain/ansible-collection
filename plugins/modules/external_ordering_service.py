@@ -392,8 +392,8 @@ def main():
                 if ordering_service_node_changed:
                     console.delete_ext_ordering_service_node(new_ordering_service_node['id'])
                     ordering_service_node = console.create_ext_ordering_service_node(expected_ordering_service_node)
-                    ordering_service.append(ordering_service_node)
                     changed = True
+                ordering_service.append(ordering_service_node)
 
         # Return the ordering service.
         ordering_service = OrderingService.from_json(console.extract_ordering_service_info(ordering_service))
