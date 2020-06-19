@@ -6,7 +6,6 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.errors import AnsibleActionFail
 from ansible.module_utils.urls import open_url
 
 import base64
@@ -30,12 +29,12 @@ class Console:
         elif api_authtype == 'basic':
             self._login_basic(api_key, api_secret)
         else:
-            raise AnsibleActionFail(f'invalid authentication type "{api_authtype}" specified, valid values are "ibmcloud" and "basic"')
+            raise Exception(f'invalid authentication type "{api_authtype}" specified, valid values are "ibmcloud" and "basic"')
         try:
             self.health = self.get_health()
             self.settings = self.get_settings()
         except Exception as e:
-            raise AnsibleActionFail(f'Failed to access IBM Blockchain Platform console: {e}')
+            raise Exception(f'Failed to access IBM Blockchain Platform console: {e}')
 
     def _login_ibmcloud(self, api_key):
         try:
@@ -51,7 +50,7 @@ class Console:
             access_token = auth['access_token']
             self.authorization = f'Bearer {access_token}'
         except Exception as e:
-            raise AnsibleActionFail(f'Failed to log in to IBM Cloud: {e}')
+            raise Exception(f'Failed to log in to IBM Cloud: {e}')
 
     def _login_basic(self, api_key, api_secret):
         credentials = f'{api_key}:{api_secret}'
@@ -59,7 +58,7 @@ class Console:
 
     def _ensure_loggedin(self):
         if self.authorization is None:
-            raise AnsibleActionFail('Not logged in')
+            raise Exception('Not logged in')
 
     def get_health(self):
         self._ensure_loggedin()
@@ -68,12 +67,12 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console health', e)
 
@@ -84,12 +83,12 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console settings', e)
 
@@ -100,13 +99,13 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
                 return parsed_response.get('components', list())
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get all components', e)
 
@@ -117,12 +116,12 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 elif isinstance(e, urllib.error.HTTPError) and e.code == 404 and deployment_attrs == 'included':
                     # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
@@ -156,12 +155,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create certificate authority', e)
 
@@ -179,12 +178,12 @@ class Console:
             if permitted_change in data:
                 stripped_data[permitted_change] = data[permitted_change]
         serialized_data = json.dumps(stripped_data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update certificate authority', e)
 
@@ -194,12 +193,12 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete certificate authority', e)
 
@@ -223,12 +222,12 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external certificate authority', e)
 
@@ -241,12 +240,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create peer', e)
 
@@ -264,12 +263,12 @@ class Console:
             if permitted_change in data:
                 stripped_data[permitted_change] = data[permitted_change]
         serialized_data = json.dumps(stripped_data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update peer', e)
 
@@ -279,12 +278,12 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete peer', e)
 
@@ -307,12 +306,12 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external peer', e)
 
@@ -325,12 +324,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create ordering service', e)
 
@@ -342,7 +341,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
@@ -361,7 +360,7 @@ class Console:
                             raise Exception(f'{deleted}')
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete ordering service', e)
 
@@ -379,7 +378,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
@@ -392,7 +391,7 @@ class Console:
                             raise Exception(f'{deleted}')
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external ordering service', e)
 
@@ -410,12 +409,12 @@ class Console:
             if permitted_change in data:
                 stripped_data[permitted_change] = data[permitted_change]
         serialized_data = json.dumps(stripped_data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update ordering service node', e)
 
@@ -446,12 +445,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create ordering service node', e)
 
@@ -464,12 +463,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update ordering service node', e)
 
@@ -481,12 +480,12 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external ordering service node', e)
 
@@ -503,12 +502,12 @@ class Console:
             'remove_admin_certs': remove_admin_certs
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to edit admin certificates', e)
 
@@ -521,12 +520,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create organization', e)
 
@@ -539,12 +538,12 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 return json.load(response)
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update peer', e)
 
@@ -554,12 +553,12 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete peer', e)
 
@@ -579,8 +578,10 @@ class Console:
             'host_url': organization.get('host_url', None)
         }
 
-    def should_retry_error(self, error):
-        if isinstance(error, urllib.error.HTTPError):
+    def should_retry_error(self, error, attempt):
+        if attempt >= self.retries:
+            return False
+        elif isinstance(error, urllib.error.HTTPError):
             retry = error.code in [502, 503, 504]
             if retry:
                 time.sleep(1)
@@ -594,9 +595,9 @@ class Console:
                 str = json.loads(str)
             except Exception:
                 pass
-            raise AnsibleActionFail(f'{message}: HTTP status code {error.code}: {str}')
+            raise Exception(f'{message}: HTTP status code {error.code}: {str}')
         else:
-            raise AnsibleActionFail(f'{message}: {error}')
+            raise Exception(f'{message}: {error}')
 
     def is_free_cluster(self):
         return self.settings.get('CLUSTER_DATA', dict()).get('type', None) == 'free'
@@ -629,12 +630,12 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get the list of console users', e)
         data = json.load(response)
@@ -670,12 +671,12 @@ class Console:
             }
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create console user', e)
         return self.get_user(email)
@@ -698,12 +699,12 @@ class Console:
             }
         }
         data = json.dumps(data)
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update console user', e)
         return self.get_user(email)
@@ -718,11 +719,11 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(self.retries):
+        for attempt in range(1, self.retries + 1):
             try:
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 return
             except Exception as e:
-                if self.should_retry_error(e):
+                if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete console user', e)
