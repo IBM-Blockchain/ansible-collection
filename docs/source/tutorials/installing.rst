@@ -90,7 +90,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
           hosts: localhost
           vars:
             state: present
-            target: k8s
+            target: openshift
             arch: amd64
             project: ibpinfra
             image_registry_password: <image_registry_password>

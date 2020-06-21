@@ -12,6 +12,7 @@
     organization_admin_enrollment_secret: orgadminpw
     ordering_service_enrollment_id: orderingservice
     ordering_service_enrollment_secret: orderingservicepw
+    ordering_service_name: "Test Ordering Service {{ short_test_run_id }}"
     k8s_namespace: "{{ k8s_namespace | mandatory }}"
     wait_timeout: "{{ wait_timeout | mandatory }}"
 
