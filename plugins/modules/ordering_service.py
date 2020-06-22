@@ -323,6 +323,12 @@ EXAMPLES = '''
     api_key: xxxxxxxx
     api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     name: Ordering Service
+    # the following are required if this task is in a separate file
+    certificate_authority: Orderer Org CA
+    enrollment_id: orderingorgorderer
+    enrollment_secret: orderingorgordererpw
+    admin_certificates:
+      - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 '''
 
 RETURN = '''

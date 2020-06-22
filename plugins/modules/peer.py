@@ -361,6 +361,12 @@ EXAMPLES = '''
     api_key: xxxxxxxx
     api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     name: Org1 Peer
+    # the following are required if this task is in a separate file
+    certificate_authority: Org1 CA
+    admins:
+        - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+    enrollment_id: org1peer
+    enrollment_secret: org1peerpw
 '''
 
 RETURN = '''
