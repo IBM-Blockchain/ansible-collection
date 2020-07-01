@@ -28,7 +28,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal
 RUN microdnf install python38
 COPY --from=builder /root/.local /root/.local
 COPY --from=builder /root/.ansible /root/.ansible
-COPY --from=fabric /go/src/github.com/hyperledger/fabric/.build/bin /opt/fabric/bin
+COPY --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
 COPY --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
 ENV FABRIC_CFG_PATH=/opt/fabric/config
 ENV PATH=/opt/fabric/bin:/root/.local/bin:$PATH
