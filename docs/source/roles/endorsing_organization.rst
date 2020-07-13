@@ -201,7 +201,7 @@ Examples
 
   - name: Destroy components for an endorsing organization
     vars:
-      state: present
+      state: absent
       api_endpoint: https://ibp-console.example.org:32000
       api_authtype: basic
       api_key: xxxxxxxx
