@@ -546,9 +546,15 @@ def main():
         ('api_authtype', 'basic', ['api_secret']),
         ('state', 'present', ['name', 'msp_id'])
     ]
-    required_one_of = [
-        ['certificate_authority', 'config']
-    ]
+    # Ansible doesn't allow us to say "require one of X and Y only if condition A is true",
+    # so we need to handle this ourselves by seeing what was passed in.
+    actual_params = _load_params()
+    if actual_params.get('state', 'present') == 'present':
+        required_one_of = [
+            ['certificate_authority', 'config']
+        ]
+    else:
+        required_one_of = []
     required_together = [
         ['certificate_authority', 'enrollment_id'],
         ['certificate_authority', 'enrollment_secret'],
