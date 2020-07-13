@@ -21,7 +21,7 @@
       - result.json.result.CAChain is defined
 
 - k8s_info:
-    api_version: ibp.com/v1alpha1
+    api_version: ibp.com/v1alpha2
     kind: IBPCA
     namespace: "{{ k8s_namespace }}"
     name: "{{ k8s_name }}"
