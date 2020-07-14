@@ -18,8 +18,10 @@ state: present
 ca_name: "{{ organization_name }} CA"
 # ca_resources:
 # ca_storage:
+# ca_version:
 peers: 1
 peer_name: "{{ organization_name }} Peer"
 # peer_resources:
 # peer_storage:
 peer_state_db: couchdb
+# peer_version:

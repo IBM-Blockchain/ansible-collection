@@ -110,6 +110,17 @@ Parameters
 
     | **Type**: dict
 
+  ca_version
+    The version of Hyperledger Fabric to use for the certificate authority.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new certificate authority.
+
+    If you do not specify a version, an existing certificate authority will not be upgraded.
+
+    If you specify a new version, an existing certificate authority will be automatically upgraded.
+
+    | **Type**: str
+
   organization_admin_enrollment_id (required)
     The enrollment ID, or user name, of the identity registered as the administrator of the organization.
 
@@ -157,6 +168,17 @@ Parameters
     For more information, review the documentation for the *storage* parameter of the *ordering_service* module: `ordering_service <../modules/ordering_service.html>`_
 
     | **Type**: dict
+
+  ordering_service_version
+    The version of Hyperledger Fabric to use for the ordering service.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.
+
+    If you do not specify a version, an existing ordering service will not be upgraded.
+
+    If you specify a new version, an existing ordering service will be automatically upgraded.
+
+    | **Type**: str
 
   wait_timeout
     The timeout, in seconds, to wait until the certificate authority and the ordering service is available.

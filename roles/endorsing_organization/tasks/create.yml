@@ -30,6 +30,7 @@
                 hf.AffiliationMgr: true
     resources: "{{ ca_resources | default(omit) }}"
     storage: "{{ ca_storage | default(omit) }}"
+    version: "{{ ca_version | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
 
 - name: Enroll certificate authority admin
@@ -124,6 +125,7 @@
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
     resources: "{{ peer_resources | default(omit) }}"
     storage: "{{ peer_storage | default(omit) }}"
+    version: "{{ peer_version | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
   when: peers == 1
 
@@ -145,6 +147,7 @@
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
     resources: "{{ peer_resources | default(omit) }}"
     storage: "{{ peer_storage | default(omit) }}"
+    version: "{{ peer_version | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
   loop: "{{ range(1, peers + 1, 1) | list }}"
   when: peers > 1
