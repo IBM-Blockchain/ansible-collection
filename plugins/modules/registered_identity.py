@@ -152,6 +152,10 @@ options:
                 description:
                     - The value of the attribute.
                 type: str
+            ecert:
+                description:
+                    - Whether or not the attribute and its value will be in the enrollment certificate.
+                type: bool
 notes: []
 requirements: []
 '''
@@ -235,6 +239,11 @@ registered_identity:
                         - The value of the attribute.
                     type: str
                     sample: true
+                ecert:
+                    description:
+                        - Whether or not the attribute and its value will be in the enrollment certificate.
+                    type: bool
+                    sample: true
 '''
 
 
@@ -258,7 +267,8 @@ def main():
         affiliation=dict(type='str', default=''),
         attributes=dict(type='list', elements='dict', default=list(), options=dict(
             name=dict(type='str', required=True),
-            value=dict(type='str', required=True)
+            value=dict(type='str', required=True),
+            ecert=dict(type='bool', default=False)
         )),
         hsm=dict(type='dict', options=dict(
             pkcs11library=dict(type='str', required=True),
