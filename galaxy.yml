@@ -4,7 +4,7 @@
 ---
 namespace: ibm
 name: blockchain_platform
-version: 0.0.31
+version: 0.0.32
 readme: README.md
 authors:
   - Simon Stone
