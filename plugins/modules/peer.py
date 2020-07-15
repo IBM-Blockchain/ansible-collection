@@ -15,6 +15,7 @@ from ..module_utils.cert_utils import normalize_whitespace
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
 
+from distutils.version import LooseVersion
 import urllib
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -202,6 +203,7 @@ options:
             dind:
                 description:
                     - The Kubernetes resource configuration for the Docker in Docker (DinD) container.
+                    - This configuration is only used if the peer is using Hyperledger Fabric v1.4.
                 type: dict
                 suboptions:
                     requests:
@@ -219,6 +221,27 @@ options:
                                     - The Kubernetes memory resource request for the Docker in Docker (DinD) container.
                                 type: str
                                 default: 1G
+            chaincodelauncher:
+                description:
+                    - The Kubernetes resource configuration for the chaincode launcher container.
+                    - This configuration is only used if the peer is using Hyperledger Fabric v2.0 or later.
+                type: dict
+                suboptions:
+                    requests:
+                        description:
+                            - The Kubernetes resource requests for the chaincode launcher container.
+                        type: str
+                        suboptions:
+                            cpu:
+                                description:
+                                    - The Kubernetes CPU resource request for the chaincode launcher container.
+                                type: str
+                                default: 200m
+                            memory:
+                                description:
+                                    - The Kubernetes memory resource request for the chaincode launcher container.
+                                type: str
+                                default: 400M
     storage:
         description:
             - The Kubernetes storage configuration for the peer.
@@ -521,6 +544,12 @@ def main():
                     cpu=dict(type='str', default='1'),
                     memory=dict(type='str', default='1G')
                 ))
+            )),
+            chaincodelauncher=dict(type='dict', default=dict(), options=dict(
+                requests=dict(type='dict', default=dict(), options=dict(
+                    cpu=dict(type='str', default='200m'),
+                    memory=dict(type='str', default='400M')
+                ))
             ))
         )),
         storage=dict(type='dict', default=dict(), options=dict(
@@ -677,7 +706,7 @@ def main():
         elif state == 'present' and peer_exists:
 
             # HACK: never send the limits back, as they are rejected.
-            for thing in ['peer', 'proxy', 'couchdb', 'dind']:
+            for thing in ['peer', 'proxy', 'couchdb', 'dind', 'chaincodelauncher']:
                 if thing in peer['resources']:
                     if 'limits' in peer['resources'][thing]:
                         del peer['resources'][thing]['limits']
@@ -689,6 +718,13 @@ def main():
             # Update the peer configuration.
             new_peer = copy_dict(peer)
             merge_dicts(new_peer, expected_peer)
+
+            # We should only send dind resources if the peer is running Fabric v1.4.
+            # We should only send chaincodelauncher resources if the peer is running Fabric v2.x.
+            if LooseVersion(new_peer['version']) >= LooseVersion('2.0'):
+                new_peer['resources'].pop('dind', None)
+            elif LooseVersion(new_peer['version']) < LooseVersion('2.0'):
+                new_peer['resources'].pop('chaincodelauncher', None)
 
             # Check to see if any banned changes have been made.
             # HACK: zone is documented as a permitted change, but it has no effect.
