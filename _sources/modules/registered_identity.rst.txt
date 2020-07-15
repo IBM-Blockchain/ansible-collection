@@ -160,6 +160,11 @@ Parameters
 
       | **Type**: str
 
+    ecert
+      Whether or not the attribute and its value will be in the enrollment certificate.
+
+      | **Type**: bool
+
 
 
 
@@ -259,6 +264,12 @@ Return Values
         The value of the attribute.
 
         | **Type**: str
+        | **Sample**: ``True``
+
+      ecert
+        Whether or not the attribute and its value will be in the enrollment certificate.
+
+        | **Type**: bool
         | **Sample**: ``True``
 
 

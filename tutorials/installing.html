@@ -174,6 +174,7 @@
   <div class="section" id="installing-the-ibm-blockchain-platform">
 <h1>Installing the IBM Blockchain Platform<a class="headerlink" href="#installing-the-ibm-blockchain-platform" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the installation of the IBM Blockchain Platform software into a Kubernetes or Red Hat OpenShift cluster.</p>
+<p>If you are using the IBM Blockchain Platform on IBM Cloud, you do not need to follow this tutorial. You can not use this Ansible collection to create an instance of the IBM Blockchain Platform service on IBM Cloud. If you want to use the IBM Blockchain Platform on IBM Cloud, you must create the instance before you attempt to use this Ansible collection. Once you have created an instance, follow the <a class="reference external" href="./building.html">Building a network</a> tutorial.</p>
 <p>This tutorial uses the Ansible roles <a class="reference external" href="../roles/crds.html">crds</a> and <a class="reference external" href="../roles/console.html">console</a> to install the IBM Blockchain Platform software. If you wish to customize the installation process, then you should review the documentation for these roles.</p>
 <div class="section" id="before-you-start">
 <h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
@@ -241,7 +242,7 @@
   <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="nt">vars</span><span class="p">:</span>
     <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
     <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
     <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibpinfra</span>
     <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>

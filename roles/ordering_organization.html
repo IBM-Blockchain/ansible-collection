@@ -282,6 +282,14 @@
 <div class="line"><strong>Type</strong>: dict</div>
 </div>
 </dd>
+<dt>ca_version</dt><dd><p>The version of Hyperledger Fabric to use for the certificate authority.</p>
+<p>If you do not specify a version, the default Hyperledger Fabric version will be used for a new certificate authority.</p>
+<p>If you do not specify a version, an existing certificate authority will not be upgraded.</p>
+<p>If you specify a new version, an existing certificate authority will be automatically upgraded.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
 <dt>organization_admin_enrollment_id (required)</dt><dd><p>The enrollment ID, or user name, of the identity registered as the administrator of the organization.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
@@ -327,6 +335,14 @@
 <div class="line"><strong>Type</strong>: dict</div>
 </div>
 </dd>
+<dt>ordering_service_version</dt><dd><p>The version of Hyperledger Fabric to use for the ordering service.</p>
+<p>If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.</p>
+<p>If you do not specify a version, an existing ordering service will not be upgraded.</p>
+<p>If you specify a new version, an existing ordering service will be automatically upgraded.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
 <dt>wait_timeout</dt><dd><p>The timeout, in seconds, to wait until the certificate authority and the ordering service is available.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: int</div>
@@ -359,7 +375,7 @@
 
 <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Destroy components for an ordering organization</span>
   <span class="nt">vars</span><span class="p">:</span>
-    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
     <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
     <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>

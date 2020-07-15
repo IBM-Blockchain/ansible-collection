@@ -7,6 +7,8 @@ Installing the IBM Blockchain Platform
 
 This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the installation of the IBM Blockchain Platform software into a Kubernetes or Red Hat OpenShift cluster.
 
+If you are using the IBM Blockchain Platform on IBM Cloud, you do not need to follow this tutorial. You can not use this Ansible collection to create an instance of the IBM Blockchain Platform service on IBM Cloud. If you want to use the IBM Blockchain Platform on IBM Cloud, you must create the instance before you attempt to use this Ansible collection. Once you have created an instance, follow the `Building a network <./building.html>`_ tutorial.
+
 This tutorial uses the Ansible roles `crds <../roles/crds.html>`_ and `console <../roles/console.html>`_ to install the IBM Blockchain Platform software. If you wish to customize the installation process, then you should review the documentation for these roles.
 
 Before you start
@@ -90,7 +92,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
           hosts: localhost
           vars:
             state: present
-            target: k8s
+            target: openshift
             arch: amd64
             project: ibpinfra
             image_registry_password: <image_registry_password>

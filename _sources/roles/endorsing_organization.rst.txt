@@ -110,6 +110,17 @@ Parameters
 
     | **Type**: dict
 
+  ca_version
+    The version of Hyperledger Fabric to use for the certificate authority.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new certificate authority.
+
+    If you do not specify a version, an existing certificate authority will not be upgraded.
+
+    If you specify a new version, an existing certificate authority will be automatically upgraded.
+
+    | **Type**: str
+
   organization_admin_enrollment_id (required)
     The enrollment ID, or user name, of the identity registered as the administrator of the organization.
 
@@ -169,6 +180,17 @@ Parameters
 
     | **Type**: dict
 
+  peer_version
+    The version of Hyperledger Fabric to use for the peer.
+
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new peer.
+
+    If you do not specify a version, an existing peer will not be upgraded.
+
+    If you specify a new version, an existing peer will be automatically upgraded.
+
+    | **Type**: str
+
   wait_timeout
     The timeout, in seconds, to wait until the certificate authority and the peer are available.
 
@@ -201,7 +223,7 @@ Examples
 
   - name: Destroy components for an endorsing organization
     vars:
-      state: present
+      state: absent
       api_endpoint: https://ibp-console.example.org:32000
       api_authtype: basic
       api_key: xxxxxxxx
