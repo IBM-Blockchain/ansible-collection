@@ -90,3 +90,12 @@
     kind: Secret
     name: "{{ image_pull_secret }}"
   when: project_info.resources
+
+- name: Delete security context constraints
+  k8s:
+    state: absent
+    namespace: "{{ project }}"
+    api_version: security.openshift.io/v1
+    kind: SecurityContextConstraints
+    name: "{{ security_context_constraints }}"
+  when: project_info.resources

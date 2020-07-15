@@ -22,6 +22,12 @@
     name: "{{ project }}"
   when: not project_info.resources
 
+- name: Create security context constraints
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
+
 - name: Create image secret
   k8s:
     state: present

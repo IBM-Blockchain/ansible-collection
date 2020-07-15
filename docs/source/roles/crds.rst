@@ -123,6 +123,15 @@ Parameters
 
     | **Type**: str
 
+  security_context_constraints
+    The name of the security context constraints.
+
+    By default, the security context contraints have the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
+
+    Only required when *target* is ``openshift``.
+
+    | **Type**: str
+
   service_account
     The name of the service account to use.
 

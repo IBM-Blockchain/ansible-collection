@@ -18,6 +18,7 @@ image_registry_url: "{{ image_registry }}/{{ image_repository }}"
 
 role: "{{ project | default(namespace) | default('') }}"
 role_binding: "{{ project | default(namespace) | default('') }}"
+security_context_constraints: "{{ project | default(namespace) | default('') }}"
 service_account: default
 webhook: ibp-webhook
 
