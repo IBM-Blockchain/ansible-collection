@@ -170,7 +170,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to fetch block from peer: {process.stdout}')
 
-    def list_installed_chaincodes(self):
+    def list_installed_chaincodes_oldlc(self):
         env = self._get_environ()
         process = subprocess.run([
             'peer', 'chaincode', 'list', '--installed'
@@ -192,7 +192,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
 
-    def install_chaincode(self, path):
+    def install_chaincode_oldlc(self, path):
         env = self._get_environ()
         process = subprocess.run([
             'peer', 'chaincode', 'install', path
@@ -263,6 +263,27 @@ class PeerConnection:
             return
         else:
             raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
+
+    def list_installed_chaincodes_newlc(self):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'lifecycle', 'chaincode', 'queryinstalled', '-O', 'json'
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            data = json.loads(process.stdout)
+            return data.get('installed_chaincodes', [])
+        else:
+            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+
+    def install_chaincode_newlc(self, path):
+        env = self._get_environ()
+        process = subprocess.run([
+            'peer', 'lifecycle', 'chaincode', 'install', path
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to install chaincode on peer: {process.stdout}')
 
     def _get_environ(self):
         api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
