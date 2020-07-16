@@ -168,6 +168,19 @@ options:
             - You must provide at least an Admins, Writers, and Readers policy.
             - Only required when I(operation) is C(create).
         type: dict
+    capabilities:
+        description:
+            - The capability levels for the new channel.
+        type: dict
+        suboptions:
+            application:
+                description:
+                    - The application capability level for the new channel.
+                    - The value must be a valid application capability level supported by Hyperledger Fabric,
+                      and all peers that will join the new channel must support this application capability level.
+                    - Example application capability levels include C(V1_4_2) and C(V2_0).
+                type: str
+                default: V1_4_2
 notes: []
 requirements: []
 '''
@@ -265,6 +278,7 @@ def create(module):
 
     # Build the config update for a new channel.
     name = module.params['name']
+    application_capability = module.params['capabilities']['application']
     config_update_json = dict(
         channel_id=name,
         read_set=dict(
@@ -291,9 +305,9 @@ def create(module):
                         Capabilities=dict(
                             mod_policy='Admins',
                             value=dict(
-                                capabilities=dict(
-                                    V1_4_2=dict()
-                                )
+                                capabilities={
+                                    application_capability: {}
+                                }
                             )
                         )
                     ),
@@ -573,7 +587,10 @@ def main():
         original=dict(type='str'),
         updated=dict(type='str'),
         organizations=dict(type='list', elements='raw'),
-        policies=dict(type='dict')
+        policies=dict(type='dict'),
+        capabilities=dict(type='dict', default=dict(), options=dict(
+            application=dict(type='str', default='V1_4_2')
+        ))
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
