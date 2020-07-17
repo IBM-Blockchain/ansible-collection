@@ -18,9 +18,9 @@ import hashlib
 import json
 import tarfile
 
-NSIBLE_METADATA = {'metadata_version': '1.1',
-                   'status': ['preview'],
-                   'supported_by': 'community'}
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
 
 DOCUMENTATION = '''
 ---
