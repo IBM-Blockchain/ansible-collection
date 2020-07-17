@@ -11,18 +11,16 @@ from ..module_utils.utils import get_console, get_peer_by_module, get_identity_b
 
 from ansible.module_utils._text import to_native
 
-import json
-
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
 DOCUMENTATION = '''
 ---
-module: instantiated_chaincode
-short_description: Manage a instantiated chaincode on a Hyperledger Fabric channel
+module: approved_chaincode
+short_description: Manage an approved chaincode on a Hyperledger Fabric channel
 description:
-    - Instantiate a chaincode on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+    - Approve a chaincode definition on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
     - This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain
       Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 author: Simon Stone (@sstone1)
@@ -63,16 +61,11 @@ options:
         default: https://iam.cloud.ibm.com/identity/token
     state:
         description:
-            - C(absent) - If a chaincode matching the specified name and version is instantiated, then an error
-              will be thrown, as it is not possible to uninstantiate chaincode.
-            - C(present) - Asserts that a chaincode matching the specified name and version is instantiated on
-              the specified channel. If it is not instantiated, then the chaincode with the specified name and
-              version is instantiated on the specified channel. If it is instantiated with a different version,
-              then the chaincode is upgraded on the specified channel. Otherwise, the instantiated chaincode is
-              checked to ensure that it matches the specified ESCC and VSCC. It is not possible to check that
-              the instantiated chaincode matches the specified endorsement policy and collections configuration.
-              If the instantiated chaincode does not match, then an error will be thrown, as it is not possible
-              to update instantiated chaincode without upgrading to a new version.
+            - C(absent) - If a chaincode definition matching the specified name, version and configuration is
+              approved, then an error will be thrown, as it is not possible to unapprove a chaincode definition.
+            - C(present) - Asserts that a chaincode definition matching the specified name, version and configuration
+              is approved on the specified channel. If it is not approved, then the chaincode definition with the
+              specified name, version and configuration will be approved on the specified channel.
         type: str
         default: present
         choices:
@@ -80,7 +73,7 @@ options:
             - present
     peer:
         description:
-            - The peer to use to manage the instantiated chaincode.
+            - The peer to use to manage the approved chaincode definition.
             - You can pass a string, which is the display name of a peer registered
               with the IBM Blockchain Platform console.
             - You can also pass a dict, which must match the result format of one of the
@@ -126,54 +119,54 @@ options:
         required: true
     name:
         description:
-            - The name of the chaincode.
+            - The name of the chaincode definition.
         type: str
         required: true
     version:
         description:
-            - The version of the chaincode.
+            - The version of the chaincode definition.
         type: str
         required: true
-    constructor:
+    package_id:
         description:
-            - The constructor for the chaincode.
-        type: dict
-        suboptions:
-            function:
-                description:
-                    - The function name to call in the chaincode.
-                type: str
-            args:
-                description:
-                    - The arguments to pass to the chaincode function.
-                type: list
-                elements: str
+            - The package ID of the chaincode to use for the chaincode definition.
+        type: str
+        required: true
+    sequence:
+        description:
+            - The sequence number of the chaincode definition.
+        type: int
+        required: true
+    endorsement_policy_ref:
+        description:
+            - A reference to a channel policy to use as the endorsement policy for this chaincode definition, for example I(/Channel/Application/MyEndorsementPolicy).
+        type: str
     endorsement_policy:
         description:
-            - The endorsement policy for the chaincode.
+            - The endorsement policy for this chaincode definition.
         type: str
+    endorsement_plugin:
+        description:
+            - The endorsement plugin for this chaincode definition.
+        type: str
+    validation_plugin:
+        description:
+            - The validation plugin for this chaincode definition.
+        type: str
+    init_required:
+        description:
+            - True if this chaincode definition requires called the I(Init) method before the I(Invoke) method,
+                false otherwise.
+        type: bool
     collections_config:
         description:
-            - The path to the collections configuration file for the chaincode.
+            - The path to the collections configuration file for the chaincode definition.
         type: str
-    escc:
-        description:
-            - The name of the endorsement system chaincode (ESCC) to use for the chaincode.
-        type: str
-        default: escc
-    vscc:
-        description:
-            - The name of the validation system chaincode (VSCC) to use for the chaincode.
-        type: str
-        default: vscc
-
-notes: []
-requirements: []
 '''
 
 EXAMPLES = '''
-- name: Instantiate the chaincode on the channel
-  ibm.blockchain_platform.instantiated_chaincode:
+- name: Approve the chaincode definition on the channel
+  ibm.blockchain_platform.approved_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -185,9 +178,10 @@ EXAMPLES = '''
     channel: mychannel
     name: fabcar
     version: 1.0.0
+    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
 
-- name: Instantiate the chaincode on the channel with an endorsement policy and collection configuration
-  ibm.blockchain_platform.instantiated_chaincode:
+- name: Approve the chaincode definition on the channel with an endorsement policy and collection configuration
+  ibm.blockchain_platform.approved_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -199,11 +193,12 @@ EXAMPLES = '''
     channel: mychannel
     name: fabcar
     version: 1.0.0
+    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
     endorsement_policy: AND('Org1MSP.peer', 'Org2MSP.peer')
     collections_config: collections-config.json
 
-- name: Ensure the chaincode is not instantiated on the channel
-  ibm.blockchain_platform.instantiated_chaincode:
+- name: Ensure the chaincode definition is not approved on the channel
+  ibm.blockchain_platform.approved_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -215,13 +210,14 @@ EXAMPLES = '''
     channel: mychannel
     name: fabcar
     version: 1.0.0
+    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
 '''
 
 RETURN = '''
 ---
-instantiated_chaincode:
+approved_chaincode:
     description:
-        - The instantiated chaincode.
+        - The approved chaincode definition.
     type: dict
     returned: when I(state) is C(present)
     contains:
@@ -232,24 +228,50 @@ instantiated_chaincode:
             sample: mychannel
         name:
             description:
-                - The name of the chaincode.
+                - The name of the chaincode definition.
             type: str
             sample: fabcar
         version:
             description:
-                - The version of the chaincode.
+                - The version of the chaincode definition.
             type: str
             sample: 1.0.0
-        escc:
+        package_id:
             description:
-                - The name of the endorsement system chaincode (ESCC) used by the chaincode.
+                - The package ID of the chaincode to use for the chaincode definition.
             type: str
-            sample: escc
-        vscc:
+            sample: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
+        sequence:
             description:
-                - The name of the validation system chaincode (VSCC) used by the chaincode.
+                - The sequence number of the chaincode definition.
+            type: int
+            sample: 1
+        endorsement_policy_ref:
+            description:
+                - The reference to a channel policy used as the endorsement policy for this chaincode definition.
             type: str
-            sample: vscc
+            sample: /Channel/Application/MyEndorsementPolicy
+        endorsement_policy:
+            description:
+                - The endorsement policy for this chaincode definition.
+            type: str
+        endorsement_plugin:
+            description:
+                - The endorsement plugin for this chaincode definition.
+            type: str
+        validation_plugin:
+            description:
+                - The validation plugin for this chaincode definition.
+            type: str
+        init_required:
+            description:
+                - True if this chaincode definition requires called the I(Init) method before the I(Invoke) method,
+                  false otherwise.
+            type: bool
+        collections_config:
+            description:
+                - The path to the collections configuration file for the chaincode definition.
+            type: str
 '''
 
 
@@ -274,24 +296,27 @@ def main():
         )),
         channel=dict(type='str', required=True),
         name=dict(type='str', required=True),
-        version=dict(type='str'),
-        constructor=dict(type='dict', default=dict(), options=dict(
-            function=dict(type='str'),
-            args=dict(type='list', elements='str', default=list())
-        )),
+        version=dict(type='str', required=True),
+        package_id=dict(type='str', required=True),
+        sequence=dict(type='int', required=True),
+        endorsement_policy_ref=dict(type='str'),
         endorsement_policy=dict(type='str'),
-        collections_config=dict(type='str'),
-        escc=dict(type='str', default='escc'),
-        vscc=dict(type='str', default='vscc')
+        endorsement_plugin=dict(type='str'),
+        validation_plugin=dict(type='str'),
+        init_required=dict(type='bool'),
+        collections_config=dict(type='str')
     )
     required_if = [
-        ('api_authtype', 'basic', ['api_secret']),
-        ('state', 'present', ['version'])
+        ('api_authtype', 'basic', ['api_secret'])
+    ]
+    mutually_exclusive = [
+        ['endorsement_policy_ref', 'endorsement_policy']
     ]
     module = BlockchainModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
-        required_if=required_if)
+        required_if=required_if,
+        mutually_exclusive=mutually_exclusive)
 
     # Validate HSM requirements if HSM is specified.
     if module.params['hsm']:
@@ -313,69 +338,44 @@ def main():
         channel = module.params['channel']
         name = module.params['name']
         version = module.params['version']
+        package_id = module.params['package_id']
+        sequence = module.params['sequence']
+        endorsement_policy_ref = module.params['endorsement_policy_ref']
+        endorsement_policy = module.params['endorsement_policy']
+        endorsement_plugin = module.params['endorsement_plugin']
+        validation_plugin = module.params['validation_plugin']
+        init_required = module.params['init_required']
+        collections_config = module.params['collections_config']
 
-        # Determine the chaincodes instantiated on the channel.
+        # Check the commit readiness for this chaincode.
         with peer.connect(identity, msp_id, hsm) as peer_connection:
-            instantiated_chaincodes = peer_connection.list_instantiated_chaincodes(channel)
+            commit_readiness = peer_connection.check_commit_readiness(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+        approval_exists = commit_readiness.get(msp_id, False)
 
-        # Find a matching chaincode, if one exists.
-        instantiated_chaincode_name_and_version = next((instantiated_chaincode for instantiated_chaincode in instantiated_chaincodes if instantiated_chaincode['name'] == name and instantiated_chaincode['version'] == version), None)
-        instantiated_chaincode_name = next((instantiated_chaincode for instantiated_chaincode in instantiated_chaincodes if instantiated_chaincode['name'] == name), None)
-        chaincode_instantiated_exact = instantiated_chaincode_name_and_version is not None
-        chaincode_instantiated_name_only = instantiated_chaincode_name is not None
-
-        # Handle the chaincode when it should be absent.
+        # Handle the cases when the approval should be absent.
         state = module.params['state']
-        if state == 'absent' and chaincode_instantiated_name_only:
+        if state == 'absent' and approval_exists:
 
-            # The chaincode should not be instantiated, but it is.
+            # The chaincode should not be approved, but it is.
             # We can't remove it, so throw an exception.
-            raise Exception(f'cannot remove instantiated chaincode {name}@{instantiated_chaincode_name["version"]} from channel')
+            raise Exception(f'cannot remove approved chaincode {name}@{version} from channel')
 
-        elif state == 'absent' and not chaincode_instantiated_name_only:
+        elif state == 'absent':
 
-            # The chaincode should not be instantiated and isn't.
+            # The chaincode should not be approved and isn't.
             return module.exit_json(changed=False)
 
-        # Extract the other parameters.
-        ctor = dict()
-        constructor = module.params['constructor']
-        if 'function' in constructor:
-            ctor['Function'] = constructor['function']
-        ctor['Args'] = constructor['args']
-        endorsement_policy = module.params['endorsement_policy']
-        collections_config = module.params['collections_config']
-        escc = module.params['escc']
-        vscc = module.params['vscc']
-
-        # Handle the chaincode when it should be present.
+        # Now handle the cases when the approval should be present.
         changed = False
-        if state == 'present' and chaincode_instantiated_exact:
+        if not approval_exists:
 
-            # Check that the ESCC and VSCC match. If they don't, we
-            # cannot update the instantiated version, so throw an
-            # exception.
-            if escc != instantiated_chaincode_name_and_version['escc']:
-                raise Exception(f'cannot update instantiated chaincode {name}@{version} with ESCC {instantiated_chaincode_name_and_version["escc"]}')
-            elif vscc != instantiated_chaincode_name_and_version['vscc']:
-                raise Exception(f'cannot update instantiated chaincode {name}@{version} with VSCC {instantiated_chaincode_name_and_version["vscc"]}')
-
-        elif state == 'present' and instantiated_chaincode_name:
-
-            # Upgrade the chaincode.
+            # Approve the chaincode.
             with peer.connect(identity, msp_id, hsm) as peer_connection:
-                peer_connection.upgrade_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
-            changed = True
+                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                changed = True
 
-        else:
-
-            # Instantiate the chaincode.
-            with peer.connect(identity, msp_id, hsm) as peer_connection:
-                peer_connection.instantiate_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
-            changed = True
-
-        # Return the chaincode.
-        return module.exit_json(changed=changed, instantiated_chaincode=dict(channel=channel, name=name, version=version, escc=escc, vscc=vscc))
+        # The approval is already present, so nothing to do.
+        return module.exit_json(changed=changed, channel=channel, name=name, version=version, package_id=package_id, sequence=sequence, endorsement_policy_ref=endorsement_policy_ref, endorsement_policy=endorsement_policy, endorsement_plugin=endorsement_plugin, validation_plugin=validation_plugin, init_required=init_required, collections_config=collections_config)
 
     # Notify Ansible of the exception.
     except Exception as e:
