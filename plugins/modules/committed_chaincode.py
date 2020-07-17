@@ -17,10 +17,10 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: approved_chaincode
-short_description: Manage an approved chaincode on a Hyperledger Fabric channel
+module: committed_chaincode
+short_description: Manage an committed chaincode on a Hyperledger Fabric channel
 description:
-    - Approve a chaincode definition on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+    - Commit a chaincode definition on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
     - This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain
       Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 author: Simon Stone (@sstone1)
@@ -62,10 +62,10 @@ options:
     state:
         description:
             - C(absent) - If a chaincode definition matching the specified name, version and configuration is
-              approved, then an error will be thrown, as it is not possible to unapprove a chaincode definition.
+              committed, then an error will be thrown, as it is not possible to uncommit a chaincode definition.
             - C(present) - Asserts that a chaincode definition matching the specified name, version and configuration
-              is approved on the specified channel. If it is not approved, then the chaincode definition with the
-              specified name, version and configuration will be approved on the specified channel.
+              is committed on the specified channel. If it is not committed, then the chaincode definition with the
+              specified name, version and configuration will be committed on the specified channel.
         type: str
         default: present
         choices:
@@ -73,7 +73,7 @@ options:
             - present
     peer:
         description:
-            - The peer to use to manage the approved chaincode definition.
+            - The peer to use to manage the committed chaincode definition.
             - You can pass a string, which is the display name of a peer registered
               with the IBM Blockchain Platform console.
             - You can also pass a dict, which must match the result format of one of the
@@ -127,11 +127,6 @@ options:
             - The version of the chaincode definition.
         type: str
         required: true
-    package_id:
-        description:
-            - The package ID of the chaincode to use for the chaincode definition.
-        type: str
-        required: true
     sequence:
         description:
             - The sequence number of the chaincode definition.
@@ -165,8 +160,8 @@ options:
 '''
 
 EXAMPLES = '''
-- name: Approve the chaincode definition on the channel
-  ibm.blockchain_platform.approved_chaincode:
+- name: Commit the chaincode definition on the channel
+  ibm.blockchain_platform.committed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -179,10 +174,9 @@ EXAMPLES = '''
     name: fabcar
     version: 1.0.0
     sequence: 1
-    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
 
-- name: Approve the chaincode definition on the channel with an endorsement policy and collection configuration
-  ibm.blockchain_platform.approved_chaincode:
+- name: Commit the chaincode definition on the channel with an endorsement policy and collection configuration
+  ibm.blockchain_platform.committed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -195,12 +189,11 @@ EXAMPLES = '''
     name: fabcar
     version: 1.0.0
     sequence: 1
-    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
     endorsement_policy: AND('Org1MSP.peer', 'Org2MSP.peer')
     collections_config: collections-config.json
 
-- name: Ensure the chaincode definition is not approved on the channel
-  ibm.blockchain_platform.approved_chaincode:
+- name: Ensure the chaincode definition is not committed on the channel
+  ibm.blockchain_platform.committed_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -213,14 +206,13 @@ EXAMPLES = '''
     name: fabcar
     version: 1.0.0
     sequence: 1
-    package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
 '''
 
 RETURN = '''
 ---
-approved_chaincode:
+committed_chaincode:
     description:
-        - The approved chaincode definition.
+        - The committed chaincode definition.
     type: dict
     returned: when I(state) is C(present)
     contains:
@@ -239,11 +231,6 @@ approved_chaincode:
                 - The version of the chaincode definition.
             type: str
             sample: 1.0.0
-        package_id:
-            description:
-                - The package ID of the chaincode to use for the chaincode definition.
-            type: str
-            sample: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
         sequence:
             description:
                 - The sequence number of the chaincode definition.
@@ -300,12 +287,11 @@ def main():
         channel=dict(type='str', required=True),
         name=dict(type='str', required=True),
         version=dict(type='str', required=True),
-        package_id=dict(type='str', required=True),
         sequence=dict(type='int', required=True),
         endorsement_policy_ref=dict(type='str'),
         endorsement_policy=dict(type='str'),
-        endorsement_plugin=dict(type='str'),
-        validation_plugin=dict(type='str'),
+        endorsement_plugin=dict(type='str', default='escc'),
+        validation_plugin=dict(type='str', default='vscc'),
         init_required=dict(type='bool'),
         collections_config=dict(type='str')
     )
@@ -341,7 +327,6 @@ def main():
         channel = module.params['channel']
         name = module.params['name']
         version = module.params['version']
-        package_id = module.params['package_id']
         sequence = module.params['sequence']
         endorsement_policy_ref = module.params['endorsement_policy_ref']
         endorsement_policy = module.params['endorsement_policy']
@@ -350,35 +335,36 @@ def main():
         init_required = module.params['init_required']
         collections_config = module.params['collections_config']
 
-        # Check the commit readiness for this chaincode.
+        # Check if this chaincode is already committed on the channel.
         with peer.connect(identity, msp_id, hsm) as peer_connection:
-            commit_readiness = peer_connection.check_commit_readiness(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
-        approval_exists = commit_readiness.get(msp_id, False)
+            committed_chaincodes = peer_connection.query_committed_chaincodes(channel)
+        committed_chaincode = next((committed_chaincode for committed_chaincode in committed_chaincodes if committed_chaincode['name'] == name and committed_chaincode['version'] == version and committed_chaincode['sequence'] == sequence and committed_chaincode['endorsement_plugin'] == endorsement_plugin and committed_chaincode['validation_plugin'] == validation_plugin), None)
+        committed_chaincode_exists = committed_chaincode is not None
 
-        # Handle the cases when the approval should be absent.
+        # Handle the cases when the committed chaincode should be absent.
         state = module.params['state']
-        if state == 'absent' and approval_exists:
+        if state == 'absent' and committed_chaincode_exists:
 
-            # The chaincode should not be approved, but it is.
+            # The chaincode should not be committed, but it is.
             # We can't remove it, so throw an exception.
-            raise Exception(f'cannot remove approved chaincode {name}@{version} from channel')
+            raise Exception(f'cannot remove committed chaincode {name}@{version} from channel')
 
         elif state == 'absent':
 
-            # The chaincode should not be approved and isn't.
+            # The chaincode should not be committed and isn't.
             return module.exit_json(changed=False)
 
-        # Now handle the cases when the approval should be present.
+        # Now handle the cases when the committed chaincode should be present.
         changed = False
-        if not approval_exists:
+        if not committed_chaincode_exists:
 
-            # Approve the chaincode.
+            # Commit the chaincode.
             with peer.connect(identity, msp_id, hsm) as peer_connection:
-                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                peer_connection.commit_chaincode(channel, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
                 changed = True
 
-        # Return the approved chaincode.
-        return module.exit_json(changed=changed, approved_chaincode=dict(channel=channel, name=name, version=version, package_id=package_id, sequence=sequence, endorsement_policy_ref=endorsement_policy_ref, endorsement_policy=endorsement_policy, endorsement_plugin=endorsement_plugin, validation_plugin=validation_plugin, init_required=init_required, collections_config=collections_config))
+        # Return the committed chaincode.
+        return module.exit_json(changed=changed, committed_chaincode=dict(channel=channel, name=name, version=version, sequence=sequence, endorsement_policy_ref=endorsement_policy_ref, endorsement_policy=endorsement_policy, endorsement_plugin=endorsement_plugin, validation_plugin=validation_plugin, init_required=init_required, collections_config=collections_config))
 
     # Notify Ansible of the exception.
     except Exception as e:
