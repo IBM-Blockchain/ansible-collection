@@ -331,6 +331,40 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to approve chaincode on peer: {process.stdout}')
 
+    def query_committed_chaincodes(self, channel):
+        env = self._get_environ()
+        args = [
+            'peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-O', 'json'
+        ]
+        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            data = json.loads(process.stdout)
+            return data.get('chaincode_definitions', [])
+        else:
+            raise Exception(f'Failed to query committed chaincode on peer: {process.stdout}')
+
+    def commit_chaincode(self, channel, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):
+        env = self._get_environ()
+        args = ['peer', 'lifecycle', 'chaincode', 'commit', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence)]
+        if endorsement_policy_ref:
+            args.extend(['--channel-config-policy', endorsement_policy_ref])
+        elif endorsement_policy:
+            args.extend(['--signature-policy', endorsement_policy])
+        if endorsement_plugin:
+            args.extend(['--endorsement-plugin', endorsement_plugin])
+        if validation_plugin:
+            args.extend(['--validation-plugin', validation_plugin])
+        if init_required:
+            args.extend(['--init-required'])
+        if collections_config:
+            args.extend(['--collections-config', collections_config])
+        args.extend(self._get_ordering_service(channel))
+        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to commit chaincode on peer: {process.stdout}')
+
     def _get_environ(self):
         api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
         env = os.environ.copy()
