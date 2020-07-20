@@ -181,6 +181,29 @@ options:
                     - Example application capability levels include C(V1_4_2) and C(V2_0).
                 type: str
                 default: V1_4_2
+    parameters:
+        batch_size:
+            description:
+                - The batch size parameters for the channel.
+            type: dict
+            suboptions:
+                max_message_count:
+                    description:
+                        - The maximum number of messages that should be present in a block for the channel.
+                    type: int
+                absolute_max_bytes:
+                    description:
+                        - The total size of all the messages in a block for the channel must not exceed this value.
+                    type: int
+                preferred_max_bytes:
+                    description:
+                        - The total size of all the messages in a block for the channel should not exceed this value.
+                    type: int
+        batch_timeout:
+            description:
+                - The maximum time to wait before cutting a new block for the channel.
+                - Example values include I(500ms), I(5m), or I(24h).
+            type: str
 notes: []
 requirements: []
 '''
@@ -335,6 +358,30 @@ def create(module):
             mod_policy='Admins',
             policy=policy
         )
+
+    # Add the parameters to the config update.
+    parameters = module.params['parameters']
+    if parameters:
+
+        # Handle the batch size.
+        batch_size = parameters['batch_size']
+        if batch_size:
+            config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('BatchSize', dict())
+            orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
+            orderer_values = orderer_group.setdefault('values', dict())
+            orderer_batch_size_value = orderer_values.setdefault('BatchSize', dict(mod_policy='Admins', value=dict(), version=1))
+            for key in batch_size:
+                if batch_size[key]:
+                    orderer_batch_size_value['value'][key] = batch_size[key]
+
+        # Handle the batch timeout.
+        batch_timeout = parameters['batch_timeout']
+        if batch_timeout:
+            config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('BatchTimeout', dict())
+            orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
+            orderer_values = orderer_group.setdefault('values', dict())
+            orderer_batch_timeout_value = orderer_values.setdefault('BatchTimeout', dict(mod_policy='Admins', value=dict(), version=1))
+            orderer_batch_timeout_value['value']['timeout'] = batch_timeout
 
     # Build the config envelope.
     config_update_envelope_json = dict(
@@ -590,6 +637,14 @@ def main():
         policies=dict(type='dict'),
         capabilities=dict(type='dict', default=dict(), options=dict(
             application=dict(type='str', default='V1_4_2')
+        )),
+        parameters=dict(type='dict', default=dict(), options=dict(
+            batch_size=dict(type='dict', options=dict(
+                max_message_count=dict(type='int'),
+                absolute_max_bytes=dict(type='int'),
+                preferred_max_bytes=dict(type='int')
+            )),
+            batch_timeout=dict(type='str')
         ))
     )
     required_if = [

@@ -61,18 +61,18 @@ requirements: []
 '''
 
 EXAMPLES = '''
-- name: Set block size channel parameters
+- name: Set batch size channel parameters
   ibm.blockchain_platform.channel_parameters:
     path: channel_config.bin
-    block_size:
+    batch_size:
         max_message_count: 10000
         absolute_max_bytes: 10485760
         preferred_max_bytes: 5242880
 
-- name: Set block timeout channel parameter
+- name: Set batch timeout channel parameter
   ibm.blockchain_platform.channel_parameters:
     path: channel_config.bin
-    block_timeout: 500ms
+    batch_timeout: 500ms
 '''
 
 RETURN = '''
