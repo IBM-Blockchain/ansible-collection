@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="channel_member – Manage a member for a Hyperledger Fabric channel" href="channel_member.html" />
-    <link rel="prev" title="channel_block – Fetch blocks for a Hyperledger Fabric channel" href="channel_block.html" /> 
+    <link rel="prev" title="channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel" href="channel_capabilities.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,9 +99,11 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../modules.html#module-reference">Module reference</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">channel_config – Manage the configuration for a Hyperledger Fabric channel</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
@@ -110,7 +112,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="channel_member.html">channel_member – Manage a member for a Hyperledger Fabric channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="channel_parameters.html">channel_parameters – Manage the parameters for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_policy.html">channel_policy – Manage a policy for a Hyperledger Fabric channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="committed_chaincode.html">committed_chaincode – Manage an committed chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="connection_profile.html">connection_profile – Manage a connection profile for a Hyperledger Fabric network</a></li>
 <li class="toctree-l3"><a class="reference internal" href="console_user.html">console_user – Manage the list of users for an IBM Blockchain Platform console</a></li>
 <li class="toctree-l3"><a class="reference internal" href="consortium_member.html">consortium_member – Manage a consortium member for a Hyperledger Fabric ordering service</a></li>
@@ -355,7 +359,37 @@
 <div class="line"><strong>Type</strong>: dict</div>
 </div>
 </dd>
+<dt>capabilities</dt><dd><p>The capability levels for the new channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>application</dt><dd><p>The application capability level for the new channel.</p>
+<p>The value must be a valid application capability level supported by Hyperledger Fabric, and all peers that will join the new channel must support this application capability level.</p>
+<p>Example application capability levels include <code class="docutils literal notranslate"><span class="pre">V1_4_2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2_0</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">V1_4_2</span></code></div>
+</div>
+</dd>
+<dt>channel</dt><dd><p>The channel capability level.</p>
+<p>The value must be a valid channel capability level supported by Hyperledger Fabric, and all peers and ordering service nodes in the new channel must support this channel capability level.</p>
+<p>Example channel capability levels include <code class="docutils literal notranslate"><span class="pre">V1_4_3</span></code> and <code class="docutils literal notranslate"><span class="pre">V2_0</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>orderer</dt><dd><p>The orderer capability level for the new channel.</p>
+<p>The value must be a valid orderer capability level supported by Hyperledger Fabric, and all ordering service nodes in the new channel must support this orderer capability level.</p>
+<p>Example orderer capability levels include <code class="docutils literal notranslate"><span class="pre">V1_4_2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2_0</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
 </dl>
+</dd>
+</dl>
+<p>parameters</p>
 </div></blockquote>
 </div>
 <div class="section" id="examples">
@@ -446,7 +480,7 @@
         <a href="channel_member.html" class="btn btn-neutral float-right" title="channel_member – Manage a member for a Hyperledger Fabric channel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="channel_block.html" class="btn btn-neutral float-left" title="channel_block – Fetch blocks for a Hyperledger Fabric channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="channel_capabilities.html" class="btn btn-neutral float-left" title="channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

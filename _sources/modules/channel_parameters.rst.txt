@@ -1,0 +1,95 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_parameters.py
+
+
+channel_parameters -- Manage the parameters for a Hyperledger Fabric channel
+============================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Specify the parameters for a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  path (required)
+    Path to current the channel configuration file.
+
+    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+
+    This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
+
+    | **Type**: str
+
+  batch_size
+    The batch size parameters for the channel.
+
+    | **Type**: dict
+
+    max_message_count
+      The maximum number of messages that should be present in a block for the channel.
+
+      | **Type**: int
+
+    absolute_max_bytes
+      The total size of all the messages in a block for the channel must not exceed this value.
+
+      | **Type**: int
+
+    preferred_max_bytes
+      The total size of all the messages in a block for the channel should not exceed this value.
+
+      | **Type**: int
+
+
+  batch_timeout
+    The maximum time to wait before cutting a new block for the channel.
+
+    Example values include *500ms*, *5m*, or *24h*.
+
+    | **Type**: str
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Set batch size channel parameters
+      ibm.blockchain_platform.channel_parameters:
+        path: channel_config.bin
+        batch_size:
+            max_message_count: 10000
+            absolute_max_bytes: 10485760
+            preferred_max_bytes: 5242880
+
+    - name: Set batch timeout channel parameter
+      ibm.blockchain_platform.channel_parameters:
+        path: channel_config.bin
+        batch_timeout: 500ms
+
+
+

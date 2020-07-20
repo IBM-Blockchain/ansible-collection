@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer &mdash; Ansible Collection  documentation</title>
+  <title>approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel &mdash; Ansible Collection  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="peer_info – Get information about a Hyperledger Fabric peer" href="peer_info.html" />
-    <link rel="prev" title="peer – Manage a Hyperledger Fabric peer" href="peer.html" /> 
+    <link rel="next" title="certificate_authority – Manage a Hyperledger Fabric certificate authority" href="certificate_authority.html" />
+    <link rel="prev" title="Modules" href="../modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,7 +99,13 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../modules.html#module-reference">Module reference</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#return-values">Return Values</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
@@ -124,12 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="organization.html">organization – Manage a Hyperledger Fabric organization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="organization_info.html">organization_info – Get information about a Hyperledger Fabric organization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="peer.html">peer – Manage a Hyperledger Fabric peer</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="peer_channel.html">peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="peer_info.html">peer_info – Get information about a Hyperledger Fabric peer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="registered_identity.html">registered_identity – Manage a registered Hyperledger Fabric identity</a></li>
 </ul>
@@ -187,7 +188,7 @@
         
           <li><a href="../modules.html">Modules</a> &raquo;</li>
         
-      <li>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</li>
+      <li>approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -195,7 +196,7 @@
             
             
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/peer_channel.py" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/approved_chaincode.py" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -209,18 +210,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="peer-channel-manage-the-list-of-channels-joined-by-a-hyperledger-fabric-peer">
-<h1>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer<a class="headerlink" href="#peer-channel-manage-the-list-of-channels-joined-by-a-hyperledger-fabric-peer" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="approved-chaincode-manage-an-approved-chaincode-on-a-hyperledger-fabric-channel">
+<h1>approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel<a class="headerlink" href="#approved-chaincode-manage-an-approved-chaincode-on-a-hyperledger-fabric-channel" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id4">Return Values</a></p></li>
 </ul>
 </div>
 <div class="section" id="synopsis">
 <h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
-<p>Join a Hyperledger Fabric peer to a channel by using the IBM Blockchain Platform.</p>
+<p>Approve a chaincode definition on a Hyperledger Fabric channel by using the IBM Blockchain Platform.</p>
 <p>This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 </div>
 <div class="section" id="parameters">
@@ -262,12 +264,14 @@
 <div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">https://iam.cloud.ibm.com/identity/token</span></code></div>
 </div>
 </dd>
-<dt>operation (required)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">join</span></code> - Join the specified <em>peer</em> to the channel with the genesis block specified in <em>path</em>.</p>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - If a chaincode definition matching the specified name, version and configuration is approved, then an error will be thrown, as it is not possible to unapprove a chaincode definition.</p>
+<p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that a chaincode definition matching the specified name, version and configuration is approved on the specified channel. If it is not approved, then the chaincode definition with the specified name, version and configuration will be approved on the specified channel.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
 </div>
 </dd>
-<dt>peer (required)</dt><dd><p>The peer to join to the channel.</p>
+<dt>peer (required)</dt><dd><p>The peer to use to manage the approved chaincode definition.</p>
 <p>You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.</p>
 <p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">peer_info</span> or <span class="xref std std-ref">peer</span> modules.</p>
 <div class="line-block">
@@ -309,7 +313,57 @@
 </dd>
 </dl>
 </dd>
-<dt>path (required)</dt><dd><p>The path to the file where the channel genesis block is stored.</p>
+<dt>channel (required)</dt><dd><p>The name of the channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>name (required)</dt><dd><p>The name of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>version (required)</dt><dd><p>The version of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>package_id (required)</dt><dd><p>The package ID of the chaincode to use for the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>sequence (required)</dt><dd><p>The sequence number of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+</div>
+</dd>
+<dt>endorsement_policy_ref</dt><dd><p>A reference to a channel policy to use as the endorsement policy for this chaincode definition, for example <em>/Channel/Application/MyEndorsementPolicy</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>endorsement_policy</dt><dd><p>The endorsement policy for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>endorsement_plugin</dt><dd><p>The endorsement plugin for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>validation_plugin</dt><dd><p>The validation plugin for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>init_required</dt><dd><p>True if this chaincode definition requires called the <em>Init</em> method before the <em>Invoke</em> method, false otherwise.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: bool</div>
+</div>
+</dd>
+<dt>collections_config</dt><dd><p>The path to the collections configuration file for the chaincode definition.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
 </div>
@@ -319,19 +373,133 @@
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Join the peer to the channel</span>
-  <span class="nt">ibm.blockchain_platform.peer_channel</span><span class="p">:</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Approve the chaincode definition on the channel</span>
+  <span class="nt">ibm.blockchain_platform.approved_chaincode</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
     <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
     <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
     <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">join</span>
     <span class="nt">peer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
     <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
     <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_genesis_block.bin</span>
+    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+    <span class="nt">sequence</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">package_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Approve the chaincode definition on the channel with an endorsement policy and collection configuration</span>
+  <span class="nt">ibm.blockchain_platform.approved_chaincode</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">peer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
+    <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
+    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
+    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+    <span class="nt">sequence</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">package_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e</span>
+    <span class="nt">endorsement_policy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AND(&#39;Org1MSP.peer&#39;, &#39;Org2MSP.peer&#39;)</span>
+    <span class="nt">collections_config</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collections-config.json</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ensure the chaincode definition is not approved on the channel</span>
+  <span class="nt">ibm.blockchain_platform.approved_chaincode</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
+    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">peer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
+    <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
+    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
+    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+    <span class="nt">sequence</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">package_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="return-values">
+<h2><a class="toc-backref" href="#id4">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl>
+<dt>approved_chaincode</dt><dd><p>The approved chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Returned</strong>: when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>channel</dt><dd><p>The name of the channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">mychannel</span></code></div>
+</div>
+</dd>
+<dt>name</dt><dd><p>The name of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">fabcar</span></code></div>
+</div>
+</dd>
+<dt>version</dt><dd><p>The version of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">1.0.0</span></code></div>
+</div>
+</dd>
+<dt>package_id</dt><dd><p>The package ID of the chaincode to use for the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">fabcar&#64;1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e</span></code></div>
+</div>
+</dd>
+<dt>sequence</dt><dd><p>The sequence number of the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code></div>
+</div>
+</dd>
+<dt>endorsement_policy_ref</dt><dd><p>The reference to a channel policy used as the endorsement policy for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">/Channel/Application/MyEndorsementPolicy</span></code></div>
+</div>
+</dd>
+<dt>endorsement_policy</dt><dd><p>The endorsement policy for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>endorsement_plugin</dt><dd><p>The endorsement plugin for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>validation_plugin</dt><dd><p>The validation plugin for this chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>init_required</dt><dd><p>True if this chaincode definition requires called the <em>Init</em> method before the <em>Invoke</em> method, false otherwise.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: bool</div>
+</div>
+</dd>
+<dt>collections_config</dt><dd><p>The path to the collections configuration file for the chaincode definition.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
 </div>
 </div>
 
@@ -343,10 +511,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="peer_info.html" class="btn btn-neutral float-right" title="peer_info – Get information about a Hyperledger Fabric peer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="certificate_authority.html" class="btn btn-neutral float-right" title="certificate_authority – Manage a Hyperledger Fabric certificate authority" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="peer.html" class="btn btn-neutral float-left" title="peer – Manage a Hyperledger Fabric peer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

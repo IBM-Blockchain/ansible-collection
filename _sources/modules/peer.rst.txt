@@ -223,6 +223,8 @@ Parameters
     dind
       The Kubernetes resource configuration for the Docker in Docker (DinD) container.
 
+      This configuration is only used if the peer is using Hyperledger Fabric v1.4.
+
       | **Type**: dict
 
       requests
@@ -241,6 +243,32 @@ Parameters
 
           | **Type**: str
           | **Default value**: ``1G``
+
+
+
+    chaincodelauncher
+      The Kubernetes resource configuration for the chaincode launcher container.
+
+      This configuration is only used if the peer is using Hyperledger Fabric v2.0 or later.
+
+      | **Type**: dict
+
+      requests
+        The Kubernetes resource requests for the chaincode launcher container.
+
+        | **Type**: str
+
+        cpu
+          The Kubernetes CPU resource request for the chaincode launcher container.
+
+          | **Type**: str
+          | **Default value**: ``200m``
+
+        memory
+          The Kubernetes memory resource request for the chaincode launcher container.
+
+          | **Type**: str
+          | **Default value**: ``400M``
 
 
 

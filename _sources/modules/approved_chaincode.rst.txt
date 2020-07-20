@@ -1,0 +1,314 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/approved_chaincode.py
+
+
+approved_chaincode -- Manage an approved chaincode on a Hyperledger Fabric channel
+==================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Approve a chaincode definition on a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (required)
+    The URL for the IBM Blockchain Platform console.
+
+    | **Type**: str
+
+  api_authtype (required)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+    | **Type**: str
+
+  api_key (required)
+    The API key for the IBM Blockchain Platform console.
+
+    | **Type**: str
+
+  api_secret
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+    | **Type**: str
+
+  api_timeout
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+    | **Type**: int
+    | **Default value**: ``60``
+
+  api_token_endpoint
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
+
+  state
+    ``absent`` - If a chaincode definition matching the specified name, version and configuration is approved, then an error will be thrown, as it is not possible to unapprove a chaincode definition.
+
+    ``present`` - Asserts that a chaincode definition matching the specified name, version and configuration is approved on the specified channel. If it is not approved, then the chaincode definition with the specified name, version and configuration will be approved on the specified channel.
+
+    | **Type**: str
+    | **Default value**: ``present``
+
+  peer (required)
+    The peer to use to manage the approved chaincode definition.
+
+    You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`peer_info <peer_info_module>` or :ref:`peer <peer_module>` modules.
+
+    | **Type**: raw
+
+  identity (required)
+    The identity to use when interacting with the peer.
+
+    You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+
+    | **Type**: raw
+
+  msp_id (required)
+    The MSP ID to use for interacting with the peer.
+
+    | **Type**: str
+
+  hsm
+    The PKCS #11 compliant HSM configuration to use for digital signatures.
+
+    Only required if the identity specified in *identity* was enrolled using an HSM.
+
+    | **Type**: dict
+
+    pkcs11library
+      The PKCS #11 library that should be used for digital signatures.
+
+      | **Type**: str
+
+    label
+      The HSM label that should be used for digital signatures.
+
+      | **Type**: str
+
+    pin
+      The HSM pin that should be used for digital signatures.
+
+      | **Type**: str
+
+
+  channel (required)
+    The name of the channel.
+
+    | **Type**: str
+
+  name (required)
+    The name of the chaincode definition.
+
+    | **Type**: str
+
+  version (required)
+    The version of the chaincode definition.
+
+    | **Type**: str
+
+  package_id (required)
+    The package ID of the chaincode to use for the chaincode definition.
+
+    | **Type**: str
+
+  sequence (required)
+    The sequence number of the chaincode definition.
+
+    | **Type**: int
+
+  endorsement_policy_ref
+    A reference to a channel policy to use as the endorsement policy for this chaincode definition, for example */Channel/Application/MyEndorsementPolicy*.
+
+    | **Type**: str
+
+  endorsement_policy
+    The endorsement policy for this chaincode definition.
+
+    | **Type**: str
+
+  endorsement_plugin
+    The endorsement plugin for this chaincode definition.
+
+    | **Type**: str
+
+  validation_plugin
+    The validation plugin for this chaincode definition.
+
+    | **Type**: str
+
+  init_required
+    True if this chaincode definition requires called the *Init* method before the *Invoke* method, false otherwise.
+
+    | **Type**: bool
+
+  collections_config
+    The path to the collections configuration file for the chaincode definition.
+
+    | **Type**: str
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Approve the chaincode definition on the channel
+      ibm.blockchain_platform.approved_chaincode:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
+        sequence: 1
+        package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
+
+    - name: Approve the chaincode definition on the channel with an endorsement policy and collection configuration
+      ibm.blockchain_platform.approved_chaincode:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
+        sequence: 1
+        package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
+        endorsement_policy: AND('Org1MSP.peer', 'Org2MSP.peer')
+        collections_config: collections-config.json
+
+    - name: Ensure the chaincode definition is not approved on the channel
+      ibm.blockchain_platform.approved_chaincode:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        channel: mychannel
+        name: fabcar
+        version: 1.0.0
+        sequence: 1
+        package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
+
+
+
+Return Values
+-------------
+
+  approved_chaincode
+    The approved chaincode definition.
+
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
+
+    channel
+      The name of the channel.
+
+      | **Type**: str
+      | **Sample**: ``mychannel``
+
+    name
+      The name of the chaincode definition.
+
+      | **Type**: str
+      | **Sample**: ``fabcar``
+
+    version
+      The version of the chaincode definition.
+
+      | **Type**: str
+      | **Sample**: ``1.0.0``
+
+    package_id
+      The package ID of the chaincode to use for the chaincode definition.
+
+      | **Type**: str
+      | **Sample**: ``fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e``
+
+    sequence
+      The sequence number of the chaincode definition.
+
+      | **Type**: int
+      | **Sample**: ``1``
+
+    endorsement_policy_ref
+      The reference to a channel policy used as the endorsement policy for this chaincode definition.
+
+      | **Type**: str
+      | **Sample**: ``/Channel/Application/MyEndorsementPolicy``
+
+    endorsement_policy
+      The endorsement policy for this chaincode definition.
+
+      | **Type**: str
+
+    endorsement_plugin
+      The endorsement plugin for this chaincode definition.
+
+      | **Type**: str
+
+    validation_plugin
+      The validation plugin for this chaincode definition.
+
+      | **Type**: str
+
+    init_required
+      True if this chaincode definition requires called the *Init* method before the *Invoke* method, false otherwise.
+
+      | **Type**: bool
+
+    collections_config
+      The path to the collections configuration file for the chaincode definition.
+
+      | **Type**: str
+
+
+

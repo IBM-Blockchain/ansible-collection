@@ -182,6 +182,42 @@ Parameters
 
     | **Type**: dict
 
+  capabilities
+    The capability levels for the new channel.
+
+    | **Type**: dict
+
+    application
+      The application capability level for the new channel.
+
+      The value must be a valid application capability level supported by Hyperledger Fabric, and all peers that will join the new channel must support this application capability level.
+
+      Example application capability levels include ``V1_4_2`` and ``V2_0``.
+
+      | **Type**: str
+      | **Default value**: ``V1_4_2``
+
+    channel
+      The channel capability level.
+
+      The value must be a valid channel capability level supported by Hyperledger Fabric, and all peers and ordering service nodes in the new channel must support this channel capability level.
+
+      Example channel capability levels include ``V1_4_3`` and ``V2_0``.
+
+      | **Type**: str
+
+    orderer
+      The orderer capability level for the new channel.
+
+      The value must be a valid orderer capability level supported by Hyperledger Fabric, and all ordering service nodes in the new channel must support this orderer capability level.
+
+      Example orderer capability levels include ``V1_4_2`` and ``V2_0``.
+
+      | **Type**: str
+
+
+  parameters
+
 
 
 

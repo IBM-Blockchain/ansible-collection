@@ -1,0 +1,103 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_capabilities.py
+
+
+channel_capabilities -- Manage the capabilities for a Hyperledger Fabric channel
+================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Specify the capability levels for a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  path (required)
+    Path to current the channel configuration file.
+
+    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+
+    This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
+
+    | **Type**: str
+
+  application
+    The application capability level for the channel.
+
+    The value must be a valid application capability level supported by Hyperledger Fabric, and all peers in the channel being updated must support this application capability level.
+
+    Example application capability levels include ``V1_4_2`` and ``V2_0``.
+
+    | **Type**: str
+
+  channel
+    The channel capability level.
+
+    The value must be a valid channel capability level supported by Hyperledger Fabric, and all peers and ordering service nodes in the channel being updated must support this channel capability level.
+
+    Example channel capability levels include ``V1_4_3`` and ``V2_0``.
+
+    | **Type**: str
+
+  orderer
+    The orderer capability level for the channel.
+
+    The value must be a valid orderer capability level supported by Hyperledger Fabric, and all ordering service nodes in the channel being updated must support this orderer capability level.
+
+    Example orderer capability levels include ``V1_4_2`` and ``V2_0``.
+
+    | **Type**: str
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Set application capability level for Hyperledger Fabric v1.4.x
+      ibm.blockchain_platform.channel_capabilities:
+        path: channel_config.bin
+        application: V1_4_2
+
+    - name: Set channel capability level for Hyperledger Fabric v1.4.x
+      ibm.blockchain_platform.channel_capabilities:
+        path: channel_config.bin
+        channel: V1_4_3
+
+    - name: Set orderer capability level for Hyperledger Fabric v1.4.x
+      ibm.blockchain_platform.channel_capabilities:
+        path: channel_config.bin
+        orderer: V1_4_2
+
+    - name: Set all channel capability levels for Hyperledger Fabric v2.x
+      ibm.blockchain_platform.channel_capabilities:
+        path: channel_config.bin
+        application: V2_0
+        channel: V2_0
+        orderer: V2_0
+
+
+
