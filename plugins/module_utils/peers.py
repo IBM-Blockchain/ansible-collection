@@ -343,7 +343,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to query committed chaincode on peer: {process.stdout}')
 
-    def commit_chaincode(self, channel, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):
+    def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):
         env = self._get_environ()
         args = ['peer', 'lifecycle', 'chaincode', 'commit', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence)]
         if endorsement_policy_ref:
@@ -358,6 +358,7 @@ class PeerConnection:
             args.extend(['--init-required'])
         if collections_config:
             args.extend(['--collections-config', collections_config])
+        args.extend(self._get_anchor_peers(channel, msp_ids))
         args.extend(self._get_ordering_service(channel))
         process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
         if process.returncode == 0:
@@ -383,6 +384,54 @@ class PeerConnection:
             env['CORE_PEER_BCCSP_PKCS11_SECURITY'] = '256'
             env['CORE_PEER_BCCSP_PKCS11_FILEKEYSTORE_KEYSTORE'] = os.path.join(self.msp_path, 'keystore')
         return env
+
+    def _get_anchor_peers(self, channel, msp_ids):
+        temp = tempfile.mkstemp()
+        os.close(temp[0])
+        block_path = temp[1]
+        try:
+            self.fetch_channel(channel, 'config', block_path)
+            with open(block_path, 'rb') as file:
+                block = proto_to_json('common.Block', file.read())
+            channel_group = block['data']['data'][0]['payload']['data']['config']['channel_group']
+            application_groups = channel_group['groups']['Application']['groups']
+            args = []
+            for msp_id in msp_ids:
+                msp = application_groups.get(msp_id, None)
+                if msp is None:
+                    raise Exception(f'Organization {msp_id} is not a member of the channel {channel}')
+                msp_value = msp['values']['MSP']
+                msp_config = msp_value['value']['config']
+                tls_root_certs = msp_config['tls_root_certs']
+                if tls_root_certs is None:
+                    tls_root_certs = []
+                tls_intermediate_certs = msp_config['tls_intermediate_certs']
+                if tls_intermediate_certs is None:
+                    tls_intermediate_certs = []
+                tls_certs = tls_root_certs + tls_intermediate_certs
+                temp = tempfile.mkstemp()
+                for tls_cert in tls_certs:
+                    decoded_tls_cert = base64.b64decode(tls_cert)
+                    os.write(temp[0], decoded_tls_cert)
+                    if not decoded_tls_cert.endswith(b'\n'):
+                        os.write(temp[0], b'\n')
+                os.close(temp[0])
+                pem_path = temp[1]
+                self.other_paths.append(pem_path)
+                anchor_peers_value = msp['values'].get('AnchorPeers', None)
+                if anchor_peers_value is None:
+                    raise Exception(f'Organization {msp_id} has no anchor peers defined for channel {channel}')
+                anchor_peers = anchor_peers_value['value']['anchor_peers']
+                if not anchor_peers:
+                    raise Exception(f'Organization {msp_id} has no anchor peers defined for channel {channel}')
+                anchor_peer = random.choice(anchor_peers)
+                host = anchor_peer['host']
+                port = anchor_peer['port']
+                address = f'{host}:{port}'
+                args.extend(['--peerAddresses', address, '--tlsRootCertFiles', pem_path])
+            return args
+        finally:
+            os.remove(block_path)
 
     def _get_ordering_service(self, channel):
         temp = tempfile.mkstemp()
