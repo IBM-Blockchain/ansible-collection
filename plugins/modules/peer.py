@@ -746,19 +746,29 @@ def main():
                 peer = console.update_peer(new_peer['id'], new_peer)
                 changed = True
 
-            # Now need to compare the list of admin certs.
+            # Now need to compare the list of admin certs. The admin certs may be passed in via
+            # three different parameters (admins, config.enrollment.component.admincerts, and
+            # config.msp.component.admincerts) so we need to find them.
             # HACK: if the admin certs did not get returned, we're running on IBP v2.1.3
             # and it does not support this feature.
             expected_admins = module.params['admins']
-            expected_admins_set = set(map(normalize_whitespace, expected_admins))
-            actual_admins = peer.get('admin_certs', None)
-            if actual_admins is not None:
-                actual_admins_set = set(map(normalize_whitespace, actual_admins))
-                append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
-                remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
-                if append_admin_certs or remove_admin_certs:
-                    console.edit_admin_certs(peer['id'], append_admin_certs, remove_admin_certs)
-                    changed = True
+            if not expected_admins:
+                config = module.params['config']
+                if config:
+                    for config_type in ['enrollment', 'msp']:
+                        expected_admins = config.get(config_type, dict()).get('component', dict()).get('admincerts', None)
+                        if expected_admins:
+                            break
+            if expected_admins:
+                expected_admins_set = set(map(normalize_whitespace, expected_admins))
+                actual_admins = peer.get('admin_certs', None)
+                if actual_admins is not None:
+                    actual_admins_set = set(map(normalize_whitespace, actual_admins))
+                    append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
+                    remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
+                    if append_admin_certs or remove_admin_certs:
+                        console.edit_admin_certs(peer['id'], append_admin_certs, remove_admin_certs)
+                        changed = True
 
         # Wait for the peer to start.
         peer = Peer.from_json(console.extract_peer_info(peer))

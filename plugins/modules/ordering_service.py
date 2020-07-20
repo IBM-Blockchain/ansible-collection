@@ -773,19 +773,30 @@ def main():
                     ordering_service[i] = console.update_ordering_service_node(new_ordering_service_node['id'], new_ordering_service_node)
                     changed = True
 
-                # Now need to compare the list of admin certs.
+                # Now need to compare the list of admin certs. The admin certs may be passed in via
+                # three different parameters (admins, config.enrollment.component.admincerts, and
+                # config.msp.component.admincerts) so we need to find them.
                 # HACK: if the admin certs did not get returned, we're running on IBP v2.1.3
                 # and it does not support this feature.
                 expected_admins = module.params['admins']
-                expected_admins_set = set(map(normalize_whitespace, expected_admins))
-                actual_admins = ordering_service_node.get('admin_certs', None)
-                if actual_admins is not None:
-                    actual_admins_set = set(map(normalize_whitespace, actual_admins))
-                    append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
-                    remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
-                    if append_admin_certs or remove_admin_certs:
-                        console.edit_admin_certs(ordering_service_node['id'], append_admin_certs, remove_admin_certs)
-                        changed = True
+                if not expected_admins:
+                    config = module.params['config']
+                    if config:
+                        node_config = config[i]
+                        for config_type in ['enrollment', 'msp']:
+                            expected_admins = node_config.get(config_type, dict()).get('component', dict()).get('admincerts', None)
+                            if expected_admins:
+                                break
+                if expected_admins:
+                    expected_admins_set = set(map(normalize_whitespace, expected_admins))
+                    actual_admins = ordering_service_node.get('admin_certs', None)
+                    if actual_admins is not None:
+                        actual_admins_set = set(map(normalize_whitespace, actual_admins))
+                        append_admin_certs = list(expected_admins_set.difference(actual_admins_set))
+                        remove_admin_certs = list(actual_admins_set.difference(expected_admins_set))
+                        if append_admin_certs or remove_admin_certs:
+                            console.edit_admin_certs(ordering_service_node['id'], append_admin_certs, remove_admin_certs)
+                            changed = True
 
                 # Move to the next ordering service node.
                 i = i + 1
