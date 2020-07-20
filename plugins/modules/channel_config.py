@@ -181,6 +181,22 @@ options:
                     - Example application capability levels include C(V1_4_2) and C(V2_0).
                 type: str
                 default: V1_4_2
+            channel:
+                description:
+                    - The channel capability level.
+                    - The value must be a valid channel capability level supported by Hyperledger Fabric,
+                      and all peers and ordering service nodes in the new channel must support this channel
+                      capability level.
+                    - Example channel capability levels include C(V1_4_3) and C(V2_0).
+                type: str
+            orderer:
+                description:
+                    - The orderer capability level for the new channel.
+                    - The value must be a valid orderer capability level supported by Hyperledger Fabric,
+                      and all ordering service nodes in the new channel must support this orderer capability
+                      level.
+                    - Example orderer capability levels include C(V1_4_2) and C(V2_0).
+                type: str
     parameters:
         batch_size:
             description:
@@ -359,6 +375,40 @@ def create(module):
             policy=policy
         )
 
+    # Add the channel and orderer capabilities to the config update.
+    capabilities = module.params['capabilities']
+    if capabilities:
+
+        # Handle the channel capability.
+        channel = capabilities['channel']
+        if channel:
+            config_update_json['read_set']['values'].setdefault('Capabilities', dict())
+            config_update_json['write_set']['values']['Capabilities'] = dict(
+                mod_policy='Admins',
+                value=dict(
+                    capabilities={
+                        channel: {}
+                    }
+                ),
+                version=1
+            )
+
+        # Handle the orderer capability.
+        orderer = capabilities['orderer']
+        if orderer:
+            config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('Capabilities', dict())
+            orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
+            orderer_values = orderer_group.setdefault('values', dict())
+            orderer_values['Capabilities'] = dict(
+                mod_policy='Admins',
+                value=dict(
+                    capabilities={
+                        orderer: {}
+                    }
+                ),
+                version=1
+            )
+
     # Add the parameters to the config update.
     parameters = module.params['parameters']
     if parameters:
@@ -369,7 +419,11 @@ def create(module):
             config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('BatchSize', dict())
             orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
             orderer_values = orderer_group.setdefault('values', dict())
-            orderer_batch_size_value = orderer_values.setdefault('BatchSize', dict(mod_policy='Admins', value=dict(), version=1))
+            orderer_batch_size_value = orderer_values.setdefault('BatchSize', dict(
+                mod_policy='Admins',
+                value=dict(),
+                version=1
+            ))
             for key in batch_size:
                 if batch_size[key]:
                     orderer_batch_size_value['value'][key] = batch_size[key]
@@ -380,8 +434,13 @@ def create(module):
             config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('BatchTimeout', dict())
             orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
             orderer_values = orderer_group.setdefault('values', dict())
-            orderer_batch_timeout_value = orderer_values.setdefault('BatchTimeout', dict(mod_policy='Admins', value=dict(), version=1))
-            orderer_batch_timeout_value['value']['timeout'] = batch_timeout
+            orderer_values['BatchTimeout'] = dict(
+                mod_policy='Admins',
+                value=dict(
+                    timeout=batch_timeout
+                ),
+                version=1
+            )
 
     # Build the config envelope.
     config_update_envelope_json = dict(
@@ -636,7 +695,9 @@ def main():
         organizations=dict(type='list', elements='raw'),
         policies=dict(type='dict'),
         capabilities=dict(type='dict', default=dict(), options=dict(
-            application=dict(type='str', default='V1_4_2')
+            application=dict(type='str', default='V1_4_2'),
+            channel=dict(type='str'),
+            orderer=dict(type='str')
         )),
         parameters=dict(type='dict', default=dict(), options=dict(
             batch_size=dict(type='dict', options=dict(
