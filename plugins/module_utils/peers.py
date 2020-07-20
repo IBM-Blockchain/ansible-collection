@@ -214,7 +214,7 @@ class PeerConnection:
                 if line.endswith(f'instantiated chaincodes on channel {channel}:'):
                     found_marker = True
                 elif found_marker:
-                    p = re.compile('^Name: (.+), Version: (.+), Path: (.+), Input: (.+), Escc: (.+), Vscc: (.+)$')
+                    p = re.compile('^Name: (.+), Version: (.+), Path: (.+),(?: Input: (.+),)? Escc: (.+), Vscc: (.+)$')
                     m = p.match(line)
                     if m is None:
                         continue
