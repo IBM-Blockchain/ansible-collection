@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module
+from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module, get_organizations_by_module
 
 from ansible.module_utils._text import to_native
 
@@ -117,6 +117,20 @@ options:
             - The name of the channel.
         type: str
         required: true
+    organizations:
+        description:
+            - The list of organizations to use to endorse the transaction for
+              committing the chaincode definition.
+            - The organizations must all be members of the channel, must all have
+              approved the chaincode definition, and must all have at least one
+              anchor peer defined.
+            - You can pass strings, which are the names of organizations that are
+              registered with the IBM Blockchain Platform console.
+            - You can also pass a dict, which must match the result format of one
+              of the M(organization_info) or M(organization) modules.
+            - Only required when I(state) is C(present).
+        type: list
+        elements: raw
     name:
         description:
             - The name of the chaincode definition.
@@ -151,7 +165,7 @@ options:
     init_required:
         description:
             - True if this chaincode definition requires called the I(Init) method before the I(Invoke) method,
-                false otherwise.
+              false otherwise.
         type: bool
     collections_config:
         description:
@@ -285,6 +299,7 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         channel=dict(type='str', required=True),
+        organizations=dict(type='list', elements='raw'),
         name=dict(type='str', required=True),
         version=dict(type='str', required=True),
         sequence=dict(type='int', required=True),
@@ -296,7 +311,8 @@ def main():
         collections_config=dict(type='str')
     )
     required_if = [
-        ('api_authtype', 'basic', ['api_secret'])
+        ('api_authtype', 'basic', ['api_secret']),
+        ('state', 'present', ['organizations'])
     ]
     mutually_exclusive = [
         ['endorsement_policy_ref', 'endorsement_policy']
@@ -358,9 +374,15 @@ def main():
         changed = False
         if not committed_chaincode_exists:
 
+            # Build the list of MSP IDs that will endorse this transaction.
+            organizations = get_organizations_by_module(console, module)
+            msp_ids = []
+            for organization in organizations:
+                msp_ids.append(organization.msp_id)
+
             # Commit the chaincode.
             with peer.connect(identity, msp_id, hsm) as peer_connection:
-                peer_connection.commit_chaincode(channel, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                peer_connection.commit_chaincode(channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
                 changed = True
 
         # Return the committed chaincode.
