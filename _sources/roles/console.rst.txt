@@ -218,7 +218,7 @@ Parameters
     The image tag used for the IBM Blockchain Platform operator is *product_version*-*operator_version*-*arch*, for example ``2.5.0-20200618-amd64``.
 
     | **Type**: str
-    | **Default value**: ``20200618``
+    | **Default value**: ``20200714``
 
   zones
     The list of Kubernetes zones that this console can deploy components into.
