@@ -156,7 +156,7 @@ Parameters
     The image tag used for the IBM Blockchain Platform webhook is *product_version*-*webhook_version*-*arch*, for example ``2.5.0-20200618-amd64``.
 
     | **Type**: str
-    | **Default value**: ``20200618``
+    | **Default value**: ``20200714``
 
   wait_timeout
     The timeout, in seconds, to wait until the custom resource defintions are available.
