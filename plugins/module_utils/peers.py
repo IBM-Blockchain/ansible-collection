@@ -341,6 +341,17 @@ class PeerConnection:
             data = json.loads(process.stdout)
             return data.get('chaincode_definitions', [])
         else:
+            raise Exception(f'Failed to query committed chaincodes on peer: {process.stdout}')
+
+    def query_committed_chaincode(self, channel, name):
+        env = self._get_environ()
+        args = [
+            'peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-n', name, '-O', 'json'
+        ]
+        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        if process.returncode == 0:
+            return json.loads(process.stdout)
+        else:
             raise Exception(f'Failed to query committed chaincode on peer: {process.stdout}')
 
     def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):

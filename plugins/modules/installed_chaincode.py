@@ -133,9 +133,9 @@ options:
             - Only required when I(state) is C(absent) and when using the chaincode
               lifecycle in Hyperledger Fabric v1.4.
         type: str
-    id:
+    package_id:
         description:
-            - The ID of the chaincode.
+            - The package ID of the chaincode.
             - Only required when I(state) is C(absent) and when using the chaincode
               lifecycle in Hyperledger Fabric v2.x.
         type: str
@@ -205,7 +205,7 @@ EXAMPLES = '''
     peer: Org1 Peer
     identity: Org1 Admin.json
     msp_id: Org1MSP
-    id: fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b
+    package_id: fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b
 '''
 
 RETURN = '''
@@ -228,17 +228,24 @@ installed_chaincode:
             type: str
             sample: 1.0.0
             returned: when using the chaincode lifecycle in Hyperledger Fabric v1.4
+        id:
+            description:
+                - The ID of the chaincode.
+            type: str
+            sample: 5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03
+            returned: when using the chaincode lifecycle in Hyperledger Fabric v1.4
         label:
             description:
                 - The label of the chaincode.
             type: str
             sample: fabcar-1.0.0
             returned: when using the chaincode lifecycle in Hyperledger Fabric v2.x
-        id:
+        package_id:
             description:
-                - The ID of the chaincode.
+                - The package ID of the chaincode.
             type: str
-            sample: 5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03
+            sample: fabcar-1.0.0:5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03
+            returned: when using the chaincode lifecycle in Hyperledger Fabric v2.x
 '''
 
 
@@ -307,7 +314,7 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
 
     # Extract the chaincode information.
     path = module.params['path']
-    id = module.params['id']
+    package_id = module.params['package_id']
 
     # If the path is provided, name and version won't be, so we need to extract them from the package.
     if path is not None:
@@ -317,14 +324,14 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
         label = metadata['label']
         with open(path, 'rb') as f:
             hash = hashlib.sha256(f.read()).hexdigest()
-        id = f'{label}:{hash}'
+        package_id = f'{label}:{hash}'
 
     # Determine the chaincodes installed on the peer.
     with peer.connect(identity, msp_id, hsm) as peer_connection:
         installed_chaincodes = peer_connection.list_installed_chaincodes_newlc()
 
     # Find a matching chaincode, if one exists.
-    installed_chaincode = next((installed_chaincode for installed_chaincode in installed_chaincodes if installed_chaincode['package_id'] == id), None)
+    installed_chaincode = next((installed_chaincode for installed_chaincode in installed_chaincodes if installed_chaincode['package_id'] == package_id), None)
     chaincode_installed = installed_chaincode is not None
 
     # Handle the chaincode appropriately based on state.
@@ -333,7 +340,7 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
 
         # The chaincode should not be installed, but it is.
         # We can't remove it, so throw an exception.
-        raise Exception(f'cannot remove installed chaincode {id} from peer')
+        raise Exception(f'cannot remove installed chaincode {package_id} from peer')
 
     elif state == 'absent' and not chaincode_installed:
 
@@ -344,14 +351,14 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
 
         # The chaincode should be installed and is.
         label = installed_chaincode['label']
-        return module.exit_json(changed=False, installed_chaincode=dict(id=id, label=label))
+        return module.exit_json(changed=False, installed_chaincode=dict(package_id=package_id, label=label))
 
     else:
 
         # Install the chaincode.
         with peer.connect(identity, msp_id, hsm) as peer_connection:
             peer_connection.install_chaincode_newlc(path)
-        return module.exit_json(changed=True, installed_chaincode=dict(id=id, label=label))
+        return module.exit_json(changed=True, installed_chaincode=dict(package_id=package_id, label=label))
 
 
 def main():
@@ -376,7 +383,7 @@ def main():
         name=dict(type='str'),
         version=dict(type='str'),
         path=dict(type='str'),
-        id=dict(type='str')
+        package_id=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
@@ -387,7 +394,7 @@ def main():
     actual_params = _load_params()
     if actual_params.get('state', 'present') == 'absent':
         required_one_of = [
-            ['name', 'id']
+            ['name', 'package_id']
         ]
     else:
         required_one_of = []
@@ -397,8 +404,8 @@ def main():
     mutually_exclusive = [
         ['name', 'path'],
         ['version', 'path'],
-        ['id', 'path'],
-        ['id', 'name']
+        ['package_id', 'path'],
+        ['package_id', 'name']
     ]
     module = BlockchainModule(
         argument_spec=argument_spec,
@@ -426,11 +433,11 @@ def main():
 
         # Determine which lifecycle we are using.
         path = module.params['path']
-        id = module.params['id']
+        package_id = module.params['package_id']
         if path is not None:
             new_lifecycle = tarfile.is_tarfile(path)
         else:
-            new_lifecycle = id is not None
+            new_lifecycle = package_id is not None
 
         # Switch to new lifecycle code if requird.
         if new_lifecycle:

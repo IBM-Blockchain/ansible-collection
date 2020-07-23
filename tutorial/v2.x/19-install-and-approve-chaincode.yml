@@ -34,7 +34,7 @@
         channel: "{{ channel_name }}"
         name: "{{ smart_contract_name }}"
         version: "{{ smart_contract_version }}"
-        package_id: "{{ result.installed_chaincode.id }}"
+        package_id: "{{ result.installed_chaincode.package_id }}"
         sequence: "{{ smart_contract_sequence }}"
         endorsement_policy: "{{ smart_contract_endorsement_policy | default(omit) }}"
         collections_config: "{{ smart_contract_collections_file | default(omit) }}"

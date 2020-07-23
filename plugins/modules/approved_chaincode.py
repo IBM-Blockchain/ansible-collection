@@ -350,10 +350,25 @@ def main():
         init_required = module.params['init_required']
         collections_config = module.params['collections_config']
 
-        # Check the commit readiness for this chaincode.
+        # We have to find out if it's already approved. To do this, we have to:
+        # - Find out if a chaincode definition with the specified name, version, and sequence number exists.
+        # - If it exists, get the details of that chaincode definition.
+        # - Check that the name, version, and sequence number match and that it has been approved by this organization.
+        # - If not, check the commit readiness for the name, version, and sequence number.
+        approval_exists = False
         with peer.connect(identity, msp_id, hsm) as peer_connection:
-            commit_readiness = peer_connection.check_commit_readiness(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
-        approval_exists = commit_readiness.get(msp_id, False)
+            committed_chaincodes = peer_connection.query_committed_chaincodes(channel)
+            found = False
+            for committed_chaincode in committed_chaincodes:
+                if committed_chaincode['name'] == name and committed_chaincode['version'] == version and committed_chaincode['sequence'] == sequence:
+                    found = True
+                    break
+            if found:
+                committed_chaincode = peer_connection.query_committed_chaincode(channel, name)
+                approval_exists = msp_id in committed_chaincode.get('approvals', dict())
+            else:
+                commit_readiness = peer_connection.check_commit_readiness(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                approval_exists = commit_readiness.get(msp_id, False)
 
         # Handle the cases when the approval should be absent.
         state = module.params['state']
