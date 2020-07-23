@@ -61,10 +61,10 @@ def convert_identity_to_msp_path(identity):
     return msp_path
 
 
-def organization_to_msp(organization):
+def organization_to_msp(organization, lifecycle_policy_required=False):
 
-    # Return a dictionary representing the MSP.
-    return dict(
+    # Build the initial MSP.
+    msp = dict(
         groups=dict(),
         mod_policy='Admins',
         policies=dict(
@@ -175,3 +175,36 @@ def organization_to_msp(organization):
             )
         )
     )
+
+    # Add the lifecycle policy if required.
+    if lifecycle_policy_required:
+        msp['policies']['Lifecycle'] = dict(
+            mod_policy='Admins',
+            policy=dict(
+                type=1,
+                value=dict(
+                    identities=list([
+                        dict(
+                            principal=dict(
+                                msp_identifier=organization.msp_id,
+                                role='MEMBER'
+                            ),
+                            principal_classification='ROLE'
+                        )
+                    ]),
+                    rule=dict(
+                        n_out_of=dict(
+                            n=1,
+                            rules=list([
+                                dict(
+                                    signed_by=0
+                                )
+                            ])
+                        )
+                    )
+                )
+            )
+        )
+
+    # Return the MSP.
+    return msp
