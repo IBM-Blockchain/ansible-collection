@@ -164,9 +164,9 @@ def main():
     # Create the module.
     argument_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
-        api_endpoint=dict(type='str'),
-        api_authtype=dict(type='str', choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str', no_log=True),
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', choices=['ibmcloud', 'basic'], required=True),
+        api_key=dict(type='str', no_log=True, required=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),

@@ -210,7 +210,7 @@ def main():
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
-        operation=dict(type='str', required=True, choices=['create', 'fetch', 'compute_update', 'sign_update', 'apply_update']),
+        operation=dict(type='str', required=True, choices=['fetch']),
         ordering_service=dict(type='str'),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
