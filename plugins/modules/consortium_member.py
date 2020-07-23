@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.channel_utils import get_highest_capability
 from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
 from ..module_utils.module import BlockchainModule
 from ..module_utils.msp_utils import organization_to_msp
@@ -156,6 +157,12 @@ def main():
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
 
+        # Determine the capabilities for this channel.
+        highest_capability = get_highest_capability(config_json['channel_group'])
+        lifecycle_policy_required = False
+        if highest_capability is not None and highest_capability >= 'V2_0':
+            lifecycle_policy_required = True
+
         # Check to see if the consortium member exists.
         consortium_groups = config_json['channel_group']['groups']['Consortiums']['groups']['SampleConsortium']['groups']
         msp = consortium_groups.get(organization.msp_id, None)
@@ -165,13 +172,13 @@ def main():
         if state == 'present' and msp is None:
 
             # Add the consortium member.
-            msp = organization_to_msp(organization)
+            msp = organization_to_msp(organization, lifecycle_policy_required)
             consortium_groups[organization.msp_id] = msp
 
         elif state == 'present' and msp is not None:
 
             # Update the consortium member.
-            new_msp = organization_to_msp(organization)
+            new_msp = organization_to_msp(organization, lifecycle_policy_required)
             updated_msp = copy_dict(msp)
             merge_dicts(updated_msp, new_msp)
             if equal_dicts(msp, updated_msp):

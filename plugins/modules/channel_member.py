@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.channel_utils import get_highest_capability
 from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
 from ..module_utils.module import BlockchainModule
 from ..module_utils.msp_utils import organization_to_msp
@@ -198,6 +199,12 @@ def main():
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
 
+        # Determine the capabilities for this channel.
+        highest_capability = get_highest_capability(config_json['channel_group'])
+        lifecycle_policy_required = False
+        if highest_capability is not None and highest_capability >= 'V2_0':
+            lifecycle_policy_required = True
+
         # Check to see if the channel member exists.
         application_groups = config_json['channel_group']['groups']['Application']['groups']
         msp = application_groups.get(organization.msp_id, None)
@@ -207,7 +214,7 @@ def main():
         if state == 'present' and msp is None:
 
             # Add the channel member.
-            msp = organization_to_msp(organization)
+            msp = organization_to_msp(organization, lifecycle_policy_required)
             if anchor_peers_value is not None:
                 msp['values']['AnchorPeers'] = anchor_peers_value
             application_groups[organization.msp_id] = msp
@@ -215,7 +222,7 @@ def main():
         elif state == 'present' and msp is not None:
 
             # Update the channel member.
-            new_msp = organization_to_msp(organization)
+            new_msp = organization_to_msp(organization, lifecycle_policy_required)
             if anchor_peers_value is not None:
                 new_msp['values']['AnchorPeers'] = anchor_peers_value
             updated_msp = copy_dict(msp)
