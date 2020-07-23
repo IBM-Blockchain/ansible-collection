@@ -658,10 +658,8 @@ class Console:
 
     def get_user(self, email):
         users = self.get_users()
-        for user in users:
-            if user['email'] == email:
-                return user
-        return None
+        # Emails are stored in lowercase, so do a case-insensitive comparision.
+        return next((user for user in users if user['email'].lower() == email.lower()), None)
 
     def create_user(self, email, roles):
         user = self.get_user(email)
