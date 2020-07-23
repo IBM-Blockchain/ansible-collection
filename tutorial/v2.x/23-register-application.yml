@@ -1,0 +1,40 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Register application
+  hosts: localhost
+  vars_files:
+    - common-vars.yml
+    - org2-vars.yml
+  tasks:
+    - name: Register a new identity
+      ibm.blockchain_platform.registered_identity:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        certificate_authority: "{{ org2_ca_name }}"
+        registrar: "{{ org2_ca_name }} Admin.json"
+        enrollment_id: "{{ application_enrollment_id }}"
+        enrollment_secret: "{{ application_enrollment_secret }}"
+        max_enrollments: "{{ application_max_enrollments }}"
+        type: "{{ application_enrollment_type }}"
+        attributes:
+          - name: "{{ smart_contract_name }}.admin"
+            value: "true"
+
+    - name: Create a connection profile
+      ibm.blockchain_platform.connection_profile:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        name: "{{ org2_name }} Gateway"
+        path: "{{ org2_name }} Gateway.json"
+        organization: "{{ org2_name }}"
+        certificate_authority: "{{ org2_ca_name }}"
+        peers:
+          - "{{ org2_peer_name }}"
