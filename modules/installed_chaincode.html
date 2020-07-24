@@ -325,7 +325,7 @@
 <div class="line"><strong>Type</strong>: str</div>
 </div>
 </dd>
-<dt>id</dt><dd><p>The ID of the chaincode.</p>
+<dt>package_id</dt><dd><p>The package ID of the chaincode.</p>
 <p>Only required when <em>state</em> is <code class="docutils literal notranslate"><span class="pre">absent</span></code> and when using the chaincode lifecycle in Hyperledger Fabric v2.x.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
@@ -391,7 +391,7 @@
     <span class="nt">peer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
     <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
     <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
-    <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b</span>
+    <span class="nt">package_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b</span>
 </pre></div>
 </div>
 </div>
@@ -419,6 +419,13 @@
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">1.0.0</span></code></div>
 </div>
 </dd>
+<dt>id</dt><dd><p>The ID of the chaincode.</p>
+<div class="line-block">
+<div class="line"><strong>Returned</strong>: when using the chaincode lifecycle in Hyperledger Fabric v1.4</div>
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03</span></code></div>
+</div>
+</dd>
 <dt>label</dt><dd><p>The label of the chaincode.</p>
 <div class="line-block">
 <div class="line"><strong>Returned</strong>: when using the chaincode lifecycle in Hyperledger Fabric v2.x</div>
@@ -426,10 +433,11 @@
 <div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">fabcar-1.0.0</span></code></div>
 </div>
 </dd>
-<dt>id</dt><dd><p>The ID of the chaincode.</p>
+<dt>package_id</dt><dd><p>The package ID of the chaincode.</p>
 <div class="line-block">
+<div class="line"><strong>Returned</strong>: when using the chaincode lifecycle in Hyperledger Fabric v2.x</div>
 <div class="line"><strong>Type</strong>: str</div>
-<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03</span></code></div>
+<div class="line"><strong>Sample</strong>: <code class="docutils literal notranslate"><span class="pre">fabcar-1.0.0:5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03</span></code></div>
 </div>
 </dd>
 </dl>

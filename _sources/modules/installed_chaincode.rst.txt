@@ -134,8 +134,8 @@ Parameters
 
     | **Type**: str
 
-  id
-    The ID of the chaincode.
+  package_id
+    The package ID of the chaincode.
 
     Only required when *state* is ``absent`` and when using the chaincode lifecycle in Hyperledger Fabric v2.x.
 
@@ -212,7 +212,7 @@ Examples
         peer: Org1 Peer
         identity: Org1 Admin.json
         msp_id: Org1MSP
-        id: fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b
+        package_id: fabcar:8eaffdff050ff04779879aa524a51b308da9327b4a5bb1e0477db5a96598455b
 
 
 
@@ -239,6 +239,13 @@ Return Values
       | **Type**: str
       | **Sample**: ``1.0.0``
 
+    id
+      The ID of the chaincode.
+
+      | **Returned**: when using the chaincode lifecycle in Hyperledger Fabric v1.4
+      | **Type**: str
+      | **Sample**: ``5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03``
+
     label
       The label of the chaincode.
 
@@ -246,11 +253,12 @@ Return Values
       | **Type**: str
       | **Sample**: ``fabcar-1.0.0``
 
-    id
-      The ID of the chaincode.
+    package_id
+      The package ID of the chaincode.
 
+      | **Returned**: when using the chaincode lifecycle in Hyperledger Fabric v2.x
       | **Type**: str
-      | **Sample**: ``5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03``
+      | **Sample**: ``fabcar-1.0.0:5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03``
 
 
 
