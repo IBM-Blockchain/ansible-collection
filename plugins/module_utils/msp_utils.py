@@ -6,6 +6,8 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from .organizations import Organization
+
 import os
 import tempfile
 
@@ -208,3 +210,21 @@ def organization_to_msp(organization, lifecycle_policy_required=False):
 
     # Return the MSP.
     return msp
+
+
+def msp_to_organization(msp_id, msp):
+
+    # Get the MSP configuration.
+    msp_value = msp['values']['MSP']
+    msp_config = msp_value['value']['config']
+
+    # Extract all of the values we need and return an organization.
+    root_certs = msp_config['root_certs']
+    intermediate_certs = msp_config['intermediate_certs']
+    admins = msp_config['admins']
+    revocation_list = msp_config['revocation_list']
+    tls_root_certs = msp_config['tls_root_certs']
+    tls_intermediate_certs = msp_config['tls_intermediate_certs']
+    fabric_node_ous = msp_config['fabric_node_ous']
+    organizational_unit_identifiers = msp_config['organizational_unit_identifiers']
+    return Organization(msp_id, msp_id, root_certs, intermediate_certs, admins, revocation_list, tls_root_certs, tls_intermediate_certs, fabric_node_ous, organizational_unit_identifiers, None)
