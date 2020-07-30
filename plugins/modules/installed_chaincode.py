@@ -312,6 +312,9 @@ def do_old_lifecycle(module, console, peer, identity, msp_id, hsm):
 
 def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
 
+    # Ensure we have the Fabric v2.x binaries available.
+    module.check_for_missing_bins(min_fabric_version='2.1.1')
+
     # Extract the chaincode information.
     path = module.params['path']
     package_id = module.params['package_id']

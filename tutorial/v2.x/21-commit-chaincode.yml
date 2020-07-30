@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-- name: Instantiate chaincode
+- name: Commit chaincode
   hosts: localhost
   vars_files:
     - common-vars.yml

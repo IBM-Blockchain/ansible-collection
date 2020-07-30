@@ -318,6 +318,7 @@ def main():
         ['endorsement_policy_ref', 'endorsement_policy']
     ]
     module = BlockchainModule(
+        min_fabric_version='2.1.1',
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if,
