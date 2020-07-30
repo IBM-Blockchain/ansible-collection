@@ -73,10 +73,10 @@ def wrong_version_bin(binary, actual_version, expected_version, reason=None, url
 
 class BlockchainModule(AnsibleModule):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, min_fabric_version='1.4.3', *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_for_missing_libs()
-        self.check_for_missing_bins()
+        self.check_for_missing_bins(min_fabric_version)
 
     def check_for_missing_libs(self):
         url = 'https://ibm-blockchain.github.io/ansible-collection/installation.html#requirements'
@@ -85,7 +85,7 @@ class BlockchainModule(AnsibleModule):
         if not HAS_CRYPTOGRAPHY:
             self.fail_json(msg=missing_required_lib("cryptography", url=url), exception=CRYPTOGRAPHY_IMPORT_ERR)
 
-    def check_for_missing_bins(self):
+    def check_for_missing_bins(self, min_fabric_version='1.4.3'):
         url = 'https://ibm-blockchain.github.io/ansible-collection/installation.html#requirements'
         for binary in ['peer', 'configtxlator']:
             try:
@@ -97,10 +97,10 @@ class BlockchainModule(AnsibleModule):
             p = re.compile('Version: (.+)$', re.MULTILINE)
             m = p.search(process.stdout)
             if m is None:
-                self.fail_json(msg=wrong_version_bin(binary, '<unknown>', '>= 1.4.3', url=url), rc=process.returncode, stdout=process.stdout, stderr=process.stderr, cmd=f'{binary} version')
+                self.fail_json(msg=wrong_version_bin(binary, '<unknown>', f'>= {min_fabric_version}', url=url), rc=process.returncode, stdout=process.stdout, stderr=process.stderr, cmd=f'{binary} version')
             version = m.group(1)
-            if not LooseVersion(version) >= LooseVersion('1.4.3'):
-                self.fail_json(msg=wrong_version_bin(binary, version, '>= 1.4.3', url=url), rc=process.returncode, stdout=process.stdout, stderr=process.stderr, cmd=f'{binary} version')
+            if not LooseVersion(version) >= LooseVersion(min_fabric_version):
+                self.fail_json(msg=wrong_version_bin(binary, version, f'>= {min_fabric_version}', url=url), rc=process.returncode, stdout=process.stdout, stderr=process.stderr, cmd=f'{binary} version')
 
     def check_for_missing_hsm_libs(self):
         url = 'https://ibm-blockchain.github.io/ansible-collection/installation.html#requirements'
