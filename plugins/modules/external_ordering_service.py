@@ -109,12 +109,14 @@ options:
             pem:
                 description:
                     - The TLS certificate chain for the ordering service node.
-                    - The TLS certificate chain is returned as a base64 encoded PEM.
+                type: str
+            tls_ca_root_cert:
+                description:
+                    - The TLS certificate chain for the ordering service node.
                 type: str
             tls_cert:
                 description:
-                    - The TLS certificate chain for the ordering service node.
-                    - The TLS certificate chain is returned as a base64 encoded PEM.
+                    - The TLS certificate for the ordering service node.
                 type: str
             location:
                 description:
@@ -205,10 +207,16 @@ ordering_service:
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
-        tls_cert:
+        tls_ca_root_cert:
             description:
                 - The TLS certificate chain for the ordering service node.
                 - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        tls_cert:
+            description:
+                - The TLS certificate for the ordering service node.
+                - The TLS certificate is returned as a base64 encoded PEM.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         location:
@@ -224,11 +232,13 @@ ordering_service:
         client_tls_cert:
             description:
                 - The client TLS certificate for the ordering service node.
+                - The client TLS certificate is returned as a base64 encoded PEM.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         server_tls_cert:
             description:
-                - The client TLS certificate for the ordering service node.
+                - The server TLS certificate for the ordering service node.
+                - The server TLS certificate is returned as a base64 encoded PEM.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         cluster_id:
@@ -263,6 +273,7 @@ def main():
             grpcwp_url=dict(type='str'),
             msp_id=dict(type='str'),
             pem=dict(type='str'),
+            tls_ca_root_cert=dict(type='str'),
             tls_cert=dict(type='str'),
             location=dict(type='str'),
             system_channel_id=dict(type='str'),
@@ -355,7 +366,7 @@ def main():
                 operations_url=ordering_service_node['operations_url'],
                 grpcwp_url=ordering_service_node['grpcwp_url'],
                 msp_id=ordering_service_node['msp_id'],
-                tls_ca_root_cert=ordering_service_node['pem'],
+                tls_ca_root_cert=ordering_service_node['tls_ca_root_cert'] or ordering_service_node['pem'],
                 system_channel_id=ordering_service_node['system_channel_id'],
                 client_tls_cert=ordering_service_node['client_tls_cert'],
                 server_tls_cert=ordering_service_node['server_tls_cert'],
