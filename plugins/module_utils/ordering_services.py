@@ -23,7 +23,7 @@ import urllib
 
 class OrderingServiceNode:
 
-    def __init__(self, name, api_url, operations_url, grpcwp_url, msp_id, pem, tls_ca_root_cert, tls_cert, location, system_channel_id, cluster_id, cluster_name, client_tls_cert, server_tls_cert):
+    def __init__(self, name, api_url, operations_url, grpcwp_url, msp_id, pem, tls_ca_root_cert, tls_cert, location, system_channel_id, cluster_id, cluster_name, client_tls_cert, server_tls_cert, consenter_proposal_fin):
         self.name = name
         self.api_url = api_url
         self.operations_url = operations_url
@@ -38,6 +38,7 @@ class OrderingServiceNode:
         self.cluster_name = cluster_name
         self.client_tls_cert = client_tls_cert
         self.server_tls_cert = server_tls_cert
+        self.consenter_proposal_fin = consenter_proposal_fin
 
     def clone(self):
         return OrderingServiceNode(
@@ -54,7 +55,8 @@ class OrderingServiceNode:
             cluster_id=self.cluster_id,
             cluster_name=self.cluster_name,
             client_tls_cert=self.client_tls_cert,
-            server_tls_cert=self.server_tls_cert
+            server_tls_cert=self.server_tls_cert,
+            consenter_proposal_fin=self.consenter_proposal_fin
         )
 
     def equals(self, other):
@@ -72,7 +74,8 @@ class OrderingServiceNode:
             self.cluster_id == other.cluster_id and
             self.cluster_name == other.cluster_name and
             self.client_tls_cert == other.client_tls_cert and
-            self.server_tls_cert == other.server_tls_cert
+            self.server_tls_cert == other.server_tls_cert and
+            self.consenter_proposal_fin == other.consenter_proposal_fin
         )
 
     def to_json(self):
@@ -91,7 +94,8 @@ class OrderingServiceNode:
             cluster_id=self.cluster_id,
             cluster_name=self.cluster_name,
             client_tls_cert=self.client_tls_cert,
-            server_tls_cert=self.server_tls_cert
+            server_tls_cert=self.server_tls_cert,
+            consenter_proposal_fin=self.consenter_proposal_fin
         )
 
     @staticmethod
@@ -110,10 +114,15 @@ class OrderingServiceNode:
             cluster_id=data['cluster_id'],
             cluster_name=data['cluster_name'],
             client_tls_cert=data['client_tls_cert'],
-            server_tls_cert=data['server_tls_cert']
+            server_tls_cert=data['server_tls_cert'],
+            consenter_proposal_fin=data['consenter_proposal_fin']
         )
 
     def wait_for(self, timeout):
+        # If the ordering service node has been pre-created, then it will
+        # not be running, so we do not want to wait for it.
+        if not self.consenter_proposal_fin:
+            return
         started = False
         for x in range(timeout):
             try:
@@ -270,6 +279,9 @@ class OrderingServiceConnection:
     def fetch(self, channel, target, path):
         last_e = None
         for node in self.ordering_service.nodes:
+            if not node.consenter_proposal_fin:
+                # Don't connect to ordering service nodes that are not ready.
+                continue
             try:
                 with node.connect(self.identity, self.msp_id, self.hsm) as connection:
                     connection.fetch(channel, target, path)
@@ -281,6 +293,9 @@ class OrderingServiceConnection:
     def update(self, channel, path):
         last_e = None
         for node in self.ordering_service.nodes:
+            if not node.consenter_proposal_fin:
+                # Don't connect to ordering service nodes that are not ready.
+                continue
             try:
                 with node.connect(self.identity, self.msp_id, self.hsm) as connection:
                     connection.update(channel, path)

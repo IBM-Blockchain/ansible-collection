@@ -444,7 +444,8 @@ class Console:
             'cluster_id': ordering_service_node['cluster_id'],
             'cluster_name': ordering_service_node['cluster_name'],
             'client_tls_cert': ordering_service_node.get('client_tls_cert', None),
-            'server_tls_cert': ordering_service_node.get('server_tls_cert', None)
+            'server_tls_cert': ordering_service_node.get('server_tls_cert', None),
+            'consenter_proposal_fin': ordering_service_node.get('consenter_proposal_fin', True)
         }
 
     def create_ext_ordering_service_node(self, data):

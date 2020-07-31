@@ -165,6 +165,14 @@ ordering_service_node:
                 - The name of the ordering service cluster.
             type: str
             sample: Ordering Service
+        consenter_proposal_fin:
+            description:
+                - True if the ordering service node has been added to the consenter
+                  set of the system channel, false otherwise. Ordering service nodes
+                  that have not been added to the consenter set of the system channel
+                  are not ready for use.
+            type: boolean
+            sample: true
 '''
 
 

@@ -281,7 +281,8 @@ def main():
             server_tls_cert=dict(type='str'),
             cluster_id=dict(type='str'),
             cluster_name=dict(type='str'),
-            type=dict(type='str')
+            type=dict(type='str'),
+            consenter_proposal_fin=dict(type='bool')
         ))
     )
     required_if = [
