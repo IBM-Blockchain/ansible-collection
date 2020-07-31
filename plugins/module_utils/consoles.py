@@ -405,6 +405,29 @@ class Console:
                     continue
                 return self.handle_error('Failed to delete external ordering service', e)
 
+    def edit_ordering_service_node(self, id, data):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/fabric-orderer/{id}')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        # Extract only the parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['cluster_name', 'display_name', 'api_url', 'operations_url', 'grpcwp_url', 'msp_id', 'consenter_proposal_fin', 'location', 'system_channel_id', 'tags']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        serialized_data = json.dumps(stripped_data)
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to edit ordering service node', e)
+
     def update_ordering_service_node(self, id, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/fabric-orderer/{id}')
@@ -427,6 +450,21 @@ class Console:
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update ordering service node', e)
+
+    def delete_ordering_service_node(self, id):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}')
+        headers = {
+            'Authorization': self.authorization
+        }
+        for attempt in range(1, self.retries + 1):
+            try:
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                return
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to delete ordering service node', e)
 
     def extract_ordering_service_node_info(self, ordering_service_node):
         return {
@@ -589,6 +627,24 @@ class Console:
             'organizational_unit_identifiers': organization.get('organizational_unit_identifiers', list()),
             'host_url': organization.get('host_url', None)
         }
+
+    def submit_config_block(self, id, config_block):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}/config')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(dict(b64_block=config_block))
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to submit config block to ordering service node', e)
 
     def should_retry_error(self, error, attempt):
         if attempt >= self.retries:
