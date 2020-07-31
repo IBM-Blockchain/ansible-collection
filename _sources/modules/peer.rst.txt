@@ -493,10 +493,18 @@ Return Values
       | **Type**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
 
-    tls_cert
+    tls_ca_root_cert
       The TLS certificate chain for the peer.
 
       The TLS certificate chain is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    tls_cert
+      The TLS certificate for the peer.
+
+      The TLS certificate is returned as a base64 encoded PEM.
 
       | **Type**: str
       | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``

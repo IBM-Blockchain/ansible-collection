@@ -1,0 +1,259 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_member_info.py
+
+
+channel_member_info -- Get information about a member for a Hyperledger Fabric channel
+======================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Get information about a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  path (required)
+    Path to current the channel configuration file.
+
+    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+
+    This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
+
+    | **Type**: str
+
+  msp_id (required)
+    The MSP ID of the channel member.
+
+    | **Type**: string
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Get the organization from the channel
+      ibm.blockchain_platform.channel_member_info:
+        path: channel_config.bin
+        msp_id: Org1MSP
+
+
+
+Return Values
+-------------
+
+  exists
+    True if the channel member exists, false otherwise.
+
+    | **Type**: boolean
+
+  organization
+    The organization.
+
+    | **Returned**: if channel member exists
+    | **Type**: dict
+
+    name
+      The name of the organization.
+
+      | **Type**: str
+      | **Sample**: ``Org1``
+
+    msp_id
+      The MSP ID for the organization.
+
+      | **Type**: str
+      | **Sample**: ``Org1MSP``
+
+    root_certs
+      The list of root certificates for this organization.
+
+      Root certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    intermediate_certs
+      The list of intermediate certificates for this organization.
+
+      Intermediate certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    admins
+      The list of administrator certificates for this organization.
+
+      Administrator certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    revocation_list
+      The list of revoked certificates for this organization.
+
+      Revoked certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    tls_root_certs
+      The list of TLS root certificates for this organization.
+
+      TLS root certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    tls_intermediate_certs
+      The list of TLS root certificates for this organization.
+
+      TLS intermediate certificates must be supplied as base64 encoded PEM files.
+
+      | **Type**: list
+      | **Elements**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    fabric_node_ous
+      Configuration specific to the identity classification.
+
+      | **Type**: dict
+
+      enable
+        True if identity classification is enabled for this organization, false otherwise.
+
+        | **Type**: boolean
+        | **Sample**: ``True``
+
+      admin_ou_identifier
+        Configuration specific to the admin identity classification.
+
+        | **Type**: dict
+
+        certificate
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+        organizational_unit_identifier
+          The organizational unit (OU) identifier for this identity classification.
+
+          | **Type**: str
+          | **Sample**: ``admin``
+
+
+      client_ou_identifier
+        Configuration specific to the client identity classification.
+
+        | **Type**: dict
+
+        certificate
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+        organizational_unit_identifier
+          The organizational unit (OU) identifier for this identity classification.
+
+          | **Type**: str
+          | **Sample**: ``client``
+
+
+      peer_ou_identifier
+        Configuration specific to the peer identity classification.
+
+        | **Type**: dict
+
+        certificate
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+        organizational_unit_identifier
+          The organizational unit (OU) identifier for this identity classification.
+
+          | **Type**: str
+          | **Sample**: ``peer``
+
+
+      orderer_ou_identifier
+        Configuration specific to the orderer identity classification.
+
+        | **Type**: dict
+
+        certificate
+          The root or intermediate certificate for this identity classification.
+
+          Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+          | **Type**: str
+          | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+        organizational_unit_identifier
+          The organizational unit (OU) identifier for this identity classification.
+
+          | **Type**: str
+          | **Sample**: ``orderer``
+
+
+
+    organizational_unit_identifiers
+      The list of organizational unit identifiers for this organization.
+
+      | **Type**: list
+      | **Elements**: dict
+
+      certificate
+        The root or intermediate certificate for this organizational unit identifier.
+
+        Root or intermediate certificates must be supplied as base64 encoded PEM files.
+
+        | **Type**: str
+        | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+      organizational_unit_identifier
+        The organizational unit (OU) identifier.
+
+        | **Type**: str
+        | **Sample**: ``acctdept``
+
+
+
+

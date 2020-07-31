@@ -2,11 +2,11 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service_info.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service_node_info.py
 
 
-ordering_service_info -- Get information about a Hyperledger Fabric ordering service
-====================================================================================
+ordering_service_node_info -- Get information about a Hyperledger Fabric ordering service node
+==============================================================================================
 
 .. contents::
    :local:
@@ -16,7 +16,7 @@ ordering_service_info -- Get information about a Hyperledger Fabric ordering ser
 Synopsis
 --------
 
-Get information about a Hyperledger Fabric ordering service by using the IBM Blockchain Platform.
+Get information about a Hyperledger Fabric ordering service node by using the IBM Blockchain Platform.
 
 This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
@@ -67,11 +67,11 @@ Parameters
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   name
-    The name of the ordering service.
+    The name of the ordering service node.
 
 
   wait_timeout
-    The timeout, in seconds, to wait until the ordering service is available.
+    The timeout, in seconds, to wait until the ordering service node is available.
 
     | **Type**: int
     | **Default value**: ``60``
@@ -89,13 +89,13 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Get the ordering service
-      ibm.blockchain_platform.ordering_service_info:
+    - name: Get the ordering service node
+      ibm.blockchain_platform.ordering_service_node_info:
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        name: Ordering Service
+        name: Ordering Service Node_1
 
 
 
@@ -103,16 +103,15 @@ Return Values
 -------------
 
   exists
-    True if the ordering service exists, false otherwise.
+    True if the ordering service node exists, false otherwise.
 
     | **Type**: boolean
 
-  ordering_service
-    The ordering service, as a list of ordering service nodes.
+  ordering_service_node
+    The ordering service node.
 
-    | **Returned**: if ordering service exists
-    | **Type**: list
-    | **Elements**: dict
+    | **Returned**: if ordering service node exists
+    | **Type**: dict
 
     name
       The name of the ordering service node.

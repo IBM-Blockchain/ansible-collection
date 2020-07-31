@@ -2,11 +2,11 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service_node.py
 
 
-ordering_service -- Manage a Hyperledger Fabric ordering service
-================================================================
+ordering_service_node -- Manage a Hyperledger Fabric ordering service node
+==========================================================================
 
 .. contents::
    :local:
@@ -16,7 +16,7 @@ ordering_service -- Manage a Hyperledger Fabric ordering service
 Synopsis
 --------
 
-Create, update, or delete a Hyperledger Fabric ordering service by using the IBM Blockchain Platform.
+Create, update, or delete a Hyperledger Fabric ordering service node by using the IBM Blockchain Platform.
 
 This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
@@ -67,39 +67,59 @@ Parameters
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - An ordering service matching the specified name will be stopped and removed.
+    ``absent`` - An ordering service node matching the specified name will be stopped and removed.
 
-    ``present`` - Asserts that an ordering service matching the specified name and configuration exists. If no ordering service matches the specified name, an ordering service will be created. If an ordering service matches the specified name but the configuration does not match, then the ordering service will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+    ``present`` - Asserts that an ordering service node matching the specified name and configuration exists. If no ordering service node matches the specified name, an ordering service node will be created. If an ordering service node matches the specified name but the configuration does not match, then the ordering service node will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
     | **Type**: str
     | **Default value**: ``present``
 
   name (required)
-    The name for the ordering service.
+    The name for the ordering service node.
+
+    | **Type**: str
+
+  ordering_service
+    The name of the ordering service that this ordering service node belongs to.
+
+    You can pass a string, which is the display name of a ordering service registered with the IBM Blockchain Platform console.
+
+    You can also pass a dictionary, which must match the result format of one of the :ref:`ordering_service_info <ordering_service_info_module>` or :ref:`ordering_service <ordering_service_module>` modules.
+
+    Only required when *config* is not specified.
 
     | **Type**: str
 
   msp_id
-    The MSP ID for this ordering service.
+    The MSP ID for this ordering service node.
 
     Only required when *state* is ``present``.
 
     | **Type**: str
 
   orderer_type
-    ``raft`` - The ordering service will use the Raft consensus algorithm.
+    ``raft`` - The ordering service node will use the Raft consensus algorithm.
 
     | **Type**: str
     | **Default value**: ``raft``
 
   system_channel_id
-    The name of the system channel for this ordering service.
+    The name of the system channel for this ordering service node.
 
     | **Type**: str
     | **Default value**: ``testchainid``
 
+  config_block
+    The path to where the config block for the system channel is stored.
+
+    You must first update the config for the system channel by adding this ordering service node into the consenter set of the system channel.
+
+    The config block will only be submitted to the ordering service node if the ordering service node has been pre-created and is not ready for use.
+
+    | **Type**: str
+
   certificate_authority
-    The certificate authority to use to enroll the identity for this ordering service.
+    The certificate authority to use to enroll the identity for this ordering service node.
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
 
@@ -110,21 +130,21 @@ Parameters
     | **Type**: raw
 
   enrollment_id
-    The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service.
+    The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service node.
 
     Only required when *config* is not specified.
 
     | **Type**: str
 
   enrollment_secret
-    The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service.
+    The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service node.
 
     Only required when *config* is not specified.
 
     | **Type**: str
 
   admins
-    The list of administrator certificates for this ordering service.
+    The list of administrator certificates for this ordering service node.
 
     Administrator certificates must be supplied as base64 encoded PEM files.
 
@@ -133,35 +153,22 @@ Parameters
     | **Type**: list
     | **Elements**: str
 
-  nodes
-    The number of ordering service nodes in this ordering service.
-
-    Only required when *state* is ``present``.
-
-    | **Type**: int
-
   config
-    The initial configuration for the ordering service. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
-
-    You must provide initial configuration for each ordering service node in the ordering service, as defined by *nodes*.
+    The initial configuration for the ordering service node. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
 
     See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
 
-    | **Type**: list
-    | **Elements**: dict
+    | **Type**: dict
 
   config_override
-    The configuration overrides for the ordering service.
-
-    You must provide configuration overrides for each ordering service node in the ordering service, as defined by *nodes*.
+    The configuration overrides for the ordering service node.
 
     See the Hyperledger Fabric documentation for available options: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
 
-    | **Type**: list
-    | **Elements**: dict
+    | **Type**: dict
 
   resources
-    The Kubernetes resource configuration for the ordering service.
+    The Kubernetes resource configuration for the ordering service node.
 
     | **Type**: dict
 
@@ -215,7 +222,7 @@ Parameters
 
 
   storage
-    The Kubernetes storage configuration for the ordering service.
+    The Kubernetes storage configuration for the ordering service node.
 
     | **Type**: dict
 
@@ -239,53 +246,50 @@ Parameters
 
 
   hsm
-    The PKCS #11 compliant HSM configuration to use for the ordering service.
+    The PKCS #11 compliant HSM configuration to use for the ordering service node.
 
     See the IBM Blockchain Platform documentation for more information: https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-adv-deployment#ibp-console-adv-deployment-cfg-hsm
 
     | **Type**: dict
 
     pkcs11endpoint
-      The HSM proxy endpoint that the ordering service should use.
+      The HSM proxy endpoint that the ordering service node should use.
 
       | **Type**: str
 
     label
-      The HSM label that the ordering service should use.
+      The HSM label that the ordering service node should use.
 
       | **Type**: str
 
     pin
-      The HSM pin that the ordering service should use.
+      The HSM pin that the ordering service node should use.
 
       | **Type**: str
 
 
-  zones
-    The Kubernetes zones for this ordering service.
-
-    If specified, you must provide a Kubernetes zone for each ordering service node in the ordering service, as defined by *nodes*.
+  zone
+    The Kubernetes zone for this ordering service node.
 
     If you do not specify a Kubernetes zone, and multiple Kubernetes zones are available, then a random Kubernetes zone will be selected for you.
 
     See the Kubernetes documentation for more information: https://kubernetes.io/docs/setup/best-practices/multiple-zones/
 
-    | **Type**: list
-    | **Elements**: str
+    | **Type**: str
 
   version
-    The version of Hyperledger Fabric to use for this ordering service.
+    The version of Hyperledger Fabric to use for this ordering service node.
 
-    If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.
+    If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service node.
 
-    If you do not specify a version, an existing ordering service will not be upgraded.
+    If you do not specify a version, an existing ordering service node will not be upgraded.
 
-    If you specify a new version, an existing ordering service will be automatically upgraded.
+    If you specify a new version, an existing ordering service node will be automatically upgraded.
 
     | **Type**: str
 
   wait_timeout
-    The timeout, in seconds, to wait until the ordering service is available.
+    The timeout, in seconds, to wait until the ordering service node is available.
 
     | **Type**: int
     | **Default value**: ``60``
@@ -303,32 +307,30 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Create ordering service
-      ibm.blockchain_platform.ordering_service:
+    - name: Create ordering service node
+      ibm.blockchain_platform.ordering_service_node:
         state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        name: Ordering Service
+        name: Ordering Service Node 2
         msp_id: OrdererOrgMSP
-        nodes: 1
         certificate_authority: Orderer Org CA
         enrollment_id: orderingorgorderer
         enrollment_secret: orderingorgordererpw
         admin_certificates:
           - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 
-    - name: Create five node ordering service with custom resources and storage
-      ibm.blockchain_platform.ordering_service:
+    - name: Create ordering service node with custom resources and storage
+      ibm.blockchain_platform.ordering_service_node:
         state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        name: Ordering Service
+        name: Ordering Service Node 2
         msp_id: OrdererOrgMSP
-        nodes: 5
         certificate_authority: Orderer Org CA
         enrollment_id: orderingorgorderer
         enrollment_secret: orderingorgordererpw
@@ -344,14 +346,14 @@ Examples
             size: 200Gi
             class: ibmc-file-gold
 
-    - name: Create ordering service that uses an HSM
-      ibm.blockchain_platform.ordering_service:
+    - name: Create ordering service node that uses an HSM
+      ibm.blockchain_platform.ordering_service_node:
         state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        name: Ordering Service
+        name: Ordering Service Node 2
         msp_id: OrdererOrgMSP
         nodes: 5
         certificate_authority: Orderer Org CA
@@ -364,26 +366,25 @@ Examples
           label: Org1 CA label
           pin: 12345678
 
-    - name: Destroy ordering service
-      ibm.blockchain_platform.ordering_service:
+    - name: Destroy ordering service node
+      ibm.blockchain_platform.ordering_service_node:
         state: absent
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        name: Ordering Service
+        name: Ordering Service Node 2
 
 
 
 Return Values
 -------------
 
-  ordering_service
-    The ordering service, as a list of ordering service nodes.
+  ordering_service_node
+    The ordering service node.
 
     | **Returned**: when *state* is ``present``
-    | **Type**: list
-    | **Elements**: dict
+    | **Type**: dict
 
     name
       The name of the ordering service node.
