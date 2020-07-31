@@ -369,6 +369,12 @@ ordering_service_node:
                 - The TLS certificate chain is returned as a base64 encoded PEM.
             type: str
             sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
+        tls_ca_root_cert:
+            description:
+                - The TLS certificate chain for the ordering service node.
+                - The TLS certificate chain is returned as a base64 encoded PEM.
+            type: str
+            sample: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
         tls_cert:
             description:
                 - The TLS certificate for the ordering service node.
