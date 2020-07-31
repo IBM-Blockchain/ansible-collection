@@ -26,13 +26,15 @@ import urllib
 
 class Peer:
 
-    def __init__(self, name, api_url, operations_url, grpcwp_url, msp_id, pem, location):
+    def __init__(self, name, api_url, operations_url, grpcwp_url, msp_id, pem, tls_ca_root_cert, tls_cert, location):
         self.name = name
         self.api_url = api_url
         self.operations_url = operations_url
         self.grpcwp_url = grpcwp_url
         self.msp_id = msp_id
         self.pem = pem
+        self.tls_ca_root_cert = tls_ca_root_cert
+        self.tls_cert = tls_cert
         self.location = location
 
     def clone(self):
@@ -43,6 +45,8 @@ class Peer:
             grpcwp_url=self.grpcwp_url,
             msp_id=self.msp_id,
             pem=self.pem,
+            tls_ca_root_cert=self.tls_ca_root_cert,
+            tls_cert=self.tls_cert,
             location=self.location
         )
 
@@ -54,6 +58,8 @@ class Peer:
             self.grpcwp_url == other.grpcwp_url and
             self.msp_id == other.msp_id and
             self.pem == other.pem and
+            self.tls_ca_root_cert == other.tls_ca_root_cert and
+            self.tls_cert == other.tls_cert and
             self.location == other.location
         )
 
@@ -66,7 +72,8 @@ class Peer:
             type='fabric-peer',
             msp_id=self.msp_id,
             pem=self.pem,
-            tls_cert=self.pem,
+            tls_ca_root_cert=self.tls_ca_root_cert,
+            tls_cert=self.tls_cert,
             location=self.location
         )
 
@@ -79,6 +86,8 @@ class Peer:
             grpcwp_url=data['grpcwp_url'],
             msp_id=data['msp_id'],
             pem=data['pem'],
+            tls_ca_root_cert=data['tls_ca_root_cert'],
+            tls_cert=data['tls_cert'],
             location=data['location']
         )
 

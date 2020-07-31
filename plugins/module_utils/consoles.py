@@ -305,8 +305,9 @@ class Console:
             'grpcwp_url': peer['grpcwp_url'],
             'type': 'fabric-peer',
             'msp_id': peer['msp_id'],
-            'pem': peer.get('tls_ca_root_cert', peer.get('tls_cert', None)),
-            'tls_cert': peer.get('tls_ca_root_cert', peer.get('tls_cert', None)),
+            'pem': peer.get('tls_ca_root_cert', peer.get('pem', None)),
+            'tls_ca_root_cert': peer.get('tls_ca_root_cert', peer.get('pem', None)),
+            'tls_cert': peer.get('tls_cert', None),
             'location': peer['location']
         }
 
