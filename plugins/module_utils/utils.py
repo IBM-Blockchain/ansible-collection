@@ -242,6 +242,32 @@ def get_ordering_service_node_by_module(console, module, parameter_name='orderin
     return OrderingServiceNode.from_json(data)
 
 
+def get_ordering_service_nodes_by_module(console, module, parameter_name='ordering_service_nodes'):
+
+    # Go over each ordering service node.
+    ordering_service_nodes = list()
+    for ordering_service_node in module.params[parameter_name]:
+
+        # If the ordering service node is a dict, then we assume that
+        # it contains all of the required keys/values.
+        if isinstance(ordering_service_node, dict):
+            ordering_service_nodes.append(OrderingServiceNode.from_json(ordering_service_node))
+            continue
+
+        # Otherwise, it is the display name of an ordering service node
+        # that we need to look up.
+        component = console.get_component_by_display_name(ordering_service_node)
+        if component is None:
+            raise Exception(f'The ordering service node {ordering_service_node} does not exist')
+        data = console.extract_ordering_service_node_info(component)
+
+        # Add the ordering service node.
+        ordering_service_nodes.append(OrderingServiceNode.from_json(data))
+
+    # Return the list of ordering service nodes.
+    return ordering_service_nodes
+
+
 def get_identity_by_module(module, parameter_name='identity'):
 
     # If the identity is a dictionary, then we assume that
