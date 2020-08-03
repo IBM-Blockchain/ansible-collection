@@ -8,8 +8,10 @@ __metaclass__ = type
 
 from ..module_utils.file_utils import get_temp_file, equal_files
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module
+from ..module_utils.ordering_services import OrderingService
+from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module
 
+from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
 
 import os
@@ -75,9 +77,20 @@ options:
               with the IBM Blockchain Platform console.
             - You can also pass a list, which must match the result format of one of the
               M(ordering_service_info) or M(ordering_service) modules.
-            - Only required when I(operation) is C(fetch) or C(apply_update).
+            - Only required when I(operation) is C(fetch).
+            - Cannot be specified with I(ordering_service_nodes).
         type: raw
         required: true
+    ordering_service_nodes:
+        description:
+            - The ordering service nodes to use to manage the channel.
+            - You can pass strings, which are the names of ordering service nodes that are
+              registered with the IBM Blockchain Platform console.
+            - You can also pass a dict, which must match the result format of one
+              of the M(ordering_service_node_info) or M(ordering_service_node) modules.
+            - Only required when I(operation) is C(fetch).
+            - Cannot be specified with I(ordering_service).
+        type: raw
     identity:
         description:
             - The identity to use when interacting with the ordering service or for signing
@@ -165,7 +178,12 @@ def fetch(module):
     console = get_console(module)
 
     # Get the ordering service.
-    ordering_service = get_ordering_service_by_module(console, module)
+    ordering_service_specified = module.params['ordering_service'] is not None
+    if ordering_service_specified:
+        ordering_service = get_ordering_service_by_module(console, module)
+    else:
+        ordering_service_nodes = get_ordering_service_nodes_by_module(console, module)
+        ordering_service = OrderingService(ordering_service_nodes)
 
     # Get the identity.
     identity = get_identity_by_module(module)
@@ -211,7 +229,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         operation=dict(type='str', required=True, choices=['fetch']),
-        ordering_service=dict(type='str'),
+        ordering_service=dict(type='raw'),
+        ordering_service_nodes=dict(type='list', elements='raw'),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
         hsm=dict(type='dict', options=dict(
@@ -225,9 +244,18 @@ def main():
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
-        ('operation', 'fetch', ['api_endpoint', 'api_authtype', 'api_key', 'ordering_service', 'identity', 'msp_id', 'name', 'path', 'target']),
+        ('operation', 'fetch', ['api_endpoint', 'api_authtype', 'api_key', 'identity', 'msp_id', 'name', 'path', 'target']),
     ]
-    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    # Ansible doesn't allow us to say "require one of X and Y only if condition A is true",
+    # so we need to handle this ourselves by seeing what was passed in.
+    actual_params = _load_params()
+    if actual_params.get('operation', None) in ['fetch']:
+        required_one_of = [
+            ['ordering_service', 'ordering_service_nodes']
+        ]
+    else:
+        required_one_of = []
+    module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if, required_one_of=required_one_of)
 
     # Validate HSM requirements if HSM is specified.
     if module.params['hsm']:
