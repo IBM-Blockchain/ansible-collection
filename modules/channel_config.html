@@ -282,6 +282,16 @@
 <p>You can pass a string, which is the cluster name of a ordering service registered with the IBM Blockchain Platform console.</p>
 <p>You can also pass a list, which must match the result format of one of the <span class="xref std std-ref">ordering_service_info</span> or <span class="xref std std-ref">ordering_service</span> modules.</p>
 <p>Only required when <em>operation</em> is <code class="docutils literal notranslate"><span class="pre">fetch</span></code> or <code class="docutils literal notranslate"><span class="pre">apply_update</span></code>.</p>
+<p>Cannot be specified with <em>ordering_service_nodes</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: raw</div>
+</div>
+</dd>
+<dt>ordering_service_nodes</dt><dd><p>The ordering service nodes to use to manage the channel.</p>
+<p>You can pass strings, which are the names of ordering service nodes that are registered with the IBM Blockchain Platform console.</p>
+<p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">ordering_service_node_info</span> or <span class="xref std std-ref">ordering_service_node</span> modules.</p>
+<p>Only required when <em>operation</em> is <code class="docutils literal notranslate"><span class="pre">fetch</span></code> or <code class="docutils literal notranslate"><span class="pre">apply_update</span></code>.</p>
+<p>Cannot be specified with <em>ordering_service</em>.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: raw</div>
 </div>

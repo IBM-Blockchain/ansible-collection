@@ -88,6 +88,21 @@ Parameters
 
     Only required when *operation* is ``fetch`` or ``apply_update``.
 
+    Cannot be specified with *ordering_service_nodes*.
+
+    | **Type**: raw
+
+  ordering_service_nodes
+    The ordering service nodes to use to manage the channel.
+
+    You can pass strings, which are the names of ordering service nodes that are registered with the IBM Blockchain Platform console.
+
+    You can also pass a dict, which must match the result format of one of the :ref:`ordering_service_node_info <ordering_service_node_info_module>` or :ref:`ordering_service_node <ordering_service_node_module>` modules.
+
+    Only required when *operation* is ``fetch`` or ``apply_update``.
+
+    Cannot be specified with *ordering_service*.
+
     | **Type**: raw
 
   identity
