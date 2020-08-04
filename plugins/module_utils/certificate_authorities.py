@@ -135,7 +135,7 @@ class CertificateAuthorityConnection:
             self.crypto = PKCS11Crypto(self.hsm['pkcs11library'], self.hsm['label'], self.hsm['pin'])
         else:
             self.crypto = ecies()
-        self.ca_service = ca_service(self.certificate_authority.api_url, self.pem_path, ca_name=self.certificate_authority.ca_name, crypto=self.crypto)
+        self.ca_service = ca_service(self.certificate_authority.api_url, False, ca_name=self.certificate_authority.ca_name, crypto=self.crypto)
         self.identity_service = self.ca_service.newIdentityService()
         self.certificate_service = self.ca_service.newCertificateService()
         return self
