@@ -1,0 +1,28 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Update admin certificates
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Get the ordering service details
+      ibm.blockchain_platform.ordering_service_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ ordering_service_name }}"
+      register: ordering_service_info
+
+    - name: Fail if the ordering service does not exist
+      fail:
+        msg: Ordering service {{ ordering_service_name }} does not exist
+      when: not ordering_service_info.exists
+
+    - name: Update channel
+      include_tasks: tasks/03-update-channel.yml
+      loop: "{{ channel_names }}"
+      loop_control:
+        loop_var: channel_name

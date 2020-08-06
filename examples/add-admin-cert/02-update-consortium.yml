@@ -1,0 +1,85 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Update admin certificates
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Get the ordering service details
+      ibm.blockchain_platform.ordering_service_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ ordering_service_name }}"
+      register: ordering_service_info
+
+    - name: Fail if the ordering service does not exist
+      fail:
+        msg: Ordering service {{ ordering_service_name }} does not exist
+      when: not ordering_service_info.exists
+
+    - name: Fetch the system channel configuration
+      ibm.blockchain_platform.channel_config:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ ordering_service_admin_identity }}"
+        msp_id: "{{ ordering_service_admin_msp_id }}"
+        operation: fetch
+        name: "{{ ordering_service_info.ordering_service[0].system_channel_id }}"
+        path: original_config.bin
+      changed_when: False
+
+    - name: Create a copy of the system channel configuration
+      copy:
+        src: original_config.bin
+        dest: updated_config.bin
+      changed_when: False
+
+    - name: Update the organization in the consortium
+      ibm.blockchain_platform.consortium_member:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        organization: "{{ organization_name }}"
+        path: updated_config.bin
+
+    - name: Compute the system channel configuration update
+      ibm.blockchain_platform.channel_config:
+        operation: compute_update
+        name: "{{ ordering_service_info.ordering_service[0].system_channel_id }}"
+        original: original_config.bin
+        updated: updated_config.bin
+        path: config_update.bin
+      register: compute_update
+      changed_when: False
+
+    - name: Sign the system channel configuration update
+      ibm.blockchain_platform.channel_config:
+        operation: sign_update
+        identity: "{{ organization_old_admin_identity }}"
+        msp_id: "{{ organization_msp_id }}"
+        name: "{{ ordering_service_info.ordering_service[0].system_channel_id }}"
+        path: config_update.bin
+      when: compute_update.path
+
+    - name: Apply the system channel configuration update
+      ibm.blockchain_platform.channel_config:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        operation: apply_update
+        ordering_service: "{{ ordering_service_name }}"
+        identity: "{{ ordering_service_admin_identity }}"
+        msp_id: "{{ ordering_service_admin_msp_id }}"
+        name: "{{ ordering_service_info.ordering_service[0].system_channel_id }}"
+        path: config_update.bin
+      when: compute_update.path

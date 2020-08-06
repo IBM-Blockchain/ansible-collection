@@ -1,0 +1,59 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Update admin certificates
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Get the organization details
+      ibm.blockchain_platform.organization_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ organization_name }}"
+      register: organization_info
+
+    - name: Fail if the organization does not exist
+      fail:
+        msg: Organization {{ organization_name }} does not exist
+      when: not organization_info.exists
+
+    - name: Load the new admin identity
+      ibm.blockchain_platform.enrolled_identity_info:
+        path: "{{ organization_new_admin_identity }}"
+      register: organization_new_admin_identity_info
+
+    - name: Fail if the admin identity does not exist
+      fail:
+        msg: Identity {{ organization_new_admin_identity }} does not exist
+      when: not organization_new_admin_identity_info.exists
+
+    - name: Initialize the new list of admin certificates
+      set_fact:
+        new_admins: "{{ organization_info.organization.admins }}"
+
+    - name: Append the new admin certificate to the list
+      set_fact:
+        new_admins: "{{ new_admins + [ organization_new_admin_identity_info.enrolled_identity.cert ] }}"
+      when: organization_new_admin_identity_info.enrolled_identity.cert not in new_admins
+
+    - name: Update the organization with the new admin identity
+      ibm.blockchain_platform.organization:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ organization_info.organization.name }}"
+        msp_id: "{{ organization_info.organization.msp_id }}"
+        root_certs: "{{ organization_info.organization.root_certs }}"
+        intermediate_certs: "{{ organization_info.organization.intermediate_certs }}"
+        admins: "{{ new_admins }}"
+        revocation_list: "{{ organization_info.organization.revocation_list }}"
+        tls_root_certs: "{{ organization_info.organization.tls_root_certs }}"
+        tls_intermediate_certs: "{{ organization_info.organization.tls_intermediate_certs }}"
+        fabric_node_ous: "{{ organization_info.organization.fabric_node_ous }}"
+        organizational_unit_identifiers: "{{ organization_info.organization.organizational_unit_identifiers }}"

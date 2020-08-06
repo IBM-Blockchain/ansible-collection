@@ -37,6 +37,14 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    tutorials/deploying
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Tasks
+   :hidden:
+   :glob:
+
+   tasks/*
+
+.. toctree::
    :maxdepth: 3
    :caption: Reference
    :hidden:
