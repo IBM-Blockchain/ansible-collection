@@ -22,8 +22,8 @@
     dest: updated_config.bin
   changed_when: False
 
-- name: Update the organization in the channel
-  ibm.blockchain_platform.channel_member:
+- name: Update the organization in the set of ordering service administrators
+  ibm.blockchain_platform.ordering_service_admin:
     state: present
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
