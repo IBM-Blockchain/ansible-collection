@@ -41,7 +41,7 @@
         dest: updated_config.bin
       changed_when: False
 
-    - name: Update the organization in the consortium
+    - name: Update the organization in the set of consortium members
       ibm.blockchain_platform.consortium_member:
         state: present
         api_endpoint: "{{ api_endpoint }}"

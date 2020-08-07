@@ -73,9 +73,9 @@ The second set of values must always be set:
 * Set ``organization_msp_id`` to the MSP ID of the organization.
 * Set ``organization_old_admin_identity`` to the path of a JSON identity file containing the identity of the old or current organization administrator.
 * Set ``organization_new_admin_identity`` to the path of a JSON identity file containing the identity of the new organization administrator.
-* Set ``channel_names`` to an array of channel names that need to be updated.
+* Set ``channel_names`` to an array of channel names that need to be updated. Do not include the system channel name in this value.
 
-The final set of values must only be set if the organization being updated is a member of the ordering service consortium:
+The final set of values must only be set if the organization being updated is a member of the ordering service consortium, but is not an administrator of the ordering service:
 
 * Set ``ordering_service_admin_identity`` to the path to a JSON identity file containing the identity of an ordering service administrator.
 * Set ``ordering_service_admin_msp_id`` to the MSP ID of the ordering service administrator.
@@ -87,38 +87,68 @@ The first step in this task is to update the organization's definition that is s
 
 Review the example playbook `01-update-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/01-update-organization.yml>`_, then run it as follows:
 
-    ::
+  ::
 
-        ansible-playbook 01-update-organization.yml
-
-Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
-
-Updating the consortium
------------------------
-
-The next step in this task is to update the organization's definition that is stored in the ordering service consortium. It is important to keep the organization in the ordering service consortium up to date, as this is used when creating new channels on the ordering service.
-
-As the consortium is managed by an ordering service administrator, you must have access to an identity for an ordering service administrator in order to complete this step.
-
-Note that you do not need to complete this step if the organization is not a member of the ordering consortium.
-
-Review the example playbook `02-update-consortium.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/02-update-consortium.yml>`_, then run it as follows:
-
-    ::
-
-        ansible-playbook 02-update-consortium.yml
+    ansible-playbook 01-update-organization.yml
 
 Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
+
+Updating the system channel
+---------------------------
+
+The system channel for an ordering service contains the definition of all of the organizations that are in the ordering service consortium and all of the organizations that are administrators of the ordering service. If the organization being updated is a member of the ordering service consortium, or an administrator of the ordering service, then you must update the system channel.
+
+If the organization being updated is a member of the ordering service consortium, then it is important to keep the organization in the ordering service consortium up to date, as this is used when creating new channels on the ordering service. Because the consortium is managed by an ordering service administrator, you must have access to an identity for an ordering service administrator in order to complete this step.
+
+If the organization being updated is an administrator of the ordering service, then you must update the definition in the system channel in order to administer the ordering service with the new administrator certificate.
+
+Depending on the role of the organization being updated, perform the appropriate step:
+
+**If the organization is a member of the ordering service consortium**
+
+  Review the example playbook `02-update-syschannel-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/02-update-syschannel-member.yml>`_, and then run it as follows:
+
+  ::
+
+    ansible-playbook 02-update-syschannel-member.yml
+
+  Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
+
+**If the organization is an administrator of the ordering service**
+
+  Review the example playbook `03-update-syschannel-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/03-update-syschannel-admin.yml>`_, and then run it as follows:
+
+  ::
+
+    ansible-playbook 03-update-syschannel-admin.yml
+
+  Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
 
 Updating the channels
 ---------------------
 
-The final step in this task is to update the organization's definition that is stored in all channels that the organization is a member of. If you do not complete this step, the new administrator certificate will not be recognized as an administrator for this organization in these channels.
+The final step in this task is to update the organization's definition that is stored in all channels that the organization is a member of. This also applies for organizations that are ordering service administrators, as a copy of the definition of an organization that is n ordering service administrator is stored in each channel.
 
-Review the example playbook `03-update-channels.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/03-update-channels.yml>`_, then run it as follows:
+If you do not complete this step, the new administrator certificate will not be recognized as an administrator for this organization in these channels.
 
-    ::
+Depending on the role of the organization being updated, perform the appropriate step:
 
-        ansible-playbook 03-update-channels.yml
+**If the organization is not an administrator of the ordering service**
 
-Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
+  Review the example playbook `04-update-channels-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/04-update-channels-member.yml>`_, then run it as follows:
+
+  ::
+
+    ansible-playbook 04-update-channels-member.yml
+
+  Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
+
+**If the organization is an administrator of the ordering service**
+
+  Review the example playbook `05-update-channels-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/05-update-channels-admin.yml>`_, then run it as follows:
+
+  ::
+
+    ansible-playbook 05-update-channels-admin.yml
+
+  Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.

@@ -22,7 +22,7 @@
       when: not ordering_service_info.exists
 
     - name: Update channel
-      include_tasks: tasks/03-update-channel.yml
+      include_tasks: tasks/04-update-channel-member.yml
       loop: "{{ channel_names }}"
       loop_control:
         loop_var: channel_name
