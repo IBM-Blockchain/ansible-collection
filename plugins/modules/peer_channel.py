@@ -8,7 +8,7 @@ __metaclass__ = type
 
 from ..module_utils.module import BlockchainModule
 from ..module_utils.proto_utils import proto_to_json
-from ..module_utils.utils import get_console, get_identity_by_module, get_peer_by_module
+from ..module_utils.utils import get_console, get_identity_by_module, get_peer_by_module, resolve_identity
 
 from ansible.module_utils._text import to_native
 
@@ -147,6 +147,7 @@ def join(module):
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
     hsm = module.params['hsm']
+    identity = resolve_identity(console, module, identity, msp_id)
 
     # Get the channel and target path.
     path = module.params['path']

@@ -825,3 +825,20 @@ class Console:
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete console user', e)
+
+    def get_msps_by_msp_id(self, msp_id):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/msps/{msp_id}')
+        headers = {
+            'Accepts': 'application/json',
+            'Authorization': self.authorization
+        }
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                parsed_response = json.load(response)
+                return parsed_response.get('msps', list())
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to get MSPs by MSP ID', e)
