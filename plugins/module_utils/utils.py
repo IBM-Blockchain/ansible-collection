@@ -13,6 +13,7 @@ from .organizations import Organization
 from .ordering_services import OrderingService, OrderingServiceNode
 from .peers import Peer
 
+import base64
 import json
 
 
@@ -283,3 +284,39 @@ def get_identity_by_module(module, parameter_name='identity'):
     with open(identity, 'r') as file:
         data = json.load(file)
     return EnrolledIdentity.from_json(data)
+
+
+def resolve_identity(console, module, identity, msp_id):
+
+    # If the identity contains the CA field, then we do
+    # not need to resolve it.
+    if identity.ca is not None:
+        return identity
+
+    # If a console instance has not been provided, we
+    # need one for the following operation.
+    if not console:
+        if not module.params['api_endpoint']:
+            raise Exception('Specified identity does not contain a CA field, and no console details provided')
+        console = get_console(module)
+
+    # The identity does not contain the CA field, so we
+    # need to ask the console for the organization that
+    # matches the specified MSP ID, and then extract the
+    # CA field from that.
+    msps = console.get_msps_by_msp_id(msp_id)
+    if not msps:
+        raise Exception(f'Specified identity does not contain a CA field, and cannot find CA certificates for MSP ID {msp_id}')
+    all_root_certs = []
+    all_intermediate_certs = []
+    for msp in msps:
+        root_certs = msp.get('root_certs', list())
+        intermediate_certs = msp.get('intermediate_certs', list())
+        all_root_certs.extend(root_certs)
+        all_intermediate_certs.extend(intermediate_certs)
+    all_certs = all_root_certs + all_intermediate_certs
+    parsed_certs = []
+    for cert in all_certs:
+        parsed_certs.append(base64.b64decode(cert).decode('utf8'))
+    identity.ca = "\n".join(parsed_certs).encode('utf8')
+    return identity

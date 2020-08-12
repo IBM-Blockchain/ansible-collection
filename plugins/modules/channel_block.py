@@ -9,7 +9,7 @@ __metaclass__ = type
 from ..module_utils.file_utils import get_temp_file, equal_files
 from ..module_utils.module import BlockchainModule
 from ..module_utils.ordering_services import OrderingService
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module
+from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, resolve_identity
 
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
@@ -189,6 +189,7 @@ def fetch(module):
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
     hsm = module.params['hsm']
+    identity = resolve_identity(console, module, identity, msp_id)
 
     # Get the channel and target path.
     name = module.params['name']

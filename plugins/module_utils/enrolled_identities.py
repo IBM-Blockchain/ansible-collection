@@ -33,9 +33,10 @@ class EnrolledIdentity:
     def to_json(self):
         result = dict(
             name=self.name,
-            cert=base64.b64encode(self.cert).decode('utf-8'),
-            ca=base64.b64encode(self.ca).decode('utf-8')
+            cert=base64.b64encode(self.cert).decode('utf-8')
         )
+        if self.ca:
+            result['ca'] = base64.b64encode(self.ca).decode('utf-8')
         if self.hsm:
             result['hsm'] = True
         else:
@@ -47,7 +48,10 @@ class EnrolledIdentity:
     def from_json(data):
         name = data['name']
         cert = base64.b64decode(data['cert'])
-        ca = base64.b64decode(data['ca'])
+        if 'ca' in data:
+            ca = base64.b64decode(data['ca'])
+        else:
+            ca = None
         hsm = data.get('hsm', False)
         if hsm:
             private_key = None

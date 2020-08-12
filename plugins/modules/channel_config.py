@@ -13,7 +13,7 @@ from ..module_utils.module import BlockchainModule
 from ..module_utils.msp_utils import convert_identity_to_msp_path
 from ..module_utils.ordering_services import OrderingService
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, get_organizations_by_module
+from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, get_organizations_by_module, resolve_identity
 
 from ansible.module_utils.basic import _load_params
 from ansible.module_utils._text import to_native
@@ -508,6 +508,7 @@ def fetch(module):
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
     hsm = module.params['hsm']
+    identity = resolve_identity(console, module, identity, msp_id)
 
     # Get the channel and target path.
     name = module.params['name']
@@ -631,6 +632,10 @@ def sign_update(module):
     msp_id = module.params['msp_id']
     hsm = module.params['hsm']
 
+    # HACK: we don't require the console for this operation, but the following
+    # function call might require it.
+    identity = resolve_identity(None, module, identity, msp_id)
+
     # Load in the existing config update file and see if we've already signed it.
     with open(path, 'rb') as file:
         config_update_envelope_json = proto_to_json('common.Envelope', file.read())
@@ -680,13 +685,14 @@ def apply_update(module):
     # Get the identity.
     identity = get_identity_by_module(module)
     msp_id = module.params['msp_id']
+    hsm = module.params['hsm']
+    identity = resolve_identity(console, module, identity, msp_id)
 
     # Get the channel and target path.
     name = module.params['name']
     path = module.params['path']
 
     # Update the channel.
-    hsm = module.params['hsm']
     with ordering_service.connect(identity, msp_id, hsm) as connection:
         connection.update(name, path)
     module.exit_json(changed=True)
