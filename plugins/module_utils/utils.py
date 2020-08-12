@@ -27,6 +27,8 @@ def get_console(module):
     api_token_endpoint = module.params['api_token_endpoint']
     console = Console(api_endpoint, api_timeout, api_token_endpoint)
     console.login(api_authtype, api_key, api_secret)
+    if console.is_v1():
+        module.warn('Console only supports v1 APIs (IBP < 2.1.3), only limited functionality will be available')
     return console
 
 
