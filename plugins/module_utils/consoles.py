@@ -651,10 +651,15 @@ class Console:
         if attempt >= self.retries:
             return False
         elif isinstance(error, urllib.error.HTTPError):
-            retry = error.code in [502, 503, 504]
-            if retry:
+            transient = error.code in [502, 503, 504]
+            if transient:
                 time.sleep(1)
-            return retry
+                return True
+            ratelimited = error.code == 429
+            if ratelimited:
+                retry_after = error.headers.get('retry-after')
+                time.sleep(int(retry_after))
+                return True
         return False
 
     def handle_error(self, message, error):
