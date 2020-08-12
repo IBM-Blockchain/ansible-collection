@@ -22,6 +22,8 @@ class Console:
         self.api_token_endpoint = api_token_endpoint
         self.retries = retries
         self.authorization = None
+        self.v1 = False
+        self.logged_in = False
 
     def login(self, api_authtype, api_key, api_secret):
         if api_authtype == 'ibmcloud':
@@ -31,6 +33,27 @@ class Console:
         else:
             raise Exception(f'invalid authentication type "{api_authtype}" specified, valid values are "ibmcloud" and "basic"')
         try:
+            self.logged_in = True
+            return self._login_v2()
+        except Exception:
+            self.logged_in = False
+            raise
+
+    def _login_v2(self):
+        try:
+            self.v1 = False
+            self.api_base_url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/')
+            self.health = self.get_health()
+            self.settings = self.get_settings()
+        except Exception as e:
+            if "HTTP status code 404" in str(e):
+                return self._login_v1()
+            raise Exception(f'Failed to access IBM Blockchain Platform console: {e}')
+
+    def _login_v1(self):
+        try:
+            self.v1 = True
+            self.api_base_url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v1/')
             self.health = self.get_health()
             self.settings = self.get_settings()
         except Exception as e:
@@ -57,12 +80,12 @@ class Console:
         self.authorization = f'Basic {base64.b64encode(credentials.encode("utf8")).decode("utf8")}'
 
     def _ensure_loggedin(self):
-        if self.authorization is None:
+        if not self.logged_in:
             raise Exception('Not logged in')
 
     def get_health(self):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/health')
+        url = urllib.parse.urljoin(self.api_base_url, './health')
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -78,7 +101,7 @@ class Console:
 
     def get_settings(self):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/settings')
+        url = urllib.parse.urljoin(self.api_base_url, './settings')
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -94,7 +117,7 @@ class Console:
 
     def get_all_components(self, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components?deployment_attrs={deployment_attrs}&cache=skip')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components?deployment_attrs={deployment_attrs}&cache=skip')
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -111,7 +134,7 @@ class Console:
 
     def get_component_by_id(self, id, deployment_attrs='omitted'):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}?deployment_attrs={deployment_attrs}&cache=skip')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}?deployment_attrs={deployment_attrs}&cache=skip')
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
@@ -158,7 +181,7 @@ class Console:
 
     def create_ca(self, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/kubernetes/components/fabric-ca')
+        url = urllib.parse.urljoin(self.api_base_url, './kubernetes/components/fabric-ca')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -176,7 +199,7 @@ class Console:
 
     def update_ca(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/fabric-ca/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-ca/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -199,7 +222,7 @@ class Console:
 
     def delete_ca(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -228,7 +251,7 @@ class Console:
 
     def delete_ext_ca(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -243,7 +266,7 @@ class Console:
 
     def create_peer(self, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/kubernetes/components/fabric-peer')
+        url = urllib.parse.urljoin(self.api_base_url, './kubernetes/components/fabric-peer')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -261,7 +284,7 @@ class Console:
 
     def update_peer(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/fabric-peer/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-peer/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -284,7 +307,7 @@ class Console:
 
     def delete_peer(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -313,7 +336,7 @@ class Console:
 
     def delete_ext_peer(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -328,7 +351,7 @@ class Console:
 
     def create_ordering_service(self, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/kubernetes/components/fabric-orderer')
+        url = urllib.parse.urljoin(self.api_base_url, './kubernetes/components/fabric-orderer')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -346,7 +369,7 @@ class Console:
 
     def delete_ordering_service(self, cluster_id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/tags/{cluster_id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/tags/{cluster_id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -383,7 +406,7 @@ class Console:
 
     def delete_ext_ordering_service(self, cluster_id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/tags/{cluster_id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -408,7 +431,7 @@ class Console:
 
     def edit_ordering_service_node(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/fabric-orderer/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/fabric-orderer/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -431,7 +454,7 @@ class Console:
 
     def update_ordering_service_node(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/fabric-orderer/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-orderer/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -454,7 +477,7 @@ class Console:
 
     def delete_ordering_service_node(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -489,7 +512,7 @@ class Console:
 
     def create_ext_ordering_service_node(self, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/components/fabric-orderer')
+        url = urllib.parse.urljoin(self.api_base_url, './components/fabric-orderer')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -507,7 +530,7 @@ class Console:
 
     def update_ext_ordering_service_node(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/fabric-orderer/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/fabric-orderer/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -525,7 +548,7 @@ class Console:
 
     def delete_ext_ordering_service_node(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -542,7 +565,7 @@ class Console:
 
     def edit_admin_certs(self, id, append_admin_certs, remove_admin_certs):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}/certs')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/{id}/certs')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -564,7 +587,7 @@ class Console:
 
     def create_organization(self, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/components/msp')
+        url = urllib.parse.urljoin(self.api_base_url, './components/msp')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -582,7 +605,7 @@ class Console:
 
     def update_organization(self, id, data):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/msp/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/msp/{id}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -600,7 +623,7 @@ class Console:
 
     def delete_organization(self, id):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/{id}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
         headers = {
             'Authorization': self.authorization
         }
@@ -631,7 +654,7 @@ class Console:
 
     def submit_config_block(self, id, config_block):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/kubernetes/components/{id}/config')
+        url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/{id}/config')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -682,6 +705,9 @@ class Console:
     def is_software(self):
         return self.settings.get('AUTH_SCHEME', None) == 'couchdb'
 
+    def is_v1(self):
+        return self.is_v1
+
     def get_host_url(self):
         split_url = urllib.parse.urlsplit(self.api_endpoint)
         scheme = split_url.scheme
@@ -698,7 +724,7 @@ class Console:
 
     def get_users(self):
         self._ensure_loggedin()
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        url = urllib.parse.urljoin(self.api_base_url, './permissions/users')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -729,7 +755,7 @@ class Console:
         user = self.get_user(email)
         if user is not None:
             raise Exception(f'The specified user {email} already exists')
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        url = urllib.parse.urljoin(self.api_base_url, './permissions/users')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -757,7 +783,7 @@ class Console:
         user = self.get_user(email)
         if user is None:
             raise Exception(f'The specified user {email} does not exist')
-        url = urllib.parse.urljoin(self.api_endpoint, '/ak/api/v2/permissions/users')
+        url = urllib.parse.urljoin(self.api_base_url, './permissions/users')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
@@ -785,7 +811,7 @@ class Console:
         user = self.get_user(email)
         if user is None:
             raise Exception(f'The specified user {email} does not exist')
-        url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/permissions/users?uuids={json.dumps([user["uuid"]])}')
+        url = urllib.parse.urljoin(self.api_base_url, f'./permissions/users?uuids={json.dumps([user["uuid"]])}')
         headers = {
             'Accepts': 'application/json',
             'Content-Type': 'application/json',
