@@ -777,6 +777,11 @@ def main():
                     if change not in permitted_changes:
                         raise Exception(f'{change} cannot be changed from {ordering_service_node[change]} to {new_ordering_service_node[change]} for existing ordering service node')
 
+                # HACK: the BCCSP section of the config overrides cannot be specified,
+                # even if it has not changed, so never send it in as part of an update.
+                ordering_service_node['config_override'].get('General', dict()).pop('BCCSP', None)
+                new_ordering_service_node['config_override'].get('General', dict()).pop('BCCSP', None)
+
                 # HACK: if the version has not changed, do not send it in. The current
                 # version may not be supported by the current version of IBP.
                 if ordering_service_node['version'] == new_ordering_service_node['version']:
