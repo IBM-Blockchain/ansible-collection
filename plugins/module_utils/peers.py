@@ -247,11 +247,24 @@ class PeerConnection:
         if vscc is not None:
             args.extend(['-V', vscc])
         args.extend(self._get_ordering_service(channel))
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
-        if process.returncode == 0:
-            return
-        else:
-            raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
+        for attempt in range(0, 5):
+            last_attempt = attempt >= 5
+            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            if process.returncode == 0:
+                transaction_committed = self.wait_for_chaincode(channel, name, version)
+                if transaction_committed:
+                    return
+                elif not last_attempt:
+                    continue
+                else:
+                    raise Exception('Failed to instantiate chaincode on channel, transaction not committed')
+            else:
+                should_retry = False
+                if "could not send to orderer node" in process.stdout:
+                    should_retry = True
+                if not last_attempt and should_retry:
+                    continue
+                raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
 
     def upgrade_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc):
         env = self._get_environ()
@@ -267,11 +280,37 @@ class PeerConnection:
         if vscc is not None:
             args.extend(['-V', vscc])
         args.extend(self._get_ordering_service(channel))
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
-        if process.returncode == 0:
-            return
-        else:
-            raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
+        for attempt in range(0, 5):
+            last_attempt = attempt >= 5
+            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            if process.returncode == 0:
+                transaction_committed = self.wait_for_chaincode(channel, name, version)
+                if transaction_committed:
+                    return
+                elif not last_attempt:
+                    continue
+                else:
+                    raise Exception('Failed to upgrade chaincode on channel, transaction not committed')
+            else:
+                should_retry = False
+                if "could not send to orderer node" in process.stdout:
+                    should_retry = True
+                if not last_attempt and should_retry:
+                    continue
+                raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
+
+    def wait_for_chaincode(self, channel, name, version):
+        # The commands for instantiating and upgrading chaincode do not
+        # support the --waitForEvent options, which means that if the
+        # transactions are lost in the ordering service or fail validation,
+        # we will not know about it.
+        for attempt in range(0, 30):
+            time.sleep(1)
+            chaincodes = self.list_instantiated_chaincodes(channel)
+            for chaincode in chaincodes:
+                if chaincode['name'] == name and chaincode['version'] == version:
+                    return True
+        return False
 
     def list_installed_chaincodes_newlc(self):
         env = self._get_environ()
