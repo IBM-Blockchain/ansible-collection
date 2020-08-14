@@ -706,7 +706,7 @@ class Console:
         return self.settings.get('AUTH_SCHEME', None) == 'couchdb'
 
     def is_v1(self):
-        return self.is_v1
+        return self.v1
 
     def get_host_url(self):
         split_url = urllib.parse.urlsplit(self.api_endpoint)
