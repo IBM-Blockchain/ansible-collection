@@ -740,6 +740,11 @@ def main():
                 if change not in permitted_changes:
                     raise Exception(f'{change} cannot be changed from {peer[change]} to {new_peer[change]} for existing peer')
 
+            # HACK: the BCCSP section of the config overrides cannot be specified,
+            # even if it has not changed, so never send it in as part of an update.
+            peer['config_override'].get('peer', dict()).pop('BCCSP', None)
+            new_peer['config_override'].get('peer', dict()).pop('BCCSP', None)
+
             # HACK: if the version has not changed, do not send it in. The current
             # version may not be supported by the current version of IBP.
             if peer['version'] == new_peer['version']:
