@@ -199,7 +199,7 @@ class PeerConnection:
                     chaincodes.append(dict(name=name, version=version, path=path, id=id))
             return chaincodes
         else:
-            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to list installed chaincodes on peer: {process.stdout}')
 
     def install_chaincode_oldlc(self, path):
         env = self._get_environ()
@@ -231,7 +231,7 @@ class PeerConnection:
                     chaincodes.append(dict(name=name, version=version, path=path, input=input, escc=escc, vscc=vscc))
             return chaincodes
         else:
-            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to list instantiated chaincodes on peer: {process.stdout}')
 
     def instantiate_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc):
         env = self._get_environ()
