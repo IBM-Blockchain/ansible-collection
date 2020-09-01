@@ -6,6 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+from ..module_utils.cert_utils import split_ca_chain
 from ..module_utils.dict_utils import equal_dicts
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console, get_organization_by_module, get_certificate_authority_by_module, get_peers_by_module
@@ -196,12 +197,15 @@ def main():
         peer_names = list()
         peers_dict = dict()
         if certificate_authority is not None:
+            (root_certs, intermediate_certs) = split_ca_chain(certificate_authority.pem)
+            all_certs = root_certs + intermediate_certs
+            encoded_certs = list(map(lambda cert: base64.b64decode(cert).decode('utf8'), all_certs))
             certificate_authority_names.append(certificate_authority.name)
             certificate_authorities_dict[certificate_authority.name] = {
                 'url': certificate_authority.api_url,
                 'caName': certificate_authority.ca_name,
                 'tlsCACerts': {
-                    'pem': base64.b64decode(certificate_authority.pem).decode('utf8')
+                    'pem': encoded_certs
                 }
             }
         for peer in peers:
