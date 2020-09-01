@@ -18,7 +18,7 @@
   k8s:
     state: absent
     namespace: "{{ namespace }}"
-    api_version: ibp.com/v1alpha1
+    api_version: "{{ 'ibp.com/v1alpha2' if product_version is version('2.5.0', '>=') else 'ibp.com/v1alpha1' }}"
     kind: IBPConsole
     name: "{{ console }}"
   when: namespace_info.resources
