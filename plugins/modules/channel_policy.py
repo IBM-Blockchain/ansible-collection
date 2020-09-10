@@ -71,10 +71,6 @@ EXAMPLES = '''
 - name: Add the policy to the channel
   ibm.blockchain_platform.channel_policy:
     state: present
-    api_endpoint: https://ibp-console.example.org:32000
-    api_authtype: basic
-    api_key: xxxxxxxx
-    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     name: Admins
     policy: admins-policy.json
     path: channel_config.bin
@@ -82,10 +78,6 @@ EXAMPLES = '''
 - name: Remove the policy to the channel
   ibm.blockchain_platform.channel_policy:
     state: absent
-    api_endpoint: https://ibp-console.example.org:32000
-    api_authtype: basic
-    api_key: xxxxxxxx
-    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     name: Admins
     path: channel_config.bin
 '''

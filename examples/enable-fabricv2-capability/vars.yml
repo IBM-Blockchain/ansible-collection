@@ -1,0 +1,19 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ordering_service_name: Ordering Service
+ordering_service_admin_identity: Ordering Org Admin.json
+ordering_service_msp: OrdererMSP
+organization_name: Org1
+organization_admin_identity: Org1 Admin.json
+organization_msp: Org1MSP
+channel_names:
+  - channel1
+  - channel2
+  - channel3
+  - channel4

@@ -1,0 +1,56 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create HA CA
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Get the certificate authority details
+      ibm.blockchain_platform.certificate_authority_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ ha_ca_name }}"
+      register: certificate_authority_info
+
+    - name: Fail if the CA already exists
+      fail:
+        msg: Certificate Authority {{ ha_ca_name }} already exists
+      when: certificate_authority_info.exists
+
+    - name: Create certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: "{{ api_endpoint }}" 
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ ha_ca_name }}"
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+              - name: "{{ ca_admin_identity }}"
+                pass: "{{ ca_admin_pass }}"
+                type: client
+                maxenrollments: -1
+                attrs:
+                  hf.Registrar.Roles: "*"
+                  hf.Registrar.DelegateRoles: "*"
+                  hf.Revoker: true
+                  hf.IntermediateCA: true
+                  hf.GenCRL: true
+                  hf.Registrar.Attributes: "*"
+                  hf.AffiliationMgr: true
+            db:
+              type: postgres
+              datasource: "{{ db_datasource }}" 
+              tls:
+                enabled: true
+                certfiles: 
+                  - "{{ db_certfile1 }}" 
+        replicas: "{{ ca_replicas }}"
