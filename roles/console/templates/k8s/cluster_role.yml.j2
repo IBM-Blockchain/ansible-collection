@@ -21,6 +21,7 @@ rules:
   - pods
 {%+ if product_version is version('2.5.0', '>=') %}
   - pod/logs
+  - jobs
 {% endif %}
   - services
   - endpoints
