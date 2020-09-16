@@ -48,6 +48,12 @@ steps:
   - script: |
       set -ex
       VERSION=$(yq -r .version galaxy.yml)
+      docker build -t ibmcom/ibp-ansible:${VERSION} .
+      docker tag ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest
+    displayName: Build Docker image
+  - script: |
+      set -ex
+      VERSION=$(yq -r .version galaxy.yml)
       ansible-galaxy collection install ibm-blockchain_platform-${VERSION}.tar.gz
     displayName: Install collection
   - script: |
@@ -97,4 +103,12 @@ steps:
       git -c http.extraheader="Authorization: Basic $(GitHub Basic Auth)" push $(Build.Repository.Uri) HEAD:gh-pages -f
       popd
     displayName: Publish documentation to GitHub Pages
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+  - script: |
+      set -ex
+      VERSION=$(yq -r .version galaxy.yml)
+      docker login -u $(Docker Hub User Name) -p $(Docker Hub Access Token)
+      docker push ibmcom/ibp-ansible:${VERSION}
+      docker push ibmcom/ibp-ansible:latest
+    displayName: Publish Docker image to Docker Hub
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
