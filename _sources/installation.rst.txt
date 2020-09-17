@@ -144,15 +144,17 @@ You can use the ``ansible-galaxy`` command to install a collection built from so
 Using a Docker image
 --------------------
 
-As an alternative to installing all of the requirements on your system, you can build a Docker image that contains all of the requirements.
+As an alternative to installing all of the requirements on your system, you can use a Docker image that contains all of the requirements.
 You can then use that Docker image to run your playbooks.
 
-An example Dockerfile can be found here: https://github.com/IBM-Blockchain/ansible-collection/blob/master/docker/Dockerfile
+A Docker image, ``ibmcom/ibp-ansible``, has been published to Docker Hub.
 
-The Dockerfile makes use of the Docker multi-stage build feature to reduce the size of the image built by 50%.
-
-Assuming you have built the Docker image and tagged it as ``mydockerorg/ansible``, you can run a playbook by volume mounting it into the container:
+You can run a playbook using this Docker image, by volume mounting the playbook into the Docker container and running the ``ansible-playbook`` command:
 
 ::
 
-    docker run --rm -v /path/to/playbooks:/playbooks mydockerorg/ansible ansible-playbook /playbooks/playbook.yml
+    docker run --rm -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+
+The Docker image is supported for use in Docker, Kubernetes, and Red Hat OpenShift.
+
+If you need to build or customize the Docker image, you can find the Dockerfile here: https://github.com/IBM-Blockchain/ansible-collection/blob/master/Dockerfile
