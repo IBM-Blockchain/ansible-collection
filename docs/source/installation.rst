@@ -48,7 +48,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
 **Ansible v2.8+**
 
-    Python can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc). You can also install it using ``pip``, the package manager for Python:
+    Ansible can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc). You can also install it using ``pip``, the package manager for Python:
 
     ::
 
@@ -158,3 +158,4 @@ You can run a playbook using this Docker image, by volume mounting the playbook 
 The Docker image is supported for use in Docker, Kubernetes, and Red Hat OpenShift.
 
 If you need to build or customize the Docker image, you can find the Dockerfile here: https://github.com/IBM-Blockchain/ansible-collection/blob/master/Dockerfile
+
