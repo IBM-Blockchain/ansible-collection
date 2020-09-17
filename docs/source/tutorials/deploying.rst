@@ -41,7 +41,7 @@ If you have installed the collection by building a Docker image, then run the sc
 
     ::
 
-        docker run --rm -v "$PWD:/tutorial" mydockerorg/ansible /tutorial/deploy_smart_contract.sh
+        docker run --rm -v "$PWD:/tutorial" ibmcom/ibp-ansible /tutorial/deploy_smart_contract.sh
 
 Exploring the network
 ---------------------
