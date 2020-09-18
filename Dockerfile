@@ -38,7 +38,14 @@ ENV GOPATH=/go
 ENV PATH=/usr/local/go/bin:$PATH
 RUN mkdir -p /go/src/github.com/hyperledger \
     && cd /go/src/github.com/hyperledger \
-    && git clone -b v1.4.7 https://github.com/hyperledger/fabric
+    && git clone -n https://github.com/hyperledger/fabric.git \
+    && cd fabric \
+    # FAB-18205 - allow communication with orderers with expired TLS certificates.
+    && git checkout 693cae5be282be51a48118ae4e8764e282b48cb8 \
+    # FAB-18175 - ignore expired signer certificates when submitting transactions.
+    && git remote add jyellick https://github.com/jyellick/fabric.git \
+    && git fetch jyellick \
+    && git format-patch --stdout -1 459fca8f6a62198b63e6705c83897b98d64ae478 msp/mspimplsetup.go | git apply -
 RUN cd /go/src/github.com/hyperledger/fabric \
     && make configtxlator peer GO_TAGS=pkcs11 EXECUTABLES=
 
