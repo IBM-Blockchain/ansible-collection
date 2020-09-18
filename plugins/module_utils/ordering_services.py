@@ -139,13 +139,13 @@ class OrderingServiceNode:
         if not started:
             raise Exception(f'Ordering service node failed to start within {timeout} seconds')
 
-    def connect(self, identity, msp_id, hsm):
-        return OrderingServiceNodeConnection(self, identity, msp_id, hsm)
+    def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
+        return OrderingServiceNodeConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
 
 
 class OrderingServiceNodeConnection:
 
-    def __init__(self, ordering_service_node, identity, msp_id, hsm):
+    def __init__(self, ordering_service_node, identity, msp_id, hsm, tls_handshake_time_shift=None):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
@@ -154,6 +154,7 @@ class OrderingServiceNodeConnection:
         self.identity = identity
         self.msp_id = msp_id
         self.hsm = hsm
+        self.tls_handshake_time_shift = tls_handshake_time_shift
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -171,12 +172,12 @@ class OrderingServiceNodeConnection:
 
     def fetch(self, channel, target, path):
         env = self._get_environ()
-        netloc = urllib.parse.urlparse(self.ordering_service_node.api_url).netloc
-        process = subprocess.run([
+        args = [
             'peer', 'channel', 'fetch', target, path,
-            '--channelID', channel,
-            '--cafile', self.pem_path, '--orderer', netloc, '--tls'
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            '--channelID', channel
+        ]
+        args.extend(self._get_ordering_service())
+        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
         if process.returncode == 0:
             return
         else:
@@ -184,12 +185,12 @@ class OrderingServiceNodeConnection:
 
     def update(self, channel, path):
         env = self._get_environ()
-        netloc = urllib.parse.urlparse(self.ordering_service_node.api_url).netloc
-        process = subprocess.run([
+        args = [
             'peer', 'channel', 'update', '-f', path,
             '--channelID', channel,
-            '--cafile', self.pem_path, '--orderer', netloc, '--tls'
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        ]
+        args.extend(self._get_ordering_service())
+        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
         if process.returncode == 0:
             return
         else:
@@ -209,6 +210,13 @@ class OrderingServiceNodeConnection:
             env['CORE_PEER_BCCSP_PKCS11_SECURITY'] = '256'
             env['CORE_PEER_BCCSP_PKCS11_FILEKEYSTORE_KEYSTORE'] = os.path.join(self.msp_path, 'keystore')
         return env
+
+    def _get_ordering_service(self):
+        netloc = urllib.parse.urlparse(self.ordering_service_node.api_url).netloc
+        result = ['--cafile', self.pem_path, '--orderer', netloc, '--tls']
+        if self.tls_handshake_time_shift:
+            result.extend(['--tlsHandshakeTimeShift', self.tls_handshake_time_shift])
+        return result
 
 
 class OrderingService:
@@ -254,13 +262,13 @@ class OrderingService:
                 pass
         raise Exception(f'Ordering service failed to start within {timeout} seconds')
 
-    def connect(self, identity, msp_id, hsm):
-        return OrderingServiceConnection(self, identity, msp_id, hsm)
+    def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
+        return OrderingServiceConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
 
 
 class OrderingServiceConnection:
 
-    def __init__(self, ordering_service, identity, msp_id, hsm):
+    def __init__(self, ordering_service, identity, msp_id, hsm, tls_handshake_time_shift=None):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
@@ -269,6 +277,7 @@ class OrderingServiceConnection:
         self.identity = identity
         self.msp_id = msp_id
         self.hsm = hsm
+        self.tls_handshake_time_shift = tls_handshake_time_shift
 
     def __enter__(self):
         return self
@@ -283,7 +292,7 @@ class OrderingServiceConnection:
                 # Don't connect to ordering service nodes that are not ready.
                 continue
             try:
-                with node.connect(self.identity, self.msp_id, self.hsm) as connection:
+                with node.connect(self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
                     connection.fetch(channel, target, path)
                 return
             except Exception as e:
@@ -297,7 +306,7 @@ class OrderingServiceConnection:
                 # Don't connect to ordering service nodes that are not ready.
                 continue
             try:
-                with node.connect(self.identity, self.msp_id, self.hsm) as connection:
+                with node.connect(self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
                     connection.update(channel, path)
                 return
             except Exception as e:

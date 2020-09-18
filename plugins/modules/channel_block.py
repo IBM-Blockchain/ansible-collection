@@ -11,7 +11,7 @@ from ..module_utils.module import BlockchainModule
 from ..module_utils.ordering_services import OrderingService
 from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, resolve_identity
 
-from ansible.module_utils.basic import _load_params
+from ansible.module_utils.basic import _load_params, env_fallback
 from ansible.module_utils._text import to_native
 
 import os
@@ -142,6 +142,12 @@ options:
               update transaction will be stored.
         type: str
         required: true
+    tls_handshake_time_shift:
+        type: str
+        description:
+            - The amount of time to shift backwards for certificate expiration checks during TLS handshakes with the ordering service endpoint.
+            - Only use this option if the ordering service TLS certificates have expired.
+            - The value must be a duration, for example I(30m), I(24h), or I(6h30m).
 notes: []
 requirements: []
 '''
@@ -184,6 +190,7 @@ def fetch(module):
     else:
         ordering_service_nodes = get_ordering_service_nodes_by_module(console, module)
         ordering_service = OrderingService(ordering_service_nodes)
+    tls_handshake_time_shift = module.params['tls_handshake_time_shift']
 
     # Get the identity.
     identity = get_identity_by_module(module)
@@ -201,7 +208,7 @@ def fetch(module):
     try:
 
         # Fetch the block.
-        with ordering_service.connect(identity, msp_id, hsm) as connection:
+        with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
             connection.fetch(name, target, block_proto_path)
 
         # Compare and copy if needed.
@@ -232,6 +239,7 @@ def main():
         operation=dict(type='str', required=True, choices=['fetch']),
         ordering_service=dict(type='raw'),
         ordering_service_nodes=dict(type='list', elements='raw'),
+        tls_handshake_time_shift=dict(type='str', fallback=(env_fallback, ['IBP_TLS_HANDSHAKE_TIME_SHIFT'])),
         identity=dict(type='raw'),
         msp_id=dict(type='str'),
         hsm=dict(type='dict', options=dict(
