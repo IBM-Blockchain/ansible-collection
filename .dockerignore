@@ -150,3 +150,6 @@ tests/output
 
 # mac gumph
 .DS_Store
+
+# git information
+.git
