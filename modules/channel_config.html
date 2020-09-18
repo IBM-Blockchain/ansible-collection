@@ -407,8 +407,49 @@
 </dd>
 </dl>
 </dd>
+<dt>parameters</dt><dd><p>The parameters for the new channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>batch_size</dt><dd><p>The batch size parameters for the channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+<dl>
+<dt>max_message_count</dt><dd><p>The maximum number of messages that should be present in a block for the channel.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+</div>
+</dd>
+<dt>absolute_max_bytes</dt><dd><p>The total size of all the messages in a block for the channel must not exceed this value.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+</div>
+</dd>
+<dt>preferred_max_bytes</dt><dd><p>The total size of all the messages in a block for the channel should not exceed this value.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+</div>
+</dd>
 </dl>
-<p>parameters</p>
+</dd>
+<dt>batch_timeout</dt><dd><p>The maximum time to wait before cutting a new block for the channel.</p>
+<p>Example values include <em>500ms</em>, <em>5m</em>, or <em>24h</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt>tls_handshake_time_shift</dt><dd><p>The amount of time to shift backwards for certificate expiration checks during TLS handshakes with the ordering service endpoint.</p>
+<p>Only use this option if the ordering service TLS certificates have expired.</p>
+<p>The value must be a duration, for example <em>30m</em>, <em>24h</em>, or <em>6h30m</em>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+</dl>
 </div></blockquote>
 </div>
 <div class="section" id="examples">

@@ -151,6 +151,15 @@ Parameters
 
     | **Type**: str
 
+  tls_handshake_time_shift
+    The amount of time to shift backwards for certificate expiration checks during TLS handshakes with the ordering service endpoint.
+
+    Only use this option if the ordering service TLS certificates have expired.
+
+    The value must be a duration, for example *30m*, *24h*, or *6h30m*.
+
+    | **Type**: str
+
 
 
 

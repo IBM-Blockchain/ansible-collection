@@ -232,6 +232,47 @@ Parameters
 
 
   parameters
+    The parameters for the new channel.
+
+    | **Type**: dict
+
+    batch_size
+      The batch size parameters for the channel.
+
+      | **Type**: dict
+
+      max_message_count
+        The maximum number of messages that should be present in a block for the channel.
+
+        | **Type**: int
+
+      absolute_max_bytes
+        The total size of all the messages in a block for the channel must not exceed this value.
+
+        | **Type**: int
+
+      preferred_max_bytes
+        The total size of all the messages in a block for the channel should not exceed this value.
+
+        | **Type**: int
+
+
+    batch_timeout
+      The maximum time to wait before cutting a new block for the channel.
+
+      Example values include *500ms*, *5m*, or *24h*.
+
+      | **Type**: str
+
+
+  tls_handshake_time_shift
+    The amount of time to shift backwards for certificate expiration checks during TLS handshakes with the ordering service endpoint.
+
+    Only use this option if the ordering service TLS certificates have expired.
+
+    The value must be a duration, for example *30m*, *24h*, or *6h30m*.
+
+    | **Type**: str
 
 
 
