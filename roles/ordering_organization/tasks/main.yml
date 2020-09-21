@@ -2,6 +2,31 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
+- name: Fail if API endpoint not specified
+  fail:
+    msg: api_endpoint not specified or is empty
+  when: not api_endpoint is defined or not api_endpoint
+
+- name: Fail if API authentication type not specified
+  fail:
+    msg: api_authtype not specified or is not one of "ibmcloud" or "basic"
+  when: not api_authtype is defined or not api_authtype in ("ibmcloud", "basic")
+
+- name: Fail if API key not specified
+  fail:
+    msg: api_key not specified or is empty
+  when: not api_key is defined or not api_key
+
+- name: Fail if API secret not specified
+  fail:
+    msg: api_secret not specified or is empty
+  when: (api_authtype == "basic") and (not api_secret is defined or not api_secret)
+
+- name: Fail if organization name not specified
+  fail:
+    msg: organization_name not specified or is empty
+  when: not organization_name is defined or not organization_name
+
 - name: Create ordering organization
   include_tasks: create.yml
   when: state == "present"

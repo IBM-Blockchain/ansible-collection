@@ -2,6 +2,41 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
+- name: Fail if organization MSP ID not specified
+  fail:
+    msg: organization_msp_id not specified or is empty
+  when: not organization_msp_id is defined or not organization_msp_id
+
+- name: Fail if certificate authority admin enrollment ID not specified
+  fail:
+    msg: ca_admin_enrollment_id not specified or is empty
+  when: not ca_admin_enrollment_id is defined or not ca_admin_enrollment_id
+
+- name: Fail if certificate authority admin enrollment secret not specified
+  fail:
+    msg: ca_admin_enrollment_secret not specified or is empty
+  when: not ca_admin_enrollment_secret is defined or not ca_admin_enrollment_secret
+
+- name: Fail if organization admin enrollment ID not specified
+  fail:
+    msg: organization_admin_enrollment_id not specified or is empty
+  when: not organization_admin_enrollment_id is defined or not organization_admin_enrollment_id
+
+- name: Fail if organization admin enrollment secret not specified
+  fail:
+    msg: organization_admin_enrollment_secret not specified or is empty
+  when: not organization_admin_enrollment_secret is defined or not organization_admin_enrollment_secret
+
+- name: Fail if peer enrollment ID not specified
+  fail:
+    msg: peer_enrollment_id not specified or is empty
+  when: not peer_enrollment_id is defined or not peer_enrollment_id
+
+- name: Fail if peer enrollment secret not specified
+  fail:
+    msg: peer_enrollment_secret not specified or is empty
+  when: not peer_enrollment_secret is defined or not peer_enrollment_secret
+
 - name: Create certificate authority
   ibm.blockchain_platform.certificate_authority:
     state: "{{ state }}"
