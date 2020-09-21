@@ -9,13 +9,13 @@
 
 - name: Fail if image registry email not specified
   fail:
-    msg: image_registry_email not specified
-  when: not image_registry_email is defined
+    msg: image_registry_email not specified or is empty
+  when: not image_registry_email is defined or not image_registry_email
 
 - name: Fail if image registry password not specified
   fail:
-    msg: image_registry_password not specified
-  when: not image_registry_password is defined
+    msg: image_registry_password not specified or is empty
+  when: not image_registry_password is defined or not image_registry_password
 
 - name: Create custom resource definitions
   include_tasks: "{{ target }}/create.yml"
