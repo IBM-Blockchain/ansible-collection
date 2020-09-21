@@ -2,6 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - master
+    always: true
 trigger:
   branches:
     include:
@@ -80,6 +87,13 @@ steps:
       yq -yi .short_test_run_id=\"${SHORT_TEST_RUN_ID}\" tests/integration/integration_config.yml
       ansible-test integration
     displayName: Run tests
+  - task: HCLAppScan@1
+    inputs:
+      AppSecTestService: "HCL AppScan on Cloud"
+      applications: "d35d7c51-bb8b-4de9-9164-26c4843cfb60"
+      scantype: "static"
+    displayName: Run HCL AppScan on Cloud
+    condition: eq(variables['Build.Reason'], 'Schedule')
   - script: |
       set -ex
       VERSION=$(yq -r .version galaxy.yml)
