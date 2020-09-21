@@ -4,8 +4,8 @@
 ---
 - name: Fail if project not specified
   fail:
-    msg: project not specified
-  when: not project is defined
+    msg: project not specified or is empty
+  when: not project is defined or not project
 
 - name: Determine if project exists
   k8s_info:

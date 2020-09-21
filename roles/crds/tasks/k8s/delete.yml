@@ -4,8 +4,8 @@
 ---
 - name: Fail if namespace not specified
   fail:
-    msg: namespace not specified
-  when: not namespace is defined
+    msg: namespace not specified or is empty
+  when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
   k8s_info:

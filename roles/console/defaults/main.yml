@@ -6,7 +6,7 @@ state: present
 # target: k8s | openshift
 # arch: amd64 | s390x
 # project: my-project
-# namespace: my-namespace
+namespace: "" # defined by jinja2 otherwise
 
 image_pull_secret: docker-key-secret
 image_registry: cp.icr.io
