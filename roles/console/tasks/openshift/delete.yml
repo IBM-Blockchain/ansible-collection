@@ -14,6 +14,13 @@
     name: "{{ project }}"
   register: project_info
 
+- name: Determine if custom resource definitions exist
+  k8s_info:
+    api_version: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: ibpconsoles.ibp.com
+  register: crds_info
+
 - name: Delete console
   k8s:
     state: absent
@@ -21,7 +28,7 @@
     api_version: "{{ 'ibp.com/v1alpha2' if product_version is version('2.5.0', '>=') else 'ibp.com/v1alpha1' }}"
     kind: IBPConsole
     name: "{{ console }}"
-  when: project_info.resources
+  when: project_info.resources and crds_info.resources
 
 - name: Delete operator
   k8s:
