@@ -19,7 +19,7 @@ RUN microdnf install gcc gzip python38-devel tar \
     && microdnf clean all
 USER ibp-user
 ENV PATH=/home/ibp-user/.local/bin:$PATH
-RUN pip3.8 install --user ansible fabric-sdk-py python-pkcs11 openshift \
+RUN pip3.8 install --user "ansible>=2.9,<2.10" fabric-sdk-py python-pkcs11 openshift \
     && chgrp -R root /home/ibp-user/.local \
     && chmod -R g=u /home/ibp-user/.local
 ADD . /tmp/collection

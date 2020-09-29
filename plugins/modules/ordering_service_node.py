@@ -530,7 +530,7 @@ def main():
             })
         )),
         hsm=dict(type='dict', options=dict(
-            pkcs11endpoint=dict(type='str', required=True),
+            pkcs11endpoint=dict(type='str'),
             label=dict(type='str', required=True, no_log=True),
             pin=dict(type='str', required=True, no_log=True)
         )),
@@ -623,7 +623,8 @@ def main():
         hsm = module.params['hsm']
         if hsm is not None:
             pkcs11endpoint = hsm['pkcs11endpoint']
-            expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+            if pkcs11endpoint:
+                expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
             hsm_config_override = dict(
                 General=dict(
                     BCCSP=dict(
