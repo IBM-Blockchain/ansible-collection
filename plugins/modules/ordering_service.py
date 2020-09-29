@@ -536,7 +536,7 @@ def main():
             })
         )),
         hsm=dict(type='dict', options=dict(
-            pkcs11endpoint=dict(type='str', required=True),
+            pkcs11endpoint=dict(type='str'),
             label=dict(type='str', required=True, no_log=True),
             pin=dict(type='str', required=True, no_log=True)
         )),
@@ -685,7 +685,8 @@ def main():
 
             # Add the HSM configuration if it is specified.
             if hsm is not None:
-                expected_ordering_service['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+                if pkcs11endpoint:
+                    expected_ordering_service['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
                 for config_override in config_override_list:
                     merge_dicts(config_override, hsm_config_override)
 
@@ -750,7 +751,8 @@ def main():
 
                 # Add the HSM configuration if it is specified.
                 if hsm is not None:
-                    expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
+                    if pkcs11endpoint:
+                        expected_ordering_service_node['hsm'] = dict(pkcs11endpoint=pkcs11endpoint)
                     merge_dicts(config_override, hsm_config_override)
 
                 # Add the zone if it is specified.
