@@ -1,0 +1,19 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ordering_service_name: myOrderingOrg
+ordering_service_admin_identity: myOrderingAdmin.json
+ordering_service_msp: OrderingOrgMSP
+organization_name: myBank
+organization_admin_identity: myBankAdmin.json
+organization_msp: MyBankMSP
+target_channel: ch1
+ch_max_message_count: 900
+ch_absolute_max_bytes: 10481784
+ch_preferred_max_bytes: 5243904
+ch_batch_timeout: 900ms

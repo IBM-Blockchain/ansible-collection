@@ -2,12 +2,12 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-Creating a highly available Certificate Authority
-=================================================
+Updating Channel Parameters
+===========================
 
-The default certificate authority in IBM Blockchain Platform is a single replica with an integrated SQLite database, however it is possible to configure the certificate authority to have an external PostgresSQL database and have multiple replicas of the certificate authority.
+Hyperledger Fabric allows each channel to be configured with specific BatchSize parameters and a BatchTimeout for blocks.  This playbook example shows how an Architect or Chaincode Developer could to set these values for a particular application channel on IBM Blockchain Platform.
 
-The IBM Blockchain Platform documentation describes some limitations with the creation of replicas, including the restriction that an existing certificate authority with an integrated SQLite database cannot be upgraded to use a PostgresSQL database.  Consequently, the playbook for this task checks for the existence of the named certificate authority and fails if it already exists.
+The details and implications of setting the parameters is covered in the Hyperledger Fabric documentation set.
 
 Before you start
 ----------------
@@ -59,24 +59,27 @@ The first set of values that you must set depend on whether the organization is 
 
 The remaining values must always be set:
 
-* Set ``ha_ca_name`` to the name of the new certificate authority, for example ``HAOrg1 CA``.
-* Set ``ca_admin_identity`` to the name of the CA administrator enroll ID.
-* Set ``ca_admin_pass`` to the CA administrator enroll secret.
-* Set ``ca_admin_type`` to ``client`` if you are **not** using NodeOU support or ``admin`` if you **are** using NodeOU support.
-* Set ``db_datasource`` to the connection details for your PostgresSQL database, for example:
- ``host=mypostgressql.example.com port=999 user=myUsername password=myPassword dbname=mydb sslmode=verify-full``
-* Set ``da_certfile1`` to the Base64 encoded value of the certificate for the PostgresSQL database.
-* Set ``ca_replicas`` to the number of replicas of the ca that you require.
+* Set ``ordering_service_name`` to the name of the ordering service, for example ``Ordering Service``.
+* Set ``organization_name`` to the name of the organization.
+* Set ``organization_msp_id`` to the MSP ID of the organization.
+* Set ``organization_admin_identity`` to the path of a JSON identity file containing the identity of the organization administrator.
+* Set ``ordering_service_admin_identity`` to the path to a JSON identity file containing the identity of an ordering service administrator.
+* Set ``ordering_service_admin_msp_id`` to the MSP ID of the ordering service administrator.
+* Set ``target_channel`` to the name of the  channel that you want to update parameters.
+* Set ``ch_max_message_count`` to the maximum number of transactions in a Block for the target channel.
+* Set ``ch_absolute_max_bytes`` to the absolute maximum Block size for the target channel.
+* Set ``ch_preferred_max_bytes`` to the preferred maximum Block size for the target channel.
+* Set ``ch_batch_timeout`` to the amount of time to wait after the first transaction before cutting a Block for the target channel.
 
 
-Creating the certificate authority
-----------------------------------
+Updating the channel parameters
+-------------------------------
 
-Review the example playbook `create-ha-ca.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/haca/create-ha-ca.yml>`_, then run it as follows:
+Review the example playbook `update-channel-parameters.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/update-channel-parameters/update-channel-parameters.yml>`_, then run it as follows:
 
   ::
 
-    ansible-playbook create-ha-ca.yml
+    ansible-playbook update-channel-parameters.yml
 
 Ensure that the example playbook completed successfully by examining the ``PLAY RECAP`` section in the output from Ansible.
 
