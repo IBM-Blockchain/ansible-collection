@@ -34,7 +34,7 @@ console_storage_size: 10Gi
 wait_timeout: 60
 
 product_version: "2.5.0"
-operator_version: "20200825"
+operator_version: "20201001"
 operator_image: "{{ image_registry_url }}/ibp-operator"
 operator_tag: "{{ product_version }}-{{ operator_version }}-{{ arch }}"
 # console_tls_secret: ibp-tls-secret
