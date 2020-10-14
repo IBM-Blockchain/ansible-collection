@@ -34,11 +34,24 @@ spec:
   scope: Namespaced
   subresources:
     status: {}
+{%+ if product_version is version('2.5.1', '>=') %}
+  version: v1beta1
+{%+ else %}
   version: v1alpha2
+{% endif %}
   versions:
+{%+ if product_version is version('2.5.1', '>=') %}
+  - name: v1beta1
+    served: true
+    storage: true
+  - name: v1alpha2
+    served: true
+    storage: false
+{%+ else %}
   - name: v1alpha2
     served: true
     storage: true
+{% endif %}
   - name: v210
     served: false
     storage: false

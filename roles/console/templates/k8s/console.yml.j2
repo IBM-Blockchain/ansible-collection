@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-{%+ if product_version is version('2.5.0', '>=') %}
+{%+ if product_version is version('2.5.1', '>=') %}
+apiVersion: ibp.com/v1beta1
+{%+ elif product_version is version('2.5.0', '>=') %}
 apiVersion: ibp.com/v1alpha2
 {%+ else %}
 apiVersion: ibp.com/v1alpha1
@@ -13,7 +15,12 @@ metadata:
 spec:
   arch:
   - "{{ arch }}"
+{%+ if product_version is version('2.5.1', '>=') %}
+  license:
+    accept: true
+{%+ else %}
   license: accept
+{% endif %}
   serviceAccountName: "{{ service_account }}"
   email: "{{ console_email }}"
   password: "{{ console_default_password }}"
