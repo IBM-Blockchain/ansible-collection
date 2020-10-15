@@ -260,8 +260,8 @@ options:
                     class:
                         description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the peer container.
+                            - By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
                         type: str
-                        default: default
             statedb:
                 description:
                     - The Kubernetes storage configuration for the CouchDB container.
@@ -275,8 +275,8 @@ options:
                     class:
                         description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the CouchDB container.
+                            - By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
                         type: str
-                        default: default
     hsm:
         description:
             - "The PKCS #11 compliant HSM configuration to use for the peer."
@@ -561,11 +561,11 @@ def main():
         storage=dict(type='dict', default=dict(), options=dict(
             peer=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='100Gi'),
-                'class': dict(type='str', default='default')
+                'class': dict(type='str')
             }),
             statedb=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='100Gi'),
-                'class': dict(type='str', default='default')
+                'class': dict(type='str')
             })
         )),
         hsm=dict(type='dict', options=dict(
@@ -645,6 +645,15 @@ def main():
             # The peer should not exist and doesn't.
             return module.exit_json(changed=False)
 
+        # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
+        storage = module.params['storage']
+        for storage_type in storage:
+            if 'class' not in storage[storage_type]:
+                continue
+            storage_class = storage[storage_type]['class']
+            if storage_class is None:
+                del storage[storage_type]['class']
+
         # Extract the expected peer configuration.
         expected_peer = dict(
             display_name=name,
@@ -652,7 +661,7 @@ def main():
             state_db=module.params['state_db'],
             config_override=module.params['config_override'],
             resources=module.params['resources'],
-            storage=module.params['storage']
+            storage=storage
         )
 
         # Add the HSM configuration if it is specified.

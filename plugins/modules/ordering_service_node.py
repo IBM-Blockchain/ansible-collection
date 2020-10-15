@@ -218,8 +218,8 @@ options:
                     class:
                         description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
+                            - By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
                         type: str
-                        default: default
     hsm:
         description:
             - "The PKCS #11 compliant HSM configuration to use for the ordering service node."
@@ -526,7 +526,7 @@ def main():
         storage=dict(type='dict', default=dict(), options=dict(
             orderer=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='100Gi'),
-                'class': dict(type='str', default='default')
+                'class': dict(type='str')
             })
         )),
         hsm=dict(type='dict', options=dict(
@@ -607,6 +607,15 @@ def main():
         ordering_service = get_ordering_service_by_module(console, module)
         cluster_id = ordering_service.nodes[0].cluster_id
 
+        # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
+        storage = module.params['storage']
+        for storage_type in storage:
+            if 'class' not in storage[storage_type]:
+                continue
+            storage_class = storage[storage_type]['class']
+            if storage_class is None:
+                del storage[storage_type]['class']
+
         # Extract the expected ordering service node configuration.
         expected_ordering_service_node = dict(
             display_name=name,
@@ -616,7 +625,7 @@ def main():
             system_channel_id=module.params['system_channel_id'],
             config_override=module.params['config_override'],
             resources=module.params['resources'],
-            storage=module.params['storage']
+            storage=storage
         )
 
         # Add the HSM configuration if it is specified.
