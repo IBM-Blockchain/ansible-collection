@@ -141,8 +141,8 @@ options:
                     class:
                         description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
+                            - By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
                         type: str
-                        default: default
     hsm:
         description:
             - "The PKCS #11 compliant HSM configuration to use for the certificate authority."
@@ -376,7 +376,7 @@ def main():
         storage=dict(type='dict', default=dict(), options=dict(
             ca=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='20Gi'),
-                'class': dict(type='str', default='default')
+                'class': dict(type='str')
             })
         )),
         hsm=dict(type='dict', options=dict(
@@ -444,12 +444,21 @@ def main():
         if ca is not None and tlsca is None:
             tlsca = config_override['tlsca'] = ca
 
+        # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
+        storage = module.params['storage']
+        for storage_type in storage:
+            if 'class' not in storage[storage_type]:
+                continue
+            storage_class = storage[storage_type]['class']
+            if storage_class is None:
+                del storage[storage_type]['class']
+
         # Extract the expected certificate authority configuration.
         expected_certificate_authority = dict(
             display_name=name,
             config_override=config_override,
             resources=module.params['resources'],
-            storage=module.params['storage']
+            storage=storage
         )
 
         # Add the HSM configuration if it is specified.

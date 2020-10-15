@@ -209,8 +209,8 @@ options:
                     class:
                         description:
                             - The Kubernetes storage class for the the Kubernetes persistent volume claim for the orderer container.
+                            - By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
                         type: str
-                        default: default
     hsm:
         description:
             - "The PKCS #11 compliant HSM configuration to use for the ordering service."
@@ -532,7 +532,7 @@ def main():
         storage=dict(type='dict', default=dict(), options=dict(
             orderer=dict(type='dict', default=dict(), options={
                 'size': dict(type='str', default='100Gi'),
-                'class': dict(type='str', default='default')
+                'class': dict(type='str')
             })
         )),
         hsm=dict(type='dict', options=dict(
@@ -664,6 +664,15 @@ def main():
                     config_override_list.append(dict())
                     i = i + 1
 
+            # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
+            storage = module.params['storage']
+            for storage_type in storage:
+                if 'class' not in storage[storage_type]:
+                    continue
+                storage_class = storage[storage_type]['class']
+                if storage_class is None:
+                    del storage[storage_type]['class']
+
             # Extract the expected ordering service configuration.
             expected_ordering_service = dict(
                 display_name=name,
@@ -674,7 +683,7 @@ def main():
                 config=config,
                 config_override=config_override_list,
                 resources=module.params['resources'],
-                storage=module.params['storage']
+                storage=storage
             )
 
             # Delete the resources and storage configuration for a new ordering
@@ -739,6 +748,15 @@ def main():
                 else:
                     config_override = dict()
 
+                # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
+                storage = module.params['storage']
+                for storage_type in storage:
+                    if 'class' not in storage[storage_type]:
+                        continue
+                    storage_class = storage[storage_type]['class']
+                    if storage_class is None:
+                        del storage[storage_type]['class']
+
                 # Extract the expected ordering service node configuration.
                 expected_ordering_service_node = dict(
                     msp_id=module.params['msp_id'],
@@ -746,7 +764,7 @@ def main():
                     system_channel_id=module.params['system_channel_id'],
                     config_override=config_override,
                     resources=module.params['resources'],
-                    storage=module.params['storage']
+                    storage=storage
                 )
 
                 # Add the HSM configuration if it is specified.
