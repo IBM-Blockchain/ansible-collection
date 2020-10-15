@@ -150,8 +150,9 @@ Parameters
       class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the certificate authority container.
 
+        By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
+
         | **Type**: str
-        | **Default value**: ``default``
 
 
 

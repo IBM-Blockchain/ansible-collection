@@ -292,8 +292,9 @@ Parameters
       class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the peer container.
 
+        By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
+
         | **Type**: str
-        | **Default value**: ``default``
 
 
     statedb
@@ -310,8 +311,9 @@ Parameters
       class
         The Kubernetes storage class for the the Kubernetes persistent volume claim for the CouchDB container.
 
+        By default, the Kubernetes storage class for the IBM Blockchain Platform console is used.
+
         | **Type**: str
-        | **Default value**: ``default``
 
 
 
