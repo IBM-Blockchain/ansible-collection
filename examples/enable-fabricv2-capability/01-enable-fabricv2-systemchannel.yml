@@ -43,7 +43,6 @@
       ibm.blockchain_platform.channel_capabilities:
         path: updated_config.bin
         channel: V2_0
-        application: V2_0
         orderer: V2_0
 
     - name: Compute the system channel configuration update

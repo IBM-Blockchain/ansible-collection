@@ -65,7 +65,7 @@ The remaining values must always be set:
 * Set ``ca_admin_type`` to ``client`` if you are **not** using NodeOU support or ``admin`` if you **are** using NodeOU support.
 * Set ``db_datasource`` to the connection details for your PostgresSQL database, for example:
  ``host=mypostgressql.example.com port=999 user=myUsername password=myPassword dbname=mydb sslmode=verify-full``
-* Set ``da_certfile1`` to the Base64 encoded value of the certificate for the PostgresSQL database.
+* Set ``db_certfile1`` to the Base64 encoded value of the certificate for the PostgresSQL database.
 * Set ``ca_replicas`` to the number of replicas of the ca that you require.
 
 
