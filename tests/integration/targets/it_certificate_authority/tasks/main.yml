@@ -50,7 +50,6 @@
         expected_enrollment_secret: adminpw
         expected_cpu: 100m
         expected_memory: 200M
-        expected_storage_class: default
         expected_storage_size: 20Gi
 
     - name: Ensure idempotency
@@ -69,7 +68,6 @@
         expected_enrollment_secret: adminpw
         expected_cpu: 100m
         expected_memory: 200M
-        expected_storage_class: default
         expected_storage_size: 20Gi
 
     - name: Change resources
@@ -93,7 +91,6 @@
         expected_enrollment_secret: adminpw
         expected_cpu: 200m
         expected_memory: 400M
-        expected_storage_class: default
         expected_storage_size: 20Gi
 
     - name: Ensure idempotency
@@ -117,7 +114,6 @@
         expected_enrollment_secret: adminpw
         expected_cpu: 200m
         expected_memory: 400M
-        expected_storage_class: default
         expected_storage_size: 20Gi
 
   always:

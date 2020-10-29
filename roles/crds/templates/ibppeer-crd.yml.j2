@@ -18,7 +18,7 @@ spec:
     strategy: Webhook
     webhookClientConfig:
       service:
-        namespace: ibpinfra
+        namespace: "{{ project | default(namespace) }}"
         name: ibp-webhook
         path: /crdconvert
       caBundle: "{{ webhook_tls_cert }}"
