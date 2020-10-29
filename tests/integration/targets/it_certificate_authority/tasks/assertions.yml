@@ -35,5 +35,4 @@
       - result.resources[0].spec.configoverride.ca.registry.identities[0].pass == expected_enrollment_secret
       - result.resources[0].spec.resources.ca.requests.cpu == expected_cpu
       - result.resources[0].spec.resources.ca.requests.memory == expected_memory
-      - result.resources[0].spec.storage.ca.class == expected_storage_class
       - result.resources[0].spec.storage.ca.size == expected_storage_size
