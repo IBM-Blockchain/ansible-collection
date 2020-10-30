@@ -27,7 +27,7 @@ steps:
     inputs:
       versionSpec: "3.x"
     displayName: Use Python 3.x
-  - script: pip install "ansible>=2.9,<2.10" ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 sphinx sphinx-rtd-theme yamllint yq
+  - script: pip install "ansible>=2.9,<2.10" ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 semantic_version sphinx sphinx-rtd-theme yamllint yq
     displayName: Install Python dependencies
   - script: curl -sSL https://github.com/hyperledger/fabric/releases/download/v1.4.7/hyperledger-fabric-linux-amd64-1.4.7.tar.gz | sudo tar xzf - -C /usr/local
     displayName: Install Fabric CLI

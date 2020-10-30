@@ -243,6 +243,8 @@ options:
             - If you do not specify a version, the default Hyperledger Fabric version will be used for a new ordering service.
             - If you do not specify a version, an existing ordering service will not be upgraded.
             - If you specify a new version, an existing ordering service will be automatically upgraded.
+            - The version can also be specified as a version range specification, for example C(>=2.2,<3.0), which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
+            - "See the C(semantic_version) Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec"
         type: str
     wait_timeout:
         description:
@@ -709,7 +711,8 @@ def main():
             # Add the version if it is specified.
             version = module.params['version']
             if version is not None:
-                expected_ordering_service['version'] = version
+                resolved_version = console.resolve_ordering_service_node_version(version)
+                expected_ordering_service['version'] = resolved_version
 
             # Create the ordering service.
             ordering_service = console.create_ordering_service(expected_ordering_service)
@@ -783,7 +786,8 @@ def main():
                 # Add the version if it is specified.
                 version = module.params['version']
                 if version is not None:
-                    expected_ordering_service_node['version'] = version
+                    resolved_version = console.resolve_ordering_service_node_version(version)
+                    expected_ordering_service_node['version'] = resolved_version
 
                 # Update the ordering service node configuration.
                 new_ordering_service_node = copy_dict(ordering_service_node)
