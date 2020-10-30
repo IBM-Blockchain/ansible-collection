@@ -104,6 +104,9 @@
 <p class="caption"><span class="caption-text">Tasks</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tasks/addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -256,7 +259,15 @@ If you install Python from the package manager for your operating system, you mu
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>IBM Blockchain Platform v2.1.3+</strong></p>
+<p><strong>Semantic Versioning for Python v2.8.5+</strong></p>
+<blockquote>
+<div><p>This Ansible collection uses Semantic Versioning for Python to handle version ranges when determining which version of Hyperledger Fabric to use.</p>
+<p>You can install this SDK using using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, the package manager for Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">semantic_version</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>IBM Blockchain Platform v2.1.3, v2.5.0, v2.5.1</strong></p>
 <blockquote>
 <div><p>This Ansible collection requires use of IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection. You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 <p>You can not use this Ansible collection to create an instance of the IBM Blockchain Platform service on IBM Cloud. If you want to use the IBM Blockchain Platform on IBM Cloud, you must create the instance before you attempt to use this Ansible collection: <a class="reference external" href="https://cloud.ibm.com/catalog/services/blockchain-platform#about">https://cloud.ibm.com/catalog/services/blockchain-platform#about</a></p>

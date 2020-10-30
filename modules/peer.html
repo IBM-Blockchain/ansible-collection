@@ -98,6 +98,9 @@
 <p class="caption"><span class="caption-text">Tasks</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -556,6 +559,8 @@
 <p>If you do not specify a version, the default Hyperledger Fabric version will be used for a new peer.</p>
 <p>If you do not specify a version, an existing peer will not be upgraded.</p>
 <p>If you specify a new version, an existing peer will be automatically upgraded.</p>
+<p>The version can also be specified as a version range specification, for example <code class="docutils literal notranslate"><span class="pre">&gt;=2.2,&lt;3.0</span></code>, which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.</p>
+<p>See the <code class="docutils literal notranslate"><span class="pre">semantic_version</span></code> Python module documentation for more information: <a class="reference external" href="https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec">https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec</a></p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
 </div>

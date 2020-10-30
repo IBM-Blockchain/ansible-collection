@@ -98,6 +98,9 @@
 <p class="caption"><span class="caption-text">Tasks</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -271,10 +274,6 @@
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Add the policy to the channel</span>
   <span class="nt">ibm.blockchain_platform.channel_policy</span><span class="p">:</span>
     <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
-    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
-    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
-    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Admins</span>
     <span class="nt">policy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admins-policy.json</span>
     <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
@@ -282,10 +281,6 @@
 <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Remove the policy to the channel</span>
   <span class="nt">ibm.blockchain_platform.channel_policy</span><span class="p">:</span>
     <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
-    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
-    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
-    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
-    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Admins</span>
     <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
 </pre></div>

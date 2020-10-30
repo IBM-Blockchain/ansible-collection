@@ -287,6 +287,10 @@ Parameters
 
     If you specify a new version, an existing ordering service node will be automatically upgraded.
 
+    The version can also be specified as a version range specification, for example ``>=2.2,<3.0``, which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
+
+    See the ``semantic_version`` Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec
+
     | **Type**: str
 
   wait_timeout

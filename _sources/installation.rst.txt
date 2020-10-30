@@ -96,7 +96,17 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install openshift
 
-**IBM Blockchain Platform v2.1.3+**
+**Semantic Versioning for Python v2.8.5+**
+
+    This Ansible collection uses Semantic Versioning for Python to handle version ranges when determining which version of Hyperledger Fabric to use.
+
+    You can install this SDK using using ``pip``, the package manager for Python:
+
+    ::
+
+        pip install semantic_version
+
+**IBM Blockchain Platform v2.1.3, v2.5.0, v2.5.1**
 
     This Ansible collection requires use of IBM Blockchain Platform v2.1.3 or later. Previous versions of the IBM Blockchain Platform cannot be used with this Ansible collection. You can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 

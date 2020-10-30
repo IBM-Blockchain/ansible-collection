@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Updating channel parameters &mdash; Ansible Collection  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="prev" title="Creating a highly available Certificate Authority" href="haca.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ansible Collection
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/deploying.html">Deploying a smart contract</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tasks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Updating channel parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#editing-the-variable-file">Editing the variable file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-the-channel-parameters">Updating the channel parameters</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible Collection</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Updating channel parameters</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docs/source/tasks/update-channel-parameters.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="updating-channel-parameters">
+<h1>Updating channel parameters<a class="headerlink" href="#updating-channel-parameters" title="Permalink to this headline">¶</a></h1>
+<p>Hyperledger Fabric allows each channel to be configured with specific BatchSize parameters and a BatchTimeout for blocks.  This playbook example shows how an Architect or Chaincode Developer could to set these values for a particular application channel on IBM Blockchain Platform.</p>
+<p>The details and implications of setting the parameters is covered in the Hyperledger Fabric documentation set.</p>
+<div class="section" id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
+<p>This task guide also assumes that you have created a PostgresSQL database and that you have the connection details available.</p>
+</div>
+<div class="section" id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
+</pre></div>
+</div>
+</div></blockquote>
+<p>After cloning the GitHub repository, you must change into the examples directory for this task guide:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/examples/create-ha-ca
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="editing-the-variable-file">
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
+<p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbook.</p>
+<p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
+<ul class="simple">
+<li><p>If the organization is using IBM Blockchain Platform on IBM Cloud:</p>
+<ol class="arabic simple">
+<li><p>Create service credentials for the IBM Blockchain Platform service instance, if they have not been created already.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> to the value of <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> specified in the service credentials.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_authtype</span></code> to <code class="docutils literal notranslate"><span class="pre">ibmcloud</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_key</span></code> to the value of <code class="docutils literal notranslate"><span class="pre">api_key</span></code> specified in the service credentials.</p></li>
+<li><p>Note that you do not need to specify a value for <code class="docutils literal notranslate"><span class="pre">api_secret</span></code>.</p></li>
+</ol>
+</li>
+<li><p>If the organization is using IBM Blockchain Platform software:</p>
+<ol class="arabic simple">
+<li><p>Determine the URL of your IBM Blockchain Platform console.</p></li>
+<li><p>Determine the API key and secret you use to access your IBM Blockchain Platform console. You can also use a username and password instead of an API key and secret.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_endpoint</span></code> to the URL of your IBM Blockchain Platform console.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_authtype</span></code> to <code class="docutils literal notranslate"><span class="pre">basic</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_key</span></code> to your API key or username.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">api_secret</span></code> to your API secret or password.</p></li>
+</ol>
+</li>
+</ul>
+<p>The remaining values must always be set:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_name</span></code> to the name of the ordering service, for example <code class="docutils literal notranslate"><span class="pre">Ordering</span> <span class="pre">Service</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_name</span></code> to the name of the organization.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_msp_id</span></code> to the MSP ID of the organization.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_admin_identity</span></code> to the path of a JSON identity file containing the identity of the organization administrator.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_identity</span></code> to the path to a JSON identity file containing the identity of an ordering service administrator.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_msp_id</span></code> to the MSP ID of the ordering service administrator.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">target_channel</span></code> to the name of the  channel that you want to update parameters.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_max_message_count</span></code> to the maximum number of transactions in a Block for the target channel.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_absolute_max_bytes</span></code> to the absolute maximum Block size for the target channel.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_preferred_max_bytes</span></code> to the preferred maximum Block size for the target channel.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_batch_timeout</span></code> to the amount of time to wait after the first transaction before cutting a Block for the target channel.</p></li>
+</ul>
+</div>
+<div class="section" id="updating-the-channel-parameters">
+<h2>Updating the channel parameters<a class="headerlink" href="#updating-the-channel-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/update-channel-parameters/update-channel-parameters.yml">update-channel-parameters.yml</a>, then run it as follows:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook update-channel-parameters.yml
+</pre></div>
+</div>
+</div></blockquote>
+<p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="haca.html" class="btn btn-neutral float-left" title="Creating a highly available Certificate Authority" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright IBM Corporation 2020
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
