@@ -179,6 +179,8 @@ options:
             - If you do not specify a version, the default Hyperledger Fabric version will be used for a new certificate authority.
             - If you do not specify a version, an existing certificate authority will not be upgraded.
             - If you specify a new version, an existing certificate authority will be automatically upgraded.
+            - The version can also be specified as a version range specification, for example C(>=2.2,<3.0), which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
+            - "See the C(semantic_version) Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec"
         type: str
     wait_timeout:
         description:
@@ -500,7 +502,8 @@ def main():
         # Add the version if it is specified.
         version = module.params['version']
         if version is not None:
-            expected_certificate_authority['version'] = version
+            resolved_version = console.resolve_ca_version(version)
+            expected_certificate_authority['version'] = resolved_version
 
         # If the certificate authority is corrupt, delete it first. This may happen if somebody imported an external certificate
         # authority with the same name, or if somebody deleted the Kubernetes resources directly.

@@ -2,8 +2,8 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-Enable Hyperledger Fabric v2 Capability
-=======================================
+Enable Hyperledger Fabric v2.x capabilities
+===========================================
 
 Fabric v2 capability is distinct from Fabric v2.x binaries, and the most common scenario will be where the binaries on a network have been upgraded to v2.x, leaving the Capability of the channels at V1.x.  This playbook example can be used to upgrade firstly the system channel, then an array of named application channels.
 

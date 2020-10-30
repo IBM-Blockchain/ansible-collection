@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-Updating Channel Parameters
+Updating channel parameters
 ===========================
 
 Hyperledger Fabric allows each channel to be configured with specific BatchSize parameters and a BatchTimeout for blocks.  This playbook example shows how an Architect or Chaincode Developer could to set these values for a particular application channel on IBM Blockchain Platform.

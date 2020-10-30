@@ -6,12 +6,27 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+
+from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.urls import open_url
 
 import base64
 import json
+import re
 import time
 import urllib.parse
+
+
+SEMANTIC_VERSION_IMPORT_ERR = None
+try:
+    from semantic_version import Version, SimpleSpec
+    HAS_SEMANTIC_VERSION = True
+except ImportError as e:
+    HAS_SEMANTIC_VERSION = False
+    SEMANTIC_VERSION_IMPORT_ERR = e
+    Version = object
+    SimpleSpec = object
+    pass
 
 
 class Console:
@@ -842,3 +857,104 @@ class Console:
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get MSPs by MSP ID', e)
+
+    def get_all_fabric_versions(self):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, './kubernetes/fabric/versions')
+        headers = {
+            'Accepts': 'application/json',
+            'Authorization': self.authorization
+        }
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                parsed_response = json.load(response)
+                return parsed_response.get('versions', dict())
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to get supported Fabric versions', e)
+
+    def get_all_ca_versions(self):
+        all_fabric_versions = self.get_all_fabric_versions()
+        return all_fabric_versions.get('ca', dict()).keys()
+
+    def get_all_peer_versions(self):
+        all_fabric_versions = self.get_all_fabric_versions()
+        return all_fabric_versions.get('peer', dict()).keys()
+
+    def get_all_ordering_service_node_versions(self):
+        all_fabric_versions = self.get_all_fabric_versions()
+        return all_fabric_versions.get('orderer', dict()).keys()
+
+    def resolve_ca_version(self, version):
+
+        # Determine if the version is just a version, and return it if so.
+        version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
+        if version_pattern.match(version):
+            return version
+
+        # Ensure we have semantic versioning support.
+        if not HAS_SEMANTIC_VERSION:
+            raise Exception(missing_required_lib('semantic_version')) from SEMANTIC_VERSION_IMPORT_ERR
+
+        # Get the list of possible versions.
+        all_ca_versions = self.get_all_ca_versions()
+
+        # Select the best possible version.
+        s = SimpleSpec(version)
+        versions = map(Version, all_ca_versions)
+        result = s.select(versions)
+
+        # Ensure we selected a valid version.
+        if result is None:
+            raise Exception(f'Unable to resolve certificate authority version {version} from available versions {all_ca_versions}')
+        return str(result)
+
+    def resolve_peer_version(self, version):
+
+        # Determine if the version is just a version, and return it if so.
+        version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
+        if version_pattern.match(version):
+            return version
+
+        # Ensure we have semantic versioning support.
+        if not HAS_SEMANTIC_VERSION:
+            raise Exception(missing_required_lib('semantic_version')) from SEMANTIC_VERSION_IMPORT_ERR
+
+        # Get the list of possible versions.
+        all_peer_versions = self.get_all_peer_versions()
+
+        # Select the best possible version.
+        s = SimpleSpec(version)
+        versions = map(Version, all_peer_versions)
+        result = s.select(versions)
+
+        # Ensure we selected a valid version.
+        if result is None:
+            raise Exception(f'Unable to resolve peer version {version} from available versions {all_peer_versions}')
+        return str(result)
+
+    def resolve_ordering_service_node_version(self, version):
+
+        # Determine if the version is just a version, and return it if so.
+        version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
+        if version_pattern.match(version):
+            return version
+
+        # Ensure we have semantic versioning support.
+        if not HAS_SEMANTIC_VERSION:
+            raise Exception(missing_required_lib('semantic_version')) from SEMANTIC_VERSION_IMPORT_ERR
+
+        # Get the list of possible versions.
+        all_ordering_service_node_versions = self.get_all_ordering_service_node_versions()
+
+        # Select the best possible version.
+        s = SimpleSpec(version)
+        versions = map(Version, all_ordering_service_node_versions)
+        result = s.select(versions)
+
+        # Ensure we selected a valid version.
+        if result is None:
+            raise Exception(f'Unable to resolve ordering service node version {version} from available versions {all_ordering_service_node_versions}')
+        return str(result)

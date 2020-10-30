@@ -307,6 +307,8 @@ options:
             - If you do not specify a version, the default Hyperledger Fabric version will be used for a new peer.
             - If you do not specify a version, an existing peer will not be upgraded.
             - If you specify a new version, an existing peer will be automatically upgraded.
+            - The version can also be specified as a version range specification, for example C(>=2.2,<3.0), which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
+            - "See the C(semantic_version) Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec"
         type: str
     wait_timeout:
         description:
@@ -691,7 +693,8 @@ def main():
         # Add the version if it is specified.
         version = module.params['version']
         if version is not None:
-            expected_peer['version'] = version
+            resolved_version = console.resolve_peer_version(version)
+            expected_peer['version'] = resolved_version
 
         # If the peer is corrupt, delete it first. This may happen if somebody imported an external peer
         # with the same name, or if somebody deleted the Kubernetes resources directly.

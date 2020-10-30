@@ -19,7 +19,7 @@ RUN microdnf install gcc gzip python38-devel tar \
     && microdnf clean all
 USER ibp-user
 ENV PATH=/home/ibp-user/.local/bin:$PATH
-RUN pip3.8 install --user "ansible>=2.9,<2.10" fabric-sdk-py python-pkcs11 openshift \
+RUN pip3.8 install --user "ansible>=2.9,<2.10" fabric-sdk-py python-pkcs11 openshift semantic_version \
     && chgrp -R root /home/ibp-user/.local \
     && chmod -R g=u /home/ibp-user/.local
 ADD https://galaxy.ansible.com/api/v2/collections/ibm/blockchain_platform /home/ibp-user/galaxy.json
