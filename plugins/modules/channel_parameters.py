@@ -65,9 +65,9 @@ EXAMPLES = '''
   ibm.blockchain_platform.channel_parameters:
     path: channel_config.bin
     batch_size:
-        max_message_count: 10000
-        absolute_max_bytes: 10485760
-        preferred_max_bytes: 5242880
+      max_message_count: 10000
+      absolute_max_bytes: 10485760
+      preferred_max_bytes: 5242880
 
 - name: Set batch timeout channel parameter
   ibm.blockchain_platform.channel_parameters:

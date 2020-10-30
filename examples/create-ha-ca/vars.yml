@@ -1,0 +1,14 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ha_ca_name: HAOrg1 CA
+ca_admin_identity: haadmin
+ca_admin_pass: haadminpw
+db_datasource: host=mypostgressql.example.com port=999 user=myUsername password=myPassword dbname=mydb sslmode=verify-full
+db_certfile1: LS0tLS...
+ca_replicas: 2
