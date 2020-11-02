@@ -20,17 +20,17 @@ shift $((OPTIND -1))
 COMMAND=$1
 if [ "${COMMAND}" = "join" ]; then
     set -x
-    ansible-playbook 12-create-endorsing-organization-components.yml
+    ansible-playbook 11-create-endorsing-organization-components.yml
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 13-export-organization.yml
-        ansible-playbook 14-import-organization.yml
+        ansible-playbook 12-export-organization.yml
+        ansible-playbook 13-import-organization.yml
     fi
-    ansible-playbook 15-add-organization-to-channel.yml
+    ansible-playbook 14-add-organization-to-channel.yml
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 16-import-ordering-service.yml
+        ansible-playbook 15-import-ordering-service.yml
     fi
-    ansible-playbook 17-join-peer-to-channel.yml
-    ansible-playbook 18-add-anchor-peer-to-channel.yml
+    ansible-playbook 16-join-peer-to-channel.yml
+    ansible-playbook 17-add-anchor-peer-to-channel.yml
     set +x
 elif [ "${COMMAND}" = "destroy" ]; then
     set -x

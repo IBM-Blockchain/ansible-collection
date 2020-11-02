@@ -13,11 +13,7 @@ org2_msp_id: Org2MSP
 channel_name: "mychannel"
 smart_contract_name: "fabcar"
 smart_contract_version: "1.0.0"
-smart_contract_sequence: 1
-smart_contract_package: "fabcar@1.0.0.tgz"
+smart_contract_package: "fabcar@1.0.0.cds"
 # smart_contract_constructor: "initLedger"
 # smart_contract_endorsement_policy: ""
 # smart_contract_collections_file: ""
-ca_version: ">=1.4,<2.0"
-peer_version: ">=2.2,<3.0"
-ordering_service_version: ">=2.2,<3.0"
