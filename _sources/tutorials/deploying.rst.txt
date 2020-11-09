@@ -7,7 +7,7 @@ Deploying a smart contract
 
 This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of deploying a smart contract to an existing Hyperledger Fabric network.
 
-In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization "Ordering Org", and two endorsing organizations "Org1" and "Org2". Both organizations are members of an existing channel called "mychannel". You will install the FabCar sample smart contract onto the peers for both "Org1" and "Org2", and then instantiate the smart contract on the channel "mychannel".
+In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization "Ordering Org", and two endorsing organizations "Org1" and "Org2". Both organizations are members of an existing channel called "mychannel". You will install the FabCar sample smart contract onto the peers for both "Org1" and "Org2", approve the FabCar smart contract definition on the channel "mychannel" as both organizations, and then commit that smart contract definition.
 
 For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
@@ -46,7 +46,7 @@ If you have installed the collection by building a Docker image, then run the sc
 Exploring the network
 ---------------------
 
-The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers `Org1 Peer` and `Org2 Peer`. The Ansible playbooks also instantiated the FabCar smart contract on the channel `mychannel`.
+The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers `Org1 Peer` and `Org2 Peer`. The Ansible playbooks also approved the FabCar smart contract definition on the channel `mychannel` as both organizations, and then committed that smart contract definition.
 
 At this point, the FabCar smart contract is deployed and ready for applications to connect to the network and submit transactions. An application that wishes to connect to the network requires two things: an identity and a connection profile. The connection profile is a JSON document that provides the application with a list of endpoints or URLs that the application can use to connect to the network.
 
@@ -66,57 +66,57 @@ When you ran the script `deploy_smart_contract.sh`, you ran multiple Ansible pla
 
 Here are the Ansible playbooks that were executed by the script above:
 
-* `18-install-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-install-chaincode.yml>`_
+* `19-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-and-approve-chaincode.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 18-install-chaincode.yml
+      ansible-playbook 19-install-and-approve-chaincode.yml
 
-  | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org1 Peer`.
+  | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org1 Peer`, and the Ansible module `approved_chaincode <../modules/approved_chaincode.html>` to approve the FabCar smart contract definition on the channel `mychannel`.
 
-* `19-install-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-chaincode.yml>`_
+* `20-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-install-and-approve-chaincode.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 19-install-chaincode.yml
+      ansible-playbook 20-install-and-approve-chaincode.yml
 
-  | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org2 Peer`.
+  | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org2 Peer`, and the Ansible module `approved_chaincode <../modules/approved_chaincode.html>` to approve the FabCar smart contract definition on the channel `mychannel`.
 
-* `20-instantiate-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-instantiate-chaincode.yml>`_
-
-  | Organization: Org1
-  | Command:
-
-    ::
-
-      ansible-playbook 20-instantiate-chaincode.yml
-
-  | This playbook uses the Ansible module `instantiated_chaincode <../modules/instantiated_chaincode.html>`_ to instantiate the FabCar smart contract on the channel `mychannel`.
-
-* `21-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-register-application.yml>`_
+* `21-commit-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-commit-chaincode.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 21-register-application.yml
+      ansible-playbook 21-commit-chaincode.yml
 
-  | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org1 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org1`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
+  | This playbook uses the Ansible module `committed_chaincode <../modules/committed_chaincode.html>`_ to commit the FabCar smart contract definition on the channel `mychannel`.
 
 * `22-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml>`_
 
-  | Organization: Org2
+  | Organization: Org1
   | Command:
 
     ::
 
       ansible-playbook 22-register-application.yml
+
+  | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org1 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org1`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
+
+* `23-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/23-register-application.yml>`_
+
+  | Organization: Org2
+  | Command:
+
+    ::
+
+      ansible-playbook 23-register-application.yml
 
   | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org2 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org2`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.

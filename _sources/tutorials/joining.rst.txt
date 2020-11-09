@@ -129,93 +129,95 @@ When you ran the script `join_network.sh`, you ran multiple Ansible playbooks. E
 
 Here are the Ansible playbooks that were executed by the script above:
 
-* `11-create-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/11-create-endorsing-organization-components.yml>`_
+* `12-create-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/12-create-endorsing-organization-components.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 11-create-endorsing-organization-components.yml
+      ansible-playbook 12-create-endorsing-organization-components.yml
 
   | This playbook creates the components for the endorsing organization `Org2`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
-* `12-export-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/12-export-organization.yml>`_
+* `13-export-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/13-export-organization.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 12-export-organization.yml
+      ansible-playbook 13-export-organization.yml
 
   | This playbook uses the Ansible module `organization_info <../modules/organization_info.html>`_ to export the organization `Org2` to a file. This is so that `Org2` can pass this file to the endorsing organization `Org1`. `Org1` can then import this file into their IBM Blockchain Platform console, so they can add `Org2` into the existing channel `mychannel`.
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `13-import-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/13-import-organization.yml>`_
+* `14-import-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-import-organization.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 13-import-organization.yml
+      ansible-playbook 14-import-organization.yml
 
   | This playbook uses the Ansible module `external_organization <../modules/external_organization.html>`_ to import the organization `Org2` from a file. This file was passed to `Org1` by `Org2`, so that `Org1` could add `Org2` into the existing channel `mychannel`.
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `14-add-organization-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-add-organization-to-channel.yml>`_
+* `15-add-organization-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-add-organization-to-channel.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 14-add-organization-to-channel.yml
+      ansible-playbook 15-add-organization-to-channel.yml
 
   | This playbook adds the organization `Org2` into the existing channel `Org1`. The channel now contains two organizations, `Org1` and `Org2`. The policies for this channel are updated, using new policies that are supplied in policy files:
 
-  * `Admins`: `14-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-admins-policy.json>`_
-  * `Readers`: `14-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-readers-policy.json>`_
-  * `Writers`: `14-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-writers-policy.json>`_
+  * `Admins`: `15-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-admins-policy.json>`_
+  * `Readers`: `15-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-readers-policy.json>`_
+  * `Writers`: `15-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-writers-policy.json>`_
+  * `Endorsement`: `15-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-endorsement-policy.json>`_
+  * `LifecycleEndorsement`: `15-lifecycle-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-lifecycle-endorsement-policy.json>`_
 
   |
   | The Ansible modules `channel_config <../modules/channel_config.html>`_, `channel_member <../modules/channel_member.html>`_, and `channel_policy <../modules/channel_policy.html>`_ are used to update the channel.
 
-* `15-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-import-ordering-service.yml>`_
+* `16-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/16-import-ordering-service.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 15-import-ordering-service.yml
+      ansible-playbook 16-import-ordering-service.yml
 
   | This playbook uses the Ansible module `external_ordering_service <../modules/external_ordering_service.html>`_ to import the ordering service from a file. This file was passed to `Org2` by `Org1`, so that `Org2` could start to join channels on the ordering service.
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `16-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/16-join-peer-to-channel.yml>`_
+* `17-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/17-join-peer-to-channel.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 16-join-peer-to-channel.yml
+      ansible-playbook 17-join-peer-to-channel.yml
 
   | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org2 Peer` to the channel.
 
-* `17-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/17-add-anchor-peer-to-channel.yml>`_
+* `18-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-add-anchor-peer-to-channel.yml>`_
 
   | Organization: Org2
   | Command:
 
     ::
 
-      ansible-playbook 17-add-anchor-peer-to-channel.yml
+      ansible-playbook 18-add-anchor-peer-to-channel.yml
 
   | This playbook updates the organization (MSP) definition for `Org2` in the channel `mychannel` to specify that the peer `Org2 Peer` is an anchor peer for the channel. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_member <../modules/channel_member.html>`_ to update the channel configuration.
 

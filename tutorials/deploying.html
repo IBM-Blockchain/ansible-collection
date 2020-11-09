@@ -182,7 +182,7 @@
   <div class="section" id="deploying-a-smart-contract">
 <h1>Deploying a smart contract<a class="headerlink" href="#deploying-a-smart-contract" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of deploying a smart contract to an existing Hyperledger Fabric network.</p>
-<p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization “Ordering Org”, and two endorsing organizations “Org1” and “Org2”. Both organizations are members of an existing channel called “mychannel”. You will install the FabCar sample smart contract onto the peers for both “Org1” and “Org2”, and then instantiate the smart contract on the channel “mychannel”.</p>
+<p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization “Ordering Org”, and two endorsing organizations “Org1” and “Org2”. Both organizations are members of an existing channel called “mychannel”. You will install the FabCar sample smart contract onto the peers for both “Org1” and “Org2”, approve the FabCar smart contract definition on the channel “mychannel” as both organizations, and then commit that smart contract definition.</p>
 <p>For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 <div class="section" id="before-you-start">
 <h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
@@ -213,7 +213,7 @@
 </div>
 <div class="section" id="exploring-the-network">
 <h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this headline">¶</a></h2>
-<p>The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers <cite>Org1 Peer</cite> and <cite>Org2 Peer</cite>. The Ansible playbooks also instantiated the FabCar smart contract on the channel <cite>mychannel</cite>.</p>
+<p>The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers <cite>Org1 Peer</cite> and <cite>Org2 Peer</cite>. The Ansible playbooks also approved the FabCar smart contract definition on the channel <cite>mychannel</cite> as both organizations, and then committed that smart contract definition.</p>
 <p>At this point, the FabCar smart contract is deployed and ready for applications to connect to the network and submit transactions. An application that wishes to connect to the network requires two things: an identity and a connection profile. The connection profile is a JSON document that provides the application with a list of endpoints or URLs that the application can use to connect to the network.</p>
 <p>The Ansible playbooks registered an application identity for each organization. The organization <cite>Org1</cite> has an application identity named <cite>org1app</cite>, with an enrollment secret of <cite>org1apppw</cite>. The organization <cite>Org2</cite> has an application identity named <cite>org2app</cite>, with an enrollment secret of <cite>org2apppw</cite>. You can use this information to enroll the identity against the respective organizations certificate authority, <cite>Org1 CA</cite> or <cite>Org2 CA</cite>.</p>
 <p>The Ansible playbooks created a connection profile for each organization. These connection profiles are created on disk, as JSON files in the same directory as the playbooks. The connection profiles are:</p>
@@ -228,55 +228,55 @@
 <p>When you ran the script <cite>deploy_smart_contract.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of deploying the smart contract. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
 <p>Here are the Ansible playbooks that were executed by the script above:</p>
 <ul>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-install-chaincode.yml">18-install-chaincode.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-and-approve-chaincode.yml">19-install-and-approve-chaincode.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 18-install-chaincode.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 19-install-and-approve-chaincode.yml
 </pre></div>
 </div>
 </div></blockquote>
 <div class="line-block">
-<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org1 Peer</cite>.</div>
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org1 Peer</cite>, and the Ansible module <cite>approved_chaincode &lt;../modules/approved_chaincode.html&gt;</cite> to approve the FabCar smart contract definition on the channel <cite>mychannel</cite>.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-chaincode.yml">19-install-chaincode.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-install-and-approve-chaincode.yml">20-install-and-approve-chaincode.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org2</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 19-install-chaincode.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 20-install-and-approve-chaincode.yml
 </pre></div>
 </div>
 </div></blockquote>
 <div class="line-block">
-<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org2 Peer</cite>.</div>
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/installed_chaincode.html">installed_chaincode</a> to install the FabCar smart contract onto the peer <cite>Org2 Peer</cite>, and the Ansible module <cite>approved_chaincode &lt;../modules/approved_chaincode.html&gt;</cite> to approve the FabCar smart contract definition on the channel <cite>mychannel</cite>.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-instantiate-chaincode.yml">20-instantiate-chaincode.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-commit-chaincode.yml">21-commit-chaincode.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 20-instantiate-chaincode.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 21-commit-chaincode.yml
 </pre></div>
 </div>
 </div></blockquote>
 <div class="line-block">
-<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/instantiated_chaincode.html">instantiated_chaincode</a> to instantiate the FabCar smart contract on the channel <cite>mychannel</cite>.</div>
+<div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/committed_chaincode.html">committed_chaincode</a> to commit the FabCar smart contract definition on the channel <cite>mychannel</cite>.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-register-application.yml">21-register-application.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml">22-register-application.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 21-register-application.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 22-register-application.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -284,13 +284,13 @@
 <div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/registered_identity.html">registered_identity</a> to register a new identity in the certificate authority <cite>Org1 CA</cite>. This playbook also uses the Ansible module <a class="reference external" href="../modules/connection_profile.html">connection_profile</a> to create a connection profile for the organization <cite>Org1</cite>. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml">22-register-application.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/23-register-application.yml">23-register-application.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org2</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 22-register-application.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 23-register-application.yml
 </pre></div>
 </div>
 </div></blockquote>

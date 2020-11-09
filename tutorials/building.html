@@ -401,13 +401,27 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/05-add-organization-to-consortium.yml">05-add-organization-to-consortium.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/05-enable-capabilities.yml">05-enable-capabitilies.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-add-organization-to-consortium.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 05-enable-capabilities.yml
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">This playbook enables Fabric v2.x capabilities on the ordering service. It uses the Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a> and <a class="reference external" href="../modules/channel_capabilities.html">channel_capabilities</a> to update the system channel configuration.</div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/06-add-organization-to-consortium.yml">06-add-organization-to-consortium.yml</a></p>
+<div class="line-block">
+<div class="line">Organization: Ordering Org</div>
+<div class="line">Command:</div>
+</div>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-add-organization-to-consortium.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -415,13 +429,13 @@
 <div class="line">This playbook adds the organization <cite>Org1</cite> into the consortium for the ordering service. It uses the Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a> and <a class="reference external" href="../modules/consortium_member.html">consortium_member</a> to update the system channel configuration, which contains the list of consortium members.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/06-export-ordering-service.yml">06-export-ordering-service.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/07-export-ordering-service.yml">07-export-ordering-service.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 06-export-ordering-service.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-export-ordering-service.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -432,13 +446,13 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/07-import-ordering-service.yml">07-import-ordering-service.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-import-ordering-service.yml">08-import-ordering-service.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 07-import-ordering-service.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-import-ordering-service.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -449,13 +463,13 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-create-channel.yml">08-create-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-create-channel.yml">09-create-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 08-create-channel.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-create-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -463,22 +477,24 @@
 <div class="line">This playbook creates a channel called <cite>mychannel</cite> on the ordering service. The channel contains a single organization, <cite>Org1</cite>. The policies for this channel are supplied in policy files:</div>
 </div>
 <ul class="simple">
-<li><p><cite>Admins</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-admins-policy.json">08-admins-policy.json</a></p></li>
-<li><p><cite>Readers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-readers-policy.json">08-readers-policy.json</a></p></li>
-<li><p><cite>Writers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-writers-policy.json">08-writers-policy.json</a></p></li>
+<li><p><cite>Admins</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-admins-policy.json">09-admins-policy.json</a></p></li>
+<li><p><cite>Readers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-readers-policy.json">09-readers-policy.json</a></p></li>
+<li><p><cite>Writers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-writers-policy.json">09-writers-policy.json</a></p></li>
+<li><p><cite>Endorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-endorsement-policy.json">09-endorsement-policy.json</a></p></li>
+<li><p><cite>LifecycleEndorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-lifecycle-endorsement-policy.json">09-lifecycle-endorsement-policy.json</a></p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
 <div class="line">The Ansible module <a class="reference external" href="../modules/channel_config.html">channel_config</a> is used to create the channel.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-join-peer-to-channel.yml">09-join-peer-to-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-join-peer-to-channel.yml">10-join-peer-to-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 09-join-peer-to-channel.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-join-peer-to-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -486,13 +502,13 @@
 <div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/channel_block.html">channel_block</a> to fetch the genesis block for the channel, before using the Ansible module <a class="reference external" href="../modules/peer_channel.html">peer_channel</a> to join the peer <cite>Org1 Peer</cite> to the channel.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-add-anchor-peer-to-channel.yml">10-add-anchor-peer-to-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/11-add-anchor-peer-to-channel.yml">11-add-anchor-peer-to-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
 </div>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 10-add-anchor-peer-to-channel.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 11-add-anchor-peer-to-channel.yml
 </pre></div>
 </div>
 </div></blockquote>
