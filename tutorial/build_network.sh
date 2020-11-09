@@ -26,14 +26,15 @@ if [ "${COMMAND}" = "build" ]; then
         ansible-playbook 03-export-organization.yml
         ansible-playbook 04-import-organization.yml
     fi
-    ansible-playbook 05-add-organization-to-consortium.yml
+    ansible-playbook 05-enable-capabilities.yml
+    ansible-playbook 06-add-organization-to-consortium.yml
     if [ "${IMPORT_EXPORT_REQUIRED}" = "1" ]; then
-        ansible-playbook 06-export-ordering-service.yml
-        ansible-playbook 07-import-ordering-service.yml
+        ansible-playbook 07-export-ordering-service.yml
+        ansible-playbook 08-import-ordering-service.yml
     fi
-    ansible-playbook 08-create-channel.yml
-    ansible-playbook 09-join-peer-to-channel.yml
-    ansible-playbook 10-add-anchor-peer-to-channel.yml
+    ansible-playbook 09-create-channel.yml
+    ansible-playbook 10-join-peer-to-channel.yml
+    ansible-playbook 11-add-anchor-peer-to-channel.yml
     set +x
 elif [ "${COMMAND}" = "destroy" ]; then
     set -x

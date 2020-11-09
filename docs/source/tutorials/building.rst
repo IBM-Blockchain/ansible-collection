@@ -218,80 +218,93 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | Note: this playbook only needs to be executed when the organizations `Ordering Org` and `Org1` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `05-add-organization-to-consortium.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/05-add-organization-to-consortium.yml>`_
+* `05-enable-capabitilies.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/05-enable-capabilities.yml>`_
 
   | Organization: Ordering Org
   | Command:
 
     ::
 
-      ansible-playbook 05-add-organization-to-consortium.yml
+      ansible-playbook 05-enable-capabilities.yml
+
+  | This playbook enables Fabric v2.x capabilities on the ordering service. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_capabilities <../modules/channel_capabilities.html>`_ to update the system channel configuration.
+
+* `06-add-organization-to-consortium.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/06-add-organization-to-consortium.yml>`_
+
+  | Organization: Ordering Org
+  | Command:
+
+    ::
+
+      ansible-playbook 06-add-organization-to-consortium.yml
 
   | This playbook adds the organization `Org1` into the consortium for the ordering service. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `consortium_member <../modules/consortium_member.html>`_ to update the system channel configuration, which contains the list of consortium members.
 
-* `06-export-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/06-export-ordering-service.yml>`_
+* `07-export-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/07-export-ordering-service.yml>`_
 
   | Organization: Ordering Org
   | Command:
 
     ::
 
-      ansible-playbook 06-export-ordering-service.yml
+      ansible-playbook 07-export-ordering-service.yml
 
   | This playbook uses the Ansible module `ordering_service_info <../modules/ordering_service_info.html>`_ to export the ordering service to a file. This is so that `Ordering Org` can pass this file to the organization `Org1`. `Org1` can then import this file into their IBM Blockchain Platform console, so they can start to create channels on the ordering service.
 
   | Note: this playbook only needs to be executed when the organizations `Ordering Org` and `Org1` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `07-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/07-import-ordering-service.yml>`_
+* `08-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-import-ordering-service.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 07-import-ordering-service.yml
+      ansible-playbook 08-import-ordering-service.yml
 
   | This playbook uses the Ansible module `external_ordering_service <../modules/external_ordering_service.html>`_ to import the ordering service from a file. This file was passed to `Org1` by `Ordering Org`, so that `Org1` could start to create channels on the ordering service.
 
   | Note: this playbook only needs to be executed when the organizations `Ordering Org` and `Org1` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `08-create-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-create-channel.yml>`_
+* `09-create-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-create-channel.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 08-create-channel.yml
+      ansible-playbook 09-create-channel.yml
 
   | This playbook creates a channel called `mychannel` on the ordering service. The channel contains a single organization, `Org1`. The policies for this channel are supplied in policy files:
 
-  * `Admins`: `08-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-admins-policy.json>`_
-  * `Readers`: `08-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-readers-policy.json>`_
-  * `Writers`: `08-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-writers-policy.json>`_
+  * `Admins`: `09-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-admins-policy.json>`_
+  * `Readers`: `09-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-readers-policy.json>`_
+  * `Writers`: `09-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-writers-policy.json>`_
+  * `Endorsement`: `09-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-endorsement-policy.json>`_
+  * `LifecycleEndorsement`: `09-lifecycle-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-lifecycle-endorsement-policy.json>`_
 
   |
   | The Ansible module `channel_config <../modules/channel_config.html>`_ is used to create the channel.
 
-* `09-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-join-peer-to-channel.yml>`_
+* `10-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-join-peer-to-channel.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 09-join-peer-to-channel.yml
+      ansible-playbook 10-join-peer-to-channel.yml
 
   | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org1 Peer` to the channel.
 
-* `10-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-add-anchor-peer-to-channel.yml>`_
+* `11-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/11-add-anchor-peer-to-channel.yml>`_
 
   | Organization: Org1
   | Command:
 
     ::
 
-      ansible-playbook 10-add-anchor-peer-to-channel.yml
+      ansible-playbook 11-add-anchor-peer-to-channel.yml
 
   | This playbook updates the organization (MSP) definition for `Org1` in the channel `mychannel` to specify that the peer `Org1 Peer` is an anchor peer for the channel. It uses the Ansible modules `channel_config <../modules/channel_config.html>`_ and `channel_member <../modules/channel_member.html>`_ to update the channel configuration.
 
