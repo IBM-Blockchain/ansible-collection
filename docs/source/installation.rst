@@ -54,17 +54,19 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install ansible
 
-**Hyperledger Fabric v1.4.3+ binaries**
+**Hyperledger Fabric v2.2.1+ binaries**
 
-    This Ansible collection requires use of the binaries from Hyperledger Fabric v1.4.3 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxlator`` and ``peer``.
+    This Ansible collection requires use of the binaries from Hyperledger Fabric v2.2.1 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxlator`` and ``peer``.
 
-    You can install these binaries by following the Hyperledger Fabric documentation: https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html
+    You can install these binaries by following the Hyperledger Fabric documentation: https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html
 
     These binaries must be on the ``PATH`` of the system that will be used to run your Ansible Playbooks. You can check that the binaries are installed correctly by running:
 
     ::
 
         peer version
+
+    Note that the Hyperledger Fabric v2.x binaries can still be used to manage Hyperledger Fabric v1.4 networks. If you find that you must use Hyperledger Fabric v1.4 binaries, then you must use the binaries from Hyperledger Fabric v1.4.3 or later.
 
 **Hyperledger Fabric SDK for Python v0.8.1+**
 
@@ -163,7 +165,9 @@ You can run a playbook using this Docker image, by volume mounting the playbook 
 
 ::
 
-    docker run --rm -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+    docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+
+Note that the UID flag ``-u $(id -u)`` ensures that Ansible can write connection profile and identity files to the volume mount.
 
 The Docker image is supported for use in Docker, Kubernetes, and Red Hat OpenShift.
 

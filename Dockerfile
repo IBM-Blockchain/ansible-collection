@@ -40,8 +40,7 @@ RUN mkdir -p /go/src/github.com/hyperledger \
     && cd /go/src/github.com/hyperledger \
     && git clone -n https://github.com/hyperledger/fabric.git \
     && cd fabric \
-    # FAB-18205 - allow communication with orderers with expired TLS certificates.
-    && git checkout 693cae5be282be51a48118ae4e8764e282b48cb8 \
+    && git checkout v2.2.1 \
     # FAB-18175 - ignore expired signer certificates when submitting transactions.
     && git remote add jyellick https://github.com/jyellick/fabric.git \
     && git fetch jyellick \
@@ -54,7 +53,7 @@ RUN cd /go/src/github.com/hyperledger/fabric \
 FROM base
 COPY --from=builder /home/ibp-user/.local /home/ibp-user/.local
 COPY --from=builder /home/ibp-user/.ansible /home/ibp-user/.ansible
-COPY --from=fabric /go/src/github.com/hyperledger/fabric/.build/bin /opt/fabric/bin
+COPY --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
 COPY --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
 COPY docker/docker-entrypoint.sh /
 ENV FABRIC_CFG_PATH=/opt/fabric/config
