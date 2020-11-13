@@ -226,14 +226,15 @@ If you install Python from the package manager for your operating system, you mu
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>Hyperledger Fabric v1.4.3+ binaries</strong></p>
+<p><strong>Hyperledger Fabric v2.2.1+ binaries</strong></p>
 <blockquote>
-<div><p>This Ansible collection requires use of the binaries from Hyperledger Fabric v1.4.3 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxlator</span></code> and <code class="docutils literal notranslate"><span class="pre">peer</span></code>.</p>
-<p>You can install these binaries by following the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html">https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html</a></p>
+<div><p>This Ansible collection requires use of the binaries from Hyperledger Fabric v2.2.1 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxlator</span></code> and <code class="docutils literal notranslate"><span class="pre">peer</span></code>.</p>
+<p>You can install these binaries by following the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html">https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html</a></p>
 <p>These binaries must be on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> of the system that will be used to run your Ansible Playbooks. You can check that the binaries are installed correctly by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">peer</span> <span class="n">version</span>
 </pre></div>
 </div>
+<p>Note that the Hyperledger Fabric v2.x binaries can still be used to manage Hyperledger Fabric v1.4 networks. If you find that you must use Hyperledger Fabric v1.4 binaries, then you must use the binaries from Hyperledger Fabric v1.4.3 or later.</p>
 </div></blockquote>
 <p><strong>Hyperledger Fabric SDK for Python v0.8.1+</strong></p>
 <blockquote>
@@ -312,9 +313,10 @@ If you install Python from the package manager for your operating system, you mu
 You can then use that Docker image to run your playbooks.</p>
 <p>A Docker image, <code class="docutils literal notranslate"><span class="pre">ibmcom/ibp-ansible</span></code>, has been published to Docker Hub.</p>
 <p>You can run a playbook using this Docker image, by volume mounting the playbook into the Docker container and running the <code class="docutils literal notranslate"><span class="pre">ansible-playbook</span></code> command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">playbooks</span><span class="p">:</span><span class="o">/</span><span class="n">playbooks</span> <span class="n">ibmcom</span><span class="o">/</span><span class="n">ibp</span><span class="o">-</span><span class="n">ansible</span> <span class="n">ansible</span><span class="o">-</span><span class="n">playbook</span> <span class="o">/</span><span class="n">playbooks</span><span class="o">/</span><span class="n">playbook</span><span class="o">.</span><span class="n">yml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
 </pre></div>
 </div>
+<p>Note that the UID flag <code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">$(id</span> <span class="pre">-u)</span></code> ensures that Ansible can write connection profile and identity files to the volume mount.</p>
 <p>The Docker image is supported for use in Docker, Kubernetes, and Red Hat OpenShift.</p>
 <p>If you need to build or customize the Docker image, you can find the Dockerfile here: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/Dockerfile">https://github.com/IBM-Blockchain/ansible-collection/blob/master/Dockerfile</a></p>
 </div>
