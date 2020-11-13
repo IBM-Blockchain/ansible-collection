@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-- name: Enable V2 Capabilities
+- name: Enable Fabric v2.x capabilities
   hosts: localhost
   vars_files:
     - common-vars.yml
