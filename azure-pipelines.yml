@@ -18,111 +18,190 @@ trigger:
   tags:
     include:
       - "*"
-pool:
-  vmImage: "ubuntu-latest"
-steps:
-  - script: sudo apt-get update && sudo apt-get install -y shellcheck
-    displayName: Install Ubuntu dependencies
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: "3.x"
-    displayName: Use Python 3.x
-  - script: pip install "ansible>=2.9,<2.10" ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 semantic_version sphinx sphinx-rtd-theme yamllint yq
-    displayName: Install Python dependencies
-  - script: curl -sSL https://github.com/hyperledger/fabric/releases/download/v2.2.1/hyperledger-fabric-linux-amd64-2.2.1.tar.gz | sudo tar xzf - -C /usr/local
-    displayName: Install Fabric CLI
-  - script: |
-      set -ex
-      curl -sL https://ibm.biz/idt-installer | bash
-      ibmcloud config --check-version=false
-      ibmcloud version
-      ibmcloud plugin list
-      curl -sSL https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz | sudo tar xzf - -C /usr/local/bin
-    displayName: Install IBM Cloud and OpenShift CLI
-  - script: |
-      set -ex
-      ibmcloud login --apikey $(IBM Cloud API Key) -c $(IBM Cloud Account) -r $(IBM Cloud Region)
-      ibmcloud oc cluster config -c $(IBM Cloud OpenShift Cluster ID)
-      oc login -u apikey -p $(IBM Cloud API Key)
-    displayName: Log in to IBM Cloud
-  - script: ansible-galaxy collection build
-    displayName: Build collection artifact
-  - script: |
-      set -ex
-      cd docs
-      make
-    displayName: Build documentation
-  - script: |
-      set -ex
-      VERSION=$(yq -r .version galaxy.yml)
-      docker build -t ibmcom/ibp-ansible:${VERSION} .
-      docker tag ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest
-    displayName: Build Docker image
-  - script: |
-      set -ex
-      VERSION=$(yq -r .version galaxy.yml)
-      ansible-galaxy collection install ibm-blockchain_platform-${VERSION}.tar.gz
-    displayName: Install collection
-  - script: |
-      set -ex
-      flake8 .
-      ansible-lint .
-      for ROLE in roles/*; do ansible-lint ${ROLE}; done
-      for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-      for PLAYBOOK in tutorial/v2.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-      shellcheck tutorial/*.sh
-      yamllint .
-    displayName: Lint collection
-  - script: |
-      set -ex
-      cd ~/.ansible/collections/ansible_collections/ibm/blockchain_platform
-      export TEST_RUN_ID=$(dd if=/dev/urandom bs=4096 count=1 2>/dev/null | shasum | awk '{print $1}')
-      export SHORT_TEST_RUN_ID=$(echo ${TEST_RUN_ID} | awk '{print substr($1,1,8)}')
-      yq -yi '.api_endpoint="$(IBM Blockchain Platform API Endpoint)"' tests/integration/integration_config.yml
-      yq -yi '.api_authtype="$(IBM Blockchain Platform API Auth Type)"' tests/integration/integration_config.yml
-      yq -yi '.api_key="$(IBM Blockchain Platform API Key)"' tests/integration/integration_config.yml
-      yq -yi '.api_secret="$(IBM Blockchain Platform API Secret)"' tests/integration/integration_config.yml
-      yq -yi '.k8s_namespace="$(IBM Blockchain Platform K8S Namespace)"' tests/integration/integration_config.yml
-      yq -yi .test_run_id=\"${TEST_RUN_ID}\" tests/integration/integration_config.yml
-      yq -yi .short_test_run_id=\"${SHORT_TEST_RUN_ID}\" tests/integration/integration_config.yml
-      ansible-test integration
-    displayName: Run tests
-  - task: HCLAppScan@1
-    inputs:
-      AppSecTestService: "HCL AppScan on Cloud"
-      applications: "d35d7c51-bb8b-4de9-9164-26c4843cfb60"
-      scantype: "static"
-    displayName: Run HCL AppScan on Cloud
-    condition: eq(variables['Build.Reason'], 'Schedule')
-  - script: |
-      set -ex
-      VERSION=$(yq -r .version galaxy.yml)
-      ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform-${VERSION}.tar.gz
+stages:
+  - stage: build
+    displayName: Build
+    pool:
+      vmImage: "ubuntu-latest"
+    jobs:
+      - job: build_collection
+        displayName: Build collection
+        steps:
+          - template: azure-templates/build-dependencies.yml
+          - script: |
+              set -ex
+              VERSION=$(yq -r .version galaxy.yml)
+              ansible-galaxy collection build
+              mv ibm-blockchain_platform-${VERSION}.tar.gz ibm-blockchain_platform.tar.gz
+            displayName: Build collection artifact
+          - script: |
+              set -ex
+              VERSION=$(yq -r .version galaxy.yml)
+              ansible-galaxy collection install ibm-blockchain_platform.tar.gz
+            displayName: Install collection
+          - script: |
+              set -ex
+              flake8 .
+              ansible-lint .
+              for ROLE in roles/*; do ansible-lint ${ROLE}; done
+              for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+              for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+              shellcheck tutorial/*.sh
+              yamllint .
+            displayName: Lint collection
+          - publish: ibm-blockchain_platform.tar.gz
+            artifact: Collection
+            displayName: Publish collection
+      - job: build_documentation
+        displayName: Build documentation
+        steps:
+          - template: azure-templates/build-dependencies.yml
+          - script: |
+              set -ex
+              cd docs
+              make
+              cd ..
+              tar cf documentation.tar.gz docs/build
+            displayName: Build documentation
+          - publish: documentation.tar.gz
+            artifact: Documentation
+            displayName: Publish documentation
+      - job: build_docker_image
+        displayName: Build Docker image
+        steps:
+          - template: azure-templates/build-dependencies.yml
+          - script: |
+              set -ex
+              VERSION=$(yq -r .version galaxy.yml)
+              docker build -t ibmcom/ibp-ansible:${VERSION} .
+              docker tag ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest
+              docker save ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest | gzip -c > image.tar.gz
+            displayName: Build Docker image
+          - publish: image.tar.gz
+            artifact: Docker image
+            displayName: Publish Docker image
+  - stage: test
+    displayName: Test
+    dependsOn: build
+    pool:
+      vmImage: "ubuntu-latest"
+    jobs:
+      - job: integration_tests_software
+        displayName: Run integration tests (software)
+        steps:
+          - template: azure-templates/test-dependencies.yml
+          - template: azure-templates/integration-tests.yml
+            parameters:
+              api_endpoint: $(IBM Blockchain Platform API Endpoint)
+              api_authtype: $(IBM Blockchain Platform API Auth Type)
+              api_key: $(IBM Blockchain Platform API Key)
+              api_secret: $(IBM Blockchain Platform API Secret)
+              k8s_namespace: $(IBM Blockchain Platform K8S Namespace)
+      - job: integration_tests_saas
+        displayName: Run integration tests (SaaS)
+        steps:
+          - template: azure-templates/test-dependencies.yml
+          - template: azure-templates/integration-tests.yml
+            parameters:
+              api_endpoint: $(IBM Blockchain Platform SaaS API Endpoint)
+              api_authtype: $(IBM Blockchain Platform SaaS API Auth Type)
+              api_key: $(IBM Blockchain Platform SaaS API Key)
+              api_secret: $(IBM Blockchain Platform SaaS API Secret)
+              k8s_namespace: $(IBM Blockchain Platform SaaS K8S Namespace)
+      - job: security_tests
+        displayName: Run security tests
+        steps:
+          - task: HCLAppScan@1
+            inputs:
+              AppSecTestService: "HCL AppScan on Cloud"
+              applications: "d35d7c51-bb8b-4de9-9164-26c4843cfb60"
+              scantype: "static"
+            displayName: Run HCL AppScan on Cloud
+      - job: tutorial_tests_software
+        displayName: Run tutorial tests (software)
+        steps:
+          - template: azure-templates/test-dependencies.yml
+          - template: azure-templates/tutorial-tests.yml
+            parameters:
+              api_endpoint: $(IBM Blockchain Platform API Endpoint)
+              api_authtype: $(IBM Blockchain Platform API Auth Type)
+              api_key: $(IBM Blockchain Platform API Key)
+              api_secret: $(IBM Blockchain Platform API Secret)
+              k8s_namespace: $(IBM Blockchain Platform K8S Namespace)
+              docker: false
+      - job: tutorial_tests_saas
+        displayName: Run tutorial tests (SaaS)
+        steps:
+          - template: azure-templates/test-dependencies.yml
+          - template: azure-templates/tutorial-tests.yml
+            parameters:
+              api_endpoint: $(IBM Blockchain Platform SaaS API Endpoint)
+              api_authtype: $(IBM Blockchain Platform SaaS API Auth Type)
+              api_key: $(IBM Blockchain Platform SaaS API Key)
+              api_secret: $(IBM Blockchain Platform SaaS API Secret)
+              k8s_namespace: $(IBM Blockchain Platform SaaS K8S Namespace)
+              docker: true
+  - stage: publish
+    displayName: Publish
+    dependsOn: test
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
-    displayName: Publish collection to Ansible Galaxy
-  - script: |
-      set -ex
-      git config --global user.name $(GitHub User Name)
-      git config --global user.email $(GitHub User Email)
-      git clone -b gh-pages $(Build.Repository.Uri) /tmp/gh-pages
-      pushd /tmp/gh-pages
-      git rm -rf . || true
-      popd
-      pushd docs/build
-      tar cf - . | (cd /tmp/gh-pages; tar xvf -)
-      popd
-      pushd /tmp/gh-pages
-      git add .
-      git commit -s -m "Automatic documentation build"
-      git -c http.extraheader="Authorization: Basic $(GitHub Basic Auth)" push $(Build.Repository.Uri) HEAD:gh-pages -f
-      popd
-    displayName: Publish documentation to GitHub Pages
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
-  - script: |
-      set -ex
-      VERSION=$(yq -r .version galaxy.yml)
-      docker login -u $(Docker Hub User Name) -p $(Docker Hub Access Token)
-      docker push ibmcom/ibp-ansible:${VERSION}
-      docker push ibmcom/ibp-ansible:latest
-    displayName: Publish Docker image to Docker Hub
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+    pool:
+      vmImage: "ubuntu-latest"
+    jobs:
+      - job: publish_collection
+        displayName: Publish collection
+        steps:
+          - template: azure-templates/build-dependencies.yml
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: Collection
+              path: $(System.DefaultWorkingDirectory)
+            displayName: Download collection
+          - script: |
+              set -ex
+              ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform.tar.gz
+            displayName: Publish collection to Ansible Galaxy
+      - job: publish_documentation
+        displayName: Publish documentation
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: Documentation
+              path: $(System.DefaultWorkingDirectory)
+            displayName: Download documentation
+          - script: |
+              set -ex
+              git config --global user.name $(GitHub User Name)
+              git config --global user.email $(GitHub User Email)
+              git clone -b gh-pages $(Build.Repository.Uri) /tmp/gh-pages
+              pushd /tmp/gh-pages
+              git rm -rf . || true
+              popd
+              pushd docs/build
+              tar cf - . | (cd /tmp/gh-pages; tar xvf -)
+              popd
+              pushd /tmp/gh-pages
+              git add .
+              git commit -s -m "Automatic documentation build"
+              git -c http.extraheader="Authorization: Basic $(GitHub Basic Auth)" push $(Build.Repository.Uri) HEAD:gh-pages -f
+              popd
+            displayName: Publish documentation to GitHub Pages
+      - job: publish_docker_image
+        displayName: Publish Docker image
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: Docker image
+              path: $(System.DefaultWorkingDirectory)
+            displayName: Download Docker image
+          - script: |
+              set -ex
+              gunzip -c image.tar.gz | docker load
+            displayName: Load Docker image
+          - script: |
+              set -ex
+              VERSION=$(yq -r .version galaxy.yml)
+              docker login -u $(Docker Hub User Name) -p $(Docker Hub Access Token)
+              docker push ibmcom/ibp-ansible:${VERSION}
+              docker push ibmcom/ibp-ansible:latest
+            displayName: Publish Docker image to Docker Hub
