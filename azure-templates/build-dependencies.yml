@@ -1,0 +1,13 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+steps:
+  - script: sudo apt-get update && sudo apt-get install -y shellcheck
+    displayName: Install Ubuntu dependencies
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.x"
+    displayName: Use Python 3.x
+  - script: pip install "ansible>=2.9,<2.10" ansible-doc-extractor ansible-lint flake8 fabric-sdk-py openshift python-pkcs11 semantic_version sphinx sphinx-rtd-theme yamllint yq
+    displayName: Install Python dependencies
