@@ -159,11 +159,14 @@ stages:
             displayName: Download collection
           - script: |
               set -ex
-              ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform.tar.gz
+              VERSION=$(yq -r .version galaxy.yml)
+              mv ibm-blockchain_platform.tar.gz ibm-blockchain_platform-${VERSION}.tar.gz
+              ansible-galaxy collection publish --api-key $(Ansible Galaxy API Key) ibm-blockchain_platform-${VERSION}.tar.gz
             displayName: Publish collection to Ansible Galaxy
       - job: publish_documentation
         displayName: Publish documentation
         steps:
+          - template: azure-templates/build-dependencies.yml
           - task: DownloadPipelineArtifact@2
             inputs:
               artifact: Documentation
@@ -171,6 +174,7 @@ stages:
             displayName: Download documentation
           - script: |
               set -ex
+              tar xf documentation.tar.gz
               git config --global user.name $(GitHub User Name)
               git config --global user.email $(GitHub User Email)
               git clone -b gh-pages $(Build.Repository.Uri) /tmp/gh-pages
@@ -189,6 +193,7 @@ stages:
       - job: publish_docker_image
         displayName: Publish Docker image
         steps:
+          - template: azure-templates/build-dependencies.yml
           - task: DownloadPipelineArtifact@2
             inputs:
               artifact: Docker image
