@@ -184,7 +184,7 @@ def organization_to_msp(organization, lifecycle_policy_required=False):
 
     # Add the lifecycle policy if required.
     if lifecycle_policy_required:
-        msp['policies']['Lifecycle'] = dict(
+        msp['policies']['Endorsement'] = dict(
             mod_policy='Admins',
             policy=dict(
                 type=1,

@@ -18,8 +18,10 @@ steps:
       yq -yi '.api_authtype="${{ parameters.api_authtype }}"' tests/integration/integration_config.yml
       yq -yi '.api_key="${{ parameters.api_key }}"' tests/integration/integration_config.yml
       yq -yi '.api_secret="${{ parameters.api_secret }}"' tests/integration/integration_config.yml
+      yq -yi '.api_timeout=300' tests/integration/integration_config.yml
       yq -yi '.k8s_namespace="${{ parameters.k8s_namespace }}"' tests/integration/integration_config.yml
-      yq -yi .test_run_id=\"${TEST_RUN_ID}\" tests/integration/integration_config.yml
-      yq -yi .short_test_run_id=\"${SHORT_TEST_RUN_ID}\" tests/integration/integration_config.yml
+      yq -yi ".test_run_id=\"${TEST_RUN_ID}\"" tests/integration/integration_config.yml
+      yq -yi ".short_test_run_id=\"${SHORT_TEST_RUN_ID}\"" tests/integration/integration_config.yml
+      yq -yi '.wait_timeout=1800' tests/integration/integration_config.yml
       ansible-test integration
     displayName: Run tests

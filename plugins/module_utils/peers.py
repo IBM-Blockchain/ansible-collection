@@ -114,7 +114,7 @@ class Peer:
 
 class PeerConnection:
 
-    def __init__(self, peer, identity, msp_id, hsm):
+    def __init__(self, peer, identity, msp_id, hsm, retries=5):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
@@ -123,6 +123,7 @@ class PeerConnection:
         self.identity = identity
         self.msp_id = msp_id
         self.hsm = hsm
+        self.retries = retries
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -143,9 +144,8 @@ class PeerConnection:
 
     def list_channels(self):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'channel', 'list'
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'channel', 'list']
+        process = self._run_command(args, env)
         if process.returncode == 0:
             channels = list()
             found_marker = False
@@ -160,9 +160,8 @@ class PeerConnection:
 
     def join_channel(self, path):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'channel', 'join', '-b', path
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'channel', 'join', '-b', path]
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -170,10 +169,8 @@ class PeerConnection:
 
     def fetch_channel(self, channel, target, path):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'channel', 'fetch', target, path,
-            '--channelID', channel
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'channel', 'fetch', target, path, '--channelID', channel]
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -181,9 +178,8 @@ class PeerConnection:
 
     def list_installed_chaincodes_oldlc(self):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'chaincode', 'list', '--installed'
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'chaincode', 'list', '--installed']
+        process = self._run_command(args, env)
         if process.returncode == 0:
             chaincodes = list()
             found_marker = False
@@ -203,9 +199,8 @@ class PeerConnection:
 
     def install_chaincode_oldlc(self, path):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'chaincode', 'install', path
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'chaincode', 'install', path]
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -213,9 +208,8 @@ class PeerConnection:
 
     def list_instantiated_chaincodes(self, channel):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'chaincode', 'list', '--instantiated', '-C', channel
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'chaincode', 'list', '--instantiated', '-C', channel]
+        process = self._run_command(args, env)
         if process.returncode == 0:
             chaincodes = list()
             found_marker = False
@@ -247,24 +241,15 @@ class PeerConnection:
         if vscc is not None:
             args.extend(['-V', vscc])
         args.extend(self._get_ordering_service(channel))
-        for attempt in range(0, 5):
-            last_attempt = attempt >= 5
-            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
-            if process.returncode == 0:
-                transaction_committed = self.wait_for_chaincode(channel, name, version)
-                if transaction_committed:
-                    return
-                elif not last_attempt:
-                    continue
-                else:
-                    raise Exception('Failed to instantiate chaincode on channel, transaction not committed')
+        process = self._run_command(args, env)
+        if process.returncode == 0:
+            transaction_committed = self.wait_for_chaincode(channel, name, version)
+            if transaction_committed:
+                return
             else:
-                should_retry = False
-                if "could not send to orderer node" in process.stdout:
-                    should_retry = True
-                if not last_attempt and should_retry:
-                    continue
-                raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
+                raise Exception('Failed to instantiate chaincode on channel, transaction not committed')
+        else:
+            raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
 
     def upgrade_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc):
         env = self._get_environ()
@@ -280,24 +265,15 @@ class PeerConnection:
         if vscc is not None:
             args.extend(['-V', vscc])
         args.extend(self._get_ordering_service(channel))
-        for attempt in range(0, 5):
-            last_attempt = attempt >= 5
-            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
-            if process.returncode == 0:
-                transaction_committed = self.wait_for_chaincode(channel, name, version)
-                if transaction_committed:
-                    return
-                elif not last_attempt:
-                    continue
-                else:
-                    raise Exception('Failed to upgrade chaincode on channel, transaction not committed')
+        process = self._run_command(args, env)
+        if process.returncode == 0:
+            transaction_committed = self.wait_for_chaincode(channel, name, version)
+            if transaction_committed:
+                return
             else:
-                should_retry = False
-                if "could not send to orderer node" in process.stdout:
-                    should_retry = True
-                if not last_attempt and should_retry:
-                    continue
-                raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
+                raise Exception('Failed to upgrade chaincode on channel, transaction not committed')
+        else:
+            raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
 
     def wait_for_chaincode(self, channel, name, version):
         # The commands for instantiating and upgrading chaincode do not
@@ -314,9 +290,8 @@ class PeerConnection:
 
     def list_installed_chaincodes_newlc(self):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'lifecycle', 'chaincode', 'queryinstalled', '-O', 'json'
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'lifecycle', 'chaincode', 'queryinstalled', '-O', 'json']
+        process = self._run_command(args, env)
         if process.returncode == 0:
             data = json.loads(process.stdout)
             return data.get('installed_chaincodes', [])
@@ -325,9 +300,8 @@ class PeerConnection:
 
     def install_chaincode_newlc(self, path):
         env = self._get_environ()
-        process = subprocess.run([
-            'peer', 'lifecycle', 'chaincode', 'install', path
-        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'lifecycle', 'chaincode', 'install', path]
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -335,9 +309,7 @@ class PeerConnection:
 
     def check_commit_readiness(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):
         env = self._get_environ()
-        args = [
-            'peer', 'lifecycle', 'chaincode', 'checkcommitreadiness', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence), '-O', 'json'
-        ]
+        args = ['peer', 'lifecycle', 'chaincode', 'checkcommitreadiness', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence), '-O', 'json']
         if endorsement_policy_ref:
             args.extend(['--channel-config-policy', endorsement_policy_ref])
         elif endorsement_policy:
@@ -350,7 +322,7 @@ class PeerConnection:
             args.extend(['--init-required'])
         if collections_config:
             args.extend(['--collections-config', collections_config])
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        process = self._run_command(args, env)
         if process.returncode == 0:
             data = json.loads(process.stdout)
             return data.get('approvals', {})
@@ -373,7 +345,7 @@ class PeerConnection:
         if collections_config:
             args.extend(['--collections-config', collections_config])
         args.extend(self._get_ordering_service(channel))
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -381,10 +353,8 @@ class PeerConnection:
 
     def query_committed_chaincodes(self, channel):
         env = self._get_environ()
-        args = [
-            'peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-O', 'json'
-        ]
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-O', 'json']
+        process = self._run_command(args, env)
         if process.returncode == 0:
             data = json.loads(process.stdout)
             return data.get('chaincode_definitions', [])
@@ -393,10 +363,8 @@ class PeerConnection:
 
     def query_committed_chaincode(self, channel, name):
         env = self._get_environ()
-        args = [
-            'peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-n', name, '-O', 'json'
-        ]
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        args = ['peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-n', name, '-O', 'json']
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return json.loads(process.stdout)
         else:
@@ -419,7 +387,7 @@ class PeerConnection:
             args.extend(['--collections-config', collections_config])
         args.extend(self._get_anchor_peers(channel, msp_ids))
         args.extend(self._get_ordering_service(channel))
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -513,3 +481,17 @@ class PeerConnection:
             return ['-o', address, '--tls', '--cafile', pem_path]
         finally:
             os.remove(block_path)
+
+    def _run_command(self, args, env):
+        for attempt in range(1, self.retries + 1):
+            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            if process.returncode == 0:
+                return process
+            elif attempt >= self.retries:
+                return process
+            elif "could not send to orderer node" in process.stdout:
+                continue
+            elif "failed to create new connection" in process.stdout:
+                continue
+            else:
+                return process
