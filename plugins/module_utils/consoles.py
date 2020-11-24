@@ -75,20 +75,23 @@ class Console:
             raise Exception(f'Failed to access IBM Blockchain Platform console: {e}')
 
     def _login_ibmcloud(self, api_key):
-        try:
-            data = urllib.parse.urlencode({
-                'apikey': api_key,
-                'grant_type': 'urn:ibm:params:oauth:grant-type:apikey'
-            })
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-            auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
-            auth = json.load(auth_response)
-            access_token = auth['access_token']
-            self.authorization = f'Bearer {access_token}'
-        except Exception as e:
-            raise Exception(f'Failed to log in to IBM Cloud: {e}')
+        data = urllib.parse.urlencode({
+            'apikey': api_key,
+            'grant_type': 'urn:ibm:params:oauth:grant-type:apikey'
+        })
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        for attempt in range(1, self.retries + 1):
+            try:
+                auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
+                auth = json.load(auth_response)
+                access_token = auth['access_token']
+                self.authorization = f'Bearer {access_token}'
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                raise self.handle_error('Failed to log in to IBM Cloud', e)
 
     def _login_basic(self, api_key, api_secret):
         credentials = f'{api_key}:{api_secret}'
@@ -709,7 +712,7 @@ class Console:
                 pass
             raise Exception(f'{message}: HTTP status code {error.code}: {str}')
         else:
-            raise Exception(f'{message}: {error}')
+            raise Exception(f'{message}: {type(error).__name__}: {error}')
 
     def is_free_cluster(self):
         return self.settings.get('CLUSTER_DATA', dict()).get('type', None) == 'free'

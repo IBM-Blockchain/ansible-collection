@@ -43,7 +43,9 @@ steps:
         yq -yi '.api_authtype="${{ parameters.api_authtype }}"' ${VARS}
         yq -yi '.api_key="${{ parameters.api_key }}"' ${VARS}
         yq -yi '.api_secret="${{ parameters.api_secret }}"' ${VARS}
+        yq -yi '.api_timeout=300' ${VARS}
         yq -yi '.k8s_namespace="${{ parameters.k8s_namespace }}"' ${VARS}
+        yq -yi '.wait_timeout=1800' ${VARS}
       done
       if [ "${{ parameters.docker }}" = "true" ]; then
         function docker_cleanup {

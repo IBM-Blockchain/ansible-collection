@@ -145,7 +145,7 @@ class OrderingServiceNode:
 
 class OrderingServiceNodeConnection:
 
-    def __init__(self, ordering_service_node, identity, msp_id, hsm, tls_handshake_time_shift=None):
+    def __init__(self, ordering_service_node, identity, msp_id, hsm, tls_handshake_time_shift=None, retries=5):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
@@ -155,6 +155,7 @@ class OrderingServiceNodeConnection:
         self.msp_id = msp_id
         self.hsm = hsm
         self.tls_handshake_time_shift = tls_handshake_time_shift
+        self.retries = retries
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -172,12 +173,9 @@ class OrderingServiceNodeConnection:
 
     def fetch(self, channel, target, path):
         env = self._get_environ()
-        args = [
-            'peer', 'channel', 'fetch', target, path,
-            '--channelID', channel
-        ]
+        args = ['peer', 'channel', 'fetch', target, path, '--channelID', channel]
         args.extend(self._get_ordering_service())
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -185,12 +183,9 @@ class OrderingServiceNodeConnection:
 
     def update(self, channel, path):
         env = self._get_environ()
-        args = [
-            'peer', 'channel', 'update', '-f', path,
-            '--channelID', channel,
-        ]
+        args = ['peer', 'channel', 'update', '-f', path, '--channelID', channel]
         args.extend(self._get_ordering_service())
-        process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+        process = self._run_command(args, env)
         if process.returncode == 0:
             return
         else:
@@ -217,6 +212,20 @@ class OrderingServiceNodeConnection:
         if self.tls_handshake_time_shift:
             result.extend(['--tlsHandshakeTimeShift', self.tls_handshake_time_shift])
         return result
+
+    def _run_command(self, args, env):
+        for attempt in range(1, self.retries + 1):
+            process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            if process.returncode == 0:
+                return process
+            elif attempt >= self.retries:
+                return process
+            elif "could not send to orderer node" in process.stdout:
+                continue
+            elif "failed to create new connection" in process.stdout:
+                continue
+            else:
+                return process
 
 
 class OrderingService:
