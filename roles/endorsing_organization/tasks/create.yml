@@ -80,7 +80,7 @@
     name: "{{ ca_name }} Admin"
     enrollment_id: "{{ ca_admin_enrollment_id }}"
     enrollment_secret: "{{ ca_admin_enrollment_secret }}"
-    path: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    path: "{{ ca_admin_identity }}"
 
 - name: Register the organization admin
   ibm.blockchain_platform.registered_identity:
@@ -91,7 +91,7 @@
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
-    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    registrar: "{{ ca_admin_identity }}"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
     enrollment_secret: "{{ organization_admin_enrollment_secret }}"
     max_enrollments: -1
@@ -106,7 +106,7 @@
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
-    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    registrar: "{{ ca_admin_identity }}"
     enrollment_id: "{{ peer_enrollment_id }}"
     enrollment_secret: "{{ peer_enrollment_secret }}"
     max_enrollments: -1
@@ -124,7 +124,7 @@
     name: "{{ organization_name }} Admin"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
     enrollment_secret: "{{ organization_admin_enrollment_secret }}"
-    path: "{{ playbook_dir }}/{{ organization_name }} Admin.json"
+    path: "{{ organization_admin_identity }}"
   register: org_admin
 
 - name: Create organization
@@ -138,7 +138,7 @@
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ ca_name }}"
-    registrar: "{{ playbook_dir }}/{{ ca_name }} Admin.json"
+    registrar: "{{ ca_admin_identity }}"
     admins:
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
 
