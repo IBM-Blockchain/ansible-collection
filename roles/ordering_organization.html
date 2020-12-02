@@ -350,6 +350,18 @@
 <div class="line"><strong>Type</strong>: str</div>
 </div>
 </dd>
+<dt>wallet</dt><dd><p>The wallet directory to store identity files in.</p>
+<p>If you do not specify a wallet directory, then the wallet directory will be set to the directory containing the Ansible playbook being executed.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>ca_admin_identity</dt><dd><p>The identity file for the administrator of the certificate authority.</p>
+<p>By default, the identity file stored in the <em>wallet</em> directory, and the file is named <em>organization_name</em> followed by <cite>CA Admin.json</cite>, for example <code class="docutils literal notranslate"><span class="pre">/path/to/my/wallet/Org1</span> <span class="pre">CA</span> <span class="pre">Admin.json</span></code>.</p>
+</dd>
+<dt>organization_admin_identity</dt><dd><p>The identity file for the administrator of the organization.</p>
+<p>By default, the identity file stored in the <em>wallet</em> directory, and the file is named <em>organization_name</em> followed by ` Admin.json`, for example <code class="docutils literal notranslate"><span class="pre">/path/to/my/wallet/Org1</span> <span class="pre">Admin.json</span></code>.</p>
+</dd>
 <dt>wait_timeout</dt><dd><p>The timeout, in seconds, to wait until the certificate authority and the ordering service is available.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: int</div>

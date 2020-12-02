@@ -180,6 +180,23 @@ Parameters
 
     | **Type**: str
 
+  wallet
+    The wallet directory to store identity files in.
+
+    If you do not specify a wallet directory, then the wallet directory will be set to the directory containing the Ansible playbook being executed.
+
+    | **Type**: str
+
+  ca_admin_identity
+    The identity file for the administrator of the certificate authority.
+
+    By default, the identity file stored in the *wallet* directory, and the file is named *organization_name* followed by `CA Admin.json`, for example ``/path/to/my/wallet/Org1 CA Admin.json``.
+
+  organization_admin_identity
+    The identity file for the administrator of the organization.
+
+    By default, the identity file stored in the *wallet* directory, and the file is named *organization_name* followed by ` Admin.json`, for example ``/path/to/my/wallet/Org1 Admin.json``.
+
   wait_timeout
     The timeout, in seconds, to wait until the certificate authority and the ordering service is available.
 
