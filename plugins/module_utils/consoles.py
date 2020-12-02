@@ -692,15 +692,29 @@ class Console:
         if attempt >= self.retries:
             return False
         elif isinstance(error, urllib.error.HTTPError):
+            # All of these HTTP status codes usually suggest a transient
+            # networking problem getting the request to the back end
+            # and are safe to retry.
+            # HTTP 502 - Bad Gateway
+            # HTTP 503 - Service Unavailable
+            # HTTP 504 - Gateway Timeout
             transient = error.code in [502, 503, 504]
             if transient:
                 time.sleep(1)
                 return True
+            # HTTP 429 Too Many Requests means we should sleep and retry
+            # after the specified period of time because too many requests
+            # were made at the same time, either by us or by other clients.
             ratelimited = error.code == 429
             if ratelimited:
                 retry_after = error.headers.get('retry-after')
                 time.sleep(int(retry_after))
                 return True
+        elif isinstance(error, urllib.error.URLError):
+            # This catches a whole bunch of sins, including incorrect DNS
+            # names and other user input errors, but also a whole bunch of
+            # transient networking problems such as EOF, read timeouts, etc.
+            return True
         return False
 
     def handle_error(self, message, error):

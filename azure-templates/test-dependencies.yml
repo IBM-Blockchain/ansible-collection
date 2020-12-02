@@ -19,7 +19,7 @@ steps:
       ibmcloud config --check-version=false
       ibmcloud version
       ibmcloud plugin list
-      curl -sSL https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz | sudo tar xzf - -C /usr/local/bin
+      curl -sSL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.5/openshift-client-linux.tar.gz | sudo tar xzf - -C /usr/local/bin
     displayName: Install IBM Cloud and OpenShift CLI
   - script: |
       set -ex

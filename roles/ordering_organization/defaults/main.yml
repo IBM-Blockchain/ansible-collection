@@ -24,3 +24,6 @@ ordering_service_nodes: 1
 # ordering_service_resources:
 # ordering_service_storage:
 # ordering_service_version:
+wallet: "{{ playbook_dir }}"
+ca_admin_identity: "{{ wallet }}/{{ ca_name }} Admin.json"
+organization_admin_identity: "{{ wallet }}/{{ organization_name }} Admin.json"
