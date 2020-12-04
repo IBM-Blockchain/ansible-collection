@@ -719,6 +719,10 @@ class Console:
         elif isinstance(error, ssl.SSLError):
             # Catch any SSL/TLS errors; this can include read timeout errors.
             return True
+        # Catch any other errors based on error messages.
+        other_errors = ['timed out', 'EOF']
+        if any(x in str(error) for x in other_errors):
+            return True
         return False
 
     def handle_error(self, message, error):
