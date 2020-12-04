@@ -13,6 +13,7 @@ from ansible.module_utils.urls import open_url
 import base64
 import json
 import re
+import ssl
 import time
 import urllib.parse
 
@@ -714,6 +715,9 @@ class Console:
             # This catches a whole bunch of sins, including incorrect DNS
             # names and other user input errors, but also a whole bunch of
             # transient networking problems such as EOF, read timeouts, etc.
+            return True
+        elif isinstance(error, ssl.SSLError):
+            # Catch any SSL/TLS errors; this can include read timeout errors.
             return True
         return False
 
