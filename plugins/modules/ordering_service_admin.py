@@ -93,6 +93,18 @@ options:
               M(organization_info) or M(organization[]) modules.
         type: raw
         required: true
+    policies:
+        description:
+            - The set of policies for the ordering service admin. The keys are the policy
+              names, and the values are the policies.
+            - You can pass strings, which are paths to JSON files containing policies
+              in the Hyperledger Fabric format (common.Policy).
+            - You can also pass a dict, which must correspond to a parsed policy in the
+              Hyperledger Fabric format (common.Policy).
+            - Default policies are provided for the Admins, Writers and Readers policies.
+              You only need to provide policies if you want to override these default
+              policies, or add additional policies.
+        type: dict
 notes: []
 requirements: []
 '''
@@ -137,7 +149,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         path=dict(type='str', required=True),
-        organization=dict(type='raw', required=True)
+        organization=dict(type='raw', required=True),
+        policies=dict(type='dict', default=dict())
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -154,13 +167,23 @@ def main():
         path = module.params['path']
         organization = get_organization_by_module(console, module)
 
+        # Get the policies.
+        policies = module.params['policies']
+        actual_policies = dict()
+        for policyName, policy in policies.items():
+            if isinstance(policy, str):
+                with open(policy, 'r') as file:
+                    actual_policies[policyName] = json.load(file)
+            elif isinstance(policy, dict):
+                actual_policies[policyName] = policy
+            else:
+                raise Exception(f'The policy {policyName} is invalid')
+
         # Read the config.
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
-        with open('test2.json', 'w') as file:
-            json.dump(config_json, file, indent=4)
 
-        # Check to see if the consortium member exists.
+        # Check to see if the ordering service administrator exists.
         orderer_groups = config_json['channel_group']['groups']['Orderer']['groups']
         msp = orderer_groups.get(organization.msp_id, None)
 
@@ -168,14 +191,14 @@ def main():
         state = module.params['state']
         if state == 'present' and msp is None:
 
-            # Add the consortium member.
-            msp = organization_to_msp(organization)
+            # Add the ordering service admin.
+            msp = organization_to_msp(organization, False, actual_policies)
             orderer_groups[organization.msp_id] = msp
 
         elif state == 'present' and msp is not None:
 
-            # Update the consortium member.
-            new_msp = organization_to_msp(organization)
+            # Update the ordering service admin.
+            new_msp = organization_to_msp(organization, False, actual_policies)
             updated_msp = copy_dict(msp)
             merge_dicts(updated_msp, new_msp)
             if equal_dicts(msp, updated_msp):
@@ -189,12 +212,10 @@ def main():
 
         elif state == 'absent' and msp is not None:
 
-            # Delete the consortium member.
+            # Delete the ordering service admin.
             del orderer_groups[organization.msp_id]
 
         # Save the config.
-        with open('test.json', 'w') as file:
-            json.dump(config_json, file, indent=4)
         config_proto = json_to_proto('common.Config', config_json)
         with open(path, 'wb') as file:
             file.write(config_proto)

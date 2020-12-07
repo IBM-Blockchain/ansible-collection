@@ -67,7 +67,115 @@ def convert_identity_to_msp_path(identity):
     return msp_path
 
 
-def organization_to_msp(organization, lifecycle_policy_required=False):
+def get_default_admins_policy(organization):
+    return dict(
+        type=1,
+        value=dict(
+            identities=list([
+                dict(
+                    principal=dict(
+                        msp_identifier=organization.msp_id,
+                        role='ADMIN'
+                    ),
+                    principal_classification='ROLE'
+                )
+            ]),
+            rule=dict(
+                n_out_of=dict(
+                    n=1,
+                    rules=list([
+                        dict(
+                            signed_by=0
+                        )
+                    ])
+                )
+            )
+        )
+    )
+
+
+def get_default_readers_policy(organization):
+    return dict(
+        type=1,
+        value=dict(
+            identities=list([
+                dict(
+                    principal=dict(
+                        msp_identifier=organization.msp_id,
+                        role='MEMBER'
+                    ),
+                    principal_classification='ROLE'
+                )
+            ]),
+            rule=dict(
+                n_out_of=dict(
+                    n=1,
+                    rules=list([
+                        dict(
+                            signed_by=0
+                        )
+                    ])
+                )
+            )
+        )
+    )
+
+
+def get_default_writers_policy(organization):
+    return dict(
+        type=1,
+        value=dict(
+            identities=list([
+                dict(
+                    principal=dict(
+                        msp_identifier=organization.msp_id,
+                        role='MEMBER'
+                    ),
+                    principal_classification='ROLE'
+                )
+            ]),
+            rule=dict(
+                n_out_of=dict(
+                    n=1,
+                    rules=list([
+                        dict(
+                            signed_by=0
+                        )
+                    ])
+                )
+            )
+        )
+    )
+
+
+def get_default_endorsement_policy(organization):
+    return dict(
+        type=1,
+        value=dict(
+            identities=list([
+                dict(
+                    principal=dict(
+                        msp_identifier=organization.msp_id,
+                        role='MEMBER'
+                    ),
+                    principal_classification='ROLE'
+                )
+            ]),
+            rule=dict(
+                n_out_of=dict(
+                    n=1,
+                    rules=list([
+                        dict(
+                            signed_by=0
+                        )
+                    ])
+                )
+            )
+        )
+    )
+
+
+def organization_to_msp(organization, endorsement_policy_required=False, policies=dict()):
 
     # Build the initial MSP.
     msp = dict(
@@ -76,84 +184,15 @@ def organization_to_msp(organization, lifecycle_policy_required=False):
         policies=dict(
             Admins=dict(
                 mod_policy='Admins',
-                policy=dict(
-                    type=1,
-                    value=dict(
-                        identities=list([
-                            dict(
-                                principal=dict(
-                                    msp_identifier=organization.msp_id,
-                                    role='ADMIN'
-                                ),
-                                principal_classification='ROLE'
-                            )
-                        ]),
-                        rule=dict(
-                            n_out_of=dict(
-                                n=1,
-                                rules=list([
-                                    dict(
-                                        signed_by=0
-                                    )
-                                ])
-                            )
-                        )
-                    )
-                )
+                policy=get_default_admins_policy(organization)
             ),
             Readers=dict(
                 mod_policy='Admins',
-                policy=dict(
-                    type=1,
-                    value=dict(
-                        identities=list([
-                            dict(
-                                principal=dict(
-                                    msp_identifier=organization.msp_id,
-                                    role='MEMBER'
-                                ),
-                                principal_classification='ROLE'
-                            )
-                        ]),
-                        rule=dict(
-                            n_out_of=dict(
-                                n=1,
-                                rules=list([
-                                    dict(
-                                        signed_by=0
-                                    )
-                                ])
-                            )
-                        )
-                    )
-                )
+                policy=get_default_readers_policy(organization)
             ),
             Writers=dict(
                 mod_policy='Admins',
-                policy=dict(
-                    type=1,
-                    value=dict(
-                        identities=list([
-                            dict(
-                                principal=dict(
-                                    msp_identifier=organization.msp_id,
-                                    role='MEMBER'
-                                ),
-                                principal_classification='ROLE'
-                            )
-                        ]),
-                        rule=dict(
-                            n_out_of=dict(
-                                n=1,
-                                rules=list([
-                                    dict(
-                                        signed_by=0
-                                    )
-                                ])
-                            )
-                        )
-                    )
-                )
+                policy=get_default_writers_policy(organization)
             )
         ),
         values=dict(
@@ -182,34 +221,18 @@ def organization_to_msp(organization, lifecycle_policy_required=False):
         )
     )
 
-    # Add the lifecycle policy if required.
-    if lifecycle_policy_required:
+    # Add the endorsement policy if required.
+    if endorsement_policy_required:
         msp['policies']['Endorsement'] = dict(
             mod_policy='Admins',
-            policy=dict(
-                type=1,
-                value=dict(
-                    identities=list([
-                        dict(
-                            principal=dict(
-                                msp_identifier=organization.msp_id,
-                                role='MEMBER'
-                            ),
-                            principal_classification='ROLE'
-                        )
-                    ]),
-                    rule=dict(
-                        n_out_of=dict(
-                            n=1,
-                            rules=list([
-                                dict(
-                                    signed_by=0
-                                )
-                            ])
-                        )
-                    )
-                )
-            )
+            policy=get_default_endorsement_policy(organization),
+        )
+
+    # Add the policies to the config update.
+    for policyName, policy in policies.items():
+        msp['policies'][policyName] = dict(
+            mod_policy='Admins',
+            policy=policy
         )
 
     # Return the MSP.
