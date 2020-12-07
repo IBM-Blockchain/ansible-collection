@@ -15,6 +15,7 @@ from ..module_utils.utils import get_console, get_organization_by_module, get_pe
 
 from ansible.module_utils._text import to_native
 
+import json
 import urllib
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -103,6 +104,18 @@ options:
               of the M(peer_info) or M(peer) modules.
         type: list
         elements: raw
+    policies:
+        description:
+            - The set of policies for the channel member. The keys are the policy
+              names, and the values are the policies.
+            - You can pass strings, which are paths to JSON files containing policies
+              in the Hyperledger Fabric format (common.Policy).
+            - You can also pass a dict, which must correspond to a parsed policy in the
+              Hyperledger Fabric format (common.Policy).
+            - Default policies are provided for the Admins, Writers, Readers, and Endorsement
+              policies. You only need to provide policies if you want to override these default
+              policies, or add additional policies.
+        type: dict
 notes: []
 requirements: []
 '''
@@ -160,7 +173,8 @@ def main():
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         path=dict(type='str', required=True),
         organization=dict(type='raw', required=True),
-        anchor_peers=dict(type='list', elements='raw', default=list())
+        anchor_peers=dict(type='list', elements='raw', default=list()),
+        policies=dict(type='dict', default=dict())
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -195,15 +209,27 @@ def main():
         else:
             anchor_peers_value = None
 
+        # Get the policies.
+        policies = module.params['policies']
+        actual_policies = dict()
+        for policyName, policy in policies.items():
+            if isinstance(policy, str):
+                with open(policy, 'r') as file:
+                    actual_policies[policyName] = json.load(file)
+            elif isinstance(policy, dict):
+                actual_policies[policyName] = policy
+            else:
+                raise Exception(f'The policy {policyName} is invalid')
+
         # Read the config.
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
 
         # Determine the capabilities for this channel.
         highest_capability = get_highest_capability(config_json['channel_group'])
-        lifecycle_policy_required = False
+        endorsement_policy_required = False
         if highest_capability is not None and highest_capability >= 'V2_0':
-            lifecycle_policy_required = True
+            endorsement_policy_required = True
 
         # Check to see if the channel member exists.
         application_groups = config_json['channel_group']['groups']['Application']['groups']
@@ -214,7 +240,7 @@ def main():
         if state == 'present' and msp is None:
 
             # Add the channel member.
-            msp = organization_to_msp(organization, lifecycle_policy_required)
+            msp = organization_to_msp(organization, endorsement_policy_required, actual_policies)
             if anchor_peers_value is not None:
                 msp['values']['AnchorPeers'] = anchor_peers_value
             application_groups[organization.msp_id] = msp
@@ -222,7 +248,7 @@ def main():
         elif state == 'present' and msp is not None:
 
             # Update the channel member.
-            new_msp = organization_to_msp(organization, lifecycle_policy_required)
+            new_msp = organization_to_msp(organization, endorsement_policy_required, actual_policies)
             if anchor_peers_value is not None:
                 new_msp['values']['AnchorPeers'] = anchor_peers_value
             updated_msp = copy_dict(msp)

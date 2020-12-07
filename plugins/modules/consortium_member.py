@@ -15,6 +15,8 @@ from ..module_utils.utils import get_console, get_organization_by_module
 
 from ansible.module_utils._text import to_native
 
+import json
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -92,6 +94,18 @@ options:
               M(organization_info) or M(organization[]) modules.
         type: raw
         required: true
+    policies:
+        description:
+            - The set of policies for the consortium member. The keys are the policy
+              names, and the values are the policies.
+            - You can pass strings, which are paths to JSON files containing policies
+              in the Hyperledger Fabric format (common.Policy).
+            - You can also pass a dict, which must correspond to a parsed policy in the
+              Hyperledger Fabric format (common.Policy).
+            - Default policies are provided for the Admins, Writers, Readers, and Endorsement
+              policies. You only need to provide policies if you want to override these default
+              policies, or add additional policies.
+        type: dict
 notes: []
 requirements: []
 '''
@@ -136,7 +150,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         path=dict(type='str', required=True),
-        organization=dict(type='raw', required=True)
+        organization=dict(type='raw', required=True),
+        policies=dict(type='dict', default=dict())
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -153,15 +168,27 @@ def main():
         path = module.params['path']
         organization = get_organization_by_module(console, module)
 
+        # Get the policies.
+        policies = module.params['policies']
+        actual_policies = dict()
+        for policyName, policy in policies.items():
+            if isinstance(policy, str):
+                with open(policy, 'r') as file:
+                    actual_policies[policyName] = json.load(file)
+            elif isinstance(policy, dict):
+                actual_policies[policyName] = policy
+            else:
+                raise Exception(f'The policy {policyName} is invalid')
+
         # Read the config.
         with open(path, 'rb') as file:
             config_json = proto_to_json('common.Config', file.read())
 
         # Determine the capabilities for this channel.
         highest_capability = get_highest_capability(config_json['channel_group'])
-        lifecycle_policy_required = False
+        endorsement_policy_required = False
         if highest_capability is not None and highest_capability >= 'V2_0':
-            lifecycle_policy_required = True
+            endorsement_policy_required = True
 
         # Check to see if the consortium member exists.
         consortium_groups = config_json['channel_group']['groups']['Consortiums']['groups']['SampleConsortium']['groups']
@@ -172,13 +199,13 @@ def main():
         if state == 'present' and msp is None:
 
             # Add the consortium member.
-            msp = organization_to_msp(organization, lifecycle_policy_required)
+            msp = organization_to_msp(organization, endorsement_policy_required, actual_policies)
             consortium_groups[organization.msp_id] = msp
 
         elif state == 'present' and msp is not None:
 
             # Update the consortium member.
-            new_msp = organization_to_msp(organization, lifecycle_policy_required)
+            new_msp = organization_to_msp(organization, endorsement_policy_required, actual_policies)
             updated_msp = copy_dict(msp)
             merge_dicts(updated_msp, new_msp)
             if equal_dicts(msp, updated_msp):
