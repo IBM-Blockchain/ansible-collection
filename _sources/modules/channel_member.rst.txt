@@ -102,6 +102,17 @@ Parameters
     | **Type**: list
     | **Elements**: raw
 
+  policies
+    The set of policies for the channel member. The keys are the policy names, and the values are the policies.
+
+    You can pass strings, which are paths to JSON files containing policies in the Hyperledger Fabric format (common.Policy).
+
+    You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).
+
+    Default policies are provided for the Admins, Writers, Readers, and Endorsement policies. You only need to provide policies if you want to override these default policies, or add additional policies.
+
+    | **Type**: dict
+
 
 
 

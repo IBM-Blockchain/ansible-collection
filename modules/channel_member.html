@@ -303,6 +303,14 @@
 <div class="line"><strong>Elements</strong>: raw</div>
 </div>
 </dd>
+<dt>policies</dt><dd><p>The set of policies for the channel member. The keys are the policy names, and the values are the policies.</p>
+<p>You can pass strings, which are paths to JSON files containing policies in the Hyperledger Fabric format (common.Policy).</p>
+<p>You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).</p>
+<p>Default policies are provided for the Admins, Writers, Readers, and Endorsement policies. You only need to provide policies if you want to override these default policies, or add additional policies.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+</dd>
 </dl>
 </div></blockquote>
 </div>
