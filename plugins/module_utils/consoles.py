@@ -217,6 +217,26 @@ class Console:
                 return self.handle_error('Failed to create certificate authority', e)
 
     def update_ca(self, id, data):
+
+        # If a version upgrade is specified, handle that first.
+        result = None
+        if 'version' in data:
+            version_data = dict(
+                version=data['version']
+            )
+            result = self._update_ca(id, version_data)
+            time.sleep(60)
+
+        # Extract any other parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override', 'replicas']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        if not stripped_data:
+            return result
+        return self._update_ca(id, stripped_data)
+
+    def _update_ca(self, id, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-ca/{id}')
         headers = {
@@ -224,12 +244,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        # Extract only the parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override', 'replicas', 'version']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        serialized_data = json.dumps(stripped_data)
+        serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -302,6 +317,26 @@ class Console:
                 return self.handle_error('Failed to create peer', e)
 
     def update_peer(self, id, data):
+
+        # If a version upgrade is specified, handle that first.
+        result = None
+        if 'version' in data:
+            version_data = dict(
+                version=data['version']
+            )
+            result = self._update_peer(id, version_data)
+            time.sleep(60)
+
+        # Extract any other parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        if not stripped_data:
+            return result
+        return self._update_peer(id, stripped_data)
+
+    def _update_peer(self, id, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-peer/{id}')
         headers = {
@@ -309,12 +344,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        # Extract only the parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override', 'version']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        serialized_data = json.dumps(stripped_data)
+        serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -472,6 +502,26 @@ class Console:
                 return self.handle_error('Failed to edit ordering service node', e)
 
     def update_ordering_service_node(self, id, data):
+
+        # If a version upgrade is specified, handle that first.
+        result = None
+        if 'version' in data:
+            version_data = dict(
+                version=data['version']
+            )
+            result = self._update_ordering_service_node(id, version_data)
+            time.sleep(60)
+
+        # Extract any other parameters we're allowed to update.
+        stripped_data = dict()
+        for permitted_change in ['resources', 'zone', 'config_override']:
+            if permitted_change in data:
+                stripped_data[permitted_change] = data[permitted_change]
+        if not stripped_data:
+            return result
+        return self._update_ordering_service_node(id, stripped_data)
+
+    def _update_ordering_service_node(self, id, data):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./kubernetes/components/fabric-orderer/{id}')
         headers = {
@@ -479,12 +529,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        # Extract only the parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override', 'version']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        serialized_data = json.dumps(stripped_data)
+        serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
