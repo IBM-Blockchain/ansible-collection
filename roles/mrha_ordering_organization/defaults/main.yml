@@ -1,0 +1,37 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+# regions:
+#   api_endpoint:
+#   api_authtype:
+#   api_key:
+#   api_secret:
+#   api_token_endpoint:
+#   zones:
+# organization_name:
+# ca_admin_enrollment_id
+# ca_admin_enrollment_secret
+# organization_admin_enrollment_id:
+# organization_admin_enrollment_secret:
+# ordering_service_enrollment_id:
+# ordering_service_enrollment_secret:
+ca_name: "{{ organization_name }} CA"
+ca_db_type: postgres
+# ca_db_datasource:
+ca_db_tls_enabled: true
+# ca_db_tls_certfiles:
+ca_replicas: 3
+# ca_resources:
+# ca_storage:
+# ca_version:
+ordering_service_name: Ordering Service
+ordering_service_nodes: 5
+# ordering_service_resources:
+# ordering_service_storage:
+# ordering_service_version:
+# ordering_service_zones:
+wallet: "{{ playbook_dir }}"
+ca_admin_identity: "{{ wallet }}/{{ ca_name }} Admin.json"
+organization_admin_identity: "{{ wallet }}/{{ organization_name }} Admin.json"

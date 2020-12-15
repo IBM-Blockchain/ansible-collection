@@ -1,0 +1,108 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create ordering service node
+  ibm.blockchain_platform.ordering_service_node:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ ordering_service_name }}_{{ node_index + 1 }}"
+    ordering_service: "{{ ordering_service_name }}"
+    msp_id: "{{ organization_msp_id }}"
+    certificate_authority: "{{ ca_name }}"
+    enrollment_id: "{{ ordering_service_enrollment_id }}"
+    enrollment_secret: "{{ ordering_service_enrollment_secret }}"
+    admin_certificates:
+      - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+    resources: "{{ ordering_service_resources | default(omit) }}"
+    storage: "{{ ordering_service_storage | default(omit) }}"
+    version: "{{ ordering_service_version | default(omit) }}"
+    wait_timeout: "{{ wait_timeout | default(omit) }}"
+    zone: "{{ ordering_service_zones_in_region[node_index] | default(omit) }}"
+  register: ordering_service_node_result
+
+- name: Import ordering service node into all other regions
+  ibm.blockchain_platform.external_ordering_service_node:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    ordering_service_node: "{{ ordering_service_node_result.ordering_service_node }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
+
+- name: Fetch the system channel configuration
+  ibm.blockchain_platform.channel_config:
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    ordering_service: "{{ ordering_service_name }}"
+    identity: "{{ ordering_org_name }} Admin.json"
+    msp_id: "{{ ordering_service_msp }}"
+    operation: fetch
+    name: "{{ ordering_service_node_result.ordering_service_node.system_channel_id }}"
+    path: original_config.bin
+  changed_when: False
+
+- name: Create a copy of the system channel configuration
+  copy:
+    src: original_config.bin
+    dest: updated_config.bin
+  changed_when: False
+
+- name: Update the consenters for the system channel
+  ibm.blockchain_platform.channel_consenter:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    path: updated_config.bin
+    ordering_service_node: "{{ ordering_service_name }}_{{ node_index + 1 }}"
+
+- name: Compute the system channel configuration update
+  ibm.blockchain_platform.channel_config:
+    operation: compute_update
+    name: "{{ ordering_service_node_result.ordering_service_node.system_channel_id }}"
+    original: original_config.bin
+    updated: updated_config.bin
+    path: config_update.bin
+  register: compute_update
+  changed_when: False
+
+- name: Sign the system channel configuration update
+  ibm.blockchain_platform.channel_config:
+    operation: sign_update
+    identity: "{{ ordering_org_name }} Admin.json"
+    msp_id: "{{ ordering_service_msp }}"
+    name: "{{ ordering_service_node_result.ordering_service_node.system_channel_id }}"
+    path: config_update.bin
+  when: compute_update.path
+
+- name: Apply the system channel configuration update
+  ibm.blockchain_platform.channel_config:
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    operation: apply_update
+    ordering_service: "{{ ordering_service_name }}"
+    identity: "{{ ordering_org_name }} Admin.json"
+    msp_id: "{{ ordering_service_msp }}"
+    name: "{{ ordering_service_node_result.ordering_service_node.system_channel_id }}"
+    path: config_update.bin
+  when: compute_update.path

@@ -283,6 +283,42 @@ class Console:
             'location': ca['location']
         }
 
+    def create_ext_ca(self, data):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, './components/fabric-ca')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to create external certificate authority', e)
+
+    def update_ext_ca(self, id, data):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/fabric-ca/{id}')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to update external certificate authority', e)
+
     def delete_ext_ca(self, id):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
@@ -590,7 +626,7 @@ class Console:
             except Exception as e:
                 if self.should_retry_error(e, attempt):
                     continue
-                return self.handle_error('Failed to create ordering service node', e)
+                return self.handle_error('Failed to create external ordering service node', e)
 
     def update_ext_ordering_service_node(self, id, data):
         self._ensure_loggedin()
@@ -608,7 +644,7 @@ class Console:
             except Exception as e:
                 if self.should_retry_error(e, attempt):
                     continue
-                return self.handle_error('Failed to update ordering service node', e)
+                return self.handle_error('Failed to update external ordering service node', e)
 
     def delete_ext_ordering_service_node(self, id):
         self._ensure_loggedin()

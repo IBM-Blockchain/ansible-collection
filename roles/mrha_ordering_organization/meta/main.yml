@@ -5,7 +5,7 @@
 galaxy_info:
   author: Simon Stone
   description: >-
-    Ansible role for building Hyperledger Fabric components for a multi-zone, highly available ordering organization using the IBM Blockchain Platform
+    Ansible role for building Hyperledger Fabric components for a multi-region, highly available ordering organization using the IBM Blockchain Platform
   license: Apache-2.0
   platforms:
     - name: GenericLinux

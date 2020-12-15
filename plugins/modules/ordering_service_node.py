@@ -608,6 +608,7 @@ def main():
         # Get the ordering service that this ordering service node should belong to.
         ordering_service = get_ordering_service_by_module(console, module)
         cluster_id = ordering_service.nodes[0].cluster_id
+        cluster_name = ordering_service.nodes[0].cluster_name
 
         # HACK: strip out the storage class if it is not specified. Can't pass null as the API barfs.
         storage = module.params['storage']
@@ -622,6 +623,7 @@ def main():
         expected_ordering_service_node = dict(
             display_name=name,
             cluster_id=cluster_id,
+            cluster_name=cluster_name,
             msp_id=module.params['msp_id'],
             orderer_type=module.params['orderer_type'],
             system_channel_id=module.params['system_channel_id'],
