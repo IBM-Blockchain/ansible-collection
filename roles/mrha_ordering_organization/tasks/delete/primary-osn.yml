@@ -1,0 +1,29 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Delete ordering service node
+  ibm.blockchain_platform.ordering_service_node:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ ordering_service_name }}_{{ node_index + 1 }}"
+
+- name: Remove ordering service node from all other regions
+  ibm.blockchain_platform.external_ordering_service_node:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    name: "{{ ordering_service_name }}_{{ node_index + 1 }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
