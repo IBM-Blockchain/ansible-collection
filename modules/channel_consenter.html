@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>channel_consenters – Manage the consenters for a Hyperledger Fabric channel &mdash; Ansible Collection  documentation</title>
+  <title>channel_consenter – Manage a consenter for a Hyperledger Fabric channel &mdash; Ansible Collection  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="channel_member – Manage a member for a Hyperledger Fabric channel" href="channel_member.html" />
-    <link rel="prev" title="channel_consenter – Manage a consenter for a Hyperledger Fabric channel" href="channel_consenter.html" /> 
+    <link rel="next" title="channel_consenters – Manage the consenters for a Hyperledger Fabric channel" href="channel_consenters.html" />
+    <link rel="prev" title="channel_config – Manage the configuration for a Hyperledger Fabric channel" href="channel_config.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -112,13 +112,13 @@
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_config.html">channel_config – Manage the configuration for a Hyperledger Fabric channel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="channel_consenter.html">channel_consenter – Manage a consenter for a Hyperledger Fabric channel</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">channel_consenters – Manage the consenters for a Hyperledger Fabric channel</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">channel_consenter – Manage a consenter for a Hyperledger Fabric channel</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="channel_consenters.html">channel_consenters – Manage the consenters for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_member.html">channel_member – Manage a member for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_member_info.html">channel_member_info – Get information about a member for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_parameters.html">channel_parameters – Manage the parameters for a Hyperledger Fabric channel</a></li>
@@ -202,7 +202,7 @@
         
           <li><a href="../modules.html">Modules</a> &raquo;</li>
         
-      <li>channel_consenters – Manage the consenters for a Hyperledger Fabric channel</li>
+      <li>channel_consenter – Manage a consenter for a Hyperledger Fabric channel</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -210,7 +210,7 @@
             
             
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_consenters.py" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_consenter.py" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -224,8 +224,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="channel-consenters-manage-the-consenters-for-a-hyperledger-fabric-channel">
-<h1>channel_consenters – Manage the consenters for a Hyperledger Fabric channel<a class="headerlink" href="#channel-consenters-manage-the-consenters-for-a-hyperledger-fabric-channel" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="channel-consenter-manage-a-consenter-for-a-hyperledger-fabric-channel">
+<h1>channel_consenter – Manage a consenter for a Hyperledger Fabric channel<a class="headerlink" href="#channel-consenter-manage-a-consenter-for-a-hyperledger-fabric-channel" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -235,7 +235,7 @@
 </div>
 <div class="section" id="synopsis">
 <h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
-<p>Specify the consenters for a Hyperledger Fabric channel by using the IBM Blockchain Platform.</p>
+<p>Specify a consenter for a Hyperledger Fabric channel by using the IBM Blockchain Platform.</p>
 <p>This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 </div>
 <div class="section" id="parameters">
@@ -277,6 +277,13 @@
 <div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">https://iam.cloud.ibm.com/identity/token</span></code></div>
 </div>
 </dd>
+<dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - A consenter matching the specified name will be removed from the channel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">present</span></code> - Asserts that an consenter matching the specified name and configuration exists in the channel. If no consenter matches the specified name, the consenter will be added to the channel. If an consenter matches the specified name but the configuration does not match, then the consenter in the channel will be updated.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">present</span></code></div>
+</div>
+</dd>
 <dt>path (required)</dt><dd><p>Path to current the channel configuration file.</p>
 <p>This file can be fetched by using the <span class="xref std std-ref">channel_config</span> module.</p>
 <p>This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.</p>
@@ -284,21 +291,11 @@
 <div class="line"><strong>Type</strong>: str</div>
 </div>
 </dd>
-<dt>ordering_service</dt><dd><p>The ordering service to use as the consenters for this channel. All ordering service nodes in this ordering service will be used as the consenters for this channel.</p>
-<p>You can pass a string, which is the cluster name of a ordering service registered with the IBM Blockchain Platform console.</p>
-<p>You can also pass a list, which must match the result format of one of the <span class="xref std std-ref">ordering_service_info</span> or <span class="xref std std-ref">ordering_service</span> modules.</p>
-<p>Cannot be specified with <em>ordering_service_nodes</em>.</p>
+<dt>ordering_service_node</dt><dd><p>The ordering service node to use as a consenter for this channel.</p>
+<p>You can pass a string, which is the name of an ordering service node that is registered with the IBM Blockchain Platform console.</p>
+<p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">ordering_service_node_info</span> or <span class="xref std std-ref">ordering_service_node</span> modules.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: raw</div>
-</div>
-</dd>
-<dt>ordering_service_nodes</dt><dd><p>The ordering service nodes to use as the consenters for this channel.</p>
-<p>You can pass strings, which are the names of ordering service nodes that are registered with the IBM Blockchain Platform console.</p>
-<p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">ordering_service_node_info</span> or <span class="xref std std-ref">ordering_service_node</span> modules.</p>
-<p>Cannot be specified with <em>ordering_service</em>.</p>
-<div class="line-block">
-<div class="line"><strong>Type</strong>: list</div>
-<div class="line"><strong>Elements</strong>: raw</div>
 </div>
 </dd>
 </dl>
@@ -306,26 +303,25 @@
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set channel consenters from ordering service</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Add consenter to channel</span>
   <span class="nt">ibm.blockchain_platform.channel_consenters</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
     <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
     <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
     <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
     <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
-    <span class="nt">ordering_service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
+    <span class="nt">ordering_service_node</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service_1</span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set channel consenters from ordering service nodes</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Remove consenter from channel</span>
   <span class="nt">ibm.blockchain_platform.channel_consenters</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
     <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
     <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
     <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
     <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
-    <span class="nt">ordering_service_nodes</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service_1</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service_2</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service_5</span>
+    <span class="nt">ordering_service_node</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service_1</span>
 </pre></div>
 </div>
 </div>
@@ -339,10 +335,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="channel_member.html" class="btn btn-neutral float-right" title="channel_member – Manage a member for a Hyperledger Fabric channel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="channel_consenters.html" class="btn btn-neutral float-right" title="channel_consenters – Manage the consenters for a Hyperledger Fabric channel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="channel_consenter.html" class="btn btn-neutral float-left" title="channel_consenter – Manage a consenter for a Hyperledger Fabric channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="channel_config.html" class="btn btn-neutral float-left" title="channel_config – Manage the configuration for a Hyperledger Fabric channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,0 +1,299 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/external_ordering_service_node.py
+
+
+external_ordering_service_node -- Manage an external Hyperledger Fabric ordering service node
+=============================================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Import or remove an external Hyperledger Fabric ordering service node by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  api_endpoint (required)
+    The URL for the IBM Blockchain Platform console.
+
+    | **Type**: str
+
+  api_authtype (required)
+    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+
+    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+
+    | **Type**: str
+
+  api_key (required)
+    The API key for the IBM Blockchain Platform console.
+
+    | **Type**: str
+
+  api_secret
+    The API secret for the IBM Blockchain Platform console.
+
+    Only required when *api_authtype* is ``basic``.
+
+    | **Type**: str
+
+  api_timeout
+    The timeout, in seconds, to use when interacting with the IBM Blockchain Platform console.
+
+    | **Type**: int
+    | **Default value**: ``60``
+
+  api_token_endpoint
+    The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
+
+    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+
+    | **Type**: str
+    | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
+
+  state
+    ``absent`` - An ordering service matching the specified name will be stopped and removed.
+
+    ``present`` - Asserts that an ordering service matching the specified name and configuration exists. If no ordering service matches the specified name, an ordering service will be created. If an ordering service matches the specified name but the configuration does not match, then the ordering service will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+
+    | **Type**: str
+    | **Default value**: ``present``
+
+  name
+    The name of the external ordering service node.
+
+    Only required when *state* is ``absent``.
+
+    | **Type**: str
+
+  ordering_service_node
+    The definition of the external ordering service node.
+
+    Only required when *state* is ``present``.
+
+    | **Type**: dict
+
+    name
+      The name of the ordering service node.
+
+      | **Type**: str
+
+    api_url
+      The URL for the API of the ordering service node.
+
+      | **Type**: str
+
+    operations_url
+      The URL for the operations service of the ordering service node.
+
+      | **Type**: str
+
+    grpcwp_url
+      The URL for the gRPC web proxy of the ordering service node.
+
+      | **Type**: str
+
+    msp_id
+      The MSP ID of the ordering service node.
+
+      | **Type**: str
+
+    pem
+      The TLS certificate chain for the ordering service node.
+
+      | **Type**: str
+
+    tls_ca_root_cert
+      The TLS certificate chain for the ordering service node.
+
+      | **Type**: str
+
+    tls_cert
+      The TLS certificate for the ordering service node.
+
+      | **Type**: str
+
+    location
+      The location of the ordering service node.
+
+      | **Type**: str
+
+    system_channel_id
+      The name of the system channel for the ordering service node.
+
+      | **Type**: str
+
+    client_tls_cert
+      The client TLS certificate for the ordering service node.
+
+      | **Type**: str
+
+    server_tls_cert
+      The client TLS certificate for the ordering service node.
+
+      | **Type**: str
+
+    cluster_id
+      The unique ID of the ordering service cluster.
+
+      | **Type**: str
+
+    cluster_name
+      The name of the ordering service cluster.
+
+      | **Type**: str
+
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Import the ordering service node
+      ibm.blockchain_platform.external_ordering_service_node:
+        state: present
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        ordering_service_node: "{{ lookup('file', 'Ordering Service Node.json') }}"
+
+    - name: Remove the imported ordering service node
+      ibm.blockchain_platform.external_ordering_service_node:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        name: Ordering Service Node
+
+
+
+Return Values
+-------------
+
+  ordering_service_node
+    The ordering service node.
+
+    | **Returned**: when *state* is ``present``
+    | **Type**: dict
+
+    name
+      The name of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``Ordering Service_1``
+
+    api_url
+      The URL for the API of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``grpcs://orderingservice1-api.example.org:32000``
+
+    operations_url
+      The URL for the operations service of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``https://orderingservice1-operations.example.org:32000``
+
+    grpcwp_url
+      The URL for the gRPC web proxy of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``https://orderingservice1-grpcwebproxy.example.org:32000``
+
+    msp_id
+      The MSP ID of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``OrdererOrgMSP``
+
+    pem
+      The TLS certificate chain for the ordering service node.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    tls_ca_root_cert
+      The TLS certificate chain for the ordering service node.
+
+      The TLS certificate chain is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    tls_cert
+      The TLS certificate for the ordering service node.
+
+      The TLS certificate is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    location
+      The location of the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``ibmcloud``
+
+    system_channel_id
+      The name of the system channel for the ordering service node.
+
+      | **Type**: str
+      | **Sample**: ``testchainid``
+
+    client_tls_cert
+      The client TLS certificate for the ordering service node.
+
+      The client TLS certificate is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    server_tls_cert
+      The server TLS certificate for the ordering service node.
+
+      The server TLS certificate is returned as a base64 encoded PEM.
+
+      | **Type**: str
+      | **Sample**: ``LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...``
+
+    cluster_id
+      The unique ID of the ordering service cluster.
+
+      | **Type**: str
+      | **Sample**: ``abcdefgh``
+
+    cluster_name
+      The name of the ordering service cluster.
+
+      | **Type**: str
+      | **Sample**: ``Ordering Service``
+
+
+

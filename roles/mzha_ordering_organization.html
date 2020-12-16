@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ordering_organization – Build Hyperledger Fabric components for an ordering organization &mdash; Ansible Collection  documentation</title>
+  <title>mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization &mdash; Ansible Collection  documentation</title>
   
 
   
@@ -38,7 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization" href="mzha_ordering_organization.html" /> 
+    <link rel="next" title="ordering_organization – Build Hyperledger Fabric components for an ordering organization" href="ordering_organization.html" />
+    <link rel="prev" title="mrha_ordering_organization – Build Hyperledger Fabric components for a multi-region, highly available ordering organization" href="mrha_ordering_organization.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -110,13 +111,13 @@
 <li class="toctree-l3"><a class="reference internal" href="crds.html">crds – Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mrha_ordering_organization.html">mrha_ordering_organization – Build Hyperledger Fabric components for a multi-region, highly available ordering organization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mzha_ordering_organization.html">mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">ordering_organization – Build Hyperledger Fabric components for an ordering organization</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ordering_organization.html">ordering_organization – Build Hyperledger Fabric components for an ordering organization</a></li>
 </ul>
 </li>
 </ul>
@@ -171,7 +172,7 @@
         
           <li><a href="../roles.html">Roles</a> &raquo;</li>
         
-      <li>ordering_organization – Build Hyperledger Fabric components for an ordering organization</li>
+      <li>mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -179,7 +180,7 @@
             
             
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/ordering_organization.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/mzha_ordering_organization.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -193,8 +194,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ordering-organization-build-hyperledger-fabric-components-for-an-ordering-organization">
-<h1>ordering_organization – Build Hyperledger Fabric components for an ordering organization<a class="headerlink" href="#ordering-organization-build-hyperledger-fabric-components-for-an-ordering-organization" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mzha-ordering-organization-build-hyperledger-fabric-components-for-a-multi-zone-highly-available-ordering-organization">
+<h1>mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization<a class="headerlink" href="#mzha-ordering-organization-build-hyperledger-fabric-components-for-a-multi-zone-highly-available-ordering-organization" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id3">Synopsis</a></p></li>
@@ -204,8 +205,13 @@
 </div>
 <div class="section" id="synopsis">
 <h2><a class="toc-backref" href="#id3">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
-<p>This role allows you to quickly build Hyperledger Fabric components for an ordering organization. An ordering organization has a certificate authority and an ordering service.</p>
-<p>This role works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
+<p>This role allows you to quickly build Hyperledger Fabric components for a multi-zone, highly available ordering organization. A multi-zone, highly available ordering organization
+has a certificate authority with multiple replicas and an ordering service with the ordering service nodes distributed across multiple zones.</p>
+<p>This role works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+The Red Hat OpenShift or Kubernetes cluster must have been configured with multiple zones.</p>
+<p>For example, if you create a Red Hat OpenShift cluster on IBM Cloud, choose a <em>Geography</em>
+such as <code class="docutils literal notranslate"><span class="pre">North</span> <span class="pre">America</span></code>, <em>Availability</em> of <code class="docutils literal notranslate"><span class="pre">Multizone</span></code>, <em>Metro</em> of <code class="docutils literal notranslate"><span class="pre">Dallas</span></code>, and three <em>Worker zones</em> such as <code class="docutils literal notranslate"><span class="pre">Dallas</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">Dallas</span> <span class="pre">12</span></code>, and <code class="docutils literal notranslate"><span class="pre">Dallas</span> <span class="pre">13</span></code>.</p>
+<p>Consult the IBM Blockchain Platform documentation for more information on high availability configurations: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-ha">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-ha</a></p>
 </div>
 <div class="section" id="parameters">
 <h2><a class="toc-backref" href="#id4">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
@@ -246,6 +252,12 @@
 <div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">https://iam.cloud.ibm.com/identity/token</span></code></div>
 </div>
 </dd>
+<dt>zones (required)</dt><dd><p>The list of zones, for example <code class="docutils literal notranslate"><span class="pre">dal10</span></code>, <code class="docutils literal notranslate"><span class="pre">dal12</span></code>, and <code class="docutils literal notranslate"><span class="pre">dal13</span></code>, that the Red Hat OpenShift or Kubernetes cluster has been configured with. The ordering service nodes created by this role will be distributed across these zones.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
+</div>
+</dd>
 <dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - All components for the ordering organization will be stopped and removed, if they exist.</p>
 <p><code class="docutils literal notranslate"><span class="pre">present</span></code> - All components for the ordering organization will be created if they do not exist, or will be updated if their current configuration does not match the expected configuration.</p>
 <div class="line-block">
@@ -277,6 +289,38 @@
 <p>By default, the certificate authority name is <em>organization_name</em> followed by <cite>CA</cite>, for example <code class="docutils literal notranslate"><span class="pre">Org1</span> <span class="pre">CA</span></code>.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>ca_db_type</dt><dd><p><code class="docutils literal notranslate"><span class="pre">postgres</span></code> - Use PostgreSQL for the certificate authority database. You must create the PostgreSQL instance that will be used by the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">postgres</span></code></div>
+</div>
+</dd>
+<dt>ca_db_datasource (required)</dt><dd><p>The datasource string for the certificate authority database connection.</p>
+<p>An example datasource string for PostgreSQL is: <code class="docutils literal notranslate"><span class="pre">host=postgresql.example.org</span> <span class="pre">port=5432</span> <span class="pre">user=myuser</span> <span class="pre">password=mypassword</span> <span class="pre">dbname=mydb</span> <span class="pre">sslmode=verify-full</span></code></p>
+<p>For more information, review the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html#configuring-the-database">https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html#configuring-the-database</a></p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>ca_db_tls_enabled</dt><dd><p>True if the certificate authority database uses TLS to secure network communications, false otherwise.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: bool</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">true</span></code></div>
+</div>
+</dd>
+<dt>ca_db_tls_certfiles</dt><dd><p>The list of TLS CA certificates required to verify the connection to the certificate authority database.</p>
+<p>TLS CA certificates must be supplied as base64 encoded PEM files.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
+</div>
+</dd>
+<dt>ca_replicas</dt><dd><p>The number of Kubernetes replicas to use for the certificate authority.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code></div>
 </div>
 </dd>
 <dt>ca_resources</dt><dd><p>The Kubernetes resource configuration for the certificate authority.</p>
@@ -326,10 +370,9 @@
 </div>
 </dd>
 <dt>ordering_service_nodes</dt><dd><p>The number of ordering service nodes in the ordering service.</p>
-<p>For development and test networks, use one ordering service node. Five ordering service nodes provides Raft crash fault tolerance, and is suitable for production networks.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: int</div>
-<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code></div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code></div>
 </div>
 </dd>
 <dt>ordering_service_resources</dt><dd><p>The Kubernetes resource configuration for the ordering service.</p>
@@ -350,6 +393,13 @@
 <p>If you specify a new version, an existing ordering service will be automatically upgraded.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: str</div>
+</div>
+</dd>
+<dt>ordering_service_zones</dt><dd><p>The zones to use for each ordering service node. You must specify a zone for each ordering service node specified by <em>ordering_service_nodes</em>.</p>
+<p>Only use this parameter if you wish to override the default zone allocation algorithm provided by the <em>zones</em> parameter.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: list</div>
+<div class="line"><strong>Elements</strong>: str</div>
 </div>
 </dd>
 <dt>wallet</dt><dd><p>The wallet directory to store identity files in.</p>
@@ -375,26 +425,33 @@
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create components for an ordering organization</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create components for a multi-zone, highly available ordering organization</span>
   <span class="nt">vars</span><span class="p">:</span>
     <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
     <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
     <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
     <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+    <span class="nt">zones</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dal10</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dal12</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dal13</span>
     <span class="nt">organization_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Org</span>
     <span class="nt">organization_msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OrdererMSP</span>
     <span class="nt">ca_admin_enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
     <span class="nt">ca_admin_enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adminpw</span>
+    <span class="nt">ca_db_datasource</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host=postgresql.example.org port=5432 user=myuser password=mypassword dbname=mydb sslmode=verify-full</span>
+    <span class="nt">ca_db_tls_certfiles</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span>
     <span class="nt">organization_admin_enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgadmin</span>
     <span class="nt">organization_admin_enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgadminpw</span>
     <span class="nt">ordering_service_enrollment_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgorderer</span>
     <span class="nt">ordering_service_enrollment_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orderingorgordererpw</span>
     <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
   <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.ordering_organization</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mzha_ordering_organization</span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Destroy components for an ordering organization</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Destroy components for a multi-zone, highly available ordering organization</span>
   <span class="nt">vars</span><span class="p">:</span>
     <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
     <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
@@ -404,7 +461,7 @@
     <span class="nt">organization_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Org</span>
     <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
   <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.ordering_organization</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mzha_ordering_organization</span>
 </pre></div>
 </div>
 </div>
@@ -418,8 +475,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="ordering_organization.html" class="btn btn-neutral float-right" title="ordering_organization – Build Hyperledger Fabric components for an ordering organization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="mzha_ordering_organization.html" class="btn btn-neutral float-left" title="mzha_ordering_organization – Build Hyperledger Fabric components for a multi-zone, highly available ordering organization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="mrha_ordering_organization.html" class="btn btn-neutral float-left" title="mrha_ordering_organization – Build Hyperledger Fabric components for a multi-region, highly available ordering organization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

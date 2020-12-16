@@ -2,11 +2,11 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_consenters.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_consenter.py
 
 
-channel_consenters -- Manage the consenters for a Hyperledger Fabric channel
-============================================================================
+channel_consenter -- Manage a consenter for a Hyperledger Fabric channel
+========================================================================
 
 .. contents::
    :local:
@@ -16,7 +16,7 @@ channel_consenters -- Manage the consenters for a Hyperledger Fabric channel
 Synopsis
 --------
 
-Specify the consenters for a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+Specify a consenter for a Hyperledger Fabric channel by using the IBM Blockchain Platform.
 
 This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
 
@@ -66,6 +66,14 @@ Parameters
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
+  state
+    ``absent`` - A consenter matching the specified name will be removed from the channel.
+
+    ``present`` - Asserts that an consenter matching the specified name and configuration exists in the channel. If no consenter matches the specified name, the consenter will be added to the channel. If an consenter matches the specified name but the configuration does not match, then the consenter in the channel will be updated.
+
+    | **Type**: str
+    | **Default value**: ``present``
+
   path (required)
     Path to current the channel configuration file.
 
@@ -75,28 +83,14 @@ Parameters
 
     | **Type**: str
 
-  ordering_service
-    The ordering service to use as the consenters for this channel. All ordering service nodes in this ordering service will be used as the consenters for this channel.
+  ordering_service_node
+    The ordering service node to use as a consenter for this channel.
 
-    You can pass a string, which is the cluster name of a ordering service registered with the IBM Blockchain Platform console.
-
-    You can also pass a list, which must match the result format of one of the :ref:`ordering_service_info <ordering_service_info_module>` or :ref:`ordering_service <ordering_service_module>` modules.
-
-    Cannot be specified with *ordering_service_nodes*.
-
-    | **Type**: raw
-
-  ordering_service_nodes
-    The ordering service nodes to use as the consenters for this channel.
-
-    You can pass strings, which are the names of ordering service nodes that are registered with the IBM Blockchain Platform console.
+    You can pass a string, which is the name of an ordering service node that is registered with the IBM Blockchain Platform console.
 
     You can also pass a dict, which must match the result format of one of the :ref:`ordering_service_node_info <ordering_service_node_info_module>` or :ref:`ordering_service_node <ordering_service_node_module>` modules.
 
-    Cannot be specified with *ordering_service*.
-
-    | **Type**: list
-    | **Elements**: raw
+    | **Type**: raw
 
 
 
@@ -111,26 +105,25 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Set channel consenters from ordering service
+    - name: Add consenter to channel
       ibm.blockchain_platform.channel_consenters:
+        state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         path: channel_config.bin
-        ordering_service: Ordering Service
+        ordering_service_node: Ordering Service_1
 
-    - name: Set channel consenters from ordering service nodes
+    - name: Remove consenter from channel
       ibm.blockchain_platform.channel_consenters:
+        state: absent
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         path: channel_config.bin
-        ordering_service_nodes:
-          - Ordering Service_1
-          - Ordering Service_2
-          - Ordering Service_5
+        ordering_service_node: Ordering Service_1
 
 
 
