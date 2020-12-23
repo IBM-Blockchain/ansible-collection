@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.dict_utils import equal_dicts, merge_dicts, copy_dict
+from ..module_utils.dict_utils import equal_dicts, copy_dict
 from ..module_utils.module import BlockchainModule
 from ..module_utils.proto_utils import proto_to_json, json_to_proto
 
@@ -136,9 +136,18 @@ def main():
 
         elif state == 'present' and policy_wrapper is not None:
 
+            # Delete the unused version if specified.
+            old_policy = policy_wrapper.get('policy', dict())
+            if old_policy.get('type', 0) == 1:
+                if 'version' in old_policy.get('value', dict()):
+                    del old_policy['value']['version']
+            if policy.get('type', 0) == 1:
+                if 'version' in policy.get('value', dict()):
+                    del policy['value']['version']
+
             # Update the channel policy.
             updated_policy_wrapper = copy_dict(policy_wrapper)
-            merge_dicts(updated_policy_wrapper['policy'], policy)
+            updated_policy_wrapper['policy'] = policy
             if equal_dicts(policy_wrapper, updated_policy_wrapper):
                 return module.exit_json(changed=False)
             application_policies[name] = updated_policy_wrapper
