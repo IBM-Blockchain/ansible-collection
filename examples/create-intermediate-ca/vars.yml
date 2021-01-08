@@ -1,0 +1,20 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://ibp-console.example.org:32000
+api_authtype: basic
+api_key: xxxxxxxx
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+parent_ca_name: MGCorp
+parent_ca_admin_identity: admin
+parent_ca_admin_secret: adminSEC
+int_ca_identity: mgcuk
+int_ca_secret: mgcukSEC
+int_tlsca_identity: mgcuktls
+int_tlsca_secret: mgcuktlsSEC
+int_ca_name: MGCUK
+int_ca_admin_identity: mgcukcaadmin
+int_ca_admin_secret: mgcukcaadminSEC
+int_tlsca_admin_identity: mgcuktlscaadmin
+int_tlsca_admin_secret: mgcuktlscaadminSEC
