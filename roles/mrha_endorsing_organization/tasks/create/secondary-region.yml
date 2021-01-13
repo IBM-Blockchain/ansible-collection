@@ -1,0 +1,44 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Load the organization admin
+  ibm.blockchain_platform.enrolled_identity_info:
+    path: "{{ organization_admin_identity }}"
+  register: org_admin
+
+- name: Clear peers
+  set_fact:
+    peers_in_region: 0
+
+- name: Determine and set peers
+  set_fact:
+    peers_in_region: "{{ (peers_in_region | int) + 1 }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer indexes
+  set_fact:
+    peer_indexes: []
+
+- name: Determine and set peer indexes
+  set_fact:
+    peer_indexes: "{{ (peer_indexes | default([])) + [item] }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer zones
+  set_fact:
+    peer_zones_in_region: []
+
+- name: Determine and set peer zones
+  set_fact:
+    peer_zones_in_region: "{{ (peer_zones_in_region | default([])) + [zones[item % (zones | length)]] }}"
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  when: zones is defined and zones
+
+- name: Create peers
+  include_tasks: secondary-peer.yml
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  loop_control:
+    index_var: peer_index

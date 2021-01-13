@@ -419,6 +419,42 @@ class Console:
             'location': peer['location']
         }
 
+    def create_ext_peer(self, data):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, './components/fabric-peer')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to create external peer', e)
+
+    def update_ext_peer(self, id, data):
+        self._ensure_loggedin()
+        url = urllib.parse.urljoin(self.api_base_url, f'./components/fabric-peer/{id}')
+        headers = {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': self.authorization
+        }
+        data = json.dumps(data)
+        for attempt in range(1, self.retries + 1):
+            try:
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                return json.load(response)
+            except Exception as e:
+                if self.should_retry_error(e, attempt):
+                    continue
+                return self.handle_error('Failed to update external peer', e)
+
     def delete_ext_peer(self, id):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}')
