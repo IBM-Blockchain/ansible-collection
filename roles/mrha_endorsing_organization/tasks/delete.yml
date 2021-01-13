@@ -1,0 +1,21 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Delete components for primary region
+  include_tasks: delete/primary-region.yml
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: region_index
+    label: "{{ region.api_endpoint }}"
+    loop_var: region
+  when: region_index == 0
+
+- name: Delete components for secondary regions
+  include_tasks: delete/secondary-region.yml
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: region_index
+    label: "{{ region.api_endpoint }}"
+    loop_var: region
+  when: region_index != 0

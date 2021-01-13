@@ -1,0 +1,178 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ ca_name }}"
+    config_override:
+      ca:
+        registry:
+          maxenrollments: -1
+          identities:
+            - name: "{{ ca_admin_enrollment_id }}"
+              pass: "{{ ca_admin_enrollment_secret }}"
+              type: client
+              maxenrollments: -1
+              attrs:
+                hf.Registrar.Roles: "*"
+                hf.Registrar.DelegateRoles: "*"
+                hf.Revoker: true
+                hf.IntermediateCA: true
+                hf.GenCRL: true
+                hf.Registrar.Attributes: "*"
+                hf.AffiliationMgr: true
+    resources: "{{ ca_resources | default(omit) }}"
+    storage: "{{ ca_storage | default(omit) }}"
+    version: "{{ ca_version | default(omit) }}"
+    wait_timeout: "{{ wait_timeout | default(omit) }}"
+  register: certificate_authority_result
+
+- name: Import certificate authority into all other regions
+  ibm.blockchain_platform.external_certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ certificate_authority_result.certificate_authority }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
+
+- name: Enroll certificate authority admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    name: "{{ ca_name }} Admin"
+    enrollment_id: "{{ ca_admin_enrollment_id }}"
+    enrollment_secret: "{{ ca_admin_enrollment_secret }}"
+    path: "{{ ca_admin_identity }}"
+
+- name: Register the organization admin
+  ibm.blockchain_platform.registered_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    registrar: "{{ ca_admin_identity }}"
+    enrollment_id: "{{ organization_admin_enrollment_id }}"
+    enrollment_secret: "{{ organization_admin_enrollment_secret }}"
+    max_enrollments: -1
+    type: admin
+
+- name: Register the peer
+  ibm.blockchain_platform.registered_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    registrar: "{{ ca_admin_identity }}"
+    enrollment_id: "{{ peer_enrollment_id }}"
+    enrollment_secret: "{{ peer_enrollment_secret }}"
+    max_enrollments: -1
+    type: peer
+
+- name: Enroll the organization admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    certificate_authority: "{{ ca_name }}"
+    name: "{{ organization_name }} Admin"
+    enrollment_id: "{{ organization_admin_enrollment_id }}"
+    enrollment_secret: "{{ organization_admin_enrollment_secret }}"
+    path: "{{ organization_admin_identity }}"
+  register: org_admin
+
+- name: Create organization
+  ibm.blockchain_platform.organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ organization_name }}"
+    msp_id: "{{ organization_msp_id }}"
+    certificate_authority: "{{ ca_name }}"
+    registrar: "{{ ca_admin_identity }}"
+    admins:
+      - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+  register: organization_result
+
+- name: Import organization into all other regions
+  ibm.blockchain_platform.external_organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    organization: "{{ organization_result.organization }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
+
+- name: Clear peers
+  set_fact:
+    peers_in_region: 0
+
+- name: Determine and set peers
+  set_fact:
+    peers_in_region: "{{ (peers_in_region | int) + 1 }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer indexes
+  set_fact:
+    peer_indexes: []
+
+- name: Determine and set peer indexes
+  set_fact:
+    peer_indexes: "{{ (peer_indexes | default([])) + [item] }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer zones
+  set_fact:
+    peer_zones_in_region: []
+
+- name: Determine and set peer zones
+  set_fact:
+    peer_zones_in_region: "{{ (peer_zones_in_region | default([])) + [zones[item % (zones | length)]] }}"
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  when: zones is defined and zones
+
+- name: Create peers
+  include_tasks: primary-peer.yml
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  loop_control:
+    index_var: peer_index

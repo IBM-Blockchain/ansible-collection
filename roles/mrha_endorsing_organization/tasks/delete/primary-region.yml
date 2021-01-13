@@ -1,0 +1,111 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Delete certificate authority
+  ibm.blockchain_platform.certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ ca_name }}"
+
+- name: Remove certificate authority from all other regions
+  ibm.blockchain_platform.external_certificate_authority:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    name: "{{ ca_name }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
+
+- name: Delete certificate authority admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    path: "{{ ca_admin_identity }}"
+
+- name: Delete organization admin
+  ibm.blockchain_platform.enrolled_identity:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    path: "{{ organization_admin_identity }}"
+
+- name: Delete organization
+  ibm.blockchain_platform.organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ organization_name }}"
+
+- name: Remove organization from all other regions
+  ibm.blockchain_platform.external_organization:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    name: "{{ organization_name }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
+
+- name: Clear peers
+  set_fact:
+    peers_in_region: 0
+
+- name: Determine and set peers
+  set_fact:
+    peers_in_region: "{{ (peers_in_region | int) + 1 }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer indexes
+  set_fact:
+    peer_indexes: []
+
+- name: Determine and set peer indexes
+  set_fact:
+    peer_indexes: "{{ (peer_indexes | default([])) + [item] }}"
+  loop: "{{ range(0, peers, 1) | list }}"
+  when: region_index == (item % (regions | length))
+
+- name: Clear peer zones
+  set_fact:
+    peer_zones_in_region: []
+
+- name: Determine and set peer zones
+  set_fact:
+    peer_zones_in_region: "{{ (peer_zones_in_region | default([])) + [zones[item % (zones | length)]] }}"
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  when: zones is defined and zones
+
+- name: Delete peers
+  include_tasks: primary-peer.yml
+  loop: "{{ range(0, peers_in_region | int, 1) | list }}"
+  loop_control:
+    index_var: peer_index

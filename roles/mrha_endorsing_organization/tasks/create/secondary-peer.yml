@@ -1,0 +1,42 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create peer
+  ibm.blockchain_platform.peer:
+    state: "{{ state }}"
+    api_endpoint: "{{ region.api_endpoint }}"
+    api_authtype: "{{ region.api_authtype }}"
+    api_key: "{{ region.api_key }}"
+    api_secret: "{{ region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    name: "{{ peer_name }}{{ peer_indexes[peer_index] + 1 }}"
+    msp_id: "{{ organization_msp_id }}"
+    state_db: "{{ peer_state_db }}"
+    certificate_authority: "{{ ca_name }}"
+    enrollment_id: "{{ peer_enrollment_id }}"
+    enrollment_secret: "{{ peer_enrollment_secret }}"
+    admin_certificates:
+      - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
+    resources: "{{ peer_resources | default(omit) }}"
+    storage: "{{ peer_storage | default(omit) }}"
+    version: "{{ peer_version | default(omit) }}"
+    wait_timeout: "{{ wait_timeout | default(omit) }}"
+    zone: "{{ peer_zones_in_region[peer_index] | default(omit) }}"
+  register: peer_result
+
+- name: Import peer into all other regions
+  ibm.blockchain_platform.external_peer:
+    state: "{{ state }}"
+    api_endpoint: "{{ other_region.api_endpoint }}"
+    api_authtype: "{{ other_region.api_authtype }}"
+    api_key: "{{ other_region.api_key }}"
+    api_secret: "{{ other_region.api_secret | default(omit) }}"
+    api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    peer: "{{ peer_result.peer }}"
+  when: region_index != other_region_index
+  loop: "{{ regions }}"
+  loop_control:
+    index_var: other_region_index
+    label: "{{ other_region.api_endpoint }}"
+    loop_var: other_region
