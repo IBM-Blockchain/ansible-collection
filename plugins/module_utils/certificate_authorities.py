@@ -122,9 +122,10 @@ class CertificateAuthority:
 
 class CertificateAuthorityConnection:
 
-    def __init__(self, certificate_authority, hsm):
+    def __init__(self, certificate_authority, hsm, retries=5):
         self.certificate_authority = certificate_authority
         self.hsm = hsm
+        self.retries = retries
 
     def __enter__(self):
         temp = tempfile.mkstemp()
@@ -144,6 +145,9 @@ class CertificateAuthorityConnection:
         os.remove(self.pem_path)
 
     def enroll(self, name, enrollment_id, enrollment_secret):
+        return self._run_with_retry(lambda: self._enroll(name, enrollment_id, enrollment_secret))
+
+    def _enroll(self, name, enrollment_id, enrollment_secret):
         enrollment = self.ca_service.enroll(enrollment_id, enrollment_secret)
         cert = enrollment.cert
         if self.hsm:
@@ -166,6 +170,9 @@ class CertificateAuthorityConnection:
         )
 
     def is_registered(self, registrar, enrollment_id):
+        return self._run_with_retry(lambda: self._is_registered(registrar, enrollment_id))
+
+    def _is_registered(self, registrar, enrollment_id):
         result = self.identity_service.getOne(enrollment_id, self._get_enrollment(registrar))
         if result['success']:
             return True
@@ -175,32 +182,50 @@ class CertificateAuthorityConnection:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
 
     def get_registration(self, registrar, enrollment_id):
+        return self._run_with_retry(lambda: self._get_registration(registrar, enrollment_id))
+
+    def _get_registration(self, registrar, enrollment_id):
         result = self.identity_service.getOne(enrollment_id, self._get_enrollment(registrar))
         if not result['success']:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
         return result['result']
 
     def create_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
+        return self._run_with_retry(lambda: self._create_registration(registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs))
+
+    def _create_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
         secret = self.identity_service.create(self._get_enrollment(registrar), enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs)
         return secret
 
     def update_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
+        return self._run_with_retry(lambda: self._update_registration(registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs))
+
+    def _update_registration(self, registrar, enrollment_id, enrollment_secret, type, affiliation, max_enrollments, attrs):
         result = self.identity_service.update(enrollment_id, self._get_enrollment(registrar), type, affiliation, max_enrollments, attrs, enrollment_secret)
         if not result['success']:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
 
     def delete_registration(self, registrar, enrollment_id):
+        return self._run_with_retry(lambda: self._delete_registration(registrar, enrollment_id))
+
+    def _delete_registration(self, registrar, enrollment_id):
         result = self.identity_service.delete(enrollment_id, self._get_enrollment(registrar))
         if not result['success']:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
 
     def get_certificates(self, registrar, enrollment_id):
+        return self._run_with_retry(lambda: self._get_certificates(registrar, enrollment_id))
+
+    def _get_certificates(self, registrar, enrollment_id):
         result = self.certificate_service.getCertificates(self._get_enrollment(registrar), enrollment_id)
         if not result['success']:
             raise CertificateAuthorityException(result['errors'][0]['code'], result['errors'][0]['message'])
         return result['result']
 
     def generate_crl(self, registrar):
+        return self._run_with_retry(lambda: self._generate_crl(registrar))
+
+    def _generate_crl(self, registrar):
         return self.ca_service.generateCRL(None, None, None, None, self._get_enrollment(registrar))
 
     def _get_enrollment(self, identity):
@@ -217,3 +242,19 @@ class CertificateAuthorityConnection:
         else:
             private_key = serialization.load_pem_private_key(identity.private_key, password=None, backend=default_backend())
         return Enrollment(private_key, identity.cert, service=self.ca_service)
+
+    def _run_with_retry(self, func):
+        for attempt in range(1, self.retries + 1):
+            try:
+                result = func()
+                return result
+            except Exception as e:
+                msg = str(e)
+                if attempt >= self.retries:
+                    raise e
+                elif "timed out" in msg:
+                    continue
+                elif "retries exceeded" in msg:
+                    continue
+                else:
+                    raise e
