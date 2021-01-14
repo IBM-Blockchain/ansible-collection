@@ -591,9 +591,19 @@ def main():
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
             if certificate_authority_changed:
+
+                # Restore the unredacted identities.
                 new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict())['identities'] = original_expected_ca_identities
                 new_certificate_authority.get('config_override', dict()).get('tlsca', dict()).get('registry', dict())['identities'] = original_expected_tlsca_identities
-                certificate_authority = console.update_ca(new_certificate_authority['id'], new_certificate_authority)
+
+                # Remove anything that hasn't changed from the updates.
+                things = list(new_certificate_authority.keys())
+                for thing in things:
+                    if thing not in diff:
+                        del new_certificate_authority[thing]
+
+                # Apply the updates.
+                certificate_authority = console.update_ca(certificate_authority['id'], new_certificate_authority)
                 changed = True
 
         # Wait for the certificate authority to start.

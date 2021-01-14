@@ -815,7 +815,15 @@ def main():
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
                 if ordering_service_node_changed:
-                    ordering_service[i] = console.update_ordering_service_node(new_ordering_service_node['id'], new_ordering_service_node)
+
+                    # Remove anything that hasn't changed from the updates.
+                    things = list(new_ordering_service_node.keys())
+                    for thing in things:
+                        if thing not in diff:
+                            del new_ordering_service_node[thing]
+
+                    # Apply the updates.
+                    ordering_service[i] = console.update_ordering_service_node(ordering_service_node['id'], new_ordering_service_node)
                     changed = True
 
                 # Now need to compare the list of admin certs. The admin certs may be passed in via
