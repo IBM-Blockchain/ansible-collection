@@ -767,7 +767,15 @@ def main():
             # If the peer has changed, apply the changes.
             peer_changed = not equal_dicts(peer, new_peer)
             if peer_changed:
-                peer = console.update_peer(new_peer['id'], new_peer)
+
+                # Remove anything that hasn't changed from the updates.
+                things = list(new_peer.keys())
+                for thing in things:
+                    if thing not in diff:
+                        del new_peer[thing]
+
+                # Apply the updates.
+                peer = console.update_peer(peer['id'], new_peer)
                 changed = True
 
             # Now need to compare the list of admin certs. The admin certs may be passed in via

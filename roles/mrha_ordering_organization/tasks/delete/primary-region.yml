@@ -28,7 +28,7 @@
     label: "{{ other_region.api_endpoint }}"
     loop_var: other_region
 
-- name: Enroll certificate authority admin
+- name: Delete certificate authority admin
   ibm.blockchain_platform.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ region.api_endpoint }}"
@@ -38,7 +38,7 @@
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
     path: "{{ ca_admin_identity }}"
 
-- name: Enroll the organization admin
+- name: Delete organization admin
   ibm.blockchain_platform.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ region.api_endpoint }}"

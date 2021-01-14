@@ -218,23 +218,21 @@ class Console:
 
     def update_ca(self, id, data):
 
-        # If a version upgrade is specified, handle that first.
-        result = None
-        if 'version' in data:
-            version_data = dict(
-                version=data['version']
-            )
-            result = self._update_ca(id, version_data)
-            time.sleep(60)
-
-        # Extract any other parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override', 'replicas']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        if not stripped_data:
-            return result
-        return self._update_ca(id, stripped_data)
+        # Go through the changes.
+        response = None
+        for change in data:
+            permitted_change = change in ['version', 'resources', 'zone', 'config_override', 'replicas']
+            if not permitted_change:
+                continue
+            request = {
+                change: data[change]
+            }
+            response = self._update_ca(id, request)
+            if change == 'version':
+                time.sleep(60)
+            else:
+                time.sleep(10)
+        return response
 
     def _update_ca(self, id, data):
         self._ensure_loggedin()
@@ -354,23 +352,21 @@ class Console:
 
     def update_peer(self, id, data):
 
-        # If a version upgrade is specified, handle that first.
-        result = None
-        if 'version' in data:
-            version_data = dict(
-                version=data['version']
-            )
-            result = self._update_peer(id, version_data)
-            time.sleep(60)
-
-        # Extract any other parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        if not stripped_data:
-            return result
-        return self._update_peer(id, stripped_data)
+        # Go through the changes.
+        response = None
+        for change in data:
+            permitted_change = change in ['version', 'resources', 'zone', 'config_override']
+            if not permitted_change:
+                continue
+            request = {
+                change: data[change]
+            }
+            response = self._update_peer(id, request)
+            if change == 'version':
+                time.sleep(60)
+            else:
+                time.sleep(10)
+        return response
 
     def _update_peer(self, id, data):
         self._ensure_loggedin()
@@ -482,7 +478,10 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                json_response = json.load(response)
+                if isinstance(json_response, list):
+                    return json_response
+                return json_response['created']
             except Exception as e:
                 if self.should_retry_error(e, attempt):
                     continue
@@ -575,23 +574,21 @@ class Console:
 
     def update_ordering_service_node(self, id, data):
 
-        # If a version upgrade is specified, handle that first.
-        result = None
-        if 'version' in data:
-            version_data = dict(
-                version=data['version']
-            )
-            result = self._update_ordering_service_node(id, version_data)
-            time.sleep(60)
-
-        # Extract any other parameters we're allowed to update.
-        stripped_data = dict()
-        for permitted_change in ['resources', 'zone', 'config_override']:
-            if permitted_change in data:
-                stripped_data[permitted_change] = data[permitted_change]
-        if not stripped_data:
-            return result
-        return self._update_ordering_service_node(id, stripped_data)
+        # Go through the changes.
+        response = None
+        for change in data:
+            permitted_change = change in ['version', 'resources', 'zone', 'config_override']
+            if not permitted_change:
+                continue
+            request = {
+                change: data[change]
+            }
+            response = self._update_ordering_service_node(id, request)
+            if change == 'version':
+                time.sleep(60)
+            else:
+                time.sleep(10)
+        return response
 
     def _update_ordering_service_node(self, id, data):
         self._ensure_loggedin()
