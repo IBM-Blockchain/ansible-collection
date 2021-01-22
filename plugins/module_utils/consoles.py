@@ -481,7 +481,9 @@ class Console:
                 json_response = json.load(response)
                 if isinstance(json_response, list):
                     return json_response
-                return json_response['created']
+                elif 'created' in json_response:
+                    return json_response['created']
+                return json_response
             except Exception as e:
                 if self.should_retry_error(e, attempt):
                     continue

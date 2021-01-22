@@ -5,7 +5,7 @@
 :github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/mrha_endorsing_organization.rst
 
 
-mzha_endorsing_organization -- Build Hyperledger Fabric components for a multi-region, highly available endorsing organization
+mrha_endorsing_organization -- Build Hyperledger Fabric components for a multi-region, highly available endorsing organization
 ============================================================================================================================
 
 .. contents::
