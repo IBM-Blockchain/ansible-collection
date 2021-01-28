@@ -23,6 +23,7 @@ import json
 import os
 import shutil
 import subprocess
+import urllib.parse
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -102,6 +103,10 @@ options:
               of the M(ordering_service_node_info) or M(ordering_service_node) modules.
             - Only required when I(operation) is C(fetch) or C(apply_update).
             - Cannot be specified with I(ordering_service).
+            - If specified when I(operation) is C(create), then the specified ordering service nodes
+              are used as the consenters for the channel. This is useful when you want to use a subset
+              of nodes in an ordering service; for example, when you only want to use three ordering
+              service nodes from a five node ordering service.
         type: raw
     identity:
         description:
@@ -464,6 +469,65 @@ def create(module):
                 ),
                 version=1
             )
+
+    # Handle the ordering service nodes.
+    if module.params['ordering_service_nodes'] is not None:
+
+        # Extract the ordering service nodes.
+        ordering_service_nodes = get_ordering_service_nodes_by_module(console, module)
+
+        # Build the list of consenters.
+        consenters = list()
+        for ordering_service_node in ordering_service_nodes:
+            parsed_api_url = urllib.parse.urlparse(ordering_service_node.api_url)
+            host = parsed_api_url.hostname
+            port = parsed_api_url.port or 443
+            client_tls_cert = ordering_service_node.client_tls_cert or ordering_service_node.tls_cert
+            server_tls_cert = ordering_service_node.server_tls_cert or ordering_service_node.tls_cert
+            consenters.append(dict(
+                host=host,
+                port=port,
+                client_tls_cert=client_tls_cert,
+                server_tls_cert=server_tls_cert,
+            ))
+
+        # Build the list of orderer addresses.
+        orderer_addresses = set()
+        for ordering_service_node in ordering_service_nodes:
+            parsed_api_url = urllib.parse.urlparse(ordering_service_node.api_url)
+            host = parsed_api_url.hostname
+            port = parsed_api_url.port or 443
+            orderer_addresses.add(f'{host}:{port}')
+
+        # Update the configuration.
+        config_update_json['read_set']['groups'].setdefault('Orderer', dict()).setdefault('values', dict()).setdefault('ConsensusType', dict())
+        orderer_group = config_update_json['write_set']['groups'].setdefault('Orderer', dict())
+        orderer_values = orderer_group.setdefault('values', dict())
+        orderer_values['ConsensusType'] = dict(
+            mod_policy='Admins',
+            value=dict(
+                type='etcdraft',
+                metadata=dict(
+                    consenters=consenters,
+                    options=dict(
+                        tick_interval='500ms',
+                        election_tick=10,
+                        heartbeat_tick=1,
+                        max_inflight_blocks=5,
+                        snapshot_interval_size=20971520
+                    )
+                )
+            ),
+            version=1
+        )
+        config_update_json['read_set']['values'].setdefault('OrdererAddresses', dict())
+        config_update_json['write_set']['values']['OrdererAddresses'] = dict(
+            mod_policy='/Channel/Orderer/Admins',
+            value=dict(
+                addresses=list(orderer_addresses)
+            ),
+            version=1
+        )
 
     # Build the config envelope.
     config_update_envelope_json = dict(
