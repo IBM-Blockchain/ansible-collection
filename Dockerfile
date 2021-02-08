@@ -15,7 +15,7 @@ RUN microdnf install python38 shadow-utils \
 # In the second stage, install all the development packages, install the Python dependencies,
 # and then install the Ansible collection.
 FROM base AS builder
-RUN microdnf install gcc gzip python38-devel tar \
+RUN microdnf install gcc gcc-c++ gzip libffi-devel python38-devel tar \
     && microdnf clean all
 USER ibp-user
 ENV PATH=/home/ibp-user/.local/bin:$PATH
@@ -33,7 +33,9 @@ RUN cd /tmp/collection \
 FROM base AS fabric
 RUN microdnf install git make tar gzip which findutils gcc \
     && microdnf clean all
-RUN curl -sSL https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz | tar xzf - -C /usr/local
+RUN ARCH=$(uname -m) \
+    && if [ "$(uname -m)" = "x86_64" ]; then ARCH=amd64; fi \
+    && curl -sSL https://dl.google.com/go/go1.15.8.linux-${ARCH}.tar.gz | tar xzf - -C /usr/local
 ENV GOPATH=/go
 ENV PATH=/usr/local/go/bin:$PATH
 RUN mkdir -p /go/src/github.com/hyperledger \
