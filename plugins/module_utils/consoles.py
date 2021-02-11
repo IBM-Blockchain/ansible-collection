@@ -4,11 +4,9 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.urls import open_url
 
 import base64
 import json
@@ -17,10 +15,12 @@ import ssl
 import time
 import urllib.parse
 
+from ansible.module_utils.basic import missing_required_lib
+from ansible.module_utils.urls import open_url
 
 SEMANTIC_VERSION_IMPORT_ERR = None
 try:
-    from semantic_version import Version, SimpleSpec
+    from semantic_version import SimpleSpec, Version
     HAS_SEMANTIC_VERSION = True
 except ImportError as e:
     HAS_SEMANTIC_VERSION = False
@@ -831,13 +831,16 @@ class Console:
             # This catches a whole bunch of sins, including incorrect DNS
             # names and other user input errors, but also a whole bunch of
             # transient networking problems such as EOF, read timeouts, etc.
+            time.sleep(1)
             return True
         elif isinstance(error, ssl.SSLError):
             # Catch any SSL/TLS errors; this can include read timeout errors.
+            time.sleep(1)
             return True
         # Catch any other errors based on error messages.
         other_errors = ['timed out', 'EOF']
         if any(x in str(error) for x in other_errors):
+            time.sleep(1)
             return True
         return False
 
