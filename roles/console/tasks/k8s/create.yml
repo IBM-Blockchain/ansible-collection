@@ -111,7 +111,7 @@
     - "{{ console }}"
     - "{{ console }}-console"
     - "{{ console }}-deployer"
-  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa 503
+  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Delete console deployment if it is being modified or upgraded
   k8s:
@@ -120,7 +120,7 @@
     api_version: apps/v1
     kind: Deployment
     name: "{{ console }}"
-  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa 503
+  when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Wait for console deployment to exist
   k8s_info:

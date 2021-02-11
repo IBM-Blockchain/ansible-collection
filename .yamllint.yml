@@ -4,6 +4,7 @@
 ---
 extends: default
 rules:
+  comments: disable
   comments-indentation: disable
   line-length: disable
   truthy:
@@ -12,3 +13,7 @@ rules:
       - "true"
       - "False"
       - "false"
+      - "Yes"
+      - "yes"
+      - "No"
+      - "no"

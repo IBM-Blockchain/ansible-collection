@@ -2,13 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-- assert:
+- name: Assertions
+  assert:
     that:
       - result is success
       - "result is {{ 'changed' if expected_change else 'not changed' }}"
       - result.certificate_authority.name == ca_name
 
-- uri:
+- name: Get CA info from CA
+  uri:
     url: "{{ result.certificate_authority.api_url }}/cainfo"
     validate_certs: no
   until: result.status == 200
@@ -16,18 +18,21 @@
   delay: 1
   register: result
 
-- assert:
+- name: Assertions
+  assert:
     that:
       - result.json.result.CAChain is defined
 
-- k8s_info:
+- name: Get CA info from Kubernetes
+  k8s_info:
     api_version: ibp.com/v1alpha2
     kind: IBPCA
     namespace: "{{ k8s_namespace }}"
     name: "{{ k8s_name }}"
   register: result
 
-- assert:
+- name: Assertions
+  assert:
     that:
       - result is success
       - result.resources

@@ -4,18 +4,19 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils.urls import open_url
 
 from .enrolled_identities import EnrolledIdentity
 from .pkcs11.crypto import PKCS11Crypto
-
-from ansible.module_utils.urls import open_url
 
 try:
     from cryptography import x509
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
-    from hfc.fabric_ca.caservice import ca_service, Enrollment, ecies
+    from hfc.fabric_ca.caservice import Enrollment, ca_service, ecies
 except ImportError:
     # Missing dependencies are handled elsewhere.
     pass
@@ -253,8 +254,10 @@ class CertificateAuthorityConnection:
                 if attempt >= self.retries:
                     raise e
                 elif "timed out" in msg:
+                    time.sleep(1)
                     continue
                 elif "retries exceeded" in msg:
+                    time.sleep(1)
                     continue
                 else:
                     raise e

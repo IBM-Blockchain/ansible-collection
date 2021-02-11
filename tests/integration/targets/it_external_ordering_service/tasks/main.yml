@@ -22,7 +22,8 @@
         ordering_service: "{{ lookup('template', 'one_node_ordering_service.json.j2') }}"
       register: result
 
-    - assert:
+    - name: Assertions
+      assert:
         that:
           - result is success
           - result is changed
@@ -35,7 +36,8 @@
         ordering_service: "{{ lookup('template', 'one_node_ordering_service.json.j2') }}"
       register: result
 
-    - assert:
+    - name: Assert
+      assert:
         that:
           - result is success
           - result is not changed

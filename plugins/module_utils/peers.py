@@ -4,13 +4,8 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
-
-from .fabric_utils import get_fabric_cfg_path
-from .msp_utils import convert_identity_to_msp_path
-from .proto_utils import proto_to_json
-
-from ansible.module_utils.urls import open_url
 
 import base64
 import json
@@ -22,6 +17,12 @@ import subprocess
 import tempfile
 import time
 import urllib
+
+from ansible.module_utils.urls import open_url
+
+from .fabric_utils import get_fabric_cfg_path
+from .msp_utils import convert_identity_to_msp_path
+from .proto_utils import proto_to_json
 
 
 class Peer:
@@ -490,8 +491,10 @@ class PeerConnection:
             elif attempt >= self.retries:
                 return process
             elif "could not send to orderer node" in process.stdout:
+                time.sleep(1)
                 continue
             elif "failed to create new connection" in process.stdout:
+                time.sleep(1)
                 continue
             else:
                 return process

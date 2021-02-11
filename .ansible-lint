@@ -2,4 +2,4 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 skip_list:
-    - '208'
+    - risky-file-permissions
