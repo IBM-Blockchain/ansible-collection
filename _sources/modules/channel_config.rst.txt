@@ -103,6 +103,8 @@ Parameters
 
     Cannot be specified with *ordering_service*.
 
+    If specified when *operation* is ``create``, then the specified ordering service nodes are used as the consenters for the channel. This is useful when you want to use a subset of nodes in an ordering service; for example, when you only want to use three ordering service nodes from a five node ordering service.
+
     | **Type**: raw
 
   identity

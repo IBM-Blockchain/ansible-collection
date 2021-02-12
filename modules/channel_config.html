@@ -307,6 +307,7 @@
 <p>You can also pass a dict, which must match the result format of one of the <span class="xref std std-ref">ordering_service_node_info</span> or <span class="xref std std-ref">ordering_service_node</span> modules.</p>
 <p>Only required when <em>operation</em> is <code class="docutils literal notranslate"><span class="pre">fetch</span></code> or <code class="docutils literal notranslate"><span class="pre">apply_update</span></code>.</p>
 <p>Cannot be specified with <em>ordering_service</em>.</p>
+<p>If specified when <em>operation</em> is <code class="docutils literal notranslate"><span class="pre">create</span></code>, then the specified ordering service nodes are used as the consenters for the channel. This is useful when you want to use a subset of nodes in an ordering service; for example, when you only want to use three ordering service nodes from a five node ordering service.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: raw</div>
 </div>
