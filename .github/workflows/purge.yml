@@ -1,0 +1,34 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: Purge
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch: {}
+jobs:
+  purge:
+    strategy:
+      matrix:
+        include:
+          - api_endpoint: API_ENDPOINT_SOFTWARE
+            api_authtype: API_AUTHTYPE_SOFTWARE
+            api_key: API_KEY_SOFTWARE
+            api_secret: API_SECRET_SOFTWARE
+            k8s_namespace: K8S_NAMESPACE_SOFTWARE
+          - api_endpoint: API_ENDPOINT_SAAS
+            api_authtype: API_AUTHTYPE_SAAS
+            api_key: API_KEY_SAAS
+            api_secret: API_SECRET_SAAS
+            k8s_namespace: K8S_NAMESPACE_SAAS
+    name: Purge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge all components
+        run: .github/scripts/purge.sh
+        env:
+          API_ENDPOINT: ${{ secrets[matrix.api_endpoint] }}
+          API_AUTHTYPE: ${{ secrets[matrix.api_authtype] }}
+          API_KEY: ${{ secrets[matrix.api_key] }}
+          API_SECRET: ${{ secrets[matrix.api_secret] }}
