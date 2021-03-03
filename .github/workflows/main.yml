@@ -164,7 +164,7 @@ jobs:
           name: Docker image
       - name: Load Docker image
         run: gunzip -c image.tar.gz | docker load
-      - name: Run integration tests
+      - name: Run tests
         env:
           IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
           IBM_CLOUD_ACCOUNT: ${{ secrets.IBM_CLOUD_ACCOUNT }}
