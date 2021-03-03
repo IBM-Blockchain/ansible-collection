@@ -2,27 +2,246 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-name: IBM Blockchain Platform collection for Ansible
+name: CI
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
   schedule:
     - cron: "0 0 * * *"
+  create:
+    tags:
+      - "*"
   workflow_dispatch: {}
 jobs:
   build_collection:
+    name: Build collection
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build collection artifact
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          ansible-galaxy collection build
+          mv ibm-blockchain_platform-${VERSION}.tar.gz ibm-blockchain_platform.tar.gz
+      - name: Install collection
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          ansible-galaxy collection install ibm-blockchain_platform.tar.gz
+      - name: Lint collection
+        run: |
+          flake8 .
+          ansible-lint
+          for ROLE in roles/*; do ansible-lint ${ROLE}; done
+          for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+          for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+          shellcheck tutorial/*.sh
+          yamllint .
+      - name: Publish collection
+        uses: actions/upload-artifact@v2
+        with:
+          name: Collection
+          path: ibm-blockchain_platform.tar.gz
   build_documentation:
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build documentation
+        run: |
+          cd docs
+          make
+          cd ..
+          tar cf documentation.tar.gz docs/build
+      - name: Publish documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: Documentation
+          path: documentation.tar.gz
   build_docker_image:
+    name: Build Docker image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build Docker image
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          docker build -t ibmcom/ibp-ansible:${VERSION} .
+          docker tag ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest
+          docker save ibmcom/ibp-ansible:${VERSION} ibmcom/ibp-ansible:latest | gzip -c > image.tar.gz
+      - name: Publish Docker image
+        uses: actions/upload-artifact@v2
+        with:
+          name: Docker image
+          path: image.tar.gz
+  tests:
+    strategy:
+      matrix:
+        include:
+          - api_endpoint: API_ENDPOINT_SOFTWARE
+            api_authtype: API_AUTHTYPE_SOFTWARE
+            api_key: API_KEY_SOFTWARE
+            api_secret: API_SECRET_SOFTWARE
+            k8s_namespace: K8S_NAMESPACE_SOFTWARE
+            type: integration
+            target: software
+          - api_endpoint: API_ENDPOINT_SAAS
+            api_authtype: API_AUTHTYPE_SAAS
+            api_key: API_KEY_SAAS
+            api_secret: API_SECRET_SAAS
+            k8s_namespace: K8S_NAMESPACE_SAAS
+            type: integration
+            target: SaaS
+          - api_endpoint: API_ENDPOINT_SOFTWARE
+            api_authtype: API_AUTHTYPE_SOFTWARE
+            api_key: API_KEY_SOFTWARE
+            api_secret: API_SECRET_SOFTWARE
+            k8s_namespace: K8S_NAMESPACE_SOFTWARE
+            type: tutorial
+            target: software
+          - api_endpoint: API_ENDPOINT_SAAS
+            api_authtype: API_AUTHTYPE_SAAS
+            api_key: API_KEY_SAAS
+            api_secret: API_SECRET_SAAS
+            k8s_namespace: K8S_NAMESPACE_SAAS
+            type: tutorial
+            target: SaaS
+    name: Run ${{ matrix.type }} tests (${{ matrix.target }})
+    needs:
+      - build_collection
+      - build_documentation
+      - build_docker_image
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Download collection
+        uses: actions/download-artifact@v2
+        with:
+          name: Collection
+      - name: Install collection
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          ansible-galaxy collection install ibm-blockchain_platform.tar.gz
+      - name: Run integration tests
+        env:
+          IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
+          IBM_CLOUD_ACCOUNT: ${{ secrets.IBM_CLOUD_ACCOUNT }}
+          IBM_CLOUD_REGION: ${{ secrets.IBM_CLOUD_REGION }}
+          IBM_CLOUD_OPENSHIFT_CLUSTER_ID: ${{ secrets.IBM_CLOUD_OPENSHIFT_CLUSTER_ID }}
+          API_ENDPOINT: ${{ secrets[matrix.api_endpoint] }}
+          API_AUTHTYPE: ${{ secrets[matrix.api_authtype] }}
+          API_KEY: ${{ secrets[matrix.api_key] }}
+          API_SECRET: ${{ secrets[matrix.api_secret] }}
+          K8S_NAMESPACE: ${{ secrets[matrix.k8s_namespace] }}
+        run: .github/scripts/run-tests.sh ${{ matrix.type }}
+  publish_collection:
+    name: Publish collection
+    needs: tests
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Download collection
+        uses: actions/download-artifact@v2
+        with:
+          name: Collection
+      - name: Publish collection to Ansible Galaxy
+        env:
+          ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          mv ibm-blockchain_platform.tar.gz ibm-blockchain_platform-${VERSION}.tar.gz
+          ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} ibm-blockchain_platform-${VERSION}.tar.gz
+  publish_documentation:
+    name: Publish documentation
+    needs: tests
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Download documentation
+        uses: actions/download-artifact@v2
+        with:
+          name: Documentation
+      - name: Extract documentation
+        run: tar xf documentation.tar.gz
+      - name: Publish documentation to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: docs/build
+  publish_docker_image:
+    name: Publish Docker image
+    needs: tests
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: Docker image
+      - name: Load Docker image
+        run: gunzip -c image.tar.gz | docker load
+      - name: Publish Docker image to Docker Hub
+        env:
+          DOCKER_HUB_USER_NAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          docker login -u ${DOCKER_HUB_USER_NAME} -p ${DOCKER_HUB_ACCESS_TOKEN}
+          docker push ibmcom/ibp-ansible:${VERSION}
+          docker push ibmcom/ibp-ansible:latest
