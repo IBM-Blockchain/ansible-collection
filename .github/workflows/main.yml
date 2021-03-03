@@ -107,6 +107,7 @@ jobs:
             api_key: API_KEY_SOFTWARE
             api_secret: API_SECRET_SOFTWARE
             k8s_namespace: K8S_NAMESPACE_SOFTWARE
+            use_docker: false
             type: integration
             target: software
           - api_endpoint: API_ENDPOINT_SAAS
@@ -114,6 +115,7 @@ jobs:
             api_key: API_KEY_SAAS
             api_secret: API_SECRET_SAAS
             k8s_namespace: K8S_NAMESPACE_SAAS
+            use_docker: false
             type: integration
             target: SaaS
           - api_endpoint: API_ENDPOINT_SOFTWARE
@@ -121,6 +123,7 @@ jobs:
             api_key: API_KEY_SOFTWARE
             api_secret: API_SECRET_SOFTWARE
             k8s_namespace: K8S_NAMESPACE_SOFTWARE
+            use_docker: true
             type: tutorial
             target: software
           - api_endpoint: API_ENDPOINT_SAAS
@@ -128,6 +131,7 @@ jobs:
             api_key: API_KEY_SAAS
             api_secret: API_SECRET_SAAS
             k8s_namespace: K8S_NAMESPACE_SAAS
+            use_docker: false
             type: tutorial
             target: SaaS
     name: Run ${{ matrix.type }} tests (${{ matrix.target }})
@@ -154,6 +158,12 @@ jobs:
         run: |
           VERSION=$(yq -r .version galaxy.yml)
           ansible-galaxy collection install ibm-blockchain_platform.tar.gz
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: Docker image
+      - name: Load Docker image
+        run: gunzip -c image.tar.gz | docker load
       - name: Run integration tests
         env:
           IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
@@ -165,6 +175,7 @@ jobs:
           API_KEY: ${{ secrets[matrix.api_key] }}
           API_SECRET: ${{ secrets[matrix.api_secret] }}
           K8S_NAMESPACE: ${{ secrets[matrix.k8s_namespace] }}
+          USE_DOCKER: ${{ matrix.use_docker }}
         run: .github/scripts/run-tests.sh ${{ matrix.type }}
   publish_collection:
     name: Publish collection
