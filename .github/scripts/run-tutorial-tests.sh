@@ -16,12 +16,12 @@ yq -yi ".org1_peer_name=\"Org1 Peer ${SHORT_TEST_RUN_ID}\"" org1-vars.yml
 yq -yi ".org2_ca_name=\"Org2 CA ${SHORT_TEST_RUN_ID}\"" org2-vars.yml
 yq -yi ".org2_peer_name=\"Org2 Peer ${SHORT_TEST_RUN_ID}\"" org2-vars.yml
 for VARS in ordering-org-vars.yml org1-vars.yml org2-vars.yml; do
-    yq -yi ".api_endpoint=\"${IBP_API_ENDPOINT}\"" ${VARS}
-    yq -yi ".api_authtype=\"${IBP_API_AUTHTYPE}\"" ${VARS}
-    yq -yi ".api_key=\"${IBP_API_KEY}\"" ${VARS}
-    yq -yi ".api_secret=\"${IBP_API_SECRET}\"" ${VARS}
+    yq -yi ".api_endpoint=\"${API_ENDPOINT}\"" ${VARS}
+    yq -yi ".api_authtype=\"${API_AUTHTYPE}\"" ${VARS}
+    yq -yi ".api_key=\"${API_KEY}\"" ${VARS}
+    yq -yi ".api_secret=\"${API_SECRET}\"" ${VARS}
     yq -yi ".api_timeout=300" ${VARS}
-    yq -yi ".k8s_namespace=\"${IBP_K8S_NAMESPACE}\"" ${VARS}
+    yq -yi ".k8s_namespace=\"${K8S_NAMESPACE}\"" ${VARS}
     yq -yi ".wait_timeout=1800" ${VARS}
 done
 if [ "${USE_DOCKER}" = "true" ]; then
