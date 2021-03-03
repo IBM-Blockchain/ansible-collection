@@ -22,7 +22,7 @@ stages:
   - stage: build
     displayName: Build
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: "ubuntu-18.04"
     jobs:
       - job: build_collection
         displayName: Build collection
@@ -84,7 +84,7 @@ stages:
     displayName: Test
     dependsOn: build
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: "ubuntu-18.04"
     jobs:
       - job: integration_tests_software
         displayName: Run integration tests (software)
@@ -146,7 +146,7 @@ stages:
     dependsOn: test
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: "ubuntu-18.04"
     jobs:
       - job: publish_collection
         displayName: Publish collection
