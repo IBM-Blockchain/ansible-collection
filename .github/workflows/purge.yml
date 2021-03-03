@@ -17,12 +17,14 @@ jobs:
             api_key: API_KEY_SOFTWARE
             api_secret: API_SECRET_SOFTWARE
             k8s_namespace: K8S_NAMESPACE_SOFTWARE
+            target: software
           - api_endpoint: API_ENDPOINT_SAAS
             api_authtype: API_AUTHTYPE_SAAS
             api_key: API_KEY_SAAS
             api_secret: API_SECRET_SAAS
             k8s_namespace: K8S_NAMESPACE_SAAS
-    name: Purge
+            target: SaaS
+    name: Purge (${{ matrix.target }})
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
