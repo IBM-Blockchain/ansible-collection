@@ -52,7 +52,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install ansible
+        pip install -U 'ansible>=2.9,<2.10'
 
 **Hyperledger Fabric v2.2.1+ binaries**
 
@@ -76,7 +76,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install fabric-sdk-py
+        pip install -U fabric-sdk-py
 
 **PKCS #11/Cryptoki for Python v0.6.0+**
 
@@ -86,7 +86,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install python-pkcs11
+        pip install -U python-pkcs11
 
 **OpenShift client for Python v0.10.3+**
 
@@ -96,7 +96,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install openshift
+        pip install -U 'openshift==0.11.2'
 
 **Semantic Versioning for Python v2.8.5+**
 
@@ -106,7 +106,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install semantic_version
+        pip install -U semantic_version
 
 **IBM Blockchain Platform v2.1.3, v2.5.0, v2.5.1**
 
