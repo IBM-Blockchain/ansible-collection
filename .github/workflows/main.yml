@@ -1,0 +1,28 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: IBM Blockchain Platform collection for Ansible
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch: {}
+jobs:
+  build_collection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+  build_documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+  build_docker_image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
