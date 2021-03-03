@@ -12,3 +12,4 @@ yq -yi ".k8s_namespace=\"${K8S_NAMESPACE}\"" tests/integration/integration_confi
 yq -yi ".test_run_id=\"${TEST_RUN_ID}\"" tests/integration/integration_config.yml
 yq -yi ".short_test_run_id=\"${SHORT_TEST_RUN_ID}\"" tests/integration/integration_config.yml
 yq -yi ".wait_timeout=1800" tests/integration/integration_config.yml
+ansible-test integration
