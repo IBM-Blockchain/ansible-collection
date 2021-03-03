@@ -1,0 +1,15 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+ansible >= 2.9, <2.10
+ansible-doc-extractor
+ansible-lint
+flake8
+fabric-sdk-py
+openshift == 0.11.2
+python-pkcs11
+semantic_version
+sphinx
+sphinx-rtd-theme
+yamllint
+yq
