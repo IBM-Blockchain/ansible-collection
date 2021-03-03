@@ -25,6 +25,8 @@ jobs:
     name: Purge
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Purge all components
         run: .github/scripts/purge.sh
         env:
