@@ -100,6 +100,7 @@ jobs:
           path: image.tar.gz
   tests:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - api_endpoint: API_ENDPOINT_SOFTWARE

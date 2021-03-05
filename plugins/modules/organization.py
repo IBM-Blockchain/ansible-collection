@@ -4,19 +4,18 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from ..module_utils.cert_utils import split_ca_chain, equal_crls
-from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
-from ..module_utils.module import BlockchainModule
-from ..module_utils.organizations import Organization
-from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_identity_by_module
-
-from ansible.module_utils.urls import open_url
 from ansible.module_utils._text import to_native
 
-import json
-import urllib
+from ..module_utils.cert_utils import equal_crls, split_ca_chain
+from ..module_utils.dict_utils import (copy_dict, diff_dicts, equal_dicts,
+                                       merge_dicts)
+from ..module_utils.module import BlockchainModule
+from ..module_utils.organizations import Organization
+from ..module_utils.utils import (get_certificate_authority_by_module,
+                                  get_console, get_identity_by_module)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -461,17 +460,12 @@ def get_from_certificate_authority(console, module):
     certificate_authority = get_certificate_authority_by_module(console, module)
 
     # Get the certificate authority information.
-    url = urllib.parse.urljoin(certificate_authority.api_url, f'/cainfo?ca={certificate_authority.ca_name}')
-    response = open_url(url, None, None, method='GET', validate_certs=False)
-    cainfo = json.load(response)
-    url = urllib.parse.urljoin(certificate_authority.api_url, f'/cainfo?ca={certificate_authority.tlsca_name}')
-    response = open_url(f'{certificate_authority.api_url}/cainfo?ca={certificate_authority.tlsca_name}', None, None, method='GET', validate_certs=False)
-    tlscainfo = json.load(response)
+    with certificate_authority.connect(None) as connection:
+        ca_chain = connection.get_ca_chain()
+        tlsca_chain = connection.get_tlsca_chain()
 
     # Split the certificate authority chains into root certificates and intermediate certificates.
-    ca_chain = cainfo['result']['CAChain']
     (root_certs, intermediate_certs) = split_ca_chain(ca_chain)
-    tlsca_chain = tlscainfo['result']['CAChain']
     (tls_root_certs, tls_intermediate_certs) = split_ca_chain(tlsca_chain)
 
     # Build the return information.
