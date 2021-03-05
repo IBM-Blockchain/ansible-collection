@@ -145,6 +145,24 @@ class CertificateAuthorityConnection:
     def __exit__(self, type, value, tb):
         os.remove(self.pem_path)
 
+    def get_ca_chain(self):
+        return self._run_with_retry(lambda: self._get_ca_chain())
+
+    def _get_ca_chain(self):
+        url = urllib.parse.urljoin(self.certificate_authority.api_url, f'/cainfo?ca={self.certificate_authority.ca_name}')
+        response = open_url(url, None, None, method='GET', validate_certs=False)
+        cainfo = json.load(response)
+        return cainfo['result']['CAChain']
+
+    def get_tlsca_chain(self):
+        return self._run_with_retry(lambda: self._get_tlsca_chain())
+
+    def _get_tlsca_chain(self):
+        url = urllib.parse.urljoin(self.certificate_authority.api_url, f'/cainfo?ca={self.certificate_authority.tlsca_name}')
+        response = open_url(url, None, None, method='GET', validate_certs=False)
+        cainfo = json.load(response)
+        return cainfo['result']['CAChain']
+
     def enroll(self, name, enrollment_id, enrollment_secret):
         return self._run_with_retry(lambda: self._enroll(name, enrollment_id, enrollment_secret))
 
