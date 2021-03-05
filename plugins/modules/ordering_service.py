@@ -4,18 +4,21 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from ..module_utils.ordering_services import OrderingService
-from ..module_utils.dict_utils import merge_dicts, equal_dicts, copy_dict, diff_dicts
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_certificate_authority_by_module
-from ..module_utils.cert_utils import normalize_whitespace
-
-from ansible.module_utils.basic import _load_params
-from ansible.module_utils._text import to_native
-
 import urllib
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params
+
+from ..module_utils.cert_utils import normalize_whitespace
+from ..module_utils.dict_utils import (copy_dict, diff_dicts, equal_dicts,
+                                       merge_dicts)
+from ..module_utils.module import BlockchainModule
+from ..module_utils.ordering_services import OrderingService
+from ..module_utils.utils import (get_certificate_authority_by_module,
+                                  get_console)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -583,7 +586,7 @@ def main():
 
         # Determine if the ordering service exists.
         name = module.params['name']
-        ordering_service = console.get_components_by_cluster_name(name, deployment_attrs='included')
+        ordering_service = console.get_components_by_cluster_name('fabric-orderer', name, deployment_attrs='included')
         ordering_service_exists = len(ordering_service) > 0
         ordering_service_corrupt_nodes = 0
         for ordering_service_node in ordering_service:

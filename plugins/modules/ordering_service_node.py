@@ -4,19 +4,22 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
-
-from ..module_utils.ordering_services import OrderingServiceNode
-from ..module_utils.dict_utils import merge_dicts, equal_dicts, copy_dict, diff_dicts
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_ordering_service_by_module
-from ..module_utils.cert_utils import normalize_whitespace
-
-from ansible.module_utils.basic import _load_params
-from ansible.module_utils._text import to_native
 
 import base64
 import urllib
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params
+
+from ..module_utils.cert_utils import normalize_whitespace
+from ..module_utils.dict_utils import (copy_dict, diff_dicts, equal_dicts,
+                                       merge_dicts)
+from ..module_utils.module import BlockchainModule
+from ..module_utils.ordering_services import OrderingServiceNode
+from ..module_utils.utils import (get_certificate_authority_by_module,
+                                  get_console, get_ordering_service_by_module)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -577,7 +580,7 @@ def main():
 
         # Determine if the ordering service node exists.
         name = module.params['name']
-        ordering_service_node = console.get_component_by_display_name(name, deployment_attrs='included')
+        ordering_service_node = console.get_component_by_display_name('fabric-orderer', name, deployment_attrs='included')
         ordering_service_node_exists = ordering_service_node is not None
         ordering_service_node_corrupt = ordering_service_node is not None and 'deployment_attrs_missing' in ordering_service_node
 

@@ -4,17 +4,18 @@
 #
 
 from __future__ import absolute_import, division, print_function
-__metaclass__ = type
 
-from .consoles import Console
-from .certificate_authorities import CertificateAuthority
-from .enrolled_identities import EnrolledIdentity
-from .organizations import Organization
-from .ordering_services import OrderingService, OrderingServiceNode
-from .peers import Peer
+__metaclass__ = type
 
 import base64
 import json
+
+from .certificate_authorities import CertificateAuthority
+from .consoles import Console
+from .enrolled_identities import EnrolledIdentity
+from .ordering_services import OrderingService, OrderingServiceNode
+from .organizations import Organization
+from .peers import Peer
 
 
 def get_console(module):
@@ -36,7 +37,7 @@ def get_console(module):
 def get_certificate_authority_by_name(console, name, fail_on_missing=True):
 
     # Look up the certificate authority by name.
-    component = console.get_component_by_display_name(name)
+    component = console.get_component_by_display_name('fabric-ca', name)
     if component is None:
         if fail_on_missing:
             raise Exception(f'The certificate authority {name} does not exist')
@@ -56,7 +57,7 @@ def get_certificate_authority_by_module(console, module, parameter_name='certifi
 
     # Otherwise, it is the display name of a certificate authority that
     # we need to look up.
-    component = console.get_component_by_display_name(certificate_authority)
+    component = console.get_component_by_display_name('fabric-ca', certificate_authority)
     if component is None:
         raise Exception(f'The certificate authority {certificate_authority} does not exist')
     data = console.extract_ca_info(component)
@@ -68,7 +69,7 @@ def get_certificate_authority_by_module(console, module, parameter_name='certifi
 def get_organization_by_name(console, name, fail_on_missing=True):
 
     # Look up the organization by name.
-    component = console.get_component_by_display_name(name)
+    component = console.get_component_by_display_name('msp', name)
     if component is None:
         if fail_on_missing:
             raise Exception(f'The organization {name} does not exist')
@@ -88,7 +89,7 @@ def get_organization_by_module(console, module, parameter_name='organization'):
 
     # Otherwise, it is the display name of an organization that
     # we need to look up.
-    component = console.get_component_by_display_name(organization)
+    component = console.get_component_by_display_name('msp', organization)
     if component is None:
         raise Exception(f'The organization {organization} does not exist')
     data = console.extract_organization_info(component)
@@ -111,7 +112,7 @@ def get_organizations_by_module(console, module, parameter_name='organizations')
 
         # Otherwise, it is the display name of an organization that
         # we need to look up.
-        component = console.get_component_by_display_name(organization)
+        component = console.get_component_by_display_name('msp', organization)
         if component is None:
             raise Exception(f'The organization {organization} does not exist')
         data = console.extract_organization_info(component)
@@ -126,7 +127,7 @@ def get_organizations_by_module(console, module, parameter_name='organizations')
 def get_peer_by_name(console, name, fail_on_missing=True):
 
     # Look up the peer by name.
-    component = console.get_component_by_display_name(name)
+    component = console.get_component_by_display_name('fabric-peer', name)
     if component is None:
         if fail_on_missing:
             raise Exception(f'The peer {name} does not exist')
@@ -146,7 +147,7 @@ def get_peer_by_module(console, module, parameter_name='peer'):
 
     # Otherwise, it is the display name of a peer that
     # we need to look up.
-    component = console.get_component_by_display_name(peer)
+    component = console.get_component_by_display_name('fabric-peer', peer)
     if component is None:
         raise Exception(f'The peer {peer} does not exist')
     data = console.extract_peer_info(component)
@@ -169,7 +170,7 @@ def get_peers_by_module(console, module, parameter_name='peers'):
 
         # Otherwise, it is the display name of an peer that
         # we need to look up.
-        component = console.get_component_by_display_name(peer)
+        component = console.get_component_by_display_name('fabric-peer', peer)
         if component is None:
             raise Exception(f'The peer {peer} does not exist')
         data = console.extract_peer_info(component)
@@ -184,7 +185,7 @@ def get_peers_by_module(console, module, parameter_name='peers'):
 def get_ordering_service_by_name(console, name, fail_on_missing=True):
 
     # Look up the ordering service by name.
-    components = console.get_components_by_cluster_name(name)
+    components = console.get_components_by_cluster_name('fabric-orderer', name)
     if len(components) == 0:
         if fail_on_missing:
             raise Exception(f'The ordering service {name} does not exist')
@@ -204,7 +205,7 @@ def get_ordering_service_by_module(console, module, parameter_name='ordering_ser
 
     # Otherwise, it is the display name of a ordering service that
     # we need to look up.
-    components = console.get_components_by_cluster_name(ordering_service)
+    components = console.get_components_by_cluster_name('fabric-orderer', ordering_service)
     if len(components) == 0:
         raise Exception(f'The ordering service {ordering_service} does not exist')
     data = console.extract_ordering_service_info(components)
@@ -216,7 +217,7 @@ def get_ordering_service_by_module(console, module, parameter_name='ordering_ser
 def get_ordering_service_node_by_name(console, name, fail_on_missing=True):
 
     # Look up the ordering service node by name.
-    component = console.get_component_by_display_name(name)
+    component = console.get_component_by_display_name('fabric-orderer', name)
     if component is None:
         if fail_on_missing:
             raise Exception(f'The peer {name} does not exist')
@@ -236,7 +237,7 @@ def get_ordering_service_node_by_module(console, module, parameter_name='orderin
 
     # Otherwise, it is the display name of a ordering service that
     # we need to look up.
-    component = console.get_component_by_display_name(ordering_service_node)
+    component = console.get_component_by_display_name('fabric-orderer', ordering_service_node)
     if component is None:
         raise Exception(f'The ordering service node {ordering_service_node} does not exist')
     data = console.extract_ordering_service_node_info(component)
@@ -259,7 +260,7 @@ def get_ordering_service_nodes_by_module(console, module, parameter_name='orderi
 
         # Otherwise, it is the display name of an ordering service node
         # that we need to look up.
-        component = console.get_component_by_display_name(ordering_service_node)
+        component = console.get_component_by_display_name('fabric-orderer', ordering_service_node)
         if component is None:
             raise Exception(f'The ordering service node {ordering_service_node} does not exist')
         data = console.extract_ordering_service_node_info(component)

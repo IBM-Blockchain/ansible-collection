@@ -184,17 +184,18 @@ class Console:
                     continue
                 return self.handle_error('Failed to get component by ID', e)
 
-    def get_component_by_display_name(self, display_name, deployment_attrs='omitted'):
+    def get_component_by_display_name(self, component_type, display_name, deployment_attrs='omitted'):
         components = self.get_all_components()
-        ca = next((component for component in components if component.get('display_name', None) == display_name), None)
-        if ca is not None:
-            return self.get_component_by_id(ca['id'], deployment_attrs)
+        for component in components:
+            if component.get('display_name', None) == display_name and component.get('type', None) == component_type:
+                return self.get_component_by_id(component['id'], deployment_attrs)
+        return None
 
-    def get_components_by_cluster_name(self, cluster_name, deployment_attrs='omitted'):
+    def get_components_by_cluster_name(self, component_type, cluster_name, deployment_attrs='omitted'):
         components = self.get_all_components()
         results = list()
         for component in components:
-            if component.get('cluster_name', None) == cluster_name:
+            if component.get('cluster_name', None) == cluster_name and component.get('type', None) == component_type:
                 results.append(self.get_component_by_id(component['id'], deployment_attrs))
         return results
 
