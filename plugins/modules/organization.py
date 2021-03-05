@@ -559,7 +559,7 @@ def main():
 
         # Determine if the organization exists.
         name = module.params['name']
-        organization = console.get_component_by_display_name(name)
+        organization = console.get_component_by_display_name('msp', name)
         organization_exists = organization is not None
 
         # Extract the organization configuration.

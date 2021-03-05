@@ -4,14 +4,15 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils._text import to_native
 
 from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
 from ..module_utils.module import BlockchainModule
 from ..module_utils.ordering_services import OrderingServiceNode
 from ..module_utils.utils import get_console
-
-from ansible.module_utils._text import to_native
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -309,7 +310,7 @@ def main():
         name = module.params['name']
         if state == 'present':
             name = ordering_service_node_definition['name']
-        ordering_service_node = console.get_component_by_display_name(name, 'included')
+        ordering_service_node = console.get_component_by_display_name('fabric-orderer', name, 'included')
         ordering_service_node_exists = ordering_service_node is not None
 
         # If the ordering service node exists, make sure it's an imported one and not

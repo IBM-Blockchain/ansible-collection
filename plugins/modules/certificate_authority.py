@@ -4,17 +4,19 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
+import copy
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params
+
 from ..module_utils.certificate_authorities import CertificateAuthority
-from ..module_utils.dict_utils import copy_dict, diff_dicts, equal_dicts, merge_dicts
+from ..module_utils.dict_utils import (copy_dict, diff_dicts, equal_dicts,
+                                       merge_dicts)
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console
-
-from ansible.module_utils.basic import _load_params
-from ansible.module_utils._text import to_native
-
-import copy
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -407,7 +409,7 @@ def main():
 
         # Determine if the certificate authority exists.
         name = module.params['name']
-        certificate_authority = console.get_component_by_display_name(name, deployment_attrs='included')
+        certificate_authority = console.get_component_by_display_name('fabric-ca', name, deployment_attrs='included')
         certificate_authority_exists = certificate_authority is not None
         certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
 

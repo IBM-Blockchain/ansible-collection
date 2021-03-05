@@ -4,14 +4,15 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils._text import to_native
 
 from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
 from ..module_utils.module import BlockchainModule
 from ..module_utils.ordering_services import OrderingService
 from ..module_utils.utils import get_console
-
-from ansible.module_utils._text import to_native
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -311,7 +312,7 @@ def main():
         cluster_name = module.params['name']
         if state == 'present':
             cluster_name = ordering_service_definition[0]['cluster_name']
-        existing_ordering_service = console.get_components_by_cluster_name(cluster_name, 'included')
+        existing_ordering_service = console.get_components_by_cluster_name('fabric-orderer', cluster_name, 'included')
         existing_ordering_service_exists = len(existing_ordering_service) > 0
 
         # If the ordering service exists, make sure it's an imported one and not
@@ -382,7 +383,7 @@ def main():
                 del expected_ordering_service_node['server_tls_cert']
 
             # Determine if it exists.
-            ordering_service_node = console.get_component_by_display_name(ordering_service_node['name'])
+            ordering_service_node = console.get_component_by_display_name('fabric-orderer', ordering_service_node['name'])
             ordering_service_node_exists = ordering_service_node is not None
 
             # Handle appropriately based on state.
