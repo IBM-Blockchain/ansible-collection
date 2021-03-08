@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ansible-base
-ansible-doc-extractor
+git+https://github.com/sstone1/ansible-doc-extractor@master#ansible-doc-extractor
 ansible-lint
 flake8
 fabric-sdk-py
