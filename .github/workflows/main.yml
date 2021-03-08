@@ -210,10 +210,13 @@ jobs:
         run: |
           git config --local user.email ${DOCS_GITHUB_EMAIL}
           git config --local user.name ${DOCS_GITHUB_NAME}
+          git config --local --unset-all http.${GITHUB_SERVER_URL}/.extraheader
       - name: Bump version
         run: .github/scripts/bump.sh
       - name: Commit version bump
-        run: git commit -asm "Automatic version bump to ${VERSION}"
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          git commit -asm "Automatic version bump to ${VERSION}"
       - name: Push commit to GitHub
         env:
           DOCS_GITHUB_NAME: ${{ secrets.DOCS_GITHUB_NAME }}

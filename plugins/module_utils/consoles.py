@@ -818,7 +818,7 @@ class Console:
             # HTTP 504 - Gateway Timeout
             transient = error.code in [502, 503, 504]
             if transient:
-                time.sleep(1)
+                time.sleep(5)
                 return True
             # HTTP 429 Too Many Requests means we should sleep and retry
             # after the specified period of time because too many requests
@@ -832,16 +832,16 @@ class Console:
             # This catches a whole bunch of sins, including incorrect DNS
             # names and other user input errors, but also a whole bunch of
             # transient networking problems such as EOF, read timeouts, etc.
-            time.sleep(1)
+            time.sleep(5)
             return True
         elif isinstance(error, ssl.SSLError):
             # Catch any SSL/TLS errors; this can include read timeout errors.
-            time.sleep(1)
+            time.sleep(5)
             return True
         # Catch any other errors based on error messages.
         other_errors = ['timed out', 'EOF']
         if any(x in str(error) for x in other_errors):
-            time.sleep(1)
+            time.sleep(5)
             return True
         return False
 
