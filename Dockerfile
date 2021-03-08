@@ -33,7 +33,10 @@ RUN cd /tmp/collection \
 FROM base AS fabric
 RUN microdnf install git make tar gzip which findutils gcc \
     && microdnf clean all
-RUN curl -sSL https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz | tar xzf - -C /usr/local
+RUN ARCH=$(uname -m) \
+    && if [ "${ARCH}" = "x86_64" ]; then ARCH=amd64; fi \
+    && if [ "${ARCH}" = "aarch64" ]; then ARCH=arm64; fi \
+    && curl -sSL https://dl.google.com/go/go1.14.15.linux-${ARCH}.tar.gz | tar xzf - -C /usr/local
 ENV GOPATH=/go
 ENV PATH=/usr/local/go/bin:$PATH
 RUN mkdir -p /go/src/github.com/hyperledger \
