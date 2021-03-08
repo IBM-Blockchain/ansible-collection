@@ -4,7 +4,7 @@
 ---
 namespace: ibm
 name: blockchain_platform
-version: 1.0.5
+version: 2.0.0
 readme: README.md
 authors:
   - Simon Stone
@@ -23,3 +23,4 @@ repository: https://github.com/IBM-Blockchain/ansible-collection
 documentation: https://ibm-blockchain.github.io/ansible-collection/
 homepage: https://www.ibm.com/cloud/blockchain-platform
 issues: https://github.com/IBM-Blockchain/ansible-collection/issues
+dependencies: {}
