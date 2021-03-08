@@ -272,10 +272,10 @@ class CertificateAuthorityConnection:
                 if attempt >= self.retries:
                     raise e
                 elif "timed out" in msg:
-                    time.sleep(1)
+                    time.sleep(5)
                     continue
                 elif "retries exceeded" in msg:
-                    time.sleep(1)
+                    time.sleep(5)
                     continue
                 else:
                     raise e

@@ -222,10 +222,10 @@ class OrderingServiceNodeConnection:
             elif attempt >= self.retries:
                 return process
             elif "could not send to orderer node" in process.stdout:
-                time.sleep(1)
+                time.sleep(5)
                 continue
             elif "failed to create new connection" in process.stdout:
-                time.sleep(1)
+                time.sleep(5)
                 continue
             else:
                 return process
