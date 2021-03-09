@@ -75,7 +75,7 @@ Enabling v2 Capability for the System Channel
 The first task is to enable v2 capability on the system channel of the Orderer.
 Note that any new channels created after updating the System Channel will have v2 capability enabled by default, but readers are encouraged to verify that all the capabilities are enabled for the new channels.
 
-Review the example playbook `01-enable-fabricv2-systemchannel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml>`_.
+Review the example playbook `01-enable-fabricv2-systemchannel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml>`_.
 
 Ensure that the JSON identity files specified in the ``vars.yml`` file have been copied to the working directory.
 
@@ -100,9 +100,9 @@ v2 capability enables a default majority Lifecycle Endorsement Policy, but if a 
 
 In this example playbook both the Ordering Service Administrator identity, and the Organisation Administrator identity are used to sign the modified channel configuration but in other scenarios these identities for signing may be different.
 
-Review the example playbook `02-enable-fabricv2-channels.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/02-enable-fabricv2-channels.yml>`_.
+Review the example playbook `02-enable-fabricv2-channels.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/02-enable-fabricv2-channels.yml>`_.
 
-When reviewing the playbook you will note that an additional playbook is used on a loop across the array of channels listed in the variables file  `02-enable-fabricv2-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/tasks/02-enable-fabricv2-channel.yml>`_.
+When reviewing the playbook you will note that an additional playbook is used on a loop across the array of channels listed in the variables file  `02-enable-fabricv2-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/tasks/02-enable-fabricv2-channel.yml>`_.
 
 Run the playbook as follows:
 

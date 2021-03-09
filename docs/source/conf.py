@@ -52,7 +52,7 @@ html_context = {
     "display_github": "True",
     "github_user": "IBM-Blockchain",
     "github_repo": "ansible-collection",
-    "github_version": "master",
+    "github_version": "main",
     "conf_py_path": "/docs/source/",
 }
 

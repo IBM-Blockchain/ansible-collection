@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/mzha_ordering_organization.rst
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/mzha_ordering_organization.rst
 
 
 mzha_ordering_organization -- Build Hyperledger Fabric components for a multi-zone, highly available ordering organization

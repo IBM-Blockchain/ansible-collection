@@ -75,7 +75,7 @@ The remaining values must always be set:
 Updating the channel parameters
 -------------------------------
 
-Review the example playbook `update-channel-parameters.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/update-channel-parameters/update-channel-parameters.yml>`_, then run it as follows:
+Review the example playbook `update-channel-parameters.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/update-channel-parameters/update-channel-parameters.yml>`_, then run it as follows:
 
   ::
 

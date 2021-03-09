@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/crds.rst
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/crds.rst
 
 
 crds -- Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift

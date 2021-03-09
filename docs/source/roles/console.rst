@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/console.rst
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/console.rst
 
 
 console -- Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift
