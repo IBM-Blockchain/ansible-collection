@@ -171,5 +171,5 @@ Note that the UID flag ``-u $(id -u)`` ensures that Ansible can write connection
 
 The Docker image is supported for use in Docker, Kubernetes, and Red Hat OpenShift.
 
-If you need to build or customize the Docker image, you can find the Dockerfile here: https://github.com/IBM-Blockchain/ansible-collection/blob/master/Dockerfile
+If you need to build or customize the Docker image, you can find the Dockerfile here: https://github.com/IBM-Blockchain/ansible-collection/blob/main/Dockerfile
 

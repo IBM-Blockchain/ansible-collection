@@ -85,7 +85,7 @@ Updating the organization
 
 The first step in this task is to update the organization's definition that is stored in the IBM Blockchain Platform console. It is important to keep the organization in the IBM Blockchain Platform console up to date, as this is used when performing various operational tasks, for example creating a new peer or ordering service node.
 
-Review the example playbook `01-update-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/01-update-organization.yml>`_, then run it as follows:
+Review the example playbook `01-update-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/01-update-organization.yml>`_, then run it as follows:
 
   ::
 
@@ -106,7 +106,7 @@ Depending on the role of the organization being updated, perform the appropriate
 
 **If the organization is a member of the ordering service consortium**
 
-  Review the example playbook `02-update-syschannel-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/02-update-syschannel-member.yml>`_, and then run it as follows:
+  Review the example playbook `02-update-syschannel-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/02-update-syschannel-member.yml>`_, and then run it as follows:
 
   ::
 
@@ -116,7 +116,7 @@ Depending on the role of the organization being updated, perform the appropriate
 
 **If the organization is an administrator of the ordering service**
 
-  Review the example playbook `03-update-syschannel-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/03-update-syschannel-admin.yml>`_, and then run it as follows:
+  Review the example playbook `03-update-syschannel-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/03-update-syschannel-admin.yml>`_, and then run it as follows:
 
   ::
 
@@ -135,7 +135,7 @@ Depending on the role of the organization being updated, perform the appropriate
 
 **If the organization is not an administrator of the ordering service**
 
-  Review the example playbook `04-update-channels-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/04-update-channels-member.yml>`_, then run it as follows:
+  Review the example playbook `04-update-channels-member.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/04-update-channels-member.yml>`_, then run it as follows:
 
   ::
 
@@ -145,7 +145,7 @@ Depending on the role of the organization being updated, perform the appropriate
 
 **If the organization is an administrator of the ordering service**
 
-  Review the example playbook `05-update-channels-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/add-admin-cert/05-update-channels-admin.yml>`_, then run it as follows:
+  Review the example playbook `05-update-channels-admin.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/05-update-channels-admin.yml>`_, then run it as follows:
 
   ::
 

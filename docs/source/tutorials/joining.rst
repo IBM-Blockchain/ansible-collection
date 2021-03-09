@@ -63,7 +63,7 @@ Joining the network
 
 There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to build the network. Each of the Ansible playbooks is run as either the existing endorsing organization "Org1", or the new endorsing organization "Org2".
 
-The contents of these playbooks are explored at the end of this tutorial. For now, a script `join_network.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/join_network.sh>`_ has been provided which runs these Ansible playbooks in order for you.
+The contents of these playbooks are explored at the end of this tutorial. For now, a script `join_network.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/join_network.sh>`_ has been provided which runs these Ansible playbooks in order for you.
 
 Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command. This is required as organization and ordering service information must be exported and then imported into the other IBM Blockchain Platform instance.
 
@@ -129,7 +129,7 @@ When you ran the script `join_network.sh`, you ran multiple Ansible playbooks. E
 
 Here are the Ansible playbooks that were executed by the script above:
 
-* `12-create-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/12-create-endorsing-organization-components.yml>`_
+* `12-create-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/12-create-endorsing-organization-components.yml>`_
 
   | Organization: Org2
   | Command:
@@ -140,7 +140,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook creates the components for the endorsing organization `Org2`. It makes use of the Ansible role `endorsing_organization <../roles/endorsing_organization.html>`_ to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.
 
-* `13-export-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/13-export-organization.yml>`_
+* `13-export-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/13-export-organization.yml>`_
 
   | Organization: Org2
   | Command:
@@ -153,7 +153,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `14-import-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/14-import-organization.yml>`_
+* `14-import-organization.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/14-import-organization.yml>`_
 
   | Organization: Org1
   | Command:
@@ -166,7 +166,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `15-add-organization-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-add-organization-to-channel.yml>`_
+* `15-add-organization-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-add-organization-to-channel.yml>`_
 
   | Organization: Org1
   | Command:
@@ -177,16 +177,16 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook adds the organization `Org2` into the existing channel `Org1`. The channel now contains two organizations, `Org1` and `Org2`. The policies for this channel are updated, using new policies that are supplied in policy files:
 
-  * `Admins`: `15-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-admins-policy.json>`_
-  * `Readers`: `15-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-readers-policy.json>`_
-  * `Writers`: `15-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-writers-policy.json>`_
-  * `Endorsement`: `15-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-endorsement-policy.json>`_
-  * `LifecycleEndorsement`: `15-lifecycle-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/15-lifecycle-endorsement-policy.json>`_
+  * `Admins`: `15-admins-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-admins-policy.json>`_
+  * `Readers`: `15-readers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-readers-policy.json>`_
+  * `Writers`: `15-writers-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-writers-policy.json>`_
+  * `Endorsement`: `15-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-endorsement-policy.json>`_
+  * `LifecycleEndorsement`: `15-lifecycle-endorsement-policy.json <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/15-lifecycle-endorsement-policy.json>`_
 
   |
   | The Ansible modules `channel_config <../modules/channel_config.html>`_, `channel_member <../modules/channel_member.html>`_, and `channel_policy <../modules/channel_policy.html>`_ are used to update the channel.
 
-* `16-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/16-import-ordering-service.yml>`_
+* `16-import-ordering-service.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/16-import-ordering-service.yml>`_
 
   | Organization: Org2
   | Command:
@@ -199,7 +199,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | Note: this playbook only needs to be executed when the organizations `Org1` and `Org2` are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.
 
-* `17-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/17-join-peer-to-channel.yml>`_
+* `17-join-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/17-join-peer-to-channel.yml>`_
 
   | Organization: Org2
   | Command:
@@ -210,7 +210,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook uses the Ansible module `channel_block <../modules/channel_block.html>`_ to fetch the genesis block for the channel, before using the Ansible module `peer_channel <../modules/peer_channel.html>`_ to join the peer `Org2 Peer` to the channel.
 
-* `18-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/18-add-anchor-peer-to-channel.yml>`_
+* `18-add-anchor-peer-to-channel.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/18-add-anchor-peer-to-channel.yml>`_
 
   | Organization: Org2
   | Command:
@@ -223,7 +223,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
 Finally, there is one Ansible playbook that can be used to destroy the network components for `Org2`. It is:
 
-* `98-delete-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/98-delete-endorsing-organization-components.yml>`_
+* `98-delete-endorsing-organization-components.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/98-delete-endorsing-organization-components.yml>`_
 
   | Organization: Org2
   | Command:
@@ -239,7 +239,7 @@ Finally, there is one Ansible playbook that can be used to destroy the network c
 Destroying the network
 ----------------------
 
-If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the `join_network.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/join_network.sh>`_ script again to run these Ansible playbooks. This script will also remove all of the components for the organizations `Ordering Org` and `Org1` created by the previous tutorial.
+If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the `join_network.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/join_network.sh>`_ script again to run these Ansible playbooks. This script will also remove all of the components for the organizations `Ordering Org` and `Org1` created by the previous tutorial.
 
 Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command.
 

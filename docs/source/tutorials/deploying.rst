@@ -29,7 +29,7 @@ Deploying the smart contract
 
 There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to deploy the smart contract. Each of the Ansible playbooks is run as one of the endorsing organizations "Org1" or "Org2".
 
-The contents of these playbooks are explored at the end of this tutorial. For now, a script `deploy_smart_contract.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/deploy_smart_contract.sh>`_ has been provided which runs these Ansible playbooks in order for you.
+The contents of these playbooks are explored at the end of this tutorial. For now, a script `deploy_smart_contract.sh <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/deploy_smart_contract.sh>`_ has been provided which runs these Ansible playbooks in order for you.
 
 If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:
 
@@ -66,7 +66,7 @@ When you ran the script `deploy_smart_contract.sh`, you ran multiple Ansible pla
 
 Here are the Ansible playbooks that were executed by the script above:
 
-* `19-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/19-install-and-approve-chaincode.yml>`_
+* `19-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/19-install-and-approve-chaincode.yml>`_
 
   | Organization: Org1
   | Command:
@@ -77,7 +77,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org1 Peer`, and the Ansible module `approved_chaincode <../modules/approved_chaincode.html>` to approve the FabCar smart contract definition on the channel `mychannel`.
 
-* `20-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/20-install-and-approve-chaincode.yml>`_
+* `20-install-and-approve-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/20-install-and-approve-chaincode.yml>`_
 
   | Organization: Org2
   | Command:
@@ -88,7 +88,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook uses the Ansible module `installed_chaincode <../modules/installed_chaincode.html>`_ to install the FabCar smart contract onto the peer `Org2 Peer`, and the Ansible module `approved_chaincode <../modules/approved_chaincode.html>` to approve the FabCar smart contract definition on the channel `mychannel`.
 
-* `21-commit-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/21-commit-chaincode.yml>`_
+* `21-commit-chaincode.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/21-commit-chaincode.yml>`_
 
   | Organization: Org1
   | Command:
@@ -99,7 +99,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook uses the Ansible module `committed_chaincode <../modules/committed_chaincode.html>`_ to commit the FabCar smart contract definition on the channel `mychannel`.
 
-* `22-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/22-register-application.yml>`_
+* `22-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/22-register-application.yml>`_
 
   | Organization: Org1
   | Command:
@@ -110,7 +110,7 @@ Here are the Ansible playbooks that were executed by the script above:
 
   | This playbook uses the Ansible module `registered_identity <../modules/registered_identity.html>`_ to register a new identity in the certificate authority `Org1 CA`. This playbook also uses the Ansible module `connection_profile <../modules/connection_profile.html>`_ to create a connection profile for the organization `Org1`. The identity and the connection profile can be used by the organizations FabCar applications to interact with the network and smart contract.
 
-* `23-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/23-register-application.yml>`_
+* `23-register-application.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/23-register-application.yml>`_
 
   | Organization: Org2
   | Command:

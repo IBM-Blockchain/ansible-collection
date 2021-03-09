@@ -72,7 +72,7 @@ The remaining values must always be set:
 Creating the certificate authority
 ----------------------------------
 
-Review the example playbook `create-ha-ca.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/haca/create-ha-ca.yml>`_, then run it as follows:
+Review the example playbook `create-ha-ca.yml <https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/haca/create-ha-ca.yml>`_, then run it as follows:
 
   ::
 
