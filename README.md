@@ -1,7 +1,5 @@
 # ansible-collection
 
-[![Build Status](https://dev.azure.com/IBM-Blockchain/ansible-collection/_apis/build/status/IBM-Blockchain.ansible-collection?branchName=master)](https://dev.azure.com/IBM-Blockchain/ansible-collection/_build/latest?definitionId=5&branchName=master)
-
 The IBM Blockchain Platform provides advanced tooling that allows you to quickly build, operate & govern and grow blockchain networks. It uses Hyperledger Fabric, the open source, industry standard for enterprise blockchain. It also helps you to deploy Hyperledger Fabric networks anywhere, either to cloud or on-premises, using Kubernetes.
 
 This Ansible collection, provided as part of the IBM Blockchain Platform, enables you to automate the building of Hyperledger Fabric networks.
