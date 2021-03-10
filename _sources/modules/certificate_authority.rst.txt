@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/certificate_authority.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/certificate_authority.py
 
 
 certificate_authority -- Manage a Hyperledger Fabric certificate authority

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/registered_identity.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/registered_identity.py
 
 
 registered_identity -- Manage a registered Hyperledger Fabric identity

@@ -170,7 +170,7 @@
         
           
             
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docs/source/tasks/enable-fabricv2-capability.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/enable-fabricv2-capability.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -248,7 +248,7 @@
 <h2>Enabling v2 Capability for the System Channel<a class="headerlink" href="#enabling-v2-capability-for-the-system-channel" title="Permalink to this headline">¶</a></h2>
 <p>The first task is to enable v2 capability on the system channel of the Orderer.
 Note that any new channels created after updating the System Channel will have v2 capability enabled by default, but readers are encouraged to verify that all the capabilities are enabled for the new channels.</p>
-<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml">01-enable-fabricv2-systemchannel.yml</a>.</p>
+<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml">01-enable-fabricv2-systemchannel.yml</a>.</p>
 <p>Ensure that the JSON identity files specified in the <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code> file have been copied to the working directory.</p>
 <p>Run the playbook as follows:</p>
 <blockquote>
@@ -265,8 +265,8 @@ Note that any new channels created after updating the System Channel will have v
 <p>v2 capability requires that a <em>Channel Application Endorsement Policy</em> be added to the channel.  This playbook uses an example policy <code class="docutils literal notranslate"><span class="pre">endorsement-policy.json</span></code>.
 v2 capability enables a default majority Lifecycle Endorsement Policy, but if a different policy is required, this playbook can be modified to include such a policy at the time v2 capability is enabled.</p>
 <p>In this example playbook both the Ordering Service Administrator identity, and the Organisation Administrator identity are used to sign the modified channel configuration but in other scenarios these identities for signing may be different.</p>
-<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/02-enable-fabricv2-channels.yml">02-enable-fabricv2-channels.yml</a>.</p>
-<p>When reviewing the playbook you will note that an additional playbook is used on a loop across the array of channels listed in the variables file  <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/enable-fabricv2-capability/tasks/02-enable-fabricv2-channel.yml">02-enable-fabricv2-channel.yml</a>.</p>
+<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/02-enable-fabricv2-channels.yml">02-enable-fabricv2-channels.yml</a>.</p>
+<p>When reviewing the playbook you will note that an additional playbook is used on a loop across the array of channels listed in the variables file  <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/tasks/02-enable-fabricv2-channel.yml">02-enable-fabricv2-channel.yml</a>.</p>
 <p>Run the playbook as follows:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-enable-fabricv2-channels.yml

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/consortium_member_info.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/consortium_member_info.py
 
 
 consortium_member_info -- Get information about a consortium member for a Hyperledger Fabric ordering service

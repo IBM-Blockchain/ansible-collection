@@ -172,7 +172,7 @@
         
           
             
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/docs/source/tutorials/building.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/building.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -244,7 +244,7 @@
 <div class="section" id="building-the-network">
 <h2>Building the network<a class="headerlink" href="#building-the-network" title="Permalink to this headline">¶</a></h2>
 <p>There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to build the network. Each of the Ansible playbooks is run as either the ordering organization “Ordering Org”, or the endorsing organization “Org1”.</p>
-<p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/build_network.sh">build_network.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
+<p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/build_network.sh">build_network.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
 <p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command. This is required as organization and ordering service information must be exported and then imported into the other IBM Blockchain Platform instance.</p>
 <p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
 <ul>
@@ -343,7 +343,7 @@
 <p>Note that this tutorial instructs you to place secrets (API keys, API secrets, passwords, etc) in plain text in these variable files. It is possible to encrypt these variables using built-in Ansible functionality, for example <a class="reference external" href="https://docs.ansible.com/ansible/latest/user_guide/vault.html">Ansible Vault</a> or Ansible lookup plugins such as <a class="reference external" href="https://docs.ansible.com/ansible/latest/plugins/lookup/hashi_vault.html">hashi_vault</a>.</p>
 <p>Here are the Ansible playbooks that were executed by the script above:</p>
 <ul>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/01-create-ordering-organization-components.yml">01-create-ordering-organization-components.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/01-create-ordering-organization-components.yml">01-create-ordering-organization-components.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -357,7 +357,7 @@
 <div class="line">This playbook creates the components for the ordering organization <cite>Ordering Org</cite>. It makes use of the Ansible role <a class="reference external" href="../roles/ordering_organization.html">ordering_organization</a> to set up the certificate authority, organization (MSP) and ordering service for this organization, along with the administrator identities for this organization.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/02-create-endorsing-organization-components.yml">02-create-endorsing-organization-components.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/02-create-endorsing-organization-components.yml">02-create-endorsing-organization-components.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -371,7 +371,7 @@
 <div class="line">This playbook creates the components for the endorsing organization <cite>Org1</cite>. It makes use of the Ansible role <a class="reference external" href="../roles/endorsing_organization.html">endorsing_organization</a> to set up the certificate authority, organization (MSP) and peer for this organization, along with the administrator identities for this organization.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/03-export-organization.yml">03-export-organization.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/03-export-organization.yml">03-export-organization.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -388,7 +388,7 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/04-import-organization.yml">04-import-organization.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/04-import-organization.yml">04-import-organization.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -405,7 +405,7 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/05-enable-capabilities.yml">05-enable-capabitilies.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/05-enable-capabilities.yml">05-enable-capabitilies.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -419,7 +419,7 @@
 <div class="line">This playbook enables Fabric v2.x capabilities on the ordering service. It uses the Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a> and <a class="reference external" href="../modules/channel_capabilities.html">channel_capabilities</a> to update the system channel configuration.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/06-add-organization-to-consortium.yml">06-add-organization-to-consortium.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/06-add-organization-to-consortium.yml">06-add-organization-to-consortium.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -433,7 +433,7 @@
 <div class="line">This playbook adds the organization <cite>Org1</cite> into the consortium for the ordering service. It uses the Ansible modules <a class="reference external" href="../modules/channel_config.html">channel_config</a> and <a class="reference external" href="../modules/consortium_member.html">consortium_member</a> to update the system channel configuration, which contains the list of consortium members.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/07-export-ordering-service.yml">07-export-ordering-service.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/07-export-ordering-service.yml">07-export-ordering-service.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -450,7 +450,7 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/08-import-ordering-service.yml">08-import-ordering-service.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/08-import-ordering-service.yml">08-import-ordering-service.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -467,7 +467,7 @@
 <div class="line">Note: this playbook only needs to be executed when the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> are using separate IBM Blockchain Platform instances. If they are using the same instances, then this information is already available to both organizations.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-create-channel.yml">09-create-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-create-channel.yml">09-create-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -481,18 +481,18 @@
 <div class="line">This playbook creates a channel called <cite>mychannel</cite> on the ordering service. The channel contains a single organization, <cite>Org1</cite>. The policies for this channel are supplied in policy files:</div>
 </div>
 <ul class="simple">
-<li><p><cite>Admins</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-admins-policy.json">09-admins-policy.json</a></p></li>
-<li><p><cite>Readers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-readers-policy.json">09-readers-policy.json</a></p></li>
-<li><p><cite>Writers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-writers-policy.json">09-writers-policy.json</a></p></li>
-<li><p><cite>Endorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-endorsement-policy.json">09-endorsement-policy.json</a></p></li>
-<li><p><cite>LifecycleEndorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/09-lifecycle-endorsement-policy.json">09-lifecycle-endorsement-policy.json</a></p></li>
+<li><p><cite>Admins</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-admins-policy.json">09-admins-policy.json</a></p></li>
+<li><p><cite>Readers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-readers-policy.json">09-readers-policy.json</a></p></li>
+<li><p><cite>Writers</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-writers-policy.json">09-writers-policy.json</a></p></li>
+<li><p><cite>Endorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-endorsement-policy.json">09-endorsement-policy.json</a></p></li>
+<li><p><cite>LifecycleEndorsement</cite>: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/09-lifecycle-endorsement-policy.json">09-lifecycle-endorsement-policy.json</a></p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
 <div class="line">The Ansible module <a class="reference external" href="../modules/channel_config.html">channel_config</a> is used to create the channel.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/10-join-peer-to-channel.yml">10-join-peer-to-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/10-join-peer-to-channel.yml">10-join-peer-to-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -506,7 +506,7 @@
 <div class="line">This playbook uses the Ansible module <a class="reference external" href="../modules/channel_block.html">channel_block</a> to fetch the genesis block for the channel, before using the Ansible module <a class="reference external" href="../modules/peer_channel.html">peer_channel</a> to join the peer <cite>Org1 Peer</cite> to the channel.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/11-add-anchor-peer-to-channel.yml">11-add-anchor-peer-to-channel.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/11-add-anchor-peer-to-channel.yml">11-add-anchor-peer-to-channel.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -523,7 +523,7 @@
 </ul>
 <p>Finally, there are also two Ansible playbooks that can be used to destroy the network components for <cite>Ordering Org</cite> and <cite>Org1</cite>. They are:</p>
 <ul>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/97-delete-endorsing-organization-components.yml">97-delete-endorsing-organization-components.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/97-delete-endorsing-organization-components.yml">97-delete-endorsing-organization-components.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Org1</div>
 <div class="line">Command:</div>
@@ -540,7 +540,7 @@
 <div class="line">Note: this is the same Ansible role that is used to create the components, but the <code class="docutils literal notranslate"><span class="pre">state:</span> <span class="pre">absent</span></code> variable tells this role that we do not want these components to exist.</div>
 </div>
 </li>
-<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/99-delete-ordering-organization-components.yml">99-delete-ordering-organization-components.yml</a></p>
+<li><p><a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/99-delete-ordering-organization-components.yml">99-delete-ordering-organization-components.yml</a></p>
 <div class="line-block">
 <div class="line">Organization: Ordering Org</div>
 <div class="line">Command:</div>
@@ -561,7 +561,7 @@
 </div>
 <div class="section" id="destroying-the-network">
 <h2>Destroying the network<a class="headerlink" href="#destroying-the-network" title="Permalink to this headline">¶</a></h2>
-<p>If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/tutorial/build_network.sh">build_network.sh</a> script again to run these Ansible playbooks.</p>
+<p>If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/build_network.sh">build_network.sh</a> script again to run these Ansible playbooks.</p>
 <p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command.</p>
 <p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
 <ul>

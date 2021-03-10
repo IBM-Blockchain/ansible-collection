@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_member_info.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/channel_member_info.py
 
 
 channel_member_info -- Get information about a member for a Hyperledger Fabric channel

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_policy.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/channel_policy.py
 
 
 channel_policy -- Manage a policy for a Hyperledger Fabric channel

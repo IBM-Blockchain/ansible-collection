@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/docs/source/roles/ordering_organization.rst
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/ordering_organization.rst
 
 
 ordering_organization -- Build Hyperledger Fabric components for an ordering organization

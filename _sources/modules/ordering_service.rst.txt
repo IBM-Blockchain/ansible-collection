@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/ordering_service.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/ordering_service.py
 
 
 ordering_service -- Manage a Hyperledger Fabric ordering service

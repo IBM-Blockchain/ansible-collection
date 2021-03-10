@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/instantiated_chaincode.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/instantiated_chaincode.py
 
 
 instantiated_chaincode -- Manage a instantiated chaincode on a Hyperledger Fabric channel

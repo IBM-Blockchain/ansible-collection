@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/peer_channel.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/peer_channel.py
 
 
 peer_channel -- Manage the list of channels joined by a Hyperledger Fabric peer

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/console_user.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/console_user.py
 
 
 console_user -- Manage the list of users for an IBM Blockchain Platform console

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/channel_consenters.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/channel_consenters.py
 
 
 channel_consenters -- Manage the consenters for a Hyperledger Fabric channel

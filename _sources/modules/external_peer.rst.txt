@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/external_peer.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/external_peer.py
 
 
 external_peer -- Manage an external Hyperledger Fabric peer

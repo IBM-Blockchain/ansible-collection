@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/enrolled_identity_info.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/enrolled_identity_info.py
 
 
 enrolled_identity_info -- Get information about an enrolled Hyperledger Fabric identity

@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/master/plugins/modules/connection_profile.py
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/connection_profile.py
 
 
 connection_profile -- Manage a connection profile for a Hyperledger Fabric network
