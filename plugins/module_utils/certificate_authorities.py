@@ -178,7 +178,7 @@ class CertificateAuthorityConnection:
         else:
             return self._enroll_ca(name, enrollment_id, enrollment_secret)
 
-    def _enroll_ca(self, name, enrollment_id, enrollment_secret, hosts):
+    def _enroll_ca(self, name, enrollment_id, enrollment_secret):
         enrollment = self.ca_service.enroll(enrollment_id, enrollment_secret)
         cert = enrollment.cert
         if self.hsm:
