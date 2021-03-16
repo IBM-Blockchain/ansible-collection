@@ -131,6 +131,21 @@ Parameters
       | **Type**: str
 
 
+  tls
+    True if the identity should be enrolled against the TLS certificate authority, false otherwise.
+
+    Cannot be specified at the same time as a PKCS
+
+    | **Type**: bool
+
+  hosts
+    The list of host names to add to the certificate as X.509 Subject Alternative Names.
+
+    Can only be specified when enrolling the identity against the TLS certificate authority.
+
+    | **Type**: list
+    | **Elements**: str
+
 
 
 
