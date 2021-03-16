@@ -16,6 +16,7 @@ try:
     from cryptography import x509
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
+    from cryptography.x509.oid import NameOID
     from hfc.fabric_ca.caservice import Enrollment, ca_service, ecies
 except ImportError:
     # Missing dependencies are handled elsewhere.
@@ -23,6 +24,7 @@ except ImportError:
 
 import base64
 import hashlib
+import ipaddress
 import json
 import os
 import tempfile
@@ -117,15 +119,16 @@ class CertificateAuthority:
         if not started:
             raise Exception(f'Certificate authority failed to start within {timeout} seconds')
 
-    def connect(self, hsm):
-        return CertificateAuthorityConnection(self, hsm)
+    def connect(self, hsm, tls=False):
+        return CertificateAuthorityConnection(self, hsm, tls)
 
 
 class CertificateAuthorityConnection:
 
-    def __init__(self, certificate_authority, hsm, retries=5):
+    def __init__(self, certificate_authority, hsm, tls=False, retries=5):
         self.certificate_authority = certificate_authority
         self.hsm = hsm
+        self.tls = tls
         self.retries = retries
 
     def __enter__(self):
@@ -137,7 +140,10 @@ class CertificateAuthorityConnection:
             self.crypto = PKCS11Crypto(self.hsm['pkcs11library'], self.hsm['label'], self.hsm['pin'])
         else:
             self.crypto = ecies()
-        self.ca_service = ca_service(self.certificate_authority.api_url, False, ca_name=self.certificate_authority.ca_name, crypto=self.crypto)
+        ca_name = self.certificate_authority.ca_name
+        if self.tls:
+            ca_name = self.certificate_authority.tlsca_name
+        self.ca_service = ca_service(self.certificate_authority.api_url, False, ca_name=ca_name, crypto=self.crypto)
         self.identity_service = self.ca_service.newIdentityService()
         self.certificate_service = self.ca_service.newCertificateService()
         return self
@@ -163,10 +169,16 @@ class CertificateAuthorityConnection:
         cainfo = json.load(response)
         return cainfo['result']['CAChain']
 
-    def enroll(self, name, enrollment_id, enrollment_secret):
-        return self._run_with_retry(lambda: self._enroll(name, enrollment_id, enrollment_secret))
+    def enroll(self, name, enrollment_id, enrollment_secret, hosts):
+        return self._run_with_retry(lambda: self._enroll(name, enrollment_id, enrollment_secret, hosts))
 
-    def _enroll(self, name, enrollment_id, enrollment_secret):
+    def _enroll(self, name, enrollment_id, enrollment_secret, hosts):
+        if self.tls:
+            return self._enroll_tlsca(name, enrollment_id, enrollment_secret, hosts)
+        else:
+            return self._enroll_ca(name, enrollment_id, enrollment_secret)
+
+    def _enroll_ca(self, name, enrollment_id, enrollment_secret, hosts):
         enrollment = self.ca_service.enroll(enrollment_id, enrollment_secret)
         cert = enrollment.cert
         if self.hsm:
@@ -187,6 +199,42 @@ class CertificateAuthorityConnection:
             ca=ca,
             hsm=hsm
         )
+
+    def _enroll_tlsca(self, name, enrollment_id, enrollment_secret, hosts):
+        private_key = self.crypto.generate_private_key()
+        subject_name = x509.Name([
+            x509.NameAttribute(NameOID.COMMON_NAME, enrollment_id)
+        ])
+        extensions = []
+        if hosts:
+            names = []
+            for host in hosts:
+                names.append(self._get_name_for_host(host))
+            extension = x509.SubjectAlternativeName(names)
+            extensions.append(x509.Extension(extension.oid, False, extension))
+        csr = self.crypto.generate_csr(private_key, subject_name, extensions)
+        enrollment = self.ca_service.enroll(enrollment_id, enrollment_secret, csr)
+        cert = enrollment.cert
+        private_key_bytes = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+        ca = enrollment.caCert
+        return EnrolledIdentity(
+            name=name,
+            cert=cert,
+            private_key=private_key_bytes,
+            ca=ca,
+            hsm=None
+        )
+
+    def _get_name_for_host(self, host):
+        try:
+            ip_address = ipaddress.ip_address(host)
+            return x509.IPAddress(ip_address)
+        except ValueError:
+            return x509.DNSName(host)
 
     def is_registered(self, registrar, enrollment_id):
         return self._run_with_retry(lambda: self._is_registered(registrar, enrollment_id))

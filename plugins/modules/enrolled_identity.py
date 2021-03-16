@@ -4,18 +4,21 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
-
-from ..module_utils.certificate_authorities import CertificateAuthorityException
-from ..module_utils.enrolled_identities import EnrolledIdentity
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_certificate_authority_by_module
-
-from ansible.module_utils._text import to_native
 
 import json
 import os
 import os.path
+
+from ansible.module_utils._text import to_native
+
+from ..module_utils.certificate_authorities import \
+    CertificateAuthorityException
+from ..module_utils.enrolled_identities import EnrolledIdentity
+from ..module_utils.module import BlockchainModule
+from ..module_utils.utils import (get_certificate_authority_by_module,
+                                  get_console)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -123,6 +126,18 @@ options:
                 description:
                     - The HSM pin that should be used for generating and storing the private key.
                 type: str
+    tls:
+        description:
+            - True if the identity should be enrolled against the TLS certificate authority, false otherwise.
+            - Cannot be specified at the same time as a PKCS #11 compliant HSM configuration.
+        type: bool
+        default: false
+    hosts:
+        description:
+            - The list of host names to add to the certificate as X.509 Subject Alternative Names.
+            - Can only be specified when enrolling the identity against the TLS certificate authority.
+        type: list
+        elements: str
 notes: []
 requirements: []
 '''
@@ -202,7 +217,9 @@ def main():
             pkcs11library=dict(type='str', required=True),
             label=dict(type='str', required=True, no_log=True),
             pin=dict(type='str', required=True, no_log=True)
-        ))
+        )),
+        tls=dict(type='bool', default=False),
+        hosts=dict(type='list', elements='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
@@ -211,8 +228,17 @@ def main():
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     # Validate HSM requirements if HSM is specified.
-    if module.params['hsm']:
+    hsm = module.params['hsm']
+    if hsm:
         module.check_for_missing_hsm_libs()
+
+    # Reject HSM + TLS, or hosts without TLS.
+    tls = module.params['tls']
+    if hsm and tls:
+        raise Exception('Cannot specify HSM configuration and enroll against TLS certificate authority')
+    hosts = module.params['hosts']
+    if hosts and not tls:
+        raise Exception('Can only specify hosts when enrolling against TLS certificate authority')
 
     # Ensure all exceptions are caught.
     try:
@@ -230,12 +256,11 @@ def main():
 
             # Enroll the identity.
             certificate_authority = get_certificate_authority_by_module(console, module)
-            hsm = module.params['hsm']
             name = module.params['name']
             enrollment_id = module.params['enrollment_id']
             enrollment_secret = module.params['enrollment_secret']
-            with certificate_authority.connect(hsm) as connection:
-                identity = connection.enroll(name, enrollment_id, enrollment_secret)
+            with certificate_authority.connect(hsm, tls) as connection:
+                identity = connection.enroll(name, enrollment_id, enrollment_secret, hosts)
             with open(path, 'w') as file:
                 json.dump(identity.to_json(), file, indent=4)
             module.exit_json(changed=True, enrolled_identity=identity.to_json())
@@ -254,8 +279,7 @@ def main():
             # The certificate may no longer be valid (revoked, expired, new certificate authority).
             # If this is the case, we want to try re-enrolling it.
             certificate_authority = get_certificate_authority_by_module(console, module)
-            hsm = module.params['hsm']
-            with certificate_authority.connect(hsm) as connection:
+            with certificate_authority.connect(hsm, tls) as connection:
 
                 # Determine if the certificate is valid.
                 enrollment_id = module.params['enrollment_id']
@@ -277,7 +301,7 @@ def main():
 
                 # If the certificate is not valid, enroll it again.
                 if not certificate_valid:
-                    new_identity = connection.enroll(name, enrollment_id, enrollment_secret)
+                    new_identity = connection.enroll(name, enrollment_id, enrollment_secret, hosts)
 
             # Check if it has changed.
             changed = not new_identity.equals(identity)
