@@ -10,6 +10,7 @@ __metaclass__ = type
 import json
 import os
 import os.path
+from datetime import datetime
 
 from ansible.module_utils._text import to_native
 
@@ -19,6 +20,13 @@ from ..module_utils.enrolled_identities import EnrolledIdentity
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import (get_certificate_authority_by_module,
                                   get_console)
+
+try:
+    from cryptography import x509
+    from cryptography.hazmat.backends import default_backend
+except ImportError:
+    # Missing dependencies are handled elsewhere.
+    pass
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -138,6 +146,20 @@ options:
             - Can only be specified when enrolling the identity against the TLS certificate authority.
         type: list
         elements: str
+    force_reenroll:
+        description:
+            - True if the identity should be re-enrolled, false otherwise.
+            - If specified, then the identity will be re-enrolled every time that your playbook is run.
+        type: bool
+        default: false
+    reenroll_before_expiry:
+        description:
+            - Use this option to automatically re-enroll the identity before the certificate expires.
+            - Specified as the maximum time in seconds before the expiration of the certificate.
+            - For example, to automatically re-enroll the identity when there are less than 30 days
+              remaining before the certificate expires, set this option to C(2592000).
+        type: int
+        default: -1
 notes: []
 requirements: []
 '''
@@ -219,7 +241,9 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         tls=dict(type='bool', default=False),
-        hosts=dict(type='list', elements='str')
+        hosts=dict(type='list', elements='str'),
+        force_reenroll=dict(type='bool', default=False),
+        reenroll_before_expiry=dict(type='int', default=-1)
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
@@ -299,8 +323,21 @@ def main():
                         # This is some other problem that we should not ignore.
                         raise
 
-                # If the certificate is not valid, enroll it again.
-                if not certificate_valid:
+                # Are we going to re-enroll the certificate?
+                reenroll_required = not certificate_valid
+                force_reenroll = module.params['force_reenroll']
+                if force_reenroll:
+                    reenroll_required = True
+                reenroll_before_expiry = module.params['reenroll_before_expiry']
+                if reenroll_before_expiry > -1:
+                    certificate = x509.load_pem_x509_certificate(new_identity.cert, default_backend())
+                    remaining_period_delta = certificate.not_valid_after - datetime.utcnow()
+                    remaining_period_secs = remaining_period_delta.total_seconds()
+                    if remaining_period_secs < reenroll_before_expiry:
+                        reenroll_required = True
+
+                # If we need to re-enroll the certificate, do it now.
+                if reenroll_required:
                     new_identity = connection.enroll(name, enrollment_id, enrollment_secret, hosts)
 
             # Check if it has changed.
