@@ -1,0 +1,170 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create Parent CA
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Get the parent certificate authority details
+      ibm.blockchain_platform.certificate_authority_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ parent_ca_name }}"
+      register: parent_certificate_authority_info
+
+    - name: Fail if the parent CA already exists
+      fail:
+        msg: Certificate Authority {{ parent_ca_name }} already exists
+      when: parent_certificate_authority_info.exists
+
+    - name: Create parent certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ parent_ca_name }}"
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+                - name: "{{ parent_ca_admin_identity }}"
+                  pass: "{{ parent_ca_admin_secret }}"
+                  type: client
+                  maxenrollments: -1
+                  attrs:
+                    hf.Registrar.Roles: "*"
+                    hf.Registrar.DelegateRoles: "*"
+                    hf.Revoker: true
+                    hf.IntermediateCA: true
+                    hf.GenCRL: true
+                    hf.Registrar.Attributes: "*"
+                    hf.AffiliationMgr: true
+      register: parent_ca_info
+
+    - name: Enroll parent certificate authority admin
+      ibm.blockchain_platform.enrolled_identity:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        certificate_authority: "{{ parent_ca_name }}"
+        name: "{{ parent_ca_name }} Admin"
+        enrollment_id: "{{ parent_ca_admin_identity }}"
+        enrollment_secret: "{{ parent_ca_admin_secret }}"
+        path: "{{ parent_ca_name }} Admin.json"
+
+    - name: Register the Intermediate CA
+      ibm.blockchain_platform.registered_identity:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        certificate_authority: "{{ parent_ca_name }}"
+        registrar: "{{ parent_ca_name }} Admin.json"
+        enrollment_id: "{{ int_ca_identity }}"
+        enrollment_secret: "{{ int_ca_secret }}"
+        max_enrollments: -1
+        type: client
+        attributes:
+          - name: "hf.IntermediateCA"
+            value: "true"
+            ecert: true
+
+    - name: Register the Intermediate CA tls
+      ibm.blockchain_platform.registered_identity:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        certificate_authority: "{{ parent_ca_name }}"
+        registrar: "{{ parent_ca_name }} Admin.json"
+        enrollment_id: "{{ int_tlsca_identity }}"
+        enrollment_secret: "{{ int_tlsca_secret }}"
+        max_enrollments: -1
+        type: client
+        attributes:
+          - name: "hf.IntermediateCA"
+            value: "true"
+            ecert: true
+
+    - name: Get the intermediate certificate authority details
+      ibm.blockchain_platform.certificate_authority_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ int_ca_name }}"
+      register: int_certificate_authority_info
+
+    - name: Fail if the intermediate CA already exists
+      fail:
+        msg: Certificate Authority {{ int_ca_name }} already exists
+      when: int_certificate_authority_info.exists
+
+    - name: Create intermediate certificate authority
+      ibm.blockchain_platform.certificate_authority:
+        state: present
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        name: "{{ int_ca_name }}"
+        config_override:
+          ca:
+            registry:
+              maxenrollments: -1
+              identities:
+                - name: "{{ int_ca_admin_identity }}"
+                  pass: "{{ int_ca_admin_secret }}"
+                  type: client
+                  maxenrollments: -1
+                  attrs:
+                    hf.Registrar.Roles: "*"
+                    hf.Registrar.DelegateRoles: "*"
+                    hf.Revoker: true
+                    hf.IntermediateCA: true
+                    hf.GenCRL: true
+                    hf.Registrar.Attributes: "*"
+                    hf.AffiliationMgr: true
+            intermediate:
+              parentserver:
+                url: "https://{{ int_ca_identity }}:{{ int_ca_secret }}@{{ parent_ca_info.certificate_authority.ca_url | urlsplit('hostname') }}:{{ parent_ca_info.certificate_authority.ca_url | urlsplit('port') }}"
+                caname: "ca"
+              tls:
+                enabled: true
+                certfiles:
+                  - "{{ parent_ca_info.certificate_authority.tls_cert }}"
+          tlsca:
+            registry:
+              maxenrollments: -1
+              identities:
+                - name: "{{ int_tlsca_admin_identity }}"
+                  pass: "{{ int_tlsca_admin_secret }}"
+                  type: client
+                  maxenrollments: -1
+                  attrs:
+                    hf.Registrar.Roles: "*"
+                    hf.Registrar.DelegateRoles: "*"
+                    hf.Revoker: true
+                    hf.IntermediateCA: true
+                    hf.GenCRL: true
+                    hf.Registrar.Attributes: "*"
+                    hf.AffiliationMgr: true
+            intermediate:
+              parentserver:
+                url: "https://{{ int_tlsca_identity }}:{{ int_tlsca_secret }}@{{ parent_ca_info.certificate_authority.ca_url | urlsplit('hostname') }}:{{ parent_ca_info.certificate_authority.ca_url | urlsplit('port') }}"
+                caname: "tlsca"
+              tls:
+                enabled: true
+                certfiles:
+                  - "{{ parent_ca_info.certificate_authority.tls_cert }}"
