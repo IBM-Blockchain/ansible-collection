@@ -4,7 +4,18 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+import json
+import os
+import shutil
+import subprocess
+import urllib.parse
+from subprocess import CalledProcessError
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params, env_fallback
 
 from ..module_utils.dict_utils import diff_dicts
 from ..module_utils.fabric_utils import get_fabric_cfg_path
@@ -12,18 +23,12 @@ from ..module_utils.file_utils import get_temp_file
 from ..module_utils.module import BlockchainModule
 from ..module_utils.msp_utils import convert_identity_to_msp_path
 from ..module_utils.ordering_services import OrderingService
-from ..module_utils.proto_utils import proto_to_json, json_to_proto
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, get_organizations_by_module, resolve_identity
-
-from ansible.module_utils.basic import _load_params, env_fallback
-from ansible.module_utils._text import to_native
-from subprocess import CalledProcessError
-
-import json
-import os
-import shutil
-import subprocess
-import urllib.parse
+from ..module_utils.proto_utils import json_to_proto, proto_to_json
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_ordering_service_by_module,
+                                  get_ordering_service_nodes_by_module,
+                                  get_organizations_by_module,
+                                  resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -185,6 +190,11 @@ options:
               Hyperledger Fabric format (common.Policy).
             - You must provide at least an Admins, Writers, and Readers policy.
             - Only required when I(operation) is C(create).
+        type: dict
+    acls:
+        description:
+            - The set of ACLs to add to the new channel. The keys are the ACL names, and
+              the values are the name of the policy used by the ACL.
         type: dict
     capabilities:
         description:
@@ -469,6 +479,21 @@ def create(module):
                 ),
                 version=1
             )
+
+    # Add the ACLs to the config update.
+    acls = module.params['acls']
+    if acls:
+        application_group = config_update_json['write_set']['groups']['Application']
+        application_values = application_group.setdefault('values', dict())
+        acls_value = application_values.setdefault('ACLs', dict(
+            mod_policy='Admins',
+            value=dict(
+                acls=dict()
+            ),
+            version=0
+        ))
+        for acl_name, acl_policy in acls.items():
+            acls_value['value']['acls'][acl_name] = dict(policy_ref=acl_policy)
 
     # Handle the ordering service nodes.
     if module.params['ordering_service_nodes'] is not None:
@@ -801,6 +826,7 @@ def main():
         updated=dict(type='str'),
         organizations=dict(type='list', elements='raw'),
         policies=dict(type='dict'),
+        acls=dict(type='dict'),
         capabilities=dict(type='dict', default=dict(), options=dict(
             application=dict(type='str', default='V1_4_2'),
             channel=dict(type='str'),
