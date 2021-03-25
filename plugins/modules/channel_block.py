@@ -4,18 +4,22 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
-
-from ..module_utils.file_utils import get_temp_file, equal_files
-from ..module_utils.module import BlockchainModule
-from ..module_utils.ordering_services import OrderingService
-from ..module_utils.utils import get_console, get_identity_by_module, get_ordering_service_by_module, get_ordering_service_nodes_by_module, resolve_identity
-
-from ansible.module_utils.basic import _load_params, env_fallback
-from ansible.module_utils._text import to_native
 
 import os
 import shutil
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params, env_fallback
+
+from ..module_utils.file_utils import equal_files, get_temp_file
+from ..module_utils.module import BlockchainModule
+from ..module_utils.ordering_services import OrderingService
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_ordering_service_by_module,
+                                  get_ordering_service_nodes_by_module,
+                                  resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -65,11 +69,15 @@ options:
             - Only required when I(api_authtype) is C(ibmcloud), and you are using IBM internal staging servers for testing.
         type: str
         default: https://iam.cloud.ibm.com/identity/token
-    operation:
+    state:
         description:
-            - C(fetch) - Fetch the target block to the specified I(path).
+            - C(absent) - If a block exists at the specified I(path), it will be removed.
+            - C(present) - Fetch the block from the specified channel and store it at the specified I(path).
         type: str
-        required: true
+        default: present
+        choices:
+            - absent
+            - present
     ordering_service:
         description:
             - The ordering service to use to manage the channel.
@@ -155,11 +163,11 @@ requirements: []
 EXAMPLES = '''
 - name: Fetch the genesis block for the channel
   ibm.blockchain_platform.channel_block:
+    state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx
     api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    operation: fetch
     ordering_service: Ordering Service
     identity: Org1 Admin.json
     msp_id: Org1MSP
@@ -178,65 +186,18 @@ path:
 '''
 
 
-def fetch(module):
-
-    # Log in to the IBP console.
-    console = get_console(module)
-
-    # Get the ordering service.
-    ordering_service_specified = module.params['ordering_service'] is not None
-    if ordering_service_specified:
-        ordering_service = get_ordering_service_by_module(console, module)
-    else:
-        ordering_service_nodes = get_ordering_service_nodes_by_module(console, module)
-        ordering_service = OrderingService(ordering_service_nodes)
-    tls_handshake_time_shift = module.params['tls_handshake_time_shift']
-
-    # Get the identity.
-    identity = get_identity_by_module(module)
-    msp_id = module.params['msp_id']
-    hsm = module.params['hsm']
-    identity = resolve_identity(console, module, identity, msp_id)
-
-    # Get the channel and target path.
-    name = module.params['name']
-    path = module.params['path']
-    target = module.params['target']
-
-    # Create a temporary file to hold the block.
-    block_proto_path = get_temp_file()
-    try:
-
-        # Fetch the block.
-        with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
-            connection.fetch(name, target, block_proto_path)
-
-        # Compare and copy if needed.
-        if os.path.exists(path):
-            changed = not equal_files(path, block_proto_path)
-            if changed:
-                shutil.copyfile(block_proto_path, path)
-            module.exit_json(changed=changed, path=path)
-        else:
-            shutil.copyfile(block_proto_path, path)
-            module.exit_json(changed=True, path=path)
-
-    # Ensure the temporary file is cleaned up.
-    finally:
-        os.remove(block_proto_path)
-
-
 def main():
 
     # Create the module.
     argument_spec = dict(
-        api_endpoint=dict(type='str'),
-        api_authtype=dict(type='str', choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str', no_log=True),
+        state=dict(type='str', default='present', choices=['present', 'absent']),
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
-        operation=dict(type='str', required=True, choices=['fetch']),
+        operation=dict(type='str', choices=['fetch']),
         ordering_service=dict(type='raw'),
         ordering_service_nodes=dict(type='list', elements='raw'),
         tls_handshake_time_shift=dict(type='str', fallback=(env_fallback, ['IBP_TLS_HANDSHAKE_TIME_SHIFT'])),
@@ -248,17 +209,17 @@ def main():
             pin=dict(type='str', required=True, no_log=True)
         )),
         name=dict(type='str'),
-        path=dict(type='str'),
+        path=dict(type='str', required=True),
         target=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
-        ('operation', 'fetch', ['api_endpoint', 'api_authtype', 'api_key', 'identity', 'msp_id', 'name', 'path', 'target']),
+        ('state', 'present', ['identity', 'msp_id', 'name', 'target']),
     ]
     # Ansible doesn't allow us to say "require one of X and Y only if condition A is true",
     # so we need to handle this ourselves by seeing what was passed in.
     actual_params = _load_params()
-    if actual_params.get('operation', None) in ['fetch']:
+    if actual_params.get('state', None) == 'present':
         required_one_of = [
             ['ordering_service', 'ordering_service_nodes']
         ]
@@ -272,11 +233,60 @@ def main():
 
     # Ensure all exceptions are caught.
     try:
-        operation = module.params['operation']
-        if operation == 'fetch':
-            fetch(module)
+
+        # Log in to the IBP console.
+        console = get_console(module)
+
+        # Handle the state is absent case first.
+        state = module.params['state']
+        path = module.params['path']
+        path_exists = os.path.isfile(path)
+        if state == 'absent' and path_exists:
+            os.remove(path)
+            return module.exit_json(changed=True)
+        elif state == 'absent':
+            return module.exit_json(changed=False)
+
+        # Get the ordering service.
+        ordering_service_specified = module.params['ordering_service'] is not None
+        if ordering_service_specified:
+            ordering_service = get_ordering_service_by_module(console, module)
         else:
-            raise Exception(f'Invalid operation {operation}')
+            ordering_service_nodes = get_ordering_service_nodes_by_module(console, module)
+            ordering_service = OrderingService(ordering_service_nodes)
+        tls_handshake_time_shift = module.params['tls_handshake_time_shift']
+
+        # Get the identity.
+        identity = get_identity_by_module(module)
+        msp_id = module.params['msp_id']
+        hsm = module.params['hsm']
+        identity = resolve_identity(console, module, identity, msp_id)
+
+        # Get the channel and target path.
+        name = module.params['name']
+        target = module.params['target']
+
+        # Create a temporary file to hold the block.
+        block_proto_path = get_temp_file()
+        try:
+
+            # Fetch the block.
+            with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
+                connection.fetch(name, target, block_proto_path)
+
+            # Compare and copy if needed.
+            if os.path.exists(path):
+                changed = not equal_files(path, block_proto_path)
+                if changed:
+                    shutil.copyfile(block_proto_path, path)
+                module.exit_json(changed=changed, path=path)
+            else:
+                shutil.copyfile(block_proto_path, path)
+                module.exit_json(changed=True, path=path)
+
+        # Ensure the temporary file is cleaned up.
+        finally:
+            os.remove(block_proto_path)
 
     # Notify Ansible of the exception.
     except Exception as e:
