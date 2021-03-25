@@ -4,13 +4,15 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils._text import to_native
 
 from ..module_utils.module import BlockchainModule
 from ..module_utils.proto_utils import proto_to_json
-from ..module_utils.utils import get_console, get_identity_by_module, get_peer_by_module, resolve_identity
-
-from ansible.module_utils._text import to_native
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -60,11 +62,18 @@ options:
             - Only required when I(api_authtype) is C(ibmcloud), and you are using IBM internal staging servers for testing.
         type: str
         default: https://iam.cloud.ibm.com/identity/token
-    operation:
+    state:
         description:
-            - C(join) - Join the specified I(peer) to the channel with the genesis block specified in I(path).
+            - C(absent) - If the peer has joined the channel with the specified name, then an error will be thrown,
+              as it is not possible for a peer to leave a channel.
+            - C(present) - Asserts that the peer has joined the channel with the specified name. If the peer has not
+              joined the channel with the specified name, then the peer will be joined to the channel using the specified
+              configuration block.
         type: str
-        required: true
+        default: present
+        choices:
+            - absent
+            - present
     peer:
         description:
             - The peer to join to the channel.
@@ -106,11 +115,16 @@ options:
                 description:
                     - The HSM pin that should be used for digital signatures.
                 type: str
+    name:
+        description:
+            - The name of the channel.
+            - Only required when I(state) is C(absent).
+        type: str
     path:
         description:
             - The path to the file where the channel genesis block is stored.
+            - Only required when I(state) is C(present).
         type: str
-        required: true
 notes: []
 requirements: []
 '''
@@ -118,15 +132,27 @@ requirements: []
 EXAMPLES = '''
 - name: Join the peer to the channel
   ibm.blockchain_platform.peer_channel:
+    state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx
     api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    operation: join
     peer: Org1 Peer
     identity: Org1 Admin.json
     msp_id: Org1MSP
     path: channel_genesis_block.bin
+
+- name: Ensure the peer is not joined to the channel
+  ibm.blockchain_platform.peer_channel:
+    state: absent
+    api_endpoint: https://ibp-console.example.org:32000
+    api_authtype: basic
+    api_key: xxxxxxxx
+    api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    peer: Org1 Peer
+    identity: Org1 Admin.json
+    msp_id: Org1MSP
+    name: channel1
 '''
 
 RETURN = '''
@@ -135,68 +161,33 @@ RETURN = '''
 '''
 
 
-def join(module):
-
-    # Log in to the IBP console.
-    console = get_console(module)
-
-    # Get the peer.
-    peer = get_peer_by_module(console, module)
-
-    # Get the identity.
-    identity = get_identity_by_module(module)
-    msp_id = module.params['msp_id']
-    hsm = module.params['hsm']
-    identity = resolve_identity(console, module, identity, msp_id)
-
-    # Get the channel and target path.
-    path = module.params['path']
-
-    # Connect to the peer.
-    with peer.connect(identity, msp_id, hsm) as connection:
-
-        # Get the list of channels the peer has joined.
-        channels = connection.list_channels()
-
-        # Load the block to determine what channel it is for.
-        with open(path, 'rb') as file:
-            block_json = proto_to_json('common.Block', file.read())
-        name = block_json['data']['data'][0]['payload']['header']['channel_header']['channel_id']
-
-        # Determine if we've joined the channel.
-        joined_channel = name in channels
-        if joined_channel:
-            return module.exit_json(changed=False)
-
-        # Join the channel.
-        connection.join_channel(path)
-        module.exit_json(changed=True)
-
-
 def main():
 
     # Create the module.
     argument_spec = dict(
-        api_endpoint=dict(type='str'),
-        api_authtype=dict(type='str', choices=['ibmcloud', 'basic']),
-        api_key=dict(type='str', no_log=True),
+        state=dict(type='str', default='present', choices=['present', 'absent']),
+        api_endpoint=dict(type='str', required=True),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
-        operation=dict(type='str', required=True, choices=['join']),
-        peer=dict(type='raw'),
-        identity=dict(type='raw'),
-        msp_id=dict(type='str'),
+        operation=dict(type='str', required=False, choices=['join']),
+        peer=dict(type='raw', required=True),
+        identity=dict(type='raw', required=True),
+        msp_id=dict(type='str', required=True),
         hsm=dict(type='dict', options=dict(
             pkcs11library=dict(type='str', required=True),
             label=dict(type='str', required=True, no_log=True),
             pin=dict(type='str', required=True, no_log=True)
         )),
+        name=dict(type='str'),
         path=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
-        ('operation', 'join', ['api_endpoint', 'api_authtype', 'api_key', 'peer', 'identity', 'msp_id', 'path']),
+        ('state', 'present', ['path']),
+        ('state', 'absent', ['name'])
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
@@ -206,11 +197,60 @@ def main():
 
     # Ensure all exceptions are caught.
     try:
-        operation = module.params['operation']
-        if operation == 'join':
-            join(module)
-        else:
-            raise Exception(f'Invalid operation {operation}')
+
+        # Log in to the IBP console.
+        console = get_console(module)
+
+        # Get the peer.
+        peer = get_peer_by_module(console, module)
+
+        # Get the identity.
+        identity = get_identity_by_module(module)
+        msp_id = module.params['msp_id']
+        hsm = module.params['hsm']
+        identity = resolve_identity(console, module, identity, msp_id)
+
+        # Connect to the peer.
+        with peer.connect(identity, msp_id, hsm) as connection:
+
+            # Get the list of channels the peer has joined.
+            channels = connection.list_channels()
+
+            # Get the channel and target path.
+            name = module.params['name']
+            path = module.params['path']
+
+            # Load the block to determine what channel it is for.
+            if not name:
+                with open(path, 'rb') as file:
+                    block_json = proto_to_json('common.Block', file.read())
+                name = block_json['data']['data'][0]['payload']['header']['channel_header']['channel_id']
+
+            # Determine if the channel exists.
+            channel_exists = name in channels
+
+            # Act depending on the desired state.
+            state = module.params['state']
+            if state == 'absent' and channel_exists:
+
+                # The peer has joined the channel, but we can't remove it yet.
+                raise Exception(f'cannot unjoin peer from channel {name}')
+
+            elif state == 'absent':
+
+                # The peer has not joined the channel, nothing to do.
+                return module.exit_json(changed=False)
+
+            elif state == 'present' and not channel_exists:
+
+                # The peer hasn't joined the channel, so join it.
+                connection.join_channel(path)
+                return module.exit_json(changed=True)
+
+            else:
+
+                # The peer has joined the channel, nothing to do.
+                return module.exit_json(changed=False)
 
     # Notify Ansible of the exception.
     except Exception as e:
