@@ -312,6 +312,11 @@ def main():
             name = ordering_service_node_definition['name']
         ordering_service_node = console.get_component_by_display_name('fabric-orderer', name, 'included')
         ordering_service_node_exists = ordering_service_node is not None
+        module.json_log({
+            'msg': 'got external ordering service node',
+            'ordering_service_node': ordering_service_node,
+            'ordering_service_node_exists': ordering_service_node_exists
+        })
 
         # If the ordering service node exists, make sure it's an imported one and not
         # a real one - we don't want to delete it, which may lose data or orphan
@@ -376,6 +381,11 @@ def main():
             # If the ordering service node has changed, apply the changes.
             ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
             if ordering_service_node_changed:
+                module.json_log({
+                    'msg': 'differences detected, updating external ordering service node',
+                    'ordering_service_node': ordering_service_node,
+                    'new_ordering_service_node': new_ordering_service_node
+                })
                 ordering_service_node = console.update_ext_ordering_service_node(expected_ordering_service_node)
                 changed = True
 

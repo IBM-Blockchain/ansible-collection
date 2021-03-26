@@ -32,7 +32,8 @@ except ImportError as e:
 
 class Console:
 
-    def __init__(self, api_endpoint, api_timeout, api_token_endpoint, retries=5):
+    def __init__(self, module, api_endpoint, api_timeout, api_token_endpoint, retries=5):
+        self.module = module
         self.api_endpoint = api_endpoint
         self.api_timeout = api_timeout
         self.api_token_endpoint = api_token_endpoint
@@ -85,11 +86,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to log in to IBM Cloud', 'url': self.api_token_endpoint, 'attempt': attempt})
                 auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
                 auth = json.load(auth_response)
                 access_token = auth['access_token']
                 self.authorization = f'Bearer {access_token}'
             except Exception as e:
+                self.module.json_log({'msg': 'failed to log in to IBM Cloud', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 raise self.handle_error('Failed to log in to IBM Cloud', e)
@@ -111,9 +114,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get console health', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                health = json.load(response)
+                self.module.json_log({'msg': 'got console health', 'health': health})
+                return health
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get console health', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console health', e)
@@ -127,9 +134,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get console settings', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                settings = json.load(response)
+                self.module.json_log({'msg': 'got console settings', 'settings': settings})
+                return settings
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get console settings', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console settings', e)
@@ -143,10 +154,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all components', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('components', list())
+                components = parsed_response.get('components', list())
+                self.module.json_log({'msg': 'got all components', 'components': components})
+                return components
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get all components', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get all components', e)
@@ -160,12 +175,16 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get component by id', 'id': id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'got component by id', 'component': component})
+                return component
             except Exception as e:
                 # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
                 # console, but not in Kubernetes. Try again without requesting the deployment attributes, and
                 # add a value to the result that will trigger the calling module to delete the component.
+                self.module.json_log({'msg': 'failed to get component by id', 'error': str(e)})
                 if isinstance(e, urllib.error.HTTPError) and deployment_attrs == 'included':
                     is_404 = e.code == 404
                     # Sometimes the HTTP 404 Not Found is buried in a HTTP 503 Service Unavailable message, so
@@ -210,9 +229,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create certificate authority', e)
@@ -246,9 +269,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update certificate authority', e)
@@ -261,9 +288,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete certificate authority', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted certificate authority'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete certificate authority', e)
@@ -293,9 +323,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create external certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created external certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create external certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create external certificate authority', e)
@@ -311,9 +345,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update external certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated external certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update external certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update external certificate authority', e)
@@ -326,9 +364,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete external certificate authority', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted external certificate authority'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete external certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external certificate authority', e)
@@ -344,9 +385,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create peer', e)
@@ -380,9 +425,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update peer', e)
@@ -395,9 +444,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete peer', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted peer'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete peer', e)
@@ -427,9 +479,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create external peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created external peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create external peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create external peer', e)
@@ -445,9 +501,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update external peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated external peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update external peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update external peer', e)
@@ -460,9 +520,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete external peer', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted external peer'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete external peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external peer', e)
@@ -478,14 +541,15 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create ordering service', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                json_response = json.load(response)
-                if isinstance(json_response, list):
-                    return json_response
-                elif 'created' in json_response:
-                    return json_response['created']
-                return json_response
+                components = json.load(response)
+                if 'created' in components:
+                    components = components['created']
+                self.module.json_log({'msg': 'created ordering service', 'components': components})
+                return components
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create ordering service', e)
@@ -500,6 +564,7 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
                     json_response = json.load(response)
@@ -511,12 +576,15 @@ class Console:
                             # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
                             # console, but not in Kubernetes. Try to delete the component again, but only from the IBM
                             # Blockchain Platform console this time.
+                            self.module.json_log({'msg': 'attempting to delete ordering service (not in kubernetes)', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                             new_url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
                             open_url(new_url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                         else:
                             raise Exception(f'{deleted}')
+                self.module.json_log({'msg': 'deleted ordering service'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete ordering service', e)
@@ -537,6 +605,7 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete external ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
                     json_response = json.load(response)
@@ -546,8 +615,10 @@ class Console:
                             pass
                         else:
                             raise Exception(f'{deleted}')
+                self.module.json_log({'msg': 'deleted external ordering service'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete external ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external ordering service', e)
@@ -568,9 +639,13 @@ class Console:
         serialized_data = json.dumps(stripped_data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to edit ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'edited ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to edit ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to edit ordering service node', e)
@@ -604,9 +679,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update ordering service node', e)
@@ -619,9 +698,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete ordering service node', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted ordering service node'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete ordering service node', e)
@@ -657,9 +739,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create external ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created external ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create external ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create external ordering service node', e)
@@ -675,9 +761,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update external ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated external ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update external ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update external ordering service node', e)
@@ -692,9 +782,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete external ordering service node', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted external ordering service node'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete external ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external ordering service node', e)
@@ -714,9 +807,12 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to edit admin certificates', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'edited admin certificates'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to edit admin certificates', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to edit admin certificates', e)
@@ -799,9 +895,11 @@ class Console:
         data = json.dumps(dict(b64_block=config_block))
         for attempt in range(1, self.retries + 1):
             try:
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                self.module.json_log({'msg': 'attempting to submit config block', 'data': data, 'url': url, 'attempt': attempt})
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'submitted config block'})
             except Exception as e:
+                self.module.json_log({'msg': 'failed to submit config block', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to submit config block to ordering service node', e)
@@ -892,9 +990,11 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all console users', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get all console users', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get the list of console users', e)
@@ -904,6 +1004,7 @@ class Console:
             user = data['users'][uuid]
             user['uuid'] = uuid
             result.append(user)
+        self.module.json_log({'msg': 'got all console users', 'users': result})
         return result
 
     def get_user(self, email):
@@ -931,13 +1032,17 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create console user', e)
-        return self.get_user(email)
+        user = self.get_user(email)
+        self.module.json_log({'msg': 'created console user', 'user': user})
+        return user
 
     def update_user(self, email, roles):
         user = self.get_user(email)
@@ -959,13 +1064,17 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update console user', e)
-        return self.get_user(email)
+        user = self.get_user(email)
+        self.module.json_log({'msg': 'updated console user', 'user': user})
+        return user
 
     def delete_user(self, email):
         user = self.get_user(email)
@@ -979,9 +1088,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete console user', 'email': email, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted console user'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete console user', e)

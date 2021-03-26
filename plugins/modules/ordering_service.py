@@ -593,6 +593,13 @@ def main():
             if 'deployment_attrs_missing' in ordering_service_node:
                 ordering_service_corrupt_nodes += 1
         ordering_service_corrupt = ordering_service_corrupt_nodes > 0
+        module.json_log({
+            'msg': 'got ordering service',
+            'ordering_service': ordering_service,
+            'ordering_service_exists': ordering_service_exists,
+            'ordering_service_corrupt_nodes': ordering_service_corrupt_nodes,
+            'ordering_service_corrupt': ordering_service_corrupt
+        })
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -818,6 +825,13 @@ def main():
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
                 if ordering_service_node_changed:
+
+                    # Log the differences.
+                    module.json_log({
+                        'msg': 'differences detected, updating ordering service node',
+                        'ordering_service_node': ordering_service_node,
+                        'new_ordering_service_node': new_ordering_service_node
+                    })
 
                     # Remove anything that hasn't changed from the updates.
                     things = list(new_ordering_service_node.keys())

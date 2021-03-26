@@ -3,14 +3,17 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils._text import to_native
-from distutils.version import LooseVersion
-
+import json
+import logging
 import os
 import platform
 import re
 import subprocess
+from distutils.version import LooseVersion
+from inspect import getframeinfo, stack
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 
 HFC_IMPORT_ERR = None
 try:
@@ -77,6 +80,7 @@ class BlockchainModule(AnsibleModule):
         super().__init__(*args, **kwargs)
         self.check_for_missing_libs()
         self.check_for_missing_bins(min_fabric_version)
+        self.setup_logging()
 
     def check_for_missing_libs(self):
         url = 'https://ibm-blockchain.github.io/ansible-collection/installation.html#requirements'
@@ -108,3 +112,19 @@ class BlockchainModule(AnsibleModule):
             self.fail_json(msg=missing_required_lib("python-pkcs11", url=url), exception=PKCS11_IMPORT_ERR)
         if not HAS_ASN1CRYPTO:
             self.fail_json(msg=missing_required_lib("asn1crypto", url=url), exception=ASN1CRYPTO_IMPORT_ERR)
+
+    def setup_logging(self):
+        filename = os.environ.get('IBP_ANSIBLE_LOG_FILENAME', None)
+        if not filename:
+            return
+        logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+        self.logger = logging.getLogger(self._name)
+
+    def json_log(self, msg):
+        if not self.logger:
+            return
+        caller = getframeinfo(stack()[1][0])
+        caller_str = f'{caller.filename}:{caller.lineno}'
+        msg['caller'] = caller_str
+        msg_str = json.dumps(msg, indent=4)
+        self.logger.debug(msg_str)

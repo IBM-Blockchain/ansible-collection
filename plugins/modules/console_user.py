@@ -4,12 +4,13 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils._text import to_native
 
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import get_console
-
-from ansible.module_utils._text import to_native
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -193,6 +194,11 @@ def main():
         email = module.params['email']
         user = console.get_user(email)
         user_exists = user is not None
+        module.json_log({
+            'msg': 'got console user',
+            'user': user,
+            'user_exists': user_exists
+        })
 
         # If the user should not exist, handle that now.
         state = module.params['state']
@@ -232,6 +238,11 @@ def main():
             # Update the user if the roles have changed.
             diff = expected_role_set.symmetric_difference(actual_role_set)
             if diff:
+                module.json_log({
+                    'msg': 'differences detected, updating console user',
+                    'expected_role_set': expected_role_set,
+                    'actual_role_set': actual_role_set
+                })
                 user = console.update_user(email, expected_roles)
                 changed = True
 
