@@ -32,7 +32,8 @@ except ImportError as e:
 
 class Console:
 
-    def __init__(self, api_endpoint, api_timeout, api_token_endpoint, retries=5):
+    def __init__(self, module, api_endpoint, api_timeout, api_token_endpoint, retries=5):
+        self.module = module
         self.api_endpoint = api_endpoint
         self.api_timeout = api_timeout
         self.api_token_endpoint = api_token_endpoint
@@ -85,11 +86,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to log in to IBM Cloud', 'url': self.api_token_endpoint, 'attempt': attempt})
                 auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
                 auth = json.load(auth_response)
                 access_token = auth['access_token']
                 self.authorization = f'Bearer {access_token}'
             except Exception as e:
+                self.module.json_log({'msg': 'failed to log in to IBM Cloud', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 raise self.handle_error('Failed to log in to IBM Cloud', e)
@@ -111,9 +114,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get console health', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                health = json.load(response)
+                self.module.json_log({'msg': 'got console health', 'health': health})
+                return health
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get console health', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console health', e)
@@ -127,9 +134,13 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get console settings', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                settings = json.load(response)
+                self.module.json_log({'msg': 'got console settings', 'settings': settings})
+                return settings
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get console settings', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get console settings', e)
