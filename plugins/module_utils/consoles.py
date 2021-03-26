@@ -639,9 +639,13 @@ class Console:
         serialized_data = json.dumps(stripped_data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to edit ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'edited ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to edit ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to edit ordering service node', e)
@@ -675,9 +679,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update ordering service node', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated ordering service node', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update ordering service node', e)
@@ -690,9 +698,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete ordering service node', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted ordering service node'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete ordering service node', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete ordering service node', e)
