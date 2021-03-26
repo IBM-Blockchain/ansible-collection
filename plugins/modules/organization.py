@@ -561,6 +561,11 @@ def main():
         name = module.params['name']
         organization = console.get_component_by_display_name('msp', name)
         organization_exists = organization is not None
+        module.json_log({
+            'msg': 'got organization',
+            'organization': organization,
+            'organization_exists': organization_exists
+        })
 
         # Extract the organization configuration.
         expected_organization = dict(
@@ -641,6 +646,11 @@ def main():
             # If the organization has changed, apply the changes.
             organization_changed = not equal_dicts(organization, new_organization)
             if organization_changed:
+                module.json_log({
+                    'msg': 'differences detected, updating organization',
+                    'organization': organization,
+                    'new_organization': new_organization
+                })
                 organization = console.update_organization(new_organization['id'], new_organization)
                 changed = True
 
