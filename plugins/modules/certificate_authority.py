@@ -414,7 +414,7 @@ def main():
         certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
         module.json_log({
             'msg': 'got certificate authority',
-            'certificate_authority': certificate_authority.to_json(),
+            'certificate_authority': certificate_authority,
             'certificate_authority_exists': certificate_authority_exists,
             'certificate_authority_corrupt': certificate_authority_corrupt
         })

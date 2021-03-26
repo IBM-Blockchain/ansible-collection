@@ -624,7 +624,7 @@ def main():
         peer_corrupt = peer is not None and 'deployment_attrs_missing' in peer
         module.json_log({
             'msg': 'got peer',
-            'peer': peer.to_json(),
+            'peer': peer,
             'peer_exists': peer_exists,
             'peer_corrupt': peer_corrupt
         })

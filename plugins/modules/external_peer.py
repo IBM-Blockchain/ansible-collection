@@ -261,6 +261,11 @@ def main():
             name = peer_definition['name']
         peer = console.get_component_by_display_name('fabric-peer', name, 'included')
         peer_exists = peer is not None
+        module.json_log({
+            'msg': 'got external peer',
+            'peer': peer,
+            'peer_exists': peer_exists
+        })
 
         # If the peer exists, make sure it's an imported one and not
         # a real one - we don't want to delete it, which may lose data or orphan
@@ -314,6 +319,11 @@ def main():
             # If the peer has changed, apply the changes.
             peer_changed = not equal_dicts(peer, new_peer)
             if peer_changed:
+                module.json_log({
+                    'msg': 'differences detected, updating external peer',
+                    'peer': peer,
+                    'new_peer': new_peer
+                })
                 peer = console.update_ext_peer(new_peer['id'], new_peer)
                 changed = True
 

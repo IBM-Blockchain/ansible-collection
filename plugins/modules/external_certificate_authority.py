@@ -261,7 +261,7 @@ def main():
         certificate_authority_exists = certificate_authority is not None
         module.json_log({
             'msg': 'got external certificate authority',
-            'certificate_authority': certificate_authority.to_json(),
+            'certificate_authority': certificate_authority,
             'certificate_authority_exists': certificate_authority_exists
         })
 
