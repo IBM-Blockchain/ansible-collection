@@ -807,9 +807,12 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to edit admin certificates', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'edited admin certificates'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to edit admin certificates', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to edit admin certificates', e)
@@ -892,9 +895,11 @@ class Console:
         data = json.dumps(dict(b64_block=config_block))
         for attempt in range(1, self.retries + 1):
             try:
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                self.module.json_log({'msg': 'attempting to submit config block', 'data': data, 'url': url, 'attempt': attempt})
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'submitted config block'})
             except Exception as e:
+                self.module.json_log({'msg': 'failed to submit config block', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to submit config block to ordering service node', e)
