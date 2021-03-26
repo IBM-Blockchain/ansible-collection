@@ -229,9 +229,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create certificate authority', e)
@@ -265,9 +269,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update certificate authority', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated certificate authority', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update certificate authority', e)
@@ -280,9 +288,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete certificate authority', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted certificate authority'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete certificate authority', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete certificate authority', e)

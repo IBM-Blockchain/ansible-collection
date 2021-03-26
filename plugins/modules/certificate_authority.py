@@ -412,6 +412,12 @@ def main():
         certificate_authority = console.get_component_by_display_name('fabric-ca', name, deployment_attrs='included')
         certificate_authority_exists = certificate_authority is not None
         certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
+        module.json_log({
+            'msg': 'got certificate authority',
+            'certificate_authority': certificate_authority.to_json(),
+            'certificate_authority_exists': certificate_authority_exists,
+            'certificate_authority_corrupt': certificate_authority_corrupt
+        })
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -593,6 +599,13 @@ def main():
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
             if certificate_authority_changed:
+
+                # Log the differences.
+                module.json_log({
+                    'msg': 'differences detected, updating certificate authority',
+                    'certificate_authority': certificate_authority,
+                    'new_certificate_authority': new_certificate_authority
+                })
 
                 # Restore the unredacted identities.
                 new_certificate_authority.get('config_override', dict()).get('ca', dict()).get('registry', dict())['identities'] = original_expected_ca_identities
