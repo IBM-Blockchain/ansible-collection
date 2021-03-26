@@ -990,9 +990,11 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all console users', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get all console users', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get the list of console users', e)
@@ -1002,6 +1004,7 @@ class Console:
             user = data['users'][uuid]
             user['uuid'] = uuid
             result.append(user)
+        self.module.json_log({'msg': 'got all console users', 'users': result})
         return result
 
     def get_user(self, email):
@@ -1029,13 +1032,17 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create console user', e)
-        return self.get_user(email)
+        user = self.get_user(email)
+        self.module.json_log({'msg': 'created console user', 'user': user})
+        return user
 
     def update_user(self, email, roles):
         user = self.get_user(email)
@@ -1057,13 +1064,17 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
                 break
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update console user', e)
-        return self.get_user(email)
+        user = self.get_user(email)
+        self.module.json_log({'msg': 'updated console user', 'user': user})
+        return user
 
     def delete_user(self, email):
         user = self.get_user(email)
@@ -1077,9 +1088,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete console user', 'email': email, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted console user'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete console user', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete console user', e)
