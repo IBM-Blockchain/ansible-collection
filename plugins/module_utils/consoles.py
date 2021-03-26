@@ -154,10 +154,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all components', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('components', list())
+                components = parsed_response.get('components', list())
+                self.module.json_log({'msg': 'got all components', 'components': components})
+                return components
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get all components', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get all components', e)
@@ -171,12 +175,16 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get component by id', 'id': id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'got component by id', 'component': component})
+                return component
             except Exception as e:
                 # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
                 # console, but not in Kubernetes. Try again without requesting the deployment attributes, and
                 # add a value to the result that will trigger the calling module to delete the component.
+                self.module.json_log({'msg': 'failed to get component by id', 'error': str(e)})
                 if isinstance(e, urllib.error.HTTPError) and deployment_attrs == 'included':
                     is_404 = e.code == 404
                     # Sometimes the HTTP 404 Not Found is buried in a HTTP 503 Service Unavailable message, so
