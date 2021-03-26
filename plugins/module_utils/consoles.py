@@ -541,14 +541,15 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create ordering service', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                json_response = json.load(response)
-                if isinstance(json_response, list):
-                    return json_response
-                elif 'created' in json_response:
-                    return json_response['created']
-                return json_response
+                components = json.load(response)
+                if 'created' in components:
+                    components = components['created']
+                self.module.json_log({'msg': 'created ordering service', 'components': components})
+                return components
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create ordering service', e)
@@ -563,6 +564,7 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
                     json_response = json.load(response)
@@ -574,12 +576,15 @@ class Console:
                             # The API will return HTTP 404 Not Found if the component exists in the IBM Blockchain Platform
                             # console, but not in Kubernetes. Try to delete the component again, but only from the IBM
                             # Blockchain Platform console this time.
+                            self.module.json_log({'msg': 'attempting to delete ordering service (not in kubernetes)', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                             new_url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
                             open_url(new_url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                         else:
                             raise Exception(f'{deleted}')
+                self.module.json_log({'msg': 'deleted ordering service'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete ordering service', e)
