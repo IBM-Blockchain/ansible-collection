@@ -259,6 +259,11 @@ def main():
             name = certificate_authority_definition['name']
         certificate_authority = console.get_component_by_display_name('fabric-ca', name, 'included')
         certificate_authority_exists = certificate_authority is not None
+        module.json_log({
+            'msg': 'got external certificate authority',
+            'certificate_authority': certificate_authority.to_json(),
+            'certificate_authority_exists': certificate_authority_exists
+        })
 
         # If the certificate authority exists, make sure it's an imported one and not
         # a real one - we don't want to delete it, which may lose data or orphan
@@ -312,6 +317,11 @@ def main():
             # If the certificate authority has changed, apply the changes.
             certificate_authority_changed = not equal_dicts(certificate_authority, new_certificate_authority)
             if certificate_authority_changed:
+                module.json_log({
+                    'msg': 'differences detected, updating external certificate authority',
+                    'certificate_authority': certificate_authority,
+                    'new_certificate_authority': new_certificate_authority
+                })
                 certificate_authority = console.update_ext_ca(new_certificate_authority['id'], new_certificate_authority)
                 changed = True
 
