@@ -80,6 +80,7 @@ class BlockchainModule(AnsibleModule):
         super().__init__(*args, **kwargs)
         self.check_for_missing_libs()
         self.check_for_missing_bins(min_fabric_version)
+        self.logger = None
         self.setup_logging()
 
     def check_for_missing_libs(self):
