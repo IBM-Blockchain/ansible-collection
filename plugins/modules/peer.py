@@ -622,6 +622,12 @@ def main():
         peer = console.get_component_by_display_name('fabric-peer', name, deployment_attrs='included')
         peer_exists = peer is not None
         peer_corrupt = peer is not None and 'deployment_attrs_missing' in peer
+        module.json_log({
+            'msg': 'got peer',
+            'peer': peer.to_json(),
+            'peer_exists': peer_exists,
+            'peer_corrupt': peer_corrupt
+        })
 
         # If this is a free cluster, we cannot accept resource/storage configuration,
         # as these are ignored for free clusters. We must also delete the defaults,
@@ -770,6 +776,13 @@ def main():
             # If the peer has changed, apply the changes.
             peer_changed = not equal_dicts(peer, new_peer)
             if peer_changed:
+
+                # Log the differences.
+                module.json_log({
+                    'msg': 'differences detected, updating peer',
+                    'peer': peer,
+                    'new_peer': new_peer
+                })
 
                 # Remove anything that hasn't changed from the updates.
                 things = list(new_peer.keys())

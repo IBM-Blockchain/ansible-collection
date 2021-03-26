@@ -385,9 +385,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create peer', e)
@@ -421,9 +425,13 @@ class Console:
         serialized_data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update peer', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated peer', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update peer', e)
@@ -436,9 +444,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete peer', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted peer'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete peer', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete peer', e)
