@@ -314,6 +314,11 @@ def main():
             cluster_name = ordering_service_definition[0]['cluster_name']
         existing_ordering_service = console.get_components_by_cluster_name('fabric-orderer', cluster_name, 'included')
         existing_ordering_service_exists = len(existing_ordering_service) > 0
+        module.json_log({
+            'msg': 'got external ordering service',
+            'existing_ordering_service': existing_ordering_service,
+            'existing_ordering_service_exists': existing_ordering_service_exists
+        })
 
         # If the ordering service exists, make sure it's an imported one and not
         # a real one - we don't want to delete it, which may lose data or orphan
@@ -403,6 +408,11 @@ def main():
                 # If the ordering service node has changed, apply the changes.
                 ordering_service_node_changed = not equal_dicts(ordering_service_node, new_ordering_service_node)
                 if ordering_service_node_changed:
+                    module.json_log({
+                        'msg': 'differences detected, updating external ordering service node',
+                        'ordering_service_node': ordering_service_node,
+                        'new_ordering_service_node': new_ordering_service_node
+                    })
                     console.delete_ext_ordering_service_node(new_ordering_service_node['id'])
                     ordering_service_node = console.create_ext_ordering_service_node(expected_ordering_service_node)
                     changed = True

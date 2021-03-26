@@ -605,6 +605,7 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete external ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
                 if response.getcode() == 207:
                     json_response = json.load(response)
@@ -614,8 +615,10 @@ class Console:
                             pass
                         else:
                             raise Exception(f'{deleted}')
+                self.module.json_log({'msg': 'deleted external ordering service'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete external ordering service', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete external ordering service', e)
