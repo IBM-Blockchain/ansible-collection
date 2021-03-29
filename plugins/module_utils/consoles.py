@@ -1139,10 +1139,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all available fabric versions', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('versions', dict())
+                versions = parsed_response.get('versions', dict())
+                self.module.json_log({'msg': 'got all available fabric versions', 'versions': versions})
+                return versions
             except Exception as e:
+                self.module.json_log({'msg': 'failed to all available fabric versions', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get supported Fabric versions', e)
@@ -1162,8 +1166,10 @@ class Console:
     def resolve_ca_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve ca version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified ca version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.
@@ -1186,8 +1192,10 @@ class Console:
     def resolve_peer_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve peer version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified peer version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.
@@ -1210,8 +1218,10 @@ class Console:
     def resolve_ordering_service_node_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve ordering service node version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified ordering service node version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.
