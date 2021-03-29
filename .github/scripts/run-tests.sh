@@ -2,8 +2,8 @@
 set -euo pipefail
 TYPE=$1
 TARGET=$2
-if [ "${COLLECT_LOGS}" = "true" ]; then
-    IBP_ANSIBLE_LOG_FILENAME=${TYPE}-${TARGET}.log
+if [ "${COLLECT_LOGS:-false}" = "true" ]; then
+    IBP_ANSIBLE_LOG_FILENAME=/tmp/${TYPE}-${TARGET}.log
     export IBP_ANSIBLE_LOG_FILENAME
     echo "${IBP_ANSIBLE_LOG_FILENAME}" > /tmp/ibp-ansible-log-filename.txt
 fi
