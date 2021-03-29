@@ -315,9 +315,12 @@ class CertificateAuthorityConnection:
     def _run_with_retry(self, func):
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'running ca operation', 'attempt': attempt})
                 result = func()
+                self.module.json_log({'msg': 'ran ca operation'})
                 return result
             except Exception as e:
+                self.module.json_log({'msg': 'failed to run ca operation', 'error': str(e)})
                 msg = str(e)
                 if attempt >= self.retries:
                     raise e

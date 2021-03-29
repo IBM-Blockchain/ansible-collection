@@ -218,7 +218,9 @@ class OrderingServiceNodeConnection:
 
     def _run_command(self, args, env):
         for attempt in range(1, self.retries + 1):
+            self.module.json_log({'msg': 'running command', 'args': args, 'env': env, 'attempt': attempt})
             process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            self.module.json_log({'msg': 'command finished', 'rc': process.returncode, 'stdout': process.stdout})
             if process.returncode == 0:
                 return process
             elif attempt >= self.retries:
