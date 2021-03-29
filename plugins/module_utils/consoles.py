@@ -1118,10 +1118,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get msps by msp id', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('msps', list())
+                msps = parsed_response.get('msps', list())
+                self.module.json_log({'msg': 'got msps by msp id', 'msps': msps})
+                return msps
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get msps by msp id', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get MSPs by MSP ID', e)
