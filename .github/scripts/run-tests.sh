@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 TYPE=$1
+TARGET=$2
 if [ "${COLLECT_LOGS}" = "true" ]; then
-    function print_logs {
-        cat "${IBP_ANSIBLE_LOG_FILENAME}"
-    }
-    IBP_ANSIBLE_LOG_FILENAME=$(mktemp)
+    IBP_ANSIBLE_LOG_FILENAME=${TYPE}-${TARGET}.log
     export IBP_ANSIBLE_LOG_FILENAME
-    trap print_logs EXIT
+    echo "${IBP_ANSIBLE_LOG_FILENAME}" > /tmp/ibp-ansible-log-filename.txt
 fi
 .github/scripts/setup-tests.sh
 ".github/scripts/run-${TYPE}-tests.sh"

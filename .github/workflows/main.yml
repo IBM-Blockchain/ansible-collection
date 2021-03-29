@@ -183,7 +183,13 @@ jobs:
           K8S_NAMESPACE: ${{ secrets[matrix.k8s_namespace] }}
           USE_DOCKER: ${{ matrix.use_docker }}
           COLLECT_LOGS: ${{ github.event.inputs.collect_logs }}
-        run: .github/scripts/run-tests.sh ${{ matrix.type }}
+        run: .github/scripts/run-tests.sh ${{ matrix.type }} ${{ matrix.target }}
+      - name: Upload logs
+        if: ${{ always() && github.event.inputs.collect_logs == 'true' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: Logs for ${{ matrix.type }} tests (${{ matrix.target }})
+          path: ${{ matrix.type }}-${{ matrix.target }}.log
   publish_collection:
     name: Publish collection
     needs: tests
