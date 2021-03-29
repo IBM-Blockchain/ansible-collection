@@ -94,6 +94,7 @@ class Peer:
 
     def wait_for(self, timeout):
         started = False
+        last_e = None
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
@@ -103,11 +104,11 @@ class Peer:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except Exception:
-                pass
+            except Exception as e:
+                last_e = e
             time.sleep(1)
         if not started:
-            raise Exception(f'Peer failed to start within {timeout} seconds')
+            raise Exception(f'Peer failed to start within {timeout} seconds: {str(last_e)}')
 
     def connect(self, identity, msp_id, hsm):
         return PeerConnection(self, identity, msp_id, hsm)

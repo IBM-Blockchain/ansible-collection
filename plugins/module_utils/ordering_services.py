@@ -125,6 +125,7 @@ class OrderingServiceNode:
         if not self.consenter_proposal_fin:
             return
         started = False
+        last_e = None
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
@@ -134,11 +135,11 @@ class OrderingServiceNode:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except Exception:
-                pass
+            except Exception as e:
+                last_e = e
             time.sleep(1)
         if not started:
-            raise Exception(f'Ordering service node failed to start within {timeout} seconds')
+            raise Exception(f'Ordering service node failed to start within {timeout} seconds: {str(last_e)}')
 
     def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
         return OrderingServiceNodeConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
@@ -266,13 +267,14 @@ class OrderingService:
         return OrderingService(nodes=nodes)
 
     def wait_for(self, timeout):
+        last_e = None
         for node in self.nodes:
             try:
                 node.wait_for(timeout)
                 return
-            except Exception:
-                pass
-        raise Exception(f'Ordering service failed to start within {timeout} seconds')
+            except Exception as e:
+                last_e = e
+        raise Exception(f'Ordering service failed to start within {timeout} seconds: {str(last_e)}')
 
     def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
         return OrderingServiceConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
