@@ -117,6 +117,11 @@ class BlockchainModule(AnsibleModule):
     def setup_logging(self):
         filename = os.environ.get('IBP_ANSIBLE_LOG_FILENAME', None)
         if not filename:
+            filename_path = '/tmp/ibp-ansible-log-filename.txt'
+            if os.path.isfile(filename_path):
+                with open(filename_path, 'r') as file:
+                    filename = file.readline().strip()
+        if not filename:
             return
         logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
         self.logger = logging.getLogger(self._name)
