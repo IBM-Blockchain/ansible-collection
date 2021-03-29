@@ -4,14 +4,16 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module, resolve_identity
+import json
 
 from ansible.module_utils._text import to_native
 
-import json
+from ..module_utils.module import BlockchainModule
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -316,7 +318,7 @@ def main():
         version = module.params['version']
 
         # Determine the chaincodes instantiated on the channel.
-        with peer.connect(identity, msp_id, hsm) as peer_connection:
+        with peer.connect(module, identity, msp_id, hsm) as peer_connection:
             instantiated_chaincodes = peer_connection.list_instantiated_chaincodes(channel)
 
         # Find a matching chaincode, if one exists.
@@ -364,14 +366,14 @@ def main():
         elif state == 'present' and instantiated_chaincode_name:
 
             # Upgrade the chaincode.
-            with peer.connect(identity, msp_id, hsm) as peer_connection:
+            with peer.connect(module, identity, msp_id, hsm) as peer_connection:
                 peer_connection.upgrade_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
             changed = True
 
         else:
 
             # Instantiate the chaincode.
-            with peer.connect(identity, msp_id, hsm) as peer_connection:
+            with peer.connect(module, identity, msp_id, hsm) as peer_connection:
                 peer_connection.instantiate_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
             changed = True
 

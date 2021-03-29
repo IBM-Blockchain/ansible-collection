@@ -271,7 +271,7 @@ def main():
         try:
 
             # Fetch the block.
-            with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
+            with ordering_service.connect(module, identity, msp_id, hsm, tls_handshake_time_shift) as connection:
                 connection.fetch(name, target, block_proto_path)
 
             # Compare and copy if needed.

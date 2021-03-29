@@ -211,7 +211,7 @@ def main():
         identity = resolve_identity(console, module, identity, msp_id)
 
         # Connect to the peer.
-        with peer.connect(identity, msp_id, hsm) as connection:
+        with peer.connect(module, identity, msp_id, hsm) as connection:
 
             # Get the list of channels the peer has joined.
             channels = connection.list_channels()

@@ -4,12 +4,15 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module, get_organizations_by_module, resolve_identity
-
 from ansible.module_utils._text import to_native
+
+from ..module_utils.module import BlockchainModule
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_organizations_by_module,
+                                  get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -354,7 +357,7 @@ def main():
         collections_config = module.params['collections_config']
 
         # Check if this chaincode is already committed on the channel.
-        with peer.connect(identity, msp_id, hsm) as peer_connection:
+        with peer.connect(module, identity, msp_id, hsm) as peer_connection:
             committed_chaincodes = peer_connection.query_committed_chaincodes(channel)
         committed_chaincode = next((committed_chaincode for committed_chaincode in committed_chaincodes if committed_chaincode['name'] == name and committed_chaincode['version'] == version and committed_chaincode['sequence'] == sequence and committed_chaincode['endorsement_plugin'] == endorsement_plugin and committed_chaincode['validation_plugin'] == validation_plugin), None)
         committed_chaincode_exists = committed_chaincode is not None
@@ -383,7 +386,7 @@ def main():
                 msp_ids.append(organization.msp_id)
 
             # Commit the chaincode.
-            with peer.connect(identity, msp_id, hsm) as peer_connection:
+            with peer.connect(module, identity, msp_id, hsm) as peer_connection:
                 peer_connection.commit_chaincode(channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
                 changed = True
 

@@ -4,13 +4,15 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
+
+from ansible.module_utils._text import to_native
 
 from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_certificate_authority_by_module, get_identity_by_module
-
-from ansible.module_utils._text import to_native
+from ..module_utils.utils import (get_certificate_authority_by_module,
+                                  get_console, get_identity_by_module)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -297,7 +299,7 @@ def main():
 
         # Connect to the certificate authority.
         hsm = module.params['hsm']
-        with certificate_authority.connect(hsm) as connection:
+        with certificate_authority.connect(module, hsm) as connection:
 
             # Determine if the identity is registered.
             enrollment_id = module.params['enrollment_id']

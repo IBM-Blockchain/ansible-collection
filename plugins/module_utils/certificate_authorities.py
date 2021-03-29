@@ -120,13 +120,14 @@ class CertificateAuthority:
         if not started:
             raise Exception(f'Certificate authority failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, hsm, tls=False):
-        return CertificateAuthorityConnection(self, hsm, tls)
+    def connect(self, module, hsm, tls=False):
+        return CertificateAuthorityConnection(module, self, hsm, tls)
 
 
 class CertificateAuthorityConnection:
 
-    def __init__(self, certificate_authority, hsm, tls=False, retries=5):
+    def __init__(self, module, certificate_authority, hsm, tls=False, retries=5):
+        self.module = module
         self.certificate_authority = certificate_authority
         self.hsm = hsm
         self.tls = tls

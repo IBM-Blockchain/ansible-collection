@@ -110,17 +110,18 @@ class Peer:
         if not started:
             raise Exception(f'Peer failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, identity, msp_id, hsm):
-        return PeerConnection(self, identity, msp_id, hsm)
+    def connect(self, module, identity, msp_id, hsm):
+        return PeerConnection(module, self, identity, msp_id, hsm)
 
 
 class PeerConnection:
 
-    def __init__(self, peer, identity, msp_id, hsm, retries=5):
+    def __init__(self, module, peer, identity, msp_id, hsm, retries=5):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
             raise Exception('Specified identity uses HSM, but no HSM configuration specified')
+        self.module = module
         self.peer = peer
         self.identity = identity
         self.msp_id = msp_id

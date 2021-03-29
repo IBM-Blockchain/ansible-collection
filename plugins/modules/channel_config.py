@@ -619,7 +619,7 @@ def fetch(module):
     try:
 
         # Fetch the block.
-        with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
+        with ordering_service.connect(module, identity, msp_id, hsm, tls_handshake_time_shift) as connection:
             connection.fetch(name, 'config', block_proto_path)
 
         # Convert it into JSON.
@@ -794,7 +794,7 @@ def apply_update(module):
     path = module.params['path']
 
     # Update the channel.
-    with ordering_service.connect(identity, msp_id, hsm, tls_handshake_time_shift) as connection:
+    with ordering_service.connect(module, identity, msp_id, hsm, tls_handshake_time_shift) as connection:
         connection.update(name, path)
     module.exit_json(changed=True)
 
