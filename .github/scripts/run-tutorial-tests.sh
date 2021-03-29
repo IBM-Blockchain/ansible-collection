@@ -26,12 +26,12 @@ for VARS in ordering-org-vars.yml org1-vars.yml org2-vars.yml; do
 done
 if [ "${USE_DOCKER}" = "true" ]; then
     function docker_cleanup {
-        docker run --rm -u "$(id -u)" -v "${PWD}:/tutorial" "ibmcom/ibp-ansible:${VERSION}" /tutorial/join_network.sh destroy
+        docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" -v /tmp:/tmp "ibmcom/ibp-ansible:${VERSION}" /tutorial/join_network.sh destroy
     }
     trap docker_cleanup EXIT
-    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" "ibmcom/ibp-ansible:${VERSION}" /tutorial/build_network.sh build
-    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" "ibmcom/ibp-ansible:${VERSION}" /tutorial/join_network.sh join
-    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" "ibmcom/ibp-ansible:${VERSION}" /tutorial/deploy_smart_contract.sh
+    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" -v /tmp:/tmp "ibmcom/ibp-ansible:${VERSION}" /tutorial/build_network.sh build
+    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" -v /tmp:/tmp "ibmcom/ibp-ansible:${VERSION}" /tutorial/join_network.sh join
+    docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u "$(id -u)" -v "${PWD}:/tutorial" -v /tmp:/tmp "ibmcom/ibp-ansible:${VERSION}" /tutorial/deploy_smart_contract.sh
     trap - EXIT
     docker_cleanup
 else
