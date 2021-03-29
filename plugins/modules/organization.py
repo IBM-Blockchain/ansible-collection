@@ -460,7 +460,7 @@ def get_from_certificate_authority(console, module):
     certificate_authority = get_certificate_authority_by_module(console, module)
 
     # Get the certificate authority information.
-    with certificate_authority.connect(None) as connection:
+    with certificate_authority.connect(module, None) as connection:
         ca_chain = connection.get_ca_chain()
         tlsca_chain = connection.get_tlsca_chain()
 
@@ -480,7 +480,7 @@ def get_from_certificate_authority(console, module):
     if module.params['registrar']:
         registrar = get_identity_by_module(module, 'registrar')
         hsm = module.params['hsm']
-        with certificate_authority.connect(hsm) as connection:
+        with certificate_authority.connect(module, hsm) as connection:
             revocation_list = connection.generate_crl(registrar)
             result['revocation_list'] = [revocation_list]
 
@@ -561,6 +561,11 @@ def main():
         name = module.params['name']
         organization = console.get_component_by_display_name('msp', name)
         organization_exists = organization is not None
+        module.json_log({
+            'msg': 'got organization',
+            'organization': organization,
+            'organization_exists': organization_exists
+        })
 
         # Extract the organization configuration.
         expected_organization = dict(
@@ -641,6 +646,11 @@ def main():
             # If the organization has changed, apply the changes.
             organization_changed = not equal_dicts(organization, new_organization)
             if organization_changed:
+                module.json_log({
+                    'msg': 'differences detected, updating organization',
+                    'organization': organization,
+                    'new_organization': new_organization
+                })
                 organization = console.update_organization(new_organization['id'], new_organization)
                 changed = True
 

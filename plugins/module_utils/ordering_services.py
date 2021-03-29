@@ -125,6 +125,7 @@ class OrderingServiceNode:
         if not self.consenter_proposal_fin:
             return
         started = False
+        last_e = None
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
@@ -134,23 +135,24 @@ class OrderingServiceNode:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except Exception:
-                pass
+            except Exception as e:
+                last_e = e
             time.sleep(1)
         if not started:
-            raise Exception(f'Ordering service node failed to start within {timeout} seconds')
+            raise Exception(f'Ordering service node failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
-        return OrderingServiceNodeConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
+    def connect(self, module, identity, msp_id, hsm, tls_handshake_time_shift=None):
+        return OrderingServiceNodeConnection(module, self, identity, msp_id, hsm, tls_handshake_time_shift)
 
 
 class OrderingServiceNodeConnection:
 
-    def __init__(self, ordering_service_node, identity, msp_id, hsm, tls_handshake_time_shift=None, retries=5):
+    def __init__(self, module, ordering_service_node, identity, msp_id, hsm, tls_handshake_time_shift=None, retries=5):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
             raise Exception('Specified identity uses HSM, but no HSM configuration specified')
+        self.module = module
         self.ordering_service_node = ordering_service_node
         self.identity = identity
         self.msp_id = msp_id
@@ -216,7 +218,9 @@ class OrderingServiceNodeConnection:
 
     def _run_command(self, args, env):
         for attempt in range(1, self.retries + 1):
+            self.module.json_log({'msg': 'running command', 'args': args, 'env': env, 'attempt': attempt})
             process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            self.module.json_log({'msg': 'command finished', 'rc': process.returncode, 'stdout': process.stdout})
             if process.returncode == 0:
                 return process
             elif attempt >= self.retries:
@@ -266,25 +270,27 @@ class OrderingService:
         return OrderingService(nodes=nodes)
 
     def wait_for(self, timeout):
+        last_e = None
         for node in self.nodes:
             try:
                 node.wait_for(timeout)
                 return
-            except Exception:
-                pass
-        raise Exception(f'Ordering service failed to start within {timeout} seconds')
+            except Exception as e:
+                last_e = e
+        raise Exception(f'Ordering service failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, identity, msp_id, hsm, tls_handshake_time_shift=None):
-        return OrderingServiceConnection(self, identity, msp_id, hsm, tls_handshake_time_shift)
+    def connect(self, module, identity, msp_id, hsm, tls_handshake_time_shift=None):
+        return OrderingServiceConnection(module, self, identity, msp_id, hsm, tls_handshake_time_shift)
 
 
 class OrderingServiceConnection:
 
-    def __init__(self, ordering_service, identity, msp_id, hsm, tls_handshake_time_shift=None):
+    def __init__(self, module, ordering_service, identity, msp_id, hsm, tls_handshake_time_shift=None):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
             raise Exception('Specified identity uses HSM, but no HSM configuration specified')
+        self.module = module
         self.ordering_service = ordering_service
         self.identity = identity
         self.msp_id = msp_id
@@ -304,7 +310,7 @@ class OrderingServiceConnection:
                 # Don't connect to ordering service nodes that are not ready.
                 continue
             try:
-                with node.connect(self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
+                with node.connect(self.module, self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
                     connection.fetch(channel, target, path)
                 return
             except Exception as e:
@@ -318,7 +324,7 @@ class OrderingServiceConnection:
                 # Don't connect to ordering service nodes that are not ready.
                 continue
             try:
-                with node.connect(self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
+                with node.connect(self.module, self.identity, self.msp_id, self.hsm, self.tls_handshake_time_shift) as connection:
                     connection.update(channel, path)
                 return
             except Exception as e:

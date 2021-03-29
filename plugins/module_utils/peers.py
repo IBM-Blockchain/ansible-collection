@@ -94,6 +94,7 @@ class Peer:
 
     def wait_for(self, timeout):
         started = False
+        last_e = None
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
@@ -103,23 +104,24 @@ class Peer:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except Exception:
-                pass
+            except Exception as e:
+                last_e = e
             time.sleep(1)
         if not started:
-            raise Exception(f'Peer failed to start within {timeout} seconds')
+            raise Exception(f'Peer failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, identity, msp_id, hsm):
-        return PeerConnection(self, identity, msp_id, hsm)
+    def connect(self, module, identity, msp_id, hsm):
+        return PeerConnection(module, self, identity, msp_id, hsm)
 
 
 class PeerConnection:
 
-    def __init__(self, peer, identity, msp_id, hsm, retries=5):
+    def __init__(self, module, peer, identity, msp_id, hsm, retries=5):
         if hsm and not identity.hsm:
             raise Exception('HSM configuration specified, but specified identity does not use HSM')
         elif not hsm and identity.hsm:
             raise Exception('Specified identity uses HSM, but no HSM configuration specified')
+        self.module = module
         self.peer = peer
         self.identity = identity
         self.msp_id = msp_id
@@ -485,7 +487,9 @@ class PeerConnection:
 
     def _run_command(self, args, env):
         for attempt in range(1, self.retries + 1):
+            self.module.json_log({'msg': 'running command', 'args': args, 'env': env, 'attempt': attempt})
             process = subprocess.run(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, text=True, close_fds=True)
+            self.module.json_log({'msg': 'command finished', 'rc': process.returncode, 'stdout': process.stdout})
             if process.returncode == 0:
                 return process
             elif attempt >= self.retries:

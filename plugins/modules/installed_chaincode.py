@@ -4,19 +4,21 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
-
-from ..module_utils.module import BlockchainModule
-from ..module_utils.proto_utils import proto_to_json
-from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module, resolve_identity
-
-from ansible.module_utils.basic import _load_params
-from ansible.module_utils._text import to_native
 
 import base64
 import hashlib
 import json
 import tarfile
+
+from ansible.module_utils._text import to_native
+from ansible.module_utils.basic import _load_params
+
+from ..module_utils.module import BlockchainModule
+from ..module_utils.proto_utils import proto_to_json
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -273,7 +275,7 @@ def do_old_lifecycle(module, console, peer, identity, msp_id, hsm):
         id = hasher.hexdigest()
 
     # Determine the chaincodes installed on the peer.
-    with peer.connect(identity, msp_id, hsm) as peer_connection:
+    with peer.connect(module, identity, msp_id, hsm) as peer_connection:
         installed_chaincodes = peer_connection.list_installed_chaincodes_oldlc()
 
     # Find a matching chaincode, if one exists.
@@ -305,7 +307,7 @@ def do_old_lifecycle(module, console, peer, identity, msp_id, hsm):
     else:
 
         # Install the chaincode.
-        with peer.connect(identity, msp_id, hsm) as peer_connection:
+        with peer.connect(module, identity, msp_id, hsm) as peer_connection:
             peer_connection.install_chaincode_oldlc(path)
         return module.exit_json(changed=True, installed_chaincode=dict(name=name, version=version, id=id))
 
@@ -330,7 +332,7 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
         package_id = f'{label}:{hash}'
 
     # Determine the chaincodes installed on the peer.
-    with peer.connect(identity, msp_id, hsm) as peer_connection:
+    with peer.connect(module, identity, msp_id, hsm) as peer_connection:
         installed_chaincodes = peer_connection.list_installed_chaincodes_newlc()
 
     # Find a matching chaincode, if one exists.
@@ -359,7 +361,7 @@ def do_new_lifecycle(module, console, peer, identity, msp_id, hsm):
     else:
 
         # Install the chaincode.
-        with peer.connect(identity, msp_id, hsm) as peer_connection:
+        with peer.connect(module, identity, msp_id, hsm) as peer_connection:
             peer_connection.install_chaincode_newlc(path)
         return module.exit_json(changed=True, installed_chaincode=dict(package_id=package_id, label=label))
 

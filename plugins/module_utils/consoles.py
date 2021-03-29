@@ -828,9 +828,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to create organization', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'created organization', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to create organization', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to create organization', e)
@@ -846,9 +850,13 @@ class Console:
         data = json.dumps(data)
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to update organization', 'data': data, 'url': url, 'attempt': attempt})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
-                return json.load(response)
+                component = json.load(response)
+                self.module.json_log({'msg': 'updated organization', 'component': component})
+                return component
             except Exception as e:
+                self.module.json_log({'msg': 'failed to update organization', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to update peer', e)
@@ -861,9 +869,12 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to delete organization', 'id': id, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                self.module.json_log({'msg': 'deleted organization'})
                 return
             except Exception as e:
+                self.module.json_log({'msg': 'failed to delete organization', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to delete peer', e)
@@ -1107,10 +1118,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get msps by msp id', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('msps', list())
+                msps = parsed_response.get('msps', list())
+                self.module.json_log({'msg': 'got msps by msp id', 'msps': msps})
+                return msps
             except Exception as e:
+                self.module.json_log({'msg': 'failed to get msps by msp id', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get MSPs by MSP ID', e)
@@ -1124,10 +1139,14 @@ class Console:
         }
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'attempting to get all available fabric versions', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
                 parsed_response = json.load(response)
-                return parsed_response.get('versions', dict())
+                versions = parsed_response.get('versions', dict())
+                self.module.json_log({'msg': 'got all available fabric versions', 'versions': versions})
+                return versions
             except Exception as e:
+                self.module.json_log({'msg': 'failed to all available fabric versions', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
                     continue
                 return self.handle_error('Failed to get supported Fabric versions', e)
@@ -1147,8 +1166,10 @@ class Console:
     def resolve_ca_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve ca version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified ca version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.
@@ -1171,8 +1192,10 @@ class Console:
     def resolve_peer_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve peer version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified peer version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.
@@ -1195,8 +1218,10 @@ class Console:
     def resolve_ordering_service_node_version(self, version):
 
         # Determine if the version is just a version, and return it if so.
+        self.module.json_log({'msg': 'attempting to resolve ordering service node version', 'version': version})
         version_pattern = re.compile('^\\d+\\.\\d+\\.\\d+(?:-\\d+)?$')
         if version_pattern.match(version):
+            self.module.json_log({'msg': 'specified ordering service node version is just a version'})
             return version
 
         # Ensure we have semantic versioning support.

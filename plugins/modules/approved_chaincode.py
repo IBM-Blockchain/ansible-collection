@@ -4,12 +4,14 @@
 #
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_peer_by_module, get_identity_by_module, resolve_identity
-
 from ansible.module_utils._text import to_native
+
+from ..module_utils.module import BlockchainModule
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -358,7 +360,7 @@ def main():
         # - Check that the name, version, and sequence number match and that it has been approved by this organization.
         # - If not, check the commit readiness for the name, version, and sequence number.
         approval_exists = False
-        with peer.connect(identity, msp_id, hsm) as peer_connection:
+        with peer.connect(module, identity, msp_id, hsm) as peer_connection:
             committed_chaincodes = peer_connection.query_committed_chaincodes(channel)
             found = False
             for committed_chaincode in committed_chaincodes:
@@ -390,7 +392,7 @@ def main():
         if not approval_exists:
 
             # Approve the chaincode.
-            with peer.connect(identity, msp_id, hsm) as peer_connection:
+            with peer.connect(module, identity, msp_id, hsm) as peer_connection:
                 peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
                 changed = True
 

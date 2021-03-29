@@ -283,7 +283,7 @@ def main():
             name = module.params['name']
             enrollment_id = module.params['enrollment_id']
             enrollment_secret = module.params['enrollment_secret']
-            with certificate_authority.connect(hsm, tls) as connection:
+            with certificate_authority.connect(module, hsm, tls) as connection:
                 identity = connection.enroll(name, enrollment_id, enrollment_secret, hosts)
             with open(path, 'w') as file:
                 json.dump(identity.to_json(), file, indent=4)
@@ -303,7 +303,7 @@ def main():
             # The certificate may no longer be valid (revoked, expired, new certificate authority).
             # If this is the case, we want to try re-enrolling it.
             certificate_authority = get_certificate_authority_by_module(console, module)
-            with certificate_authority.connect(hsm, tls) as connection:
+            with certificate_authority.connect(module, hsm, tls) as connection:
 
                 # Determine if the certificate is valid.
                 enrollment_id = module.params['enrollment_id']

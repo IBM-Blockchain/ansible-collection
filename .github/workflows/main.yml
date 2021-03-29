@@ -15,7 +15,12 @@ on:
   create:
     tags:
       - "*"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      collect_logs:
+        description: Collect logs
+        required: true
+        default: "false"
 jobs:
   build_collection:
     name: Build collection
@@ -177,6 +182,7 @@ jobs:
           API_SECRET: ${{ secrets[matrix.api_secret] }}
           K8S_NAMESPACE: ${{ secrets[matrix.k8s_namespace] }}
           USE_DOCKER: ${{ matrix.use_docker }}
+          COLLECT_LOGS: ${{ github.event.inputs.collect_logs }}
         run: .github/scripts/run-tests.sh ${{ matrix.type }}
   publish_collection:
     name: Publish collection

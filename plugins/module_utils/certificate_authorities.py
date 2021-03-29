@@ -104,6 +104,7 @@ class CertificateAuthority:
 
     def wait_for(self, timeout):
         started = False
+        last_e = None
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
@@ -113,19 +114,20 @@ class CertificateAuthority:
                     if healthz['status'] == 'OK':
                         started = True
                         break
-            except Exception:
-                pass
+            except Exception as e:
+                last_e = e
             time.sleep(1)
         if not started:
-            raise Exception(f'Certificate authority failed to start within {timeout} seconds')
+            raise Exception(f'Certificate authority failed to start within {timeout} seconds: {str(last_e)}')
 
-    def connect(self, hsm, tls=False):
-        return CertificateAuthorityConnection(self, hsm, tls)
+    def connect(self, module, hsm, tls=False):
+        return CertificateAuthorityConnection(module, self, hsm, tls)
 
 
 class CertificateAuthorityConnection:
 
-    def __init__(self, certificate_authority, hsm, tls=False, retries=5):
+    def __init__(self, module, certificate_authority, hsm, tls=False, retries=5):
+        self.module = module
         self.certificate_authority = certificate_authority
         self.hsm = hsm
         self.tls = tls
@@ -313,9 +315,12 @@ class CertificateAuthorityConnection:
     def _run_with_retry(self, func):
         for attempt in range(1, self.retries + 1):
             try:
+                self.module.json_log({'msg': 'running ca operation', 'attempt': attempt})
                 result = func()
+                self.module.json_log({'msg': 'ran ca operation'})
                 return result
             except Exception as e:
+                self.module.json_log({'msg': 'failed to run ca operation', 'error': str(e)})
                 msg = str(e)
                 if attempt >= self.retries:
                     raise e
