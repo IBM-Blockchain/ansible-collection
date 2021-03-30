@@ -91,6 +91,7 @@ class Console:
                 auth = json.load(auth_response)
                 access_token = auth['access_token']
                 self.authorization = f'Bearer {access_token}'
+                return
             except Exception as e:
                 self.module.json_log({'msg': 'failed to log in to IBM Cloud', 'error': str(e)})
                 if self.should_retry_error(e, attempt):
