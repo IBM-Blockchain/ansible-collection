@@ -52,3 +52,10 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    modules
    roles
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Support
+   :hidden:
+
+   support
+

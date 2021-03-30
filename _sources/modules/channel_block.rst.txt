@@ -66,10 +66,13 @@ Parameters
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  operation (required)
-    ``fetch`` - Fetch the target block to the specified *path*.
+  state
+    ``absent`` - If a block exists at the specified *path*, it will be removed.
+
+    ``present`` - Fetch the block from the specified channel and store it at the specified *path*.
 
     | **Type**: str
+    | **Default value**: ``present``
 
   ordering_service (required)
     The ordering service to use to manage the channel.
@@ -175,11 +178,11 @@ Examples
     
     - name: Fetch the genesis block for the channel
       ibm.blockchain_platform.channel_block:
+        state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        operation: fetch
         ordering_service: Ordering Service
         identity: Org1 Admin.json
         msp_id: Org1MSP

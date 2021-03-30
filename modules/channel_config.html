@@ -102,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -111,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="channel_acl.html">channel_acl – Manage an ACL for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">channel_config – Manage the configuration for a Hyperledger Fabric channel</a><ul>
@@ -156,6 +158,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
 </ul>
 
             
@@ -386,6 +392,11 @@
 <p>You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).</p>
 <p>You must provide at least an Admins, Writers, and Readers policy.</p>
 <p>Only required when <em>operation</em> is <code class="docutils literal notranslate"><span class="pre">create</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: dict</div>
+</div>
+</dd>
+<dt>acls</dt><dd><p>The set of ACLs to add to the new channel. The keys are the ACL names, and the values are the name of the policy used by the ACL.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: dict</div>
 </div>

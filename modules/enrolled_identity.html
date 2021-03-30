@@ -102,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -111,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="channel_acl.html">channel_acl – Manage an ACL for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_config.html">channel_config – Manage the configuration for a Hyperledger Fabric channel</a></li>
@@ -156,6 +158,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
 </ul>
 
             
@@ -352,6 +358,20 @@
 <div class="line-block">
 <div class="line"><strong>Type</strong>: list</div>
 <div class="line"><strong>Elements</strong>: str</div>
+</div>
+</dd>
+<dt>force_reenroll</dt><dd><p>True if the identity should be re-enrolled, false otherwise.</p>
+<p>If specified, then the identity will be re-enrolled every time that your playbook is run.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: bool</div>
+</div>
+</dd>
+<dt>reenroll_before_expiry</dt><dd><p>Use this option to automatically re-enroll the identity before the certificate expires.</p>
+<p>Specified as the maximum time in seconds before the expiration of the certificate.</p>
+<p>For example, to automatically re-enroll the identity when there are less than 30 days remaining before the certificate expires, set this option to <code class="docutils literal notranslate"><span class="pre">2592000</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: int</div>
+<div class="line"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">-1</span></code></div>
 </div>
 </dd>
 </dl>

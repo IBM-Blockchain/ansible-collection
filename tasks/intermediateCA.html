@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Enable Hyperledger Fabric v2.x capabilities &mdash; Ansible Collection  documentation</title>
+  <title>Creating an Intermediate Certificate Authority &mdash; Ansible Collection  documentation</title>
   
 
   
@@ -40,8 +40,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Creating a highly available Certificate Authority" href="haca.html" />
-    <link rel="prev" title="Adding an administrator certificate" href="addadmincert.html" /> 
+    <link rel="next" title="Updating channel parameters" href="update-channel-parameters.html" />
+    <link rel="prev" title="Creating a highly available Certificate Authority" href="haca.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -100,16 +100,15 @@
 <p class="caption"><span class="caption-text">Tasks</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="addadmincert.html">Adding an administrator certificate</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Enable Hyperledger Fabric v2.x capabilities</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating an Intermediate Certificate Authority</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the repository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#editing-the-variable-file">Editing the variable file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#enabling-v2-capability-for-the-system-channel">Enabling v2 Capability for the System Channel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#enabling-v2-capability-for-specified-channels">Enabling v2 Capability for Specified Channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-the-parent-ca-and-the-intermediate-ca">Creating the Parent CA and the Intermediate CA</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="haca.html">Creating a highly available Certificate Authority</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -168,14 +167,14 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Enable Hyperledger Fabric v2.x capabilities</li>
+      <li>Creating an Intermediate Certificate Authority</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
             
-              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/enable-fabricv2-capability.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/intermediateCA.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -189,18 +188,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="enable-hyperledger-fabric-v2-x-capabilities">
-<h1>Enable Hyperledger Fabric v2.x capabilities<a class="headerlink" href="#enable-hyperledger-fabric-v2-x-capabilities" title="Permalink to this headline">¶</a></h1>
-<p>Fabric v2 capability is distinct from Fabric v2.x binaries, and the most common scenario will be where the binaries on a network have been upgraded to v2.x, leaving the Capability of the channels at V1.x.  This playbook example can be used to upgrade firstly the system channel, then an array of named application channels.</p>
-<p>Note that when an application channel has been upgraded to v2 capability it is incompatible with the Fabric v1.x chaincode lifecycle, and the new v2.* lifecycle must be used to upgrade or deploy new chaincodes (contracts).</p>
-<p>v2 capability should only be enabled when all nodes on the network are running v2.x binaries.</p>
+  <div class="section" id="creating-an-intermediate-certificate-authority">
+<h1>Creating an Intermediate Certificate Authority<a class="headerlink" href="#creating-an-intermediate-certificate-authority" title="Permalink to this headline">¶</a></h1>
+<p>IBM Blockchain Platform allows for the optional use of Intermediate CAs which can protect a root CA and provide operational flexibility. The IBM Blockchain Platform documentation describes the business rerquirement and the manual steps in detail.</p>
+<p>The scenario in this task guide is that Magneto Corp wishes to create a Root CA for the corporation, and an Intermediate CA for a UK subsidiary.</p>
+<p>The playbook has the following steps:
+* Check for the presence of the Parent CA and exit if it already exists
+* Create the Parent CA
+* Register and enroll the identities for the Intermediate CA
+* Check for the presence of the Intermediate CA and exit if it already exists
+* Create the Intermediate CA</p>
 <div class="section" id="before-you-start">
 <h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
 <p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
+<p>This task guide assumes that you have access to the IBM Blockchain Platform documentation and the sections regarding Intermediate CAs.</p>
 </div>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
-<p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
+<p>This task guide uses an example playbook which is stored in a GitHub repository. You must clone this GitHub repository in order to run the playbook locally:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
 </pre></div>
@@ -208,14 +213,14 @@
 </div></blockquote>
 <p>After cloning the GitHub repository, you must change into the examples directory for this task guide:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/examples/enable-fabricv2-capability
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd ansible-collection/examples/create-intermediate-ca
 </pre></div>
 </div>
 </div></blockquote>
 </div>
 <div class="section" id="editing-the-variable-file">
 <h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
-<p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbooks.</p>
+<p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbook.</p>
 <p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
 <ul class="simple">
 <li><p>If the organization is using IBM Blockchain Platform on IBM Cloud:</p>
@@ -238,43 +243,27 @@
 </ol>
 </li>
 </ul>
-<p>The second set of values must always be set:</p>
+<p>The remaining values must always be set:</p>
 <ul class="simple">
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_name</span></code> to the name of the ordering service, for example <code class="docutils literal notranslate"><span class="pre">Ordering</span> <span class="pre">Service</span></code>.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_name</span></code> to the name of the organization.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_msp_id</span></code> to the MSP ID of the organization.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">organization_admin_identity</span></code> to the path of a JSON identity file containing the identity of the organization administrator.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_identity</span></code> to the path to a JSON identity file containing the identity of an ordering service administrator.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_msp_id</span></code> to the MSP ID of the ordering service administrator.</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">channel_names</span></code> to an array of channel names that need to have Fabric v2 capability enabled. Do not include the system channel name in this value.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">parent_ca_name:</span></code> to the name of the parent CA, for example <code class="docutils literal notranslate"><span class="pre">MGCorp</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">parent_ca_admin_identity</span></code> to the name of the Parent CA administrator enroll ID.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">parent_ca_admin_secret</span></code> to the Parent CA administrator enroll secret.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_ca_identity</span></code> to the name if the intermediate CA identity. (The identity will be created as type <code class="docutils literal notranslate"><span class="pre">client</span></code> and with the attribute <code class="docutils literal notranslate"><span class="pre">hf.IntermediateCA</span></code>.)</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_ca_secret</span></code> to the secret of the intermediate CA identity.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_tlsca_identity</span></code> to the name if the intermediate CA tls identity. (The identity will be created as type <code class="docutils literal notranslate"><span class="pre">client</span></code> and with the attribute <code class="docutils literal notranslate"><span class="pre">hf.IntermediateCA</span></code>.)</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_tlsca_secret</span></code> to the secret of the intermediate CA tls identity.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_ca_name</span></code> to the name of the intermediate CA, for example <code class="docutils literal notranslate"><span class="pre">MGCUK</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_ca_admin_identity</span></code> to the name of the Intermediate CA administrator enroll ID.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_ca_admin_secret</span></code> to the secret of the Intermediate CA administrator.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_tlsca_admin_identity</span></code> to the name of the Intermediate CA tls administrator enroll ID.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">int_tlsca_admin_secret</span></code> to the secret of the Intermediate CA tls administrator.</p></li>
 </ul>
 </div>
-<div class="section" id="enabling-v2-capability-for-the-system-channel">
-<h2>Enabling v2 Capability for the System Channel<a class="headerlink" href="#enabling-v2-capability-for-the-system-channel" title="Permalink to this headline">¶</a></h2>
-<p>The first task is to enable v2 capability on the system channel of the Orderer.
-Note that any new channels created after updating the System Channel will have v2 capability enabled by default, but readers are encouraged to verify that all the capabilities are enabled for the new channels.</p>
-<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml">01-enable-fabricv2-systemchannel.yml</a>.</p>
-<p>Ensure that the JSON identity files specified in the <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code> file have been copied to the working directory.</p>
-<p>Run the playbook as follows:</p>
+<div class="section" id="creating-the-parent-ca-and-the-intermediate-ca">
+<h2>Creating the Parent CA and the Intermediate CA<a class="headerlink" href="#creating-the-parent-ca-and-the-intermediate-ca" title="Permalink to this headline">¶</a></h2>
+<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/master/examples/create-intermediate-ca/create-parent-plus-intermediate-ca.yml">create-parent-plus-intermediate-ca.yml</a>, then run it as follows:</p>
 <blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 01-enable-fabricv2-systemchannel.yml
-</pre></div>
-</div>
-</div></blockquote>
-<p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
-</div>
-<div class="section" id="enabling-v2-capability-for-specified-channels">
-<h2>Enabling v2 Capability for Specified Channels<a class="headerlink" href="#enabling-v2-capability-for-specified-channels" title="Permalink to this headline">¶</a></h2>
-<p>The second step in this task is to enable v2 capability for the application channels.  Application channels do not have to be v2 enabled immediately after the system channel, channels can continue to run with V1.x capability if required.</p>
-<p>Note that when you have enabled v2 Capability on a channel you are commited to using the new v2 Chaincode Lifecycle on that channel.</p>
-<p>v2 capability requires that a <em>Channel Application Endorsement Policy</em> be added to the channel.  This playbook uses an example policy <code class="docutils literal notranslate"><span class="pre">endorsement-policy.json</span></code>.
-v2 capability enables a default majority Lifecycle Endorsement Policy, but if a different policy is required, this playbook can be modified to include such a policy at the time v2 capability is enabled.</p>
-<p>In this example playbook both the Ordering Service Administrator identity, and the Organisation Administrator identity are used to sign the modified channel configuration but in other scenarios these identities for signing may be different.</p>
-<p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/02-enable-fabricv2-channels.yml">02-enable-fabricv2-channels.yml</a>.</p>
-<p>When reviewing the playbook you will note that an additional playbook is used on a loop across the array of channels listed in the variables file  <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/tasks/02-enable-fabricv2-channel.yml">02-enable-fabricv2-channel.yml</a>.</p>
-<p>Run the playbook as follows:</p>
-<blockquote>
-<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook 02-enable-fabricv2-channels.yml
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook create-parent-plus-intermediate-ca.yml
 </pre></div>
 </div>
 </div></blockquote>
@@ -288,8 +277,8 @@ v2 capability enables a default majority Lifecycle Endorsement Policy, but if a 
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="haca.html" class="btn btn-neutral float-right" title="Creating a highly available Certificate Authority" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="addadmincert.html" class="btn btn-neutral float-left" title="Adding an administrator certificate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="update-channel-parameters.html" class="btn btn-neutral float-right" title="Updating channel parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="haca.html" class="btn btn-neutral float-left" title="Creating a highly available Certificate Authority" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

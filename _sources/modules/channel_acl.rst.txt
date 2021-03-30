@@ -1,0 +1,85 @@
+..
+.. SPDX-License-Identifier: Apache-2.0
+..
+
+:github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/channel_acl.py
+
+
+channel_acl -- Manage an ACL for a Hyperledger Fabric channel
+=============================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+Synopsis
+--------
+
+Add, update, and remove ACLs for a Hyperledger Fabric channel by using the IBM Blockchain Platform.
+
+This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
+
+
+
+
+
+
+Parameters
+----------
+
+  state
+    ``absent`` - An ACL matching the specified name will be removed from the channel.
+
+    ``present`` - Asserts that an ACL matching the specified name and policy exists in the channel. If no ACL matches the specified name, the ACL will be added to the channel. If an ACL matches the specified name but the policy does not match, then the ACL in the channel will be updated.
+
+    | **Type**: str
+    | **Default value**: ``present``
+
+  path (required)
+    Path to current the channel configuration file.
+
+    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+
+    This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
+
+    | **Type**: str
+
+  name (required)
+    The name of the ACL to add, update, or remove from the channel.
+
+    | **Type**: str
+
+  policy (required)
+    The name of the policy used by the ACL.
+
+    | **Type**: str
+
+
+
+
+
+
+
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Add the ACL to the channel
+      ibm.blockchain_platform.channel_acl:
+        state: present
+        name: lscc/ChaincodeExists
+        policy: /Channel/Application/Admins
+        path: channel_config.bin
+
+    - name: Remove the ACL from the channel
+      ibm.blockchain_platform.channel_acl:
+        state: absent
+        name: lscc/ChaincodeExists
+        path: channel_config.bin
+
+
+

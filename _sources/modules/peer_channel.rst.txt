@@ -66,10 +66,13 @@ Parameters
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
-  operation (required)
-    ``join`` - Join the specified *peer* to the channel with the genesis block specified in *path*.
+  state
+    ``absent`` - If the peer has joined the channel with the specified name, then an error will be thrown, as it is not possible for a peer to leave a channel.
+
+    ``present`` - Asserts that the peer has joined the channel with the specified name. If the peer has not joined the channel with the specified name, then the peer will be joined to the channel using the specified configuration block.
 
     | **Type**: str
+    | **Default value**: ``present``
 
   peer (required)
     The peer to join to the channel.
@@ -117,8 +120,17 @@ Parameters
       | **Type**: str
 
 
-  path (required)
+  name
+    The name of the channel.
+
+    Only required when *state* is ``absent``.
+
+    | **Type**: str
+
+  path
     The path to the file where the channel genesis block is stored.
+
+    Only required when *state* is ``present``.
 
     | **Type**: str
 
@@ -137,15 +149,27 @@ Examples
     
     - name: Join the peer to the channel
       ibm.blockchain_platform.peer_channel:
+        state: present
         api_endpoint: https://ibp-console.example.org:32000
         api_authtype: basic
         api_key: xxxxxxxx
         api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        operation: join
         peer: Org1 Peer
         identity: Org1 Admin.json
         msp_id: Org1MSP
         path: channel_genesis_block.bin
+
+    - name: Ensure the peer is not joined to the channel
+      ibm.blockchain_platform.peer_channel:
+        state: absent
+        api_endpoint: https://ibp-console.example.org:32000
+        api_authtype: basic
+        api_key: xxxxxxxx
+        api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        name: channel1
 
 
 

@@ -199,6 +199,11 @@ Parameters
 
     | **Type**: dict
 
+  acls
+    The set of ACLs to add to the new channel. The keys are the ACL names, and the values are the name of the policy used by the ACL.
+
+    | **Type**: dict
+
   capabilities
     The capability levels for the new channel.
 

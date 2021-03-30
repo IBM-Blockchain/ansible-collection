@@ -146,6 +146,23 @@ Parameters
     | **Type**: list
     | **Elements**: str
 
+  force_reenroll
+    True if the identity should be re-enrolled, false otherwise.
+
+    If specified, then the identity will be re-enrolled every time that your playbook is run.
+
+    | **Type**: bool
+
+  reenroll_before_expiry
+    Use this option to automatically re-enroll the identity before the certificate expires.
+
+    Specified as the maximum time in seconds before the expiration of the certificate.
+
+    For example, to automatically re-enroll the identity when there are less than 30 days remaining before the certificate expires, set this option to ``2592000``.
+
+    | **Type**: int
+    | **Default value**: ``-1``
+
 
 
 
