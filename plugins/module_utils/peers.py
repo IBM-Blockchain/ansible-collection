@@ -334,7 +334,7 @@ class PeerConnection:
 
     def approve_chaincode(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout):
         env = self._get_environ()
-        args = ['peer', 'lifecycle', 'chaincode', 'approveformyorg', '-C', channel, '-n', name, '-v', version, '--package-id', package_id, '--sequence', str(sequence), '--waitForEventTimeout', timeout]
+        args = ['peer', 'lifecycle', 'chaincode', 'approveformyorg', '-C', channel, '-n', name, '-v', version, '--package-id', package_id, '--sequence', str(sequence), '--waitForEventTimeout', str(timeout) + "s"]
         if endorsement_policy_ref:
             args.extend(['--channel-config-policy', endorsement_policy_ref])
         elif endorsement_policy:
@@ -375,7 +375,7 @@ class PeerConnection:
 
     def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout):
         env = self._get_environ()
-        args = ['peer', 'lifecycle', 'chaincode', 'commit', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence), '--waitForEventTimeout', timeout]
+        args = ['peer', 'lifecycle', 'chaincode', 'commit', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence), '--waitForEventTimeout', str(timeout) + "s"]
         if endorsement_policy_ref:
             args.extend(['--channel-config-policy', endorsement_policy_ref])
         elif endorsement_policy:
