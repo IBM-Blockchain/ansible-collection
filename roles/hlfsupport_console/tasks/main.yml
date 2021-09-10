@@ -1,0 +1,16 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if target not specified
+  fail:
+    msg: target not specified or is not one of "openshift"
+  when: not target is defined or not target in ("openshift")
+
+- name: Create console
+  include_tasks: "create.yml"
+  when: state == "present"
+
+- name: Delete console
+  include_tasks: "delete.yml"
+  when: state == "absent"
