@@ -7,11 +7,9 @@ kind: CustomResourceDefinition
 metadata:
   name: ibppeers.ibp.com
   labels:
-    release: "operator"
-    helm.sh/chart: "ibm-hlfsupport"
     app.kubernetes.io/name: "ibm-hlfsupport"
-    app.kubernetes.io/instance: "ibm-hlfsupport-peer"
-    app.kubernetes.io/managed-by: "ibm-hlfsupport-operator"
+    app.kubernetes.io/instance: "ibm-hlfsupport"
+    app.kubernetes.io/managed-by: "ibm-hlfsupport"
 spec:
   conversion:
     strategy: Webhook
@@ -20,7 +18,7 @@ spec:
       clientConfig:
         service:
           namespace: "{{ project | default(namespace) }}"
-          name: ibp-webhook
+          name: ibm-hlfsupport-webhook
           path: /crdconvert
         caBundle: "{{ webhook_tls_cert }}"
   group: ibp.com
@@ -34,14 +32,7 @@ spec:
   - name: v1beta1
     schema:
       openAPIV3Schema:
-        properties:
-          spec:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-          status:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-        type: object
+        x-kubernetes-preserve-unknown-fields: true
     served: true
     storage: true
     subresources:
@@ -49,32 +40,25 @@ spec:
   - name: v1alpha2
     schema:
       openAPIV3Schema:
-        properties:
-          spec:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-          status:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-        type: object
+        x-kubernetes-preserve-unknown-fields: true
     served: true
     storage: false
+    subresources:
+      status: {}
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        properties:
-          spec:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-          status:
-            x-kubernetes-preserve-unknown-fields: true
-            type: object
-        type: object
+        x-kubernetes-preserve-unknown-fields: true
     served: true
     storage: false
+    subresources:
+      status: {}
 status:
   acceptedNames:
-    kind: ""
-    plural: ""
+    kind: IBPPeer
+    listKind: IBPPeerList
+    plural: ibppeers
+    singular: ibppeer
   conditions: []
-  storedVersions: []
+  storedVersions:
+  - v1beta1
