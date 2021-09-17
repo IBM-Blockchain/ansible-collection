@@ -6,7 +6,7 @@ state: present
 target: openshift
 # arch: amd64 | s390x
 # project: my-project
-namespace: "" # defined by jinja2 otherwise
+namespace: ""
 
 image_pull_secret: docker-key-secret
 image_registry: cp.icr.io
@@ -20,11 +20,9 @@ role: "{{ project | default(namespace) | default('') }}"
 role_binding: "{{ project | default(namespace) | default('') }}"
 security_context_constraints: "{{ project | default(namespace) | default('') }}"
 service_account: default
-webhook: ibp-webhook
-
 wait_timeout: 60
 
-product_version: "2.5.1"
-webhook_version: "20210222"
-webhook_image: "{{ image_registry_url }}/ibp-crdwebhook"
+product_version: "1.0.0"
+webhook_version: "20210915"
+webhook_image: "{{ image_registry_url }}/ibm-hlfsupport-crdwebhook"
 webhook_tag: "{{ product_version }}-{{ webhook_version }}-{{ arch }}"

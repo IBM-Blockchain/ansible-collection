@@ -6,7 +6,7 @@ state: present
 target: openshift
 # arch: amd64 | s390x
 # project: my-project
-namespace: "" # defined by jinja2 otherwise
+namespace: ""
 
 image_pull_secret: docker-key-secret
 image_registry: cp.icr.io
@@ -32,9 +32,9 @@ console_storage_class: default
 console_storage_size: 10Gi
 
 wait_timeout: 60
-
-operator_version: "20210222"
-operator_image: "{{ image_registry_url }}/ibp-operator"
+product_version: 1.0.0
+operator_version: "20210915"
+operator_image: "{{ image_registry_url }}/ibm-hlfsupport-operator"
 operator_tag: "{{ product_version }}-{{ operator_version }}-{{ arch }}"
 # console_tls_secret: ibp-tls-secret
 # zones: []

@@ -26,7 +26,6 @@
     state: absent
     namespace: "{{ project }}"
     api_version: "ibp.com/v1alpha2"
-    # api_version: "{{ 'ibp.com/v1alpha2' if product_version is version('2.5.0', '>=') else 'ibp.com/v1alpha1' }}"
     kind: IBPConsole
     name: "{{ console }}"
   when: project_info.resources and crds_info.resources
