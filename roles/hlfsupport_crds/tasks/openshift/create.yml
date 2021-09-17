@@ -82,7 +82,7 @@
     resource_definition: "{{ lookup('template', item) }}"
     apply: yes
   loop:
-    - ibpca-crd.yml.j2
-    - ibpconsole-crd.yml.j2
-    - ibporderer-crd.yml.j2
-    - ibppeer-crd.yml.j2
+    - ca-crd.yml.j2
+    - console-crd.yml.j2
+    - orderer-crd.yml.j2
+    - peer-crd.yml.j2

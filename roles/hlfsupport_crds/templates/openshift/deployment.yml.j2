@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ webhook }}"
+  name: "ibm-hlfsupport-webhook"
   labels:
     helm.sh/chart: "ibm-hlfsupport"
     app.kubernetes.io/name: "ibm-hlfsupport"
@@ -28,7 +28,7 @@ spec:
         app.kubernetes.io/instance: "ibm-hlfsupport-webhook"
       annotations:
         productName: "IBM Support for Hyperledger Fabric"
-        productID: "54283fa24f1a4e8589964e6e92626ec4" # need to update
+        productID: "5d5997a033594f149a534a09802d60f1"
         productVersion: "1.0.0"
     spec:
       serviceAccountName: "{{ service_account }}"
@@ -42,7 +42,7 @@ spec:
         runAsUser: 1000
         fsGroup: 2000
       containers:
-        - name: "ibp-webhook"
+        - name: "ibm-hlfsupport-webhook"
           image: "{{ webhook_image }}:{{ webhook_tag }}"
           imagePullPolicy: Always
           securityContext:
@@ -63,6 +63,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: SERVICE_NAME
+              value: "ibm-hlfsupport-webhook"
           ports:
             - name: server
               containerPort: 3000
