@@ -353,6 +353,7 @@ def main():
         validation_plugin = module.params['validation_plugin']
         init_required = module.params['init_required']
         collections_config = module.params['collections_config']
+        timeout = module.params['api_timeout']
 
         # We have to find out if it's already approved. To do this, we have to:
         # - Find out if a chaincode definition with the specified name, version, and sequence number exists.
@@ -393,7 +394,7 @@ def main():
 
             # Approve the chaincode.
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout)
                 changed = True
 
         # Return the approved chaincode.

@@ -355,6 +355,7 @@ def main():
         validation_plugin = module.params['validation_plugin']
         init_required = module.params['init_required']
         collections_config = module.params['collections_config']
+        timeout = module.params['api_timeout']
 
         # Check if this chaincode is already committed on the channel.
         with peer.connect(module, identity, msp_id, hsm) as peer_connection:
@@ -387,7 +388,7 @@ def main():
 
             # Commit the chaincode.
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.commit_chaincode(channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                peer_connection.commit_chaincode(channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout)
                 changed = True
 
         # Return the committed chaincode.
