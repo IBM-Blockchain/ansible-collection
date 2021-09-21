@@ -1,0 +1,28 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+target: openshift
+# arch: amd64 | s390x
+# project: my-project
+namespace: ""
+
+image_pull_secret: docker-key-secret
+image_registry: cp.icr.io
+image_registry_username: cp
+# image_registry_email: user@example.org
+# image_registry_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+image_repository: cp
+image_registry_url: "{{ image_registry }}/{{ image_repository }}"
+
+role: "{{ project | default(namespace) | default('') }}"
+role_binding: "{{ project | default(namespace) | default('') }}"
+security_context_constraints: "{{ project | default(namespace) | default('') }}"
+service_account: default
+wait_timeout: 60
+
+product_version: "1.0.0"
+webhook_version: "20210915"
+webhook_image: "{{ image_registry_url }}/ibm-hlfsupport-crdwebhook"
+webhook_tag: "{{ product_version }}-{{ webhook_version }}-{{ arch }}"

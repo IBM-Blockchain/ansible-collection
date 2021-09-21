@@ -1,0 +1,88 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if project not specified
+  fail:
+    msg: project not specified or is empty
+  when: not project is defined or not project
+
+- name: Determine if project exists
+  k8s_info:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ project }}"
+  register: project_info
+
+- name: Create project
+  k8s:
+    state: present
+    api_version: project.openshift.io/v1
+    kind: ProjectRequest
+    name: "{{ project }}"
+  when: not project_info.resources
+
+- name: Create security context constraints
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
+
+- name: Create image secret
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/image_pull_secret.yml.j2') }}"
+
+- name: Create role
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/role.yml.j2') }}"
+
+- name: Create role binding
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/role_binding.yml.j2') }}"
+
+- name: Create deployment
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/deployment.yml.j2') }}"
+    wait: yes
+    wait_timeout: "{{ wait_timeout }}"
+
+- name: Create service
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/service.yml.j2') }}"
+
+- name: Wait for secret to exist
+  k8s_info:
+    namespace: "{{ project }}"
+    api_version: v1
+    kind: Secret
+    name: webhook-tls-cert
+  register: webhook_secret
+  until: webhook_secret.resources
+  retries: "{{ wait_timeout }}"
+  delay: 1
+
+- name: Extract TLS certificate from secret
+  set_fact:
+    webhook_tls_cert: "{{ webhook_secret.resources[0].data['cert.pem'] }}"
+
+- name: Create custom resource definitions
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', item) }}"
+    apply: yes
+  loop:
+    - ca-crd.yml.j2
+    - console-crd.yml.j2
+    - orderer-crd.yml.j2
+    - peer-crd.yml.j2

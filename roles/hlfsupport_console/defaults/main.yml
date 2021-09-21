@@ -1,0 +1,40 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+target: openshift
+# arch: amd64 | s390x
+# project: my-project
+namespace: ""
+
+image_pull_secret: docker-key-secret
+image_registry: cp.icr.io
+image_registry_username: cp
+# image_registry_email: user@example.org
+# image_registry_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+image_repository: cp
+image_registry_url: "{{ image_registry }}/{{ image_repository }}"
+
+cluster_role: "{{ project | default(namespace) | default('') }}"
+cluster_role_binding: "{{ project | default(namespace) | default('') }}"
+pod_security_policy: "{{ project | default(namespace) | default('') }}"
+role_binding: "{{ project | default(namespace) | default('') }}"
+security_context_constraints: "{{ project | default(namespace) | default('') }}"
+service_account: default
+operator: ibm-hlfsupport-operator
+console: ibm-hlfsupport-console
+
+# console_domain: example.org
+# console_email: user@example.org
+# console_default_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+console_storage_class: default
+console_storage_size: 10Gi
+
+wait_timeout: 60
+product_version: 1.0.0
+operator_version: "20210915"
+operator_image: "{{ image_registry_url }}/ibm-hlfsupport-operator"
+operator_tag: "{{ product_version }}-{{ operator_version }}-{{ arch }}"
+# console_tls_secret: ibp-tls-secret
+# zones: []
