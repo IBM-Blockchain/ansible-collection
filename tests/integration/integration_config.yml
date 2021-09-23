@@ -11,3 +11,7 @@ k8s_namespace: ibp
 test_run_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 short_test_run_id: xxxxxxxx
 wait_timeout: 600
+
+ca_version: ">=1.4,<2.0"
+peer_version: ">=2.2,<3.0"
+ordering_service_version: ">=2.2,<3.0"
