@@ -5,8 +5,8 @@
 :github_url: https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/crds.rst
 
 
-crds -- Deploy the IBM Support for Hyperledger Fabric custom resource definitions Red Hat OpenShift
-===========================================================================================================
+crds -- Deploy the IBM Support for Hyperledger Fabric custom resource definitions into Kubernetes or Red Hat OpenShift
+======================================================================================================================
 
 .. contents::
    :local:
@@ -32,6 +32,8 @@ Parameters
     | **Default**: ``present``
 
   target (required)
+    ``k8s`` - Deploy the custom resource definitions into a Kubernetes cluster.
+
     ``openshift`` - Deploy the custom resource definitions into a Red Hat OpenShift cluster.
 
     | **Type**: str

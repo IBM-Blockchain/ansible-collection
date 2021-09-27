@@ -23,7 +23,7 @@ role_binding: "{{ project | default(namespace) | default('') }}"
 security_context_constraints: "{{ project | default(namespace) | default('') }}"
 service_account: default
 operator: ibm-hlfsupport-operator
-console: ibm-hlfsupport-console
+console: hlf
 
 # console_domain: example.org
 # console_email: user@example.org
