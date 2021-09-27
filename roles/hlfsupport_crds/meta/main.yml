@@ -4,7 +4,7 @@
 ---
 galaxy_info:
   author: Simon Stone & Matthew White
-  description: Ansible role for deploying the IBM Hyperledger Fabric Support Offering into Red Hat OpenShift
+  description: Ansible role for deploying the IBM Hyperledger Fabric Support Offering into Red Hat OpenShift or Kubernetes
   license: Apache-2.0
   platforms:
     - name: GenericLinux

@@ -32,6 +32,8 @@ Parameters
     | **Default**: ``present``
 
   target (required)
+    ``k8s`` - Deploy the console into a Kubernetes cluster.
+
     ``openshift`` - Deploy the console into a Red Hat OpenShift cluster.
 
     | **Type**: str
@@ -43,6 +45,13 @@ Parameters
 
     | **Type**: str
 
+
+  namespace
+    The name of the Kubernetes namespace to deploy the console to. The namespace will be created if it does not exist.
+
+    Only required when *target* is ``k8s``.
+
+    | **Type**: str
 
   project
     The name of the Red Hat OpenShift project to deploy the console to. The project will be created if it does not exist.
@@ -115,6 +124,14 @@ Parameters
 
     | **Type**: str
 
+  pod_security_policy
+    The name of the pod security policy.
+
+    By default, the pod security policy has the same name as the specified Kubernetes namespace or Red Hat OpenShift project.
+
+    Only required when *target* is ``k8s``.
+
+    | **Type**: str
 
   role_binding
     The name of the role binding.
