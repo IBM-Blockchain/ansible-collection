@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installing the IBM Support for Hyperledger Fabric &mdash; Ansible Collection  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installing the IBM Blockchain Platform" href="installing.html" />
+    <link rel="prev" title="Installation" href="../installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Ansible Collection
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing the IBM Support for Hyperledger Fabric</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-the-playbook">Creating the playbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-playbook">Running the playbook</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joining.html">Joining a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying a smart contract</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Installing the IBM Support for Hyperledger Fabric</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/hlfsupport-installing.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installing-the-ibm-support-for-hyperledger-fabric">
+<h1>Installing the IBM Support for Hyperledger Fabric<a class="headerlink" href="#installing-the-ibm-support-for-hyperledger-fabric" title="Permalink to this headline"></a></h1>
+<p>This tutorial will demonstrate how to use the IBM Support for Hyperledger Fabric collection for Ansible to automate the installation of the IBM Support for Hyperledger Fabric software into a Red Hat OpenShift cluster.</p>
+<p>If you are using the IBM Support for Hyperledger Fabric on IBM Cloud, you do not need to follow this tutorial. You can not use this Ansible collection to create an instance of the IBM Support for Hyperledger Fabric service on IBM Cloud. If you want to use the IBM Support for Hyperledger Fabric on IBM Cloud, you must create the instance before you attempt to use this Ansible collection. Once you have created an instance, follow the <a class="reference external" href="./building.html">Building a network</a> tutorial.</p>
+<p>This tutorial uses the Ansible roles <a class="reference external" href="../roles/crds.html">crds</a> and <a class="reference external" href="../roles/console.html">console</a> to install the IBM Support for Hyperledger Fabric software. If you wish to customize the installation process, then you should review the documentation for these roles.</p>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
+<p>Ensure that you have installed all of the pre-requisite software described in <a class="reference external" href="../installation.html">Installation</a>.</p>
+<p>You must have access to a  Red Hat OpenShift cluster that is supported for use with the IBM Support for Hyperledger Fabric. Review the list of supported platforms in the IBM Support for Hyperledger Fabric documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-prerequisites">Supported Platforms</a></p>
+<p>If you have a Kubernetes cluster, you must have the Kubernetes CLI (<code class="docutils literal notranslate"><span class="pre">kubectl</span></code>) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">get</span> <span class="n">nodes</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If you have a Red Hat OpenShift cluster, you must have the Red Hat OpenShift CLI (<code class="docutils literal notranslate"><span class="pre">oc</span></code>) installed and configured to use your Red Hat OpenShift cluster. Verify that it is working by running the following command:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">oc</span> <span class="n">get</span> <span class="n">nodes</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The IBM Support for Hyperledger Fabric software should be installed into two Kubernetes namespaces or Red Hat OpenShift projects.</p>
+<p>The first namespace or project will contain the IBM Support for Hyperledger Fabric webhook and custom resource definitions. A single instance of the webhook and custom resource definitions are required per cluster. The webhook automatically handles migration between different versions of the custom resource definitions, allowing different versions of the IBM Support for Hyperledger Fabric to coexist in the same cluster. It is recommended that you call this namespace or project <code class="docutils literal notranslate"><span class="pre">ibpinfra</span></code>.</p>
+<p>The second namespace or project will contain the IBM Support for Hyperledger Fabric operator and console.</p>
+<p>The Ansible collection will attempt to automatically create both of these namespaces or projects for you. If you do not have permissions to create a namespace or project, then ask your administrator to create them for you.</p>
+<p>Finally, you must have purchased an entitlement to use the IBM Support for Hyperledger Fabric. You will need your entitlement key in order to complete this tutorial. For more information, see the IBM Support for Hyperledger Fabric documentation: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-license">License and pricing</a></p>
+</section>
+<section id="creating-the-playbook">
+<h2>Creating the playbook<a class="headerlink" href="#creating-the-playbook" title="Permalink to this headline"></a></h2>
+<p>Create a new Ansible playbook file called <cite>install-ibp.yml</cite>. Copy and paste the content for  Red Hat OpenShift into this new playbook, depending on the type of cluster that you are using:</p>
+<p><strong>Red Hat OpenShift</strong></p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Support for Hyperledger Fabric custom resource definitions</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm-hlfsupport-infra</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Support for Hyperledger Fabric console</span>
+  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
+    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;project&gt;</span>
+    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
+    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
+    <span class="nt">console_domain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_domain&gt;</span>
+    <span class="nt">console_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_email&gt;</span>
+    <span class="nt">console_default_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_default_password&gt;</span>
+    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+  <span class="nt">roles</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Next, you will need to replace the variable placeholders with the required values.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> with the name of the Kubernetes namespace, or <code class="docutils literal notranslate"><span class="pre">&lt;project&gt;</span></code> with the name of the Red Hat OpenShift project that you are installing the IBM Support for Hyperledger Fabric operator and console into.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;image_registry_password&gt;</span></code> with your IBM Support for Hyperledger Fabric entitlement key.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;image_registry_email&gt;</span></code> with the email address of your IBMid account that you use to access the My IBM dashboard.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;console_domain&gt;</span></code> with the domain name of your Kubernetes cluster or Red Hat OpenShift cluster. This domain name is used as the base domain name for all ingress or routes created by the IBM Support for Hyperledger Fabric.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;console_email&gt;</span></code> with the email address of the IBM Support for Hyperledger Fabric console user that will be created during the installation process. You will use this email address to access the IBM Support for Hyperledger Fabric console after installation.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;console_default_password&gt;</span></code> with the default password for the IBM Support for Hyperledger Fabric console. This default password will be set as the password for all new users, including the user created during the installation process.</p>
+<p>By default, the <code class="docutils literal notranslate"><span class="pre">&lt;wait_timeout&gt;</span></code> variable is set to <code class="docutils literal notranslate"><span class="pre">3600</span></code> seconds (1 hour), which should be sufficient for most environments. You only need to change the value for this variable if you find that timeout errors occur during the installation process.</p>
+</section>
+<section id="running-the-playbook">
+<h2>Running the playbook<a class="headerlink" href="#running-the-playbook" title="Permalink to this headline"></a></h2>
+<p>Run the Ansible playbook file you created in the previous step by running the following command:</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ansible-playbook install-ibp.yml</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The Ansible playbook will take some time to run. As the playbook runs, it will output information on the tasks being executed.</p>
+<p>At the end of the output, you should see text similar to the following:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>TASK [console : Wait for console to start] ***********************************************************************
+ok: [localhost]
+
+TASK [console : Print console URL] *******************************************************************************
+ok: [localhost] =&gt; {
+    &quot;msg&quot;: &quot;IBM Support for Hyperledger Fabric console available at https://my-namespace-ibp-console-console.apps.my-openshift-cluster.example.org&quot;
+}
+
+TASK [console : Delete console] **********************************************************************************
+skipping: [localhost]
+
+PLAY RECAP *******************************************************************************************************
+localhost                  : ok=19   changed=4    unreachable=0    failed=0    skipped=13   rescued=0    ignored=0
+</pre></div>
+</div>
+</div></blockquote>
+<p>Ensure that no errors are reported in the output. Ensure that the failure count in the final <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section is 0.</p>
+<p>The URL of the IBM Support for Hyperledger Fabric console is displayed as part of the output for the <code class="docutils literal notranslate"><span class="pre">Print</span> <span class="pre">console</span> <span class="pre">URL</span></code> task. When you access this URL, you can log in with the email and default password that you specified in your Ansible playbook.</p>
+<p>You have now finished installing the IBM Support for Hyperledger Fabric software.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installing.html" class="btn btn-neutral float-right" title="Installing the IBM Blockchain Platform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright IBM Corporation 2020.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

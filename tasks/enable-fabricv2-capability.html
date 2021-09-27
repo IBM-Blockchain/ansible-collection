@@ -1,72 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Enable Hyperledger Fabric v2.x capabilities &mdash; Ansible Collection  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-  
-
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Creating a highly available Certificate Authority" href="haca.html" />
     <link rel="prev" title="Adding an administrator certificate" href="addadmincert.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Ansible Collection
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,30 +37,20 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/deploying.html">Deploying a smart contract</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tasks</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="addadmincert.html">Adding an administrator certificate</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Enable Hyperledger Fabric v2.x capabilities</a><ul>
@@ -112,94 +65,51 @@
 <li class="toctree-l1"><a class="reference internal" href="intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption" role="heading"><span class="caption-text">Support</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Ansible Collection</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Enable Hyperledger Fabric v2.x capabilities</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
-            
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/enable-fabricv2-capability.rst" class="fa fa-github"> Edit on GitHub</a>
-            
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="enable-hyperledger-fabric-v2-x-capabilities">
-<h1>Enable Hyperledger Fabric v2.x capabilities<a class="headerlink" href="#enable-hyperledger-fabric-v2-x-capabilities" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="enable-hyperledger-fabric-v2-x-capabilities">
+<h1>Enable Hyperledger Fabric v2.x capabilities<a class="headerlink" href="#enable-hyperledger-fabric-v2-x-capabilities" title="Permalink to this headline"></a></h1>
 <p>Fabric v2 capability is distinct from Fabric v2.x binaries, and the most common scenario will be where the binaries on a network have been upgraded to v2.x, leaving the Capability of the channels at V1.x.  This playbook example can be used to upgrade firstly the system channel, then an array of named application channels.</p>
 <p>Note that when an application channel has been upgraded to v2 capability it is incompatible with the Fabric v1.x chaincode lifecycle, and the new v2.* lifecycle must be used to upgrade or deploy new chaincodes (contracts).</p>
 <p>v2 capability should only be enabled when all nodes on the network are running v2.x binaries.</p>
-<div class="section" id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
 <p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
-</div>
-<div class="section" id="cloning-the-repository">
-<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline"></a></h2>
 <p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
@@ -212,9 +122,9 @@
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="editing-the-variable-file">
-<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="editing-the-variable-file">
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline"></a></h2>
 <p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbooks.</p>
 <p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
 <ul class="simple">
@@ -248,9 +158,9 @@
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_msp_id</span></code> to the MSP ID of the ordering service administrator.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">channel_names</span></code> to an array of channel names that need to have Fabric v2 capability enabled. Do not include the system channel name in this value.</p></li>
 </ul>
-</div>
-<div class="section" id="enabling-v2-capability-for-the-system-channel">
-<h2>Enabling v2 Capability for the System Channel<a class="headerlink" href="#enabling-v2-capability-for-the-system-channel" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="enabling-v2-capability-for-the-system-channel">
+<h2>Enabling v2 Capability for the System Channel<a class="headerlink" href="#enabling-v2-capability-for-the-system-channel" title="Permalink to this headline"></a></h2>
 <p>The first task is to enable v2 capability on the system channel of the Orderer.
 Note that any new channels created after updating the System Channel will have v2 capability enabled by default, but readers are encouraged to verify that all the capabilities are enabled for the new channels.</p>
 <p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/enable-fabricv2-capability/01-enable-fabricv2-systemchannel.yml">01-enable-fabricv2-systemchannel.yml</a>.</p>
@@ -262,9 +172,9 @@ Note that any new channels created after updating the System Channel will have v
 </div>
 </div></blockquote>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
-</div>
-<div class="section" id="enabling-v2-capability-for-specified-channels">
-<h2>Enabling v2 Capability for Specified Channels<a class="headerlink" href="#enabling-v2-capability-for-specified-channels" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="enabling-v2-capability-for-specified-channels">
+<h2>Enabling v2 Capability for Specified Channels<a class="headerlink" href="#enabling-v2-capability-for-specified-channels" title="Permalink to this headline"></a></h2>
 <p>The second step in this task is to enable v2 capability for the application channels.  Application channels do not have to be v2 enabled immediately after the system channel, channels can continue to run with V1.x capability if required.</p>
 <p>Note that when you have enabled v2 Capability on a channel you are commited to using the new v2 Chaincode Lifecycle on that channel.</p>
 <p>v2 capability requires that a <em>Channel Application Endorsement Policy</em> be added to the channel.  This playbook uses an example policy <code class="docutils literal notranslate"><span class="pre">endorsement-policy.json</span></code>.
@@ -279,55 +189,38 @@ v2 capability enables a default majority Lifecycle Endorsement Policy, but if a 
 </div>
 </div></blockquote>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="haca.html" class="btn btn-neutral float-right" title="Creating a highly available Certificate Authority" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="addadmincert.html" class="btn btn-neutral float-left" title="Adding an administrator certificate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="haca.html" class="btn btn-neutral float-right" title="Creating a highly available Certificate Authority" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright IBM Corporation 2020.
-
-    </p>
+    <p>&#169; Copyright IBM Corporation 2020.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

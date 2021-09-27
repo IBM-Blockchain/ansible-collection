@@ -1,72 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Adding an administrator certificate &mdash; Ansible Collection  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-  
-
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Enable Hyperledger Fabric v2.x capabilities" href="enable-fabricv2-capability.html" />
     <link rel="prev" title="Deploying a smart contract" href="../tutorials/deploying.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Ansible Collection
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,30 +37,20 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/deploying.html">Deploying a smart contract</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tasks</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Adding an administrator certificate</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#before-you-start">Before you start</a></li>
@@ -113,85 +66,42 @@
 <li class="toctree-l1"><a class="reference internal" href="intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="update-channel-parameters.html">Updating channel parameters</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption" role="heading"><span class="caption-text">Support</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Ansible Collection</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Adding an administrator certificate</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
-            
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/addadmincert.rst" class="fa fa-github"> Edit on GitHub</a>
-            
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="adding-an-administrator-certificate">
-<h1>Adding an administrator certificate<a class="headerlink" href="#adding-an-administrator-certificate" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="adding-an-administrator-certificate">
+<h1>Adding an administrator certificate<a class="headerlink" href="#adding-an-administrator-certificate" title="Permalink to this headline"></a></h1>
 <p>A organization in Hyperledger Fabric has one or more administrators that are able to perform administrative actions such as installing a smart contract onto a peer, or editing channel configuration.</p>
 <p>When NodeOU support is enabled for an organization (the default in IBM Blockchain Platform), any enrolled identity with a type of <code class="docutils literal notranslate"><span class="pre">admin</span></code> is automatically recognized as an administrator for that organization. If that enrolled identity expires, or is revoked, then you can just enroll a new identity and that new identity will also be automatically recognized as an administrator for that organization.</p>
 <p>However, if NodeOU support is disabled for an organization, then the definition of that organization must specify an explicit list of enrolled identities which will be recognized as administrators. If you need to enroll a new identity, then you must add that new identity to the list of administrators for the organization before it can be recognized as an administrator.</p>
@@ -205,12 +115,12 @@
 </ul>
 </div></blockquote>
 <p>This task guide walks you through the process of adding a new administrator certificate to an existing organization. You should only follow this task guide if NodeOU support is disabled for the organization.</p>
-<div class="section" id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
 <p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
-</div>
-<div class="section" id="cloning-the-repository">
-<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline"></a></h2>
 <p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
@@ -223,9 +133,9 @@
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="editing-the-variable-file">
-<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="editing-the-variable-file">
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline"></a></h2>
 <p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbooks.</p>
 <p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
 <ul class="simple">
@@ -263,9 +173,9 @@
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_identity</span></code> to the path to a JSON identity file containing the identity of an ordering service administrator.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">ordering_service_admin_msp_id</span></code> to the MSP ID of the ordering service administrator.</p></li>
 </ul>
-</div>
-<div class="section" id="updating-the-organization">
-<h2>Updating the organization<a class="headerlink" href="#updating-the-organization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="updating-the-organization">
+<h2>Updating the organization<a class="headerlink" href="#updating-the-organization" title="Permalink to this headline"></a></h2>
 <p>The first step in this task is to update the organization’s definition that is stored in the IBM Blockchain Platform console. It is important to keep the organization in the IBM Blockchain Platform console up to date, as this is used when performing various operational tasks, for example creating a new peer or ordering service node.</p>
 <p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/add-admin-cert/01-update-organization.yml">01-update-organization.yml</a>, then run it as follows:</p>
 <blockquote>
@@ -274,9 +184,9 @@
 </div>
 </div></blockquote>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
-</div>
-<div class="section" id="updating-the-system-channel">
-<h2>Updating the system channel<a class="headerlink" href="#updating-the-system-channel" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="updating-the-system-channel">
+<h2>Updating the system channel<a class="headerlink" href="#updating-the-system-channel" title="Permalink to this headline"></a></h2>
 <p>The system channel for an ordering service contains the definition of all of the organizations that are in the ordering service consortium and all of the organizations that are administrators of the ordering service. If the organization being updated is a member of the ordering service consortium, or an administrator of the ordering service, then you must update the system channel.</p>
 <p>If the organization being updated is a member of the ordering service consortium, then it is important to keep the organization in the ordering service consortium up to date, as this is used when creating new channels on the ordering service. Because the consortium is managed by an ordering service administrator, you must have access to an identity for an ordering service administrator in order to complete this step.</p>
 <p>If the organization being updated is an administrator of the ordering service, then you must update the definition in the system channel in order to administer the ordering service with the new administrator certificate.</p>
@@ -297,9 +207,9 @@
 </div>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
 </div></blockquote>
-</div>
-<div class="section" id="updating-the-channels">
-<h2>Updating the channels<a class="headerlink" href="#updating-the-channels" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="updating-the-channels">
+<h2>Updating the channels<a class="headerlink" href="#updating-the-channels" title="Permalink to this headline"></a></h2>
 <p>The final step in this task is to update the organization’s definition that is stored in all channels that the organization is a member of. This also applies for organizations that are ordering service administrators, as a copy of the definition of an organization that is n ordering service administrator is stored in each channel.</p>
 <p>If you do not complete this step, the new administrator certificate will not be recognized as an administrator for this organization in these channels.</p>
 <p>Depending on the role of the organization being updated, perform the appropriate step:</p>
@@ -319,55 +229,38 @@
 </div>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="enable-fabricv2-capability.html" class="btn btn-neutral float-right" title="Enable Hyperledger Fabric v2.x capabilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../tutorials/deploying.html" class="btn btn-neutral float-left" title="Deploying a smart contract" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="enable-fabricv2-capability.html" class="btn btn-neutral float-right" title="Enable Hyperledger Fabric v2.x capabilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright IBM Corporation 2020.
-
-    </p>
+    <p>&#169; Copyright IBM Corporation 2020.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

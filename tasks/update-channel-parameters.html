@@ -1,72 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Updating channel parameters &mdash; Ansible Collection  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-  
-
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Modules" href="../modules.html" />
     <link rel="prev" title="Creating an Intermediate Certificate Authority" href="intermediateCA.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Ansible Collection
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,30 +37,20 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/deploying.html">Deploying a smart contract</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tasks</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="addadmincert.html">Adding an administrator certificate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
@@ -111,94 +64,51 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption" role="heading"><span class="caption-text">Support</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Ansible Collection</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Updating channel parameters</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
-            
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/update-channel-parameters.rst" class="fa fa-github"> Edit on GitHub</a>
-            
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="updating-channel-parameters">
-<h1>Updating channel parameters<a class="headerlink" href="#updating-channel-parameters" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="updating-channel-parameters">
+<h1>Updating channel parameters<a class="headerlink" href="#updating-channel-parameters" title="Permalink to this headline"></a></h1>
 <p>Hyperledger Fabric allows each channel to be configured with specific BatchSize parameters and a BatchTimeout for blocks.  This playbook example shows how an Architect or Chaincode Developer could to set these values for a particular application channel on IBM Blockchain Platform.</p>
 <p>The details and implications of setting the parameters is covered in the Hyperledger Fabric documentation set.</p>
-<div class="section" id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
 <p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
 <p>This task guide also assumes that you have created a PostgresSQL database and that you have the connection details available.</p>
-</div>
-<div class="section" id="cloning-the-repository">
-<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline"></a></h2>
 <p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
@@ -211,9 +121,9 @@
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="editing-the-variable-file">
-<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="editing-the-variable-file">
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline"></a></h2>
 <p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbook.</p>
 <p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
 <ul class="simple">
@@ -251,9 +161,9 @@
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_preferred_max_bytes</span></code> to the preferred maximum Block size for the target channel.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">ch_batch_timeout</span></code> to the amount of time to wait after the first transaction before cutting a Block for the target channel.</p></li>
 </ul>
-</div>
-<div class="section" id="updating-the-channel-parameters">
-<h2>Updating the channel parameters<a class="headerlink" href="#updating-the-channel-parameters" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="updating-the-channel-parameters">
+<h2>Updating the channel parameters<a class="headerlink" href="#updating-the-channel-parameters" title="Permalink to this headline"></a></h2>
 <p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/update-channel-parameters/update-channel-parameters.yml">update-channel-parameters.yml</a>, then run it as follows:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook update-channel-parameters.yml
@@ -261,55 +171,38 @@
 </div>
 </div></blockquote>
 <p>Ensure that the example playbook completed successfully by examining the <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section in the output from Ansible.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="intermediateCA.html" class="btn btn-neutral float-left" title="Creating an Intermediate Certificate Authority" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright IBM Corporation 2020.
-
-    </p>
+    <p>&#169; Copyright IBM Corporation 2020.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
