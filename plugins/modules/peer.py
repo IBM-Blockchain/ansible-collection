@@ -729,10 +729,11 @@ def main():
 
             # We should only send dind resources if the peer is running Fabric v1.4.
             # We should only send chaincodelauncher resources if the peer is running Fabric v2.x.
-            if LooseVersion(expected_peer['version']) >= LooseVersion('2.0'):
-                expected_peer['resources'].pop('dind', None)
-            elif LooseVersion(expected_peer['version']) < LooseVersion('2.0'):
-                expected_peer['resources'].pop('chaincodelauncher', None)
+            if 'version' in expected_peer:
+                if LooseVersion(expected_peer['version']) >= LooseVersion('2.0'):
+                    expected_peer['resources'].pop('dind', None)
+                elif LooseVersion(expected_peer['version']) < LooseVersion('2.0'):
+                    expected_peer['resources'].pop('chaincodelauncher', None)
 
             # Create the peer.
             peer = console.create_peer(expected_peer)
