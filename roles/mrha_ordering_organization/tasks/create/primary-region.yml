@@ -10,6 +10,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     name: "{{ ca_name }}"
     config_override:
       ca:
@@ -42,6 +43,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     certificate_authority: "{{ certificate_authority_result.certificate_authority }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"
@@ -58,6 +60,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
     name: "{{ ca_name }} Admin"
     enrollment_id: "{{ ca_admin_enrollment_id }}"
@@ -72,6 +75,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
     registrar: "{{ ca_admin_identity }}"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
@@ -87,6 +91,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
     registrar: "{{ ca_admin_identity }}"
     enrollment_id: "{{ ordering_service_enrollment_id }}"
@@ -102,6 +107,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     certificate_authority: "{{ ca_name }}"
     name: "{{ organization_name }} Admin"
     enrollment_id: "{{ organization_admin_enrollment_id }}"
@@ -117,6 +123,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ organization_name }}"
     msp_id: "{{ organization_msp_id }}"
     certificate_authority: "{{ ca_name }}"
@@ -133,6 +140,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ other_region.api_timeout | default(omit) }}"
     organization: "{{ organization_result.organization }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"
@@ -168,6 +176,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ ordering_service_name }}"
   register: ordering_service_info_result
 
@@ -179,6 +188,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ ordering_service_name }}"
     msp_id: "{{ organization_msp_id }}"
     nodes: "{{ ordering_service_nodes_in_region }}"

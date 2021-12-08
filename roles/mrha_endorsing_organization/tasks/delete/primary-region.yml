@@ -10,6 +10,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ ca_name }}"
 
 - name: Remove certificate authority from all other regions
@@ -20,6 +21,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ other_region.api_timeout | default(omit) }}"
     name: "{{ ca_name }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"
@@ -36,6 +38,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     path: "{{ ca_admin_identity }}"
 
 - name: Delete organization admin
@@ -46,6 +49,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     path: "{{ organization_admin_identity }}"
 
 - name: Delete organization
@@ -56,6 +60,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ organization_name }}"
 
 - name: Remove organization from all other regions
@@ -66,6 +71,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ other_region.api_timeout | default(omit) }}"
     name: "{{ organization_name }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"
