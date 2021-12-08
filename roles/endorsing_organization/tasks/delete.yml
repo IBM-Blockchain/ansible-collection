@@ -10,6 +10,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     name: "{{ ca_name }}"
 
 - name: Delete certificate authority admin
@@ -20,6 +21,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     path: "{{ ca_admin_identity }}"
 
 - name: Delete organization admin
@@ -30,6 +32,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     path: "{{ organization_admin_identity }}"
 
 - name: Delete organization
@@ -40,6 +43,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     name: "{{ organization_name }}"
 
 - name: Delete peer
@@ -50,6 +54,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     name: "{{ peer_name }}"
   when: peers == 1
 
@@ -61,6 +66,7 @@
     api_key: "{{ api_key }}"
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ api_timeout | default(omit) }}"
     name: "{{ peer_name }}{{ item }}"
   loop: "{{ range(1, peers + 1, 1) | list }}"
   when: peers > 1

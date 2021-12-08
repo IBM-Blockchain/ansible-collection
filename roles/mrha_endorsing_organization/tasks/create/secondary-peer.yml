@@ -10,6 +10,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ peer_name }}{{ peer_indexes[peer_index] + 1 }}"
     msp_id: "{{ organization_msp_id }}"
     state_db: "{{ peer_state_db }}"
@@ -33,6 +34,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ other_region.api_timeout | default(omit) }}"
     peer: "{{ peer_result.peer }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"

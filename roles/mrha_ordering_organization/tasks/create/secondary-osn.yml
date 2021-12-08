@@ -10,6 +10,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ ordering_service_name }}_r{{ region_index }}n{{ node_index }}"
     ordering_service: "{{ ordering_service_name }}"
     msp_id: "{{ organization_msp_id }}"
@@ -33,6 +34,7 @@
     api_key: "{{ other_region.api_key }}"
     api_secret: "{{ other_region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ other_region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ other_region.api_timeout | default(omit) }}"
     ordering_service_node: "{{ ordering_service_node_result.ordering_service_node }}"
   when: region_index != other_region_index
   loop: "{{ regions }}"
@@ -48,6 +50,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     ordering_service: "{{ ordering_service_name }}"
     identity: "{{ ordering_org_name }} Admin.json"
     msp_id: "{{ ordering_service_msp }}"
@@ -70,6 +73,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     path: updated_config.bin
     ordering_service_node: "{{ ordering_service_name }}_r{{ region_index }}n{{ node_index }}"
 
@@ -99,6 +103,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     operation: apply_update
     ordering_service: "{{ ordering_service_name }}"
     identity: "{{ ordering_org_name }} Admin.json"
@@ -114,6 +119,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     operation: fetch
     ordering_service: "{{ ordering_service_name }}"
     identity: "{{ ordering_org_name }} Admin.json"
@@ -131,6 +137,7 @@
     api_key: "{{ region.api_key }}"
     api_secret: "{{ region.api_secret | default(omit) }}"
     api_token_endpoint: "{{ region.api_token_endpoint | default(omit) }}"
+    api_timeout: "{{ region.api_timeout | default(omit) }}"
     name: "{{ ordering_service_name }}_r{{ region_index }}n{{ node_index }}"
     ordering_service: "{{ ordering_service_name }}"
     msp_id: "{{ organization_msp_id }}"
