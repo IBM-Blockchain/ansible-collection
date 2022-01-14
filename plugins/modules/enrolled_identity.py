@@ -338,7 +338,7 @@ def main():
 
                 # If we need to re-enroll the certificate, do it now.
                 if reenroll_required:
-                    new_identity = connection.enroll(name, enrollment_id, enrollment_secret, hosts)
+                    new_identity = connection.reenroll(name, identity)
 
             # Check if it has changed.
             changed = not new_identity.equals(identity)

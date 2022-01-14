@@ -171,6 +171,38 @@ class CertificateAuthorityConnection:
         cainfo = json.load(response)
         return cainfo['result']['CAChain']
 
+    def reenroll(self, name, identity):
+        return self._run_with_retry(lambda: self._reenroll(name, identity))
+
+    def _reenroll(self, name, identity):
+        if self.tls:
+            raise Exception("Reenrolling TLS Certs not supported")
+        else:
+            return self._reenroll_ca(name, identity)
+
+    def _reenroll_ca(self, name, identity):
+
+        enrollment = self.ca_service.reenroll(self._get_enrollment(identity))
+        cert = enrollment.cert
+        if self.hsm:
+            hsm = True
+            private_key = None
+        else:
+            hsm = False
+            private_key = enrollment.private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption()
+            )
+        ca = enrollment.caCert
+        return EnrolledIdentity(
+            name=name,
+            cert=cert,
+            private_key=private_key,
+            ca=ca,
+            hsm=hsm
+        )
+
     def enroll(self, name, enrollment_id, enrollment_secret, hosts):
         return self._run_with_retry(lambda: self._enroll(name, enrollment_id, enrollment_secret, hosts))
 
