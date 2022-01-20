@@ -129,69 +129,69 @@
 <p>Create a new Ansible playbook file called <cite>install-ibp.yml</cite>. Copy and paste the content for Kubernetes or Red Hat OpenShift into this new playbook, depending on the type of cluster that you are using:</p>
 <p><strong>Kubernetes</strong></p>
 <blockquote>
-<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span>
-  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
-  <span class="nt">vars</span><span class="p">:</span>
-    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
-    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
-    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibpinfra</span>
-    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
-    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
-    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
-  <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span><span class="w"></span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibpinfra</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span>
-  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
-  <span class="nt">vars</span><span class="p">:</span>
-    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s</span>
-    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
-    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;namespace&gt;</span>
-    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
-    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
-    <span class="nt">console_domain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_domain&gt;</span>
-    <span class="nt">console_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_email&gt;</span>
-    <span class="nt">console_default_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_default_password&gt;</span>
-    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
-  <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span><span class="w"></span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;namespace&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_domain&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_default_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
 <p><strong>Red Hat OpenShift</strong></p>
 <blockquote>
-<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span>
-  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
-  <span class="nt">vars</span><span class="p">:</span>
-    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
-    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
-    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibpinfra</span>
-    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
-    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
-    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
-  <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform custom resource definitions</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span><span class="w"></span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
+<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibpinfra</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.crds</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span>
-  <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
-  <span class="nt">vars</span><span class="p">:</span>
-    <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openshift</span>
-    <span class="nt">arch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
-    <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;project&gt;</span>
-    <span class="nt">image_registry_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span>
-    <span class="nt">image_registry_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span>
-    <span class="nt">console_domain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_domain&gt;</span>
-    <span class="nt">console_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_email&gt;</span>
-    <span class="nt">console_default_password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;console_default_password&gt;</span>
-    <span class="nt">wait_timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
-  <span class="nt">roles</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span><span class="w"></span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
+<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;project&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;image_registry_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_domain&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_email&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;console_default_password&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -208,7 +208,7 @@
 <h2>Running the playbook<a class="headerlink" href="#running-the-playbook" title="Permalink to this headline"></a></h2>
 <p>Run the Ansible playbook file you created in the previous step by running the following command:</p>
 <blockquote>
-<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ansible-playbook install-ibp.yml</span>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ansible-playbook install-ibp.yml</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>

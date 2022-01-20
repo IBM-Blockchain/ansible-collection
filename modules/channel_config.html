@@ -384,63 +384,63 @@
 </section>
 <section id="examples">
 <h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create the configuration for a new channel</span>
-  <span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span>
-    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
-    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
-    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
-    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span>
-    <span class="nt">organizations</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Org1</span>
-    <span class="nt">policies</span><span class="p">:</span>
-      <span class="nt">Admins</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admins-policy.json</span>
-      <span class="nt">Readers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">readers-policy.json</span>
-      <span class="nt">Writers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">writers-policy.json</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create the configuration for a new channel</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">operation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mychannel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span><span class="w"></span>
+<span class="w">    </span><span class="nt">organizations</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">policies</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Admins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admins-policy.json</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Readers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">readers-policy.json</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Writers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">writers-policy.json</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Fetch the channel configuration</span>
-  <span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span>
-    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
-    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
-    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
-    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-    <span class="nt">ordering_service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
-    <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
-    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fetch</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fetch the channel configuration</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ordering_service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ordering Service</span><span class="w"></span>
+<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span><span class="w"></span>
+<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
+<span class="w">    </span><span class="nt">operation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mychannel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_config.bin</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Compute the configuration update for the channel</span>
-  <span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compute_update</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
-    <span class="nt">original</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_channel_config.bin</span>
-    <span class="nt">updated</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">updated_channel_config.bin</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Compute the configuration update for the channel</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">operation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute_update</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mychannel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">original</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">original_channel_config.bin</span><span class="w"></span>
+<span class="w">    </span><span class="nt">updated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">updated_channel_config.bin</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sign the configuration update for the channel</span>
-  <span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sign_update</span>
-    <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
-    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sign the configuration update for the channel</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">operation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sign_update</span><span class="w"></span>
+<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span><span class="w"></span>
+<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mychannel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span><span class="w"></span>
 
-<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Apply the configuration update for the channel</span>
-  <span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span>
-    <span class="nt">api_endpoint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
-    <span class="nt">api_authtype</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">basic</span>
-    <span class="nt">api_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
-    <span class="nt">api_secret</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-    <span class="nt">ordering_service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ordering Service</span>
-    <span class="nt">identity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
-    <span class="nt">msp_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
-    <span class="nt">operation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apply_update</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mychannel</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apply the configuration update for the channel</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.channel_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ordering_service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ordering Service</span><span class="w"></span>
+<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span><span class="w"></span>
+<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
+<span class="w">    </span><span class="nt">operation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apply_update</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mychannel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_config_update.bin</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
