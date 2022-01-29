@@ -10,7 +10,7 @@ __metaclass__ = type
 from ansible.module_utils._text import to_native
 
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import (get_console, get_identity_by_module,
+from ..module_utils.utils import (get_console, get_identity_by_module, get_ordering_service_by_name,
                                   get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -309,7 +309,8 @@ def main():
         endorsement_plugin=dict(type='str'),
         validation_plugin=dict(type='str'),
         init_required=dict(type='bool'),
-        collections_config=dict(type='str')
+        collections_config=dict(type='str'),
+        orderer_name=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -340,6 +341,11 @@ def main():
         msp_id = module.params['msp_id']
         hsm = module.params['hsm']
         identity = resolve_identity(console, module, identity, msp_id)
+
+        if module.params['orderer_name']:
+            orderer = get_ordering_service_by_name(console, module.params['orderer_name'])
+        else:
+            orderer = None
 
         # Extract the chaincode information.
         channel = module.params['channel']
@@ -394,7 +400,7 @@ def main():
 
             # Approve the chaincode.
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout)
+                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer)
                 changed = True
 
         # Return the approved chaincode.

@@ -13,7 +13,7 @@ from ansible.module_utils._text import to_native
 
 from ..module_utils.module import BlockchainModule
 from ..module_utils.utils import (get_console, get_identity_by_module,
-                                  get_peer_by_module, resolve_identity)
+                                  get_peer_by_module, resolve_identity, get_ordering_service_by_name)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -312,6 +312,11 @@ def main():
         hsm = module.params['hsm']
         identity = resolve_identity(console, module, identity, msp_id)
 
+        if module.params['orderer_name']:
+            orderer = get_ordering_service_by_name(console, module.params['orderer_name'])
+        else:
+            orderer = None
+
         # Extract the chaincode information.
         channel = module.params['channel']
         name = module.params['name']
@@ -367,14 +372,14 @@ def main():
 
             # Upgrade the chaincode.
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.upgrade_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
+                peer_connection.upgrade_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc, orderer)
             changed = True
 
         else:
 
             # Instantiate the chaincode.
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.instantiate_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc)
+                peer_connection.instantiate_chaincode(channel, name, version, json.dumps(ctor), endorsement_policy, collections_config, escc, vscc, orderer)
             changed = True
 
         # Return the chaincode.
