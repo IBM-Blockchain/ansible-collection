@@ -230,7 +230,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to list instantiated chaincodes on peer: {process.stdout}')
 
-    def instantiate_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc):
+    def instantiate_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc, orderer):
         env = self._get_environ()
         args = ['peer', 'chaincode', 'instantiate', '-C', channel, '-n', name, '-v', version]
         if ctor is not None:
@@ -243,7 +243,7 @@ class PeerConnection:
             args.extend(['-E', escc])
         if vscc is not None:
             args.extend(['-V', vscc])
-        args.extend(self._get_ordering_service(channel))
+        args.extend(self._get_ordering_service(channel, orderer))
         process = self._run_command(args, env)
         if process.returncode == 0:
             transaction_committed = self.wait_for_chaincode(channel, name, version)
@@ -254,7 +254,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
 
-    def upgrade_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc):
+    def upgrade_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc, orderer):
         env = self._get_environ()
         args = ['peer', 'chaincode', 'upgrade', '-C', channel, '-n', name, '-v', version]
         if ctor is not None:
@@ -267,7 +267,7 @@ class PeerConnection:
             args.extend(['-E', escc])
         if vscc is not None:
             args.extend(['-V', vscc])
-        args.extend(self._get_ordering_service(channel))
+        args.extend(self._get_ordering_service(channel, orderer))
         process = self._run_command(args, env)
         if process.returncode == 0:
             transaction_committed = self.wait_for_chaincode(channel, name, version)
@@ -332,7 +332,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to check commit readiness on peer: {process.stdout}')
 
-    def approve_chaincode(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout):
+    def approve_chaincode(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer):
         env = self._get_environ()
         args = ['peer', 'lifecycle', 'chaincode', 'approveformyorg', '-C', channel, '-n', name, '-v', version, '--package-id', package_id, '--sequence', str(sequence), '--waitForEventTimeout', str(timeout) + "s"]
         if endorsement_policy_ref:
@@ -347,7 +347,7 @@ class PeerConnection:
             args.extend(['--init-required'])
         if collections_config:
             args.extend(['--collections-config', collections_config])
-        args.extend(self._get_ordering_service(channel))
+        args.extend(self._get_ordering_service(channel, orderer))
         process = self._run_command(args, env)
         if process.returncode == 0:
             return
@@ -373,7 +373,7 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to query committed chaincode on peer: {process.stdout}')
 
-    def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout):
+    def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer):
         env = self._get_environ()
         args = ['peer', 'lifecycle', 'chaincode', 'commit', '-C', channel, '-n', name, '-v', version, '--sequence', str(sequence), '--waitForEventTimeout', str(timeout) + "s"]
         if endorsement_policy_ref:
@@ -389,7 +389,7 @@ class PeerConnection:
         if collections_config:
             args.extend(['--collections-config', collections_config])
         args.extend(self._get_anchor_peers(channel, msp_ids))
-        args.extend(self._get_ordering_service(channel))
+        args.extend(self._get_ordering_service(channel, orderer))
         process = self._run_command(args, env)
         if process.returncode == 0:
             return
@@ -463,24 +463,36 @@ class PeerConnection:
         finally:
             os.remove(block_path)
 
-    def _get_ordering_service(self, channel):
+    def _get_ordering_service(self, channel, orderer):
         temp = tempfile.mkstemp()
         os.close(temp[0])
         block_path = temp[1]
         try:
-            self.fetch_channel(channel, 'config', block_path)
-            with open(block_path, 'rb') as file:
-                block = proto_to_json('common.Block', file.read())
-            channel_group = block['data']['data'][0]['payload']['data']['config']['channel_group']
-            orderer_group = channel_group['groups']['Orderer']
-            consenters = orderer_group['values']['ConsensusType']['value']['metadata']['consenters']
-            consenter = random.choice(consenters)
+
+            if orderer:
+                ordererNode = random.choice(orderer.nodes)
+                tlsCert = ordererNode.tls_ca_root_cert
+                apiUrl = urllib.parse.urlparse(ordererNode.api_url)
+                address = f'{apiUrl.hostname}:{apiUrl.port}'
+                self.module.json_log({"msg": "using task specified orderer", "tls_cert": tlsCert, "api_url": address})
+            else:
+                self.fetch_channel(channel, 'config', block_path)
+                with open(block_path, 'rb') as file:
+                    block = proto_to_json('common.Block', file.read())
+
+                channel_group = block['data']['data'][0]['payload']['data']['config']['channel_group']
+                orderer_group = channel_group['groups']['Orderer']
+                consenters = orderer_group['values']['ConsensusType']['value']['metadata']['consenters']
+                consenter = random.choice(consenters)
+                tlsCert = consenter['server_tls_cert']
+                address = f'{consenter["host"]}:{consenter["port"]}'
+                self.module.json_log({"msg": "using orderer from channel", "tls_cert": tlsCert, "api_url": address})
+
             temp = tempfile.mkstemp()
-            os.write(temp[0], base64.b64decode(consenter['server_tls_cert']))
+            os.write(temp[0], base64.b64decode(tlsCert))
             os.close(temp[0])
             pem_path = temp[1]
             self.other_paths.append(pem_path)
-            address = f'{consenter["host"]}:{consenter["port"]}'
             return ['-o', address, '--tls', '--cafile', pem_path]
         finally:
             os.remove(block_path)
