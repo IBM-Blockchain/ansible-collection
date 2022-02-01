@@ -168,7 +168,12 @@ options:
             - The name of the validation system chaincode (VSCC) to use for the chaincode.
         type: str
         default: vscc
-
+    orderer_name:
+        description:
+            - The name of the ordering service node to get the tls-certificate from
+        type: str
+        sample: Ordering Service_1
+        default: the tls_cert for the orderering service will be found from the channel configuration
 notes: []
 requirements: []
 '''
@@ -284,7 +289,8 @@ def main():
         endorsement_policy=dict(type='str'),
         collections_config=dict(type='str'),
         escc=dict(type='str', default='escc'),
-        vscc=dict(type='str', default='vscc')
+        vscc=dict(type='str', default='vscc'),
+        orderer_name=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),

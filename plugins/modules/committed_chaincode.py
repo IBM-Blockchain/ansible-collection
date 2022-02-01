@@ -174,6 +174,12 @@ options:
         description:
             - The path to the collections configuration file for the chaincode definition.
         type: str
+    orderer_name:
+        description:
+            - The name of the ordering service node to get the tls-certificate from
+        type: str
+        sample: Ordering Service_1
+        default: the tls_cert for the orderering service will be found from the channel configuration
 '''
 
 EXAMPLES = '''
@@ -279,6 +285,7 @@ committed_chaincode:
             description:
                 - The path to the collections configuration file for the chaincode definition.
             type: str
+
 '''
 
 
