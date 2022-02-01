@@ -318,7 +318,8 @@ def main():
         endorsement_plugin=dict(type='str', default='escc'),
         validation_plugin=dict(type='str', default='vscc'),
         init_required=dict(type='bool'),
-        collections_config=dict(type='str')
+        collections_config=dict(type='str'),
+        orderer_name=dict(type='str')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret']),
