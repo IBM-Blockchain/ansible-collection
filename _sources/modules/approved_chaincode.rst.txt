@@ -175,6 +175,12 @@ Parameters
 
     | **Type**: str
 
+  orderer_name
+    The name of the ordering service node to get the tls-certificate from
+
+    | **Type**: str
+    | **Default value**: ``the tls_cert for the orderering service will be found from the channel configuration``
+
 
 
 
