@@ -396,6 +396,25 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to commit chaincode on peer: {process.stdout}')
 
+    def init_chaincode(self, channel, msp_ids, name, initJsonStr, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, timeout, orderer):
+        env = self._get_environ()
+        args = ['peer', 'chaincode', 'invoke', '-C', channel, '-n', name, '--isInit', '--ctor', initJsonStr, '--waitForEventTimeout', str(timeout) + "s"]
+        if endorsement_policy_ref:
+            args.extend(['--channel-config-policy', endorsement_policy_ref])
+        elif endorsement_policy:
+            args.extend(['--signature-policy', endorsement_policy])
+        if endorsement_plugin:
+            args.extend(['--endorsement-plugin', endorsement_plugin])
+        if validation_plugin:
+            args.extend(['--validation-plugin', validation_plugin])
+        args.extend(self._get_anchor_peers(channel, msp_ids))
+        args.extend(self._get_ordering_service(channel, orderer))
+        process = self._run_command(args, env)
+        if process.returncode == 0:
+            return
+        else:
+            raise Exception(f'Failed to init legacy chaincode on peer: {process.stdout}')
+
     def _get_environ(self):
         api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
         env = os.environ.copy()

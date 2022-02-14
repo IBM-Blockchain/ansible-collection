@@ -12,6 +12,16 @@ values.
 While different modules perform different tasks, their interfaces and responses
 follow similar patterns.
 
+
+Invoking transactions
+---------------------
+
+Ansible modules should work on the principle that they are idempotent; the same playbook
+can be executed more than once safetly. Submmiting a transactions to Fabric would break this concept.
+
+The modules here are intended for administrative purposes; for this reason and to main the modules
+as being idempotent there are no modules for general purpose transaction invoking.
+
 Module reference
 ----------------
 
