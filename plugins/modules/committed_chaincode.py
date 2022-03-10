@@ -170,6 +170,13 @@ options:
             - True if this chaincode definition requires called the I(Init) method before the I(Invoke) method,
               false otherwise.
         type: bool
+    init_json_str:
+        description:
+            - The JSON string to pass to the Init method.
+              If init_required is true, then the transaciton will be submitted immediately after the commit
+              completes sucessfully. Note if the transaction fails and you wish to resubmit this will need
+              to be done via other (non-ansible) methods
+        type: string
     collections_config:
         description:
             - The path to the collections configuration file for the chaincode definition.
@@ -318,6 +325,7 @@ def main():
         endorsement_plugin=dict(type='str', default='escc'),
         validation_plugin=dict(type='str', default='vscc'),
         init_required=dict(type='bool'),
+        init_json_str=dict(type='str'),
         collections_config=dict(type='str'),
         orderer_name=dict(type='str')
     )
@@ -369,6 +377,7 @@ def main():
         init_required = module.params['init_required']
         collections_config = module.params['collections_config']
         timeout = module.params['api_timeout']
+        initJsonStr = module.params['init_json_str']
 
         # Check if this chaincode is already committed on the channel.
         with peer.connect(module, identity, msp_id, hsm) as peer_connection:
@@ -403,6 +412,8 @@ def main():
             with peer.connect(module, identity, msp_id, hsm) as peer_connection:
                 peer_connection.commit_chaincode(channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer)
                 changed = True
+                if init_required:
+                    peer_connection.init_chaincode(channel, msp_ids, name, initJsonStr, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, timeout, orderer)
 
         # Return the committed chaincode.
         return module.exit_json(changed=changed, committed_chaincode=dict(channel=channel, name=name, version=version, sequence=sequence, endorsement_policy_ref=endorsement_policy_ref, endorsement_policy=endorsement_policy, endorsement_plugin=endorsement_plugin, validation_plugin=validation_plugin, init_required=init_required, collections_config=collections_config))
