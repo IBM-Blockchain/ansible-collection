@@ -6,6 +6,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: "{{ cluster_role }}"
+  labels:
+  release: "operator"
+  helm.sh/chart: "ibm-ibp"
+  app.kubernetes.io/name: "ibp"
+  app.kubernetes.io/instance: "ibp"
+  app.kubernetes.io/managed-by: "ibp-operator"
 rules:
 - apiGroups:
   - extensions
