@@ -61,6 +61,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#invoking-transactions">Invoking transactions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-reference">Module reference</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="modules/approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
@@ -142,6 +143,13 @@ executes each module, usually on the remote target node, and collects return
 values.</p>
 <p>While different modules perform different tasks, their interfaces and responses
 follow similar patterns.</p>
+<section id="invoking-transactions">
+<h2>Invoking transactions<a class="headerlink" href="#invoking-transactions" title="Permalink to this headline"></a></h2>
+<p>Ansible modules should work on the principle that they are idempotent; the same playbook
+can be executed more than once safetly. Submmiting a transactions to Fabric would break this concept.</p>
+<p>The modules here are intended for administrative purposes; for this reason and to main the modules
+as being idempotent there are no modules for general purpose transaction invoking.</p>
+</section>
 <section id="module-reference">
 <h2>Module reference<a class="headerlink" href="#module-reference" title="Permalink to this headline"></a></h2>
 <p>Reference material for each module contains documentation on what parameters

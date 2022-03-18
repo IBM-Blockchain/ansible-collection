@@ -61,6 +61,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#invoking-transactions">Invoking transactions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../modules.html#module-reference">Module reference</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
@@ -299,6 +300,11 @@
 <dt>init_required</dt><dd><p>True if this chaincode definition requires called the <em>Init</em> method before the <em>Invoke</em> method, false otherwise.</p>
 <div class="line-block">
 <div class="line"><strong>Type</strong>: bool</div>
+</div>
+</dd>
+<dt>init_json_str</dt><dd><p>The JSON string to pass to the Init method. If init_required is true, then the transaciton will be submitted immediately after the commit completes sucessfully. Note if the transaction fails and you wish to resubmit this will need to be done via other (non-ansible) methods</p>
+<div class="line-block">
+<div class="line"><strong>Type</strong>: string</div>
 </div>
 </dd>
 <dt>collections_config</dt><dd><p>The path to the collections configuration file for the chaincode definition.</p>
