@@ -36,6 +36,7 @@ options:
               You must provide a valid API key using I(api_key).
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
+            - C(localfabric)
         type: str
         required: true
     api_key:
@@ -149,7 +150,7 @@ def main():
     # Create the module.
     argument_spec = dict(
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic','localfabric']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),

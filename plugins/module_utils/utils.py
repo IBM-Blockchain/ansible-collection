@@ -9,6 +9,7 @@ __metaclass__ = type
 
 import base64
 import json
+import q
 
 from .certificate_authorities import CertificateAuthority
 from .consoles import Console
@@ -16,7 +17,7 @@ from .enrolled_identities import EnrolledIdentity
 from .ordering_services import OrderingService, OrderingServiceNode
 from .organizations import Organization
 from .peers import Peer
-
+from .local_console import LocalConsole
 
 def get_console(module):
 
@@ -27,11 +28,17 @@ def get_console(module):
     api_secret = module.params['api_secret']
     api_timeout = module.params['api_timeout']
     api_token_endpoint = module.params['api_token_endpoint']
-    console = Console(module, api_endpoint, api_timeout, api_token_endpoint)
-    console.login(api_authtype, api_key, api_secret)
-    if console.is_v1():
-        module.warn('Console only supports v1 APIs (IBP < 2.1.3), only limited functionality will be available')
-    return console
+
+    if api_authtype == 'localfabric':
+        q("Local fabric to be used")
+        console = LocalConsole(module, api_endpoint, api_timeout)
+        return console
+    else:
+        console = Console(module, api_endpoint, api_timeout, api_token_endpoint)
+        console.login(api_authtype, api_key, api_secret)
+        if console.is_v1():
+            module.warn('Console only supports v1 APIs (IBP < 2.1.3), only limited functionality will be available')
+        return console
 
 
 def get_certificate_authority_by_name(console, name, fail_on_missing=True):

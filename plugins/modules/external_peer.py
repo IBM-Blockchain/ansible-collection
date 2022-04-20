@@ -214,7 +214,7 @@ def main():
     argument_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic','localfabric']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),

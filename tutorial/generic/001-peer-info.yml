@@ -1,0 +1,36 @@
+---
+- name: Check the authentication to the console
+  hosts: localhost
+  vars:
+    state: present
+  vars_files:
+    - ./common-vars.yml
+    - ./org1-vars.yml
+  tasks:
+    - name: Get peer
+      ibm.blockchain_platform.peer_info:
+        api_endpoint: http://localhost:3000/components
+        api_authtype: localfabric
+        api_key: none
+        name: Org1 Peer
+      register: info
+
+    - name: output information
+      ansible.builtin.debug:
+        msg: "{{info}}"
+
+    - name: Install the chaincode on the peer using Hyperledger Fabric v2.x lifecycle
+      ibm.blockchain_platform.installed_chaincode:
+        state: present
+        api_endpoint: http://localhost:3000/components
+        api_authtype: localfabric
+        api_key: none
+        peer: Org1 Peer
+        identity: Org1 Admin.json
+        msp_id: Org1MSP
+        path: fabcar@1.0.0.tgz
+      register: info
+
+    - name: output information
+      ansible.builtin.debug:
+        msg: "{{info}}"
