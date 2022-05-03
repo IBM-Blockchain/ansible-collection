@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-api_endpoint: https://ibp-console.example.org:32000
-api_authtype: basic
-api_key: xxxxxxxx
+api_endpoint: https://60059925c0584d4a9a762e19696b3c4b-ibpconsole-console.uks02.blockchain.cloud.ibm.com
+api_authtype: ibmcloud
+api_key: dR9UnccY_tsdDBE_7AKIiups7p5fbGr0_m7RBDe5v9N8
 api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ca_admin_enrollment_id: admin
 ca_admin_enrollment_secret: adminpw

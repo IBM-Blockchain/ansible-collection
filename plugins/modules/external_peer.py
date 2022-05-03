@@ -12,7 +12,7 @@ from ansible.module_utils._text import to_native
 from ..module_utils.dict_utils import copy_dict, equal_dicts, merge_dicts
 from ..module_utils.module import BlockchainModule
 from ..module_utils.peers import Peer
-from ..module_utils.utils import get_console
+from .utils import get_console
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -214,7 +214,7 @@ def main():
     argument_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic','localfabric']),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),

@@ -5,6 +5,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+from plugins.module_utils.fabric_provider_interface import IFabricProvider
+
 __metaclass__ = type
 
 import base64
@@ -29,7 +31,7 @@ except ImportError as e:
     pass
 
 
-class Console:
+class Console(IFabricProvider):
 
     def __init__(self, module, api_endpoint, api_timeout, api_token_endpoint, retries=5):
         self.module = module

@@ -17,8 +17,8 @@ from ansible.module_utils.basic import _load_params
 
 from ..module_utils.module import BlockchainModule
 from ..module_utils.proto_utils import proto_to_json
-from ..module_utils.utils import (get_console, get_identity_by_module,
-                                  get_peer_by_module, resolve_identity)
+from .utils import (get_console, get_identity_by_module,
+                    get_peer_by_module, resolve_identity)
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -372,7 +372,7 @@ def main():
     argument_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic','localfabric']),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),

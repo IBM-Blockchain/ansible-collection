@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_peer_by_name
+from .utils import get_console, get_peer_by_name
 
 from ansible.module_utils._text import to_native
 
@@ -36,7 +36,6 @@ options:
               You must provide a valid API key using I(api_key).
             - C(basic) - Authenticate to the IBM Blockchain Platform console using basic authentication.
               You must provide both a valid API key using I(api_key) and API secret using I(api_secret).
-            - C(localfabric)
         type: str
         required: true
     api_key:
@@ -69,6 +68,10 @@ options:
             - The timeout, in seconds, to wait until the peer is available.
         type: int
         default: 60
+    provider:
+        description: name of the Fabric Provider
+        type: string
+        default: ibp
 notes: []
 requirements: []
 '''
@@ -146,23 +149,25 @@ peer:
 
 
 def main():
-
+    print("Helllllllloooooooooooooo")
     # Create the module.
     argument_spec = dict(
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic','localfabric']),
+        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
-        wait_timeout=dict(type='int', default=60)
+        wait_timeout=dict(type='int', default=60),
+        provider=dict(type='str', defaut='ibp')
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
     ]
     module = BlockchainModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
+    print("Helllllllloooooooooooooo")
     # Ensure all exceptions are caught.
     try:
 
