@@ -23,7 +23,7 @@ service_account: default
 webhook: ibp-webhook
 
 wait_timeout: 60
-product_version: "2.5.2"
-webhook_version: "20220308"
+product_version: "2.5.3"
+webhook_version: "20220503"
 webhook_image: "{{ image_registry_url }}/ibp-crdwebhook"
 webhook_tag: "{{ product_version }}-{{ webhook_version }}-{{ arch }}"
