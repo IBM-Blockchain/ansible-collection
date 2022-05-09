@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-import collections
+from collections.abc import Mapping
 import json
 
 
@@ -16,7 +16,7 @@ def copy_dict(source):
 
 def merge_dicts(target, source):
     for key, value in source.items():
-        if key in target and isinstance(target[key], dict) and isinstance(source[key], collections.Mapping):
+        if key in target and isinstance(target[key], dict) and isinstance(source[key], Mapping):
             merge_dicts(target[key], source[key])
         else:
             target[key] = source[key]
@@ -25,7 +25,7 @@ def merge_dicts(target, source):
 def diff_dicts(target, source):
     result = dict()
     for key, value in source.items():
-        if key in target and isinstance(target[key], dict) and isinstance(source[key], collections.Mapping):
+        if key in target and isinstance(target[key], dict) and isinstance(source[key], Mapping):
             sub_result = diff_dicts(target[key], source[key])
             if bool(sub_result):
                 result[key] = sub_result
