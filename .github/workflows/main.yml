@@ -28,15 +28,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Which yq
+        run: |
+          which yq
+          yq --version
+      - name: Which yq
+        run: |
+          which yq
+          yq --version
       - name: Use Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Which yq
+        run: |
+          which yq
+          yq --version
       - name: Install Python dependencies
         run: pip install -Ur requirements.txt
+      - name: Which yq
+        run: |
+          which yq
+          yq --version
       - name: Build collection artifact
         run: |
           VERSION=$(yq -r .version galaxy.yml)
+          yq --version
+          which yq
           ansible-galaxy collection build
           mv ibm-blockchain_platform-${VERSION}.tar.gz ibm-blockchain_platform.tar.gz
       - name: Install collection
