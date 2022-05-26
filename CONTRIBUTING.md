@@ -19,7 +19,14 @@ The skills required depend on the area of the code you are looking to contribute
 
 Follow these steps to set up a development environment for this Ansible collection.
 
+> Note: that the repo is migrating touse Poetry for dependency management, and the just task runner for developmnet purposes
+
 1. Install Python v3.x. The Python version manager [pyenv](https://github.com/pyenv/pyenv) works great on Linux and macOS and avoids a lot of difficulties seen when trying to use the system Python, or Python installed using the package manager for your operating system.
+
+We're migrating to use [Poetry](https://python-poetry.org/docs/master/)
+Optional for quickly running development activites use [just](https://github.com/casey/just)
+
+The linting uses [shellcheck](https://github.com/koalaman/shellcheck#installing) that needs to be installed with your package manager
 
 2. Clone the GitHub repository. To avoid difficulties later on, it is recommended that you clone the GitHub repository directly into the Ansible collections directory, so you need to delete any installed version first:
 
@@ -43,6 +50,8 @@ Follow these steps to set up a development environment for this Ansible collecti
 
 4. Install all Python dependencies:
 
+    `poetry install`
+     or
     `pip install -Ur requirements.txt`
 
     The modules installed include Ansible and tools for building documentation and linting the code.
@@ -120,6 +129,11 @@ shellcheck tutorial/*.sh
 yamllint .
 ```
 
+This can also be run
+```
+just lint
+```
+
 ### Ansible collection
 
 You can build the Ansible collection into a package by running the following command:
@@ -135,6 +149,13 @@ ansible-galaxy collection install ibm-blockchain_platform-1.0.0.tar.gz
 ```
 
 The package can also be imported into Ansible Galaxy manually using your web browser.
+
+
+All the above tasks can be completed by running:
+
+```
+just local
+```
 
 ### Documentation
 
