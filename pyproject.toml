@@ -9,7 +9,7 @@ license = "Apache-2.0"
 [tool.poetry.dependencies]
 python = "^3.8"
 yq = "^2.14.0"
-ansible = ">=2.9,<2.10"
+ansible = ">=2.9,<4.3"
 
 [tool.poetry.dev-dependencies]
 ansible-lint = "5.3.2"
