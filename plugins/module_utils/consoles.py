@@ -84,7 +84,7 @@ class Console:
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to log in to IBM Cloud', 'url': self.api_token_endpoint, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
@@ -106,6 +106,19 @@ class Console:
         if not self.logged_in:
             raise Exception('Not logged in')
 
+    def map_id_from_name(self, name):
+
+        if (len(name) < 3):
+            raise Exception('Name is too short')
+
+        regex = r"[a-z][a-z0-9]{2,7}"
+
+        result = re.search(regex, name.lower().replace(' ', ''))
+        if result:
+            return result.group()
+        else:
+            raise Exception("Unable to co-erce display name to id")
+
     def get_health(self):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, './health')
@@ -113,7 +126,7 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get console health', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -133,7 +146,7 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get console settings', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -153,7 +166,7 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all components', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -167,14 +180,15 @@ class Console:
                     continue
                 return self.handle_error('Failed to get all components', e)
 
-    def get_component_by_id(self, id, deployment_attrs='omitted'):
+    def get_component_by_id(self, id, deployment_attrs='omitted', expected=True):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, f'./components/{id}?deployment_attrs={deployment_attrs}&cache=skip')
         headers = {
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        self.module.json_log({'msg': "Getting and expected to exist is " + str(expected)})
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get component by id', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -197,15 +211,22 @@ class Console:
                         except Exception:
                             pass
                     if is_404:
-                        result = self.get_component_by_id(id, 'omitted')
-                        result['deployment_attrs_missing'] = True
+                        result = self.get_component_by_id(id, 'omitted', expected)
+                        if result is not None:
+                            result['deployment_attrs_missing'] = True
                         return result
+
                 if self.should_retry_error(e, attempt):
                     continue
-                return self.handle_error('Failed to get component by ID', e)
+
+                if expected:
+                    return self.handle_error('Failed to get component by ID', e)
+                else:
+                    return None
 
     def get_component_by_display_name(self, component_type, display_name, deployment_attrs='omitted'):
         components = self.get_all_components()
+
         for component in components:
             if component.get('display_name', None) == display_name and component.get('type', None) == component_type:
                 return self.get_component_by_id(component['id'], deployment_attrs)
@@ -228,7 +249,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -268,7 +289,7 @@ class Console:
             'Authorization': self.authorization
         }
         serialized_data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -287,7 +308,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete certificate authority', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -322,7 +343,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -344,7 +365,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -363,7 +384,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external certificate authority', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -384,7 +405,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -424,7 +445,7 @@ class Console:
             'Authorization': self.authorization
         }
         serialized_data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -443,7 +464,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete peer', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -478,7 +499,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -500,7 +521,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -519,7 +540,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external peer', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -540,7 +561,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create ordering service', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -563,7 +584,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -604,7 +625,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -638,7 +659,7 @@ class Console:
             if permitted_change in data:
                 stripped_data[permitted_change] = data[permitted_change]
         serialized_data = json.dumps(stripped_data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to edit ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -678,7 +699,7 @@ class Console:
             'Authorization': self.authorization
         }
         serialized_data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -697,7 +718,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete ordering service node', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -738,7 +759,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -760,7 +781,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -781,7 +802,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external ordering service node', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -806,7 +827,7 @@ class Console:
             'remove_admin_certs': remove_admin_certs
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to edit admin certificates', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -827,7 +848,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create organization', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -849,7 +870,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update organization', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -868,7 +889,7 @@ class Console:
         headers = {
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete organization', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -905,7 +926,7 @@ class Console:
             'Authorization': self.authorization
         }
         data = json.dumps(dict(b64_block=config_block))
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to submit config block', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -1005,7 +1026,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all console users', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -1047,7 +1068,7 @@ class Console:
             }
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
@@ -1079,7 +1100,7 @@ class Console:
             }
         }
         data = json.dumps(data)
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update console user', 'data': data, 'url': url, 'attempt': attempt})
                 open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
@@ -1103,7 +1124,7 @@ class Console:
             'Content-Type': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete console user', 'email': email, 'url': url, 'attempt': attempt})
                 open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
@@ -1122,7 +1143,7 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get msps by msp id', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
@@ -1143,7 +1164,7 @@ class Console:
             'Accepts': 'application/json',
             'Authorization': self.authorization
         }
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(0, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all available fabric versions', 'url': url, 'attempt': attempt})
                 response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)

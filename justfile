@@ -47,3 +47,8 @@ toolcheck:
     confirm "shellcheck"
     confirm "yamllint"
 
+tutorial:
+    #!/bin/bash
+    set -ex -o pipefail
+
+    export IBP_ANSIBLE_LOG_FILENAME=ibp.log

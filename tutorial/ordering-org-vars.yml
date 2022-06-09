@@ -14,4 +14,14 @@ ordering_service_enrollment_id: orderingorgorderer
 ordering_service_enrollment_secret: orderingorgordererpw
 ordering_service_msp: OrdererMSP
 ordering_service_nodes: 1
-wait_timeout: 600
+
+# set to 0 for most cases
+error_retries: 0
+
+# Unqiue ID for each component is generated from the name
+id_name_mapping: id_from_name
+# Adjust api and wait timeouts if needed.
+
+# wait_timeout: 60
+# api_timeout: 300
+

@@ -27,7 +27,13 @@ def get_console(module):
     api_secret = module.params['api_secret']
     api_timeout = module.params['api_timeout']
     api_token_endpoint = module.params['api_token_endpoint']
-    console = Console(module, api_endpoint, api_timeout, api_token_endpoint)
+
+    if 'error_retries' in module.params:
+        error_retries = module.params['error_retries']
+    else:
+        error_retries = 5
+
+    console = Console(module, api_endpoint, api_timeout, api_token_endpoint, error_retries)
     console.login(api_authtype, api_key, api_secret)
     if console.is_v1():
         module.warn('Console only supports v1 APIs (IBP < 2.1.3), only limited functionality will be available')

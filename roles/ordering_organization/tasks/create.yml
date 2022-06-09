@@ -46,6 +46,7 @@
     api_secret: "{{ api_secret | default(omit) }}"
     api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
     api_timeout: "{{ api_timeout | default(omit) }}"
+    error_retries: "{{ error_retries | default(omit) }}"
     name: "{{ ca_name }}"
     config_override:
       ca:
@@ -68,6 +69,7 @@
     storage: "{{ ca_storage | default(omit) }}"
     version: "{{ ca_version | default(omit) }}"
     wait_timeout: "{{ wait_timeout | default(omit) }}"
+    id_name_mapping: "{{ id_name_mapping | default(omit) }}"
 
 - name: Enroll certificate authority admin
   ibm.blockchain_platform.enrolled_identity:

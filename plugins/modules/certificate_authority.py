@@ -81,9 +81,14 @@ options:
             - present
     name:
         description:
-            - The name of the certificate authority.
+            - The display name of the certificate authority.
         type: str
         required: true
+    id:
+        description:
+            - The unique identifier of the certifcate authority. Will be required in a future release.
+        type: str
+        required: false
     config_override:
         description:
             - The configuration overrides for the root certificate authority and the TLS certificate authority.
@@ -189,6 +194,23 @@ options:
             - The timeout, in seconds, to wait until the certificate authority is available.
         type: int
         default: 60
+    error_retries:
+        description:
+            - In the event of a timeout or failure for the certificate authority to be created the attempt will be remade
+            - It is advised to set this to (0) unless there are specific reasons to increase
+            - The default of 5 is left - as this was the value in previous releases. This value should now be considered deprecated
+        type: int
+        default: 5
+    id_name_mapping:
+        description:
+            - C(as_set) the values of name and id are used exactly as they have been passed in (id of "" is removed and not used)
+            - C(id_is_name) the id value is taken directly from the name as is. This may limit the format of the name as there are restrictions on the id length
+            - C(id_from_name) this id is generated from the name.
+        type: str
+        choices:
+            - as_set
+            - id_is_name
+            - id_from_name
 notes: []
 requirements: []
 '''
@@ -365,6 +387,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
+        id=dict(type='str', required=False, default=''),  # Note set to false for backward compatibility
+        id_name_mapping=dict(type='str', required=False, choices=['as_is', 'is_is_name', 'id_from_name'], default='as_is'),
         config_override=dict(type='dict', default=dict(), options=dict(
             ca=dict(type='dict'),
             tlsca=dict(type='dict'),
@@ -391,7 +415,8 @@ def main():
         zone=dict(type='str'),
         replicas=dict(type='int'),
         version=dict(type='str'),
-        wait_timeout=dict(type='int', default=60)
+        wait_timeout=dict(type='int', default=60),
+        error_retries=dict(type='int', default=5)
     )
     required_if = [
         ('api_authtype', 'basic', ['api_secret'])
@@ -408,8 +433,29 @@ def main():
         console = get_console(module)
 
         # Determine if the certificate authority exists.
-        name = module.params['name']
-        certificate_authority = console.get_component_by_display_name('fabric-ca', name, deployment_attrs='included')
+
+        mapping = module.params['id_name_mapping']
+        if mapping == 'as_is':
+            # pass the id and name as is, unless the id is emptry
+            if module.params['id'] or module.params['id'] == '':
+                del module.params['id']
+
+        elif mapping == 'id_is_name':
+            # set the id from the name
+            module.params['id'] = module.parms['name']
+
+        elif mapping == 'id_from_name':
+            module.params['id'] = console.map_id_from_name(module.params['name'])
+
+        else:
+            raise Exception('unknown mapping string:' + mapping)
+
+        if 'id' in module.params:
+            print("getting by id")
+            certificate_authority = console.get_component_by_id(module.params['id'], deployment_attrs='included', expected=False)
+        else:
+            certificate_authority = console.get_component_by_display_name('fabric-ca', module.params['name'], deployment_attrs='included')
+
         certificate_authority_exists = certificate_authority is not None
         certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
         module.json_log({
@@ -465,11 +511,14 @@ def main():
 
         # Extract the expected certificate authority configuration.
         expected_certificate_authority = dict(
-            display_name=name,
+            display_name=module.params['name'],
             config_override=config_override,
             resources=module.params['resources'],
             storage=storage
         )
+
+        if 'id' in module.params:
+            expected_certificate_authority['id'] = module.params['id']
 
         # Add the HSM configuration if it is specified.
         hsm = module.params['hsm']
