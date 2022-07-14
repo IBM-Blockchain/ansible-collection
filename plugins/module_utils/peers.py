@@ -98,7 +98,7 @@ class Peer:
         for x in range(timeout):
             try:
                 url = urllib.parse.urljoin(self.operations_url, '/healthz')
-                response = open_url(url, None, None, method='GET', validate_certs=False)
+                response = open_url(url, None, None, method='GET', validate_certs=False, follow_redirects='all')
                 if response.code == 200:
                     healthz = json.load(response)
                     if healthz['status'] == 'OK':

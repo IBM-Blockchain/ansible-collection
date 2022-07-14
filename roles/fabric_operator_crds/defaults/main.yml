@@ -1,0 +1,67 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+target: openshift
+# arch: amd64 | s390x
+# project: my-project
+namespace: ""
+
+fabric_container_registry: hyperledger
+
+fabric_ca_version: 1.5.2
+fabric_version: 2.4.3
+
+ca_image: "{{ fabric_container_registry }}/fabric-ca"
+ca_image_label: "{{ fabric_ca_version}}"
+peer_image: "{{ fabric_container_registry}}/fabric-peer"
+peer_image_label: "{{ fabric_version}}"
+orderer_image: "{{ fabric_container_registry}}/fabric-orderer"
+orderer_image_label: "{{ fabric_version }}"
+tools_image: "{{fabric_container_registry }}/fabric-tools"
+tools_image_label: "{{ fabric_version }}"
+operator_image: ghcr.io/ibm-blockchain/fabric-operator
+operator_image_label: latest-amd64
+init_image: registry.access.redhat.com/ubi8/ubi-minimal
+init_image_label: latest
+grpcweb_image: ghcr.io/hyperledger-labs/grpc-web
+grpcweb_image_label: latest
+couchdb_image: couchdb
+couchdb_image_label: 3.2.1
+console_image: ghcr.io/hyperledger-labs/fabric-console
+console_image_label: latest
+deployer_image: ghcr.io/ibm-blockchain/fabric-deployer
+deployer_image_label: latest-amd64
+
+fabric_operator_image: "{{operator_image}}:{{ operator_image_label }}"
+fabric_console_image: "{{console_image }}:{{ console_image_label }}"
+fabric_deployer_image: "{{deployer_image }}:{{ deployer_image_label }}"
+fabric_ca_image: "{{ca_image}}:{{ca_image_label}}"
+fabric_peer_image: "{{ peer_image }}:{{ peer_image_label }}"
+fabric_orderer_image: "{{ orderer_image }}:{{ orderer_image_label }}"
+fabric_tools_image: "{{ tools_image }}:{{ tools_image_label }}"
+
+# test_network_ingress_ipaddr: "172.17.154.105"
+ingress_domain: localho.st
+container_cli: docker
+container_namespace: ""
+storage_class: standard
+# image_pull_secret: docker-key-secret
+# image_registry: cp.icr.io
+# image_registry_username: cp
+# # image_registry_email: user@example.org
+# # image_registry_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# image_repository: cp
+# image_registry_url: "{{ image_registry }}/{{ image_repository }}"
+
+# role: "{{ project | default(namespace) | default('') }}"
+# role_binding: "{{ project | default(namespace) | default('') }}"
+# security_context_constraints: "{{ project | default(namespace) | default('') }}"
+# service_account: default
+# wait_timeout: 60
+
+# product_version: "1.0.0"
+# webhook_version: "20220308"
+# webhook_image: "{{ image_registry_url }}/ibm-hlfsupport-crdwebhook"
+# webhook_tag: "{{ product_version }}-{{ webhook_version }}-{{ arch }}"

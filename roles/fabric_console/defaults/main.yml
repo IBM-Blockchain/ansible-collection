@@ -1,0 +1,45 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+state: present
+# target: k8s | openshift
+# arch: amd64 | s390x
+# project: my-project
+namespace: "" # defined by jinja2 otherwise
+
+image_pull_secret: ghcr-pull-secret
+image_registry: hyperledger
+# image_registry_username: cp
+# image_registry_email: user@example.org
+# image_registry_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+fabric_version: 2.4.4
+fabric_ca_version: 1.5.4
+
+image_repository: cp
+image_registry_url: "{{ image_registry }}/{{ image_repository }}"
+
+service_account: default
+
+# console_domain: example.org
+# console_email: user@example.org
+# console_default_password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+console_storage_class: default
+console_storage_size: 5Gi
+
+wait_timeout: 60
+
+deployer_image: ghcr.io/ibm-blockchain/fabric-deployer
+deployer_image_label: latest-amd64
+console_image: ghcr.io/hyperledger-labs/fabric-console
+console_image_label: latest
+
+init_image: registry.access.redhat.com/ubi8/ubi-minimal
+init_image_label: latest
+
+couchdb_image: couchdb
+couchdb_image_label: 3.2.1
+
+tools_image: "{{image_registry}}/fabric-tools"
+tools_image_label: "{{fabric_version}}"

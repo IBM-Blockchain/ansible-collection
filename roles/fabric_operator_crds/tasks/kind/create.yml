@@ -1,0 +1,94 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Creating CRDs
+  k8s:
+    definition: "{{ lookup('kubernetes.core.kustomize',dir=role_path+'/templates/'+target+'/crd') }}"
+  register: resultcrds
+
+- name: Create kubernetes resources for the ingress
+  k8s:
+    definition: "{{ lookup('kubernetes.core.kustomize', dir=role_path+'/templates/'+target+'/ingress') }}"
+  register: resultingress
+
+- name: Wait for the ingress
+  command: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=2m
+  changed_when: false
+
+# Override the cluster DNS with a local override to refer pods to the HOST interface
+# when connecting to ingress.
+- name: Need the cluster ip address
+  k8s_info:
+    api_version: v1
+    kind: service
+    namespace: ingress-nginx
+    name: "ingress-nginx-controller"
+  register: ingress_info
+
+- name: Applying CoreDNS overrides for ingress domain
+  vars:
+    clusterip: "{{ ingress_info.resources[0].spec.clusterIP }}"
+  k8s:
+    state: present
+    namespace: kube-system
+    resource_definition: "{{ lookup('template','templates/'+target+'/coredns/coredns.yaml.j2') }}"
+    apply: yes
+
+- name: Rollout the CoreDNS
+  shell: |
+    kubectl -n kube-system rollout restart deployment/coredns
+    kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=2m
+  changed_when: false
+
+# END of KIND specifics
+
+# Time to deploy the operator
+# Create the namespace for the operator
+- name: Fail if namespace not specified
+  fail:
+    msg: namespace not specified or is empty
+  when: not namespace is defined or not namespace
+
+- name: Determine if namespace exists
+  k8s_info:
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  register: namespace_info
+
+- name: Create namespace
+  k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: "{{ namespace }}"
+  when: not namespace_info.resources
+
+# Create the Role based Access Control
+- name: Create Role Based Access Control
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'templates/'+target+'/rbac/'+item) }}"
+    apply: yes
+  loop:
+    - hlf-operator-clusterrole.yaml
+    - hlf-operator-clusterrolebinding.yaml.j2
+    - hlf-operator-serviceaccount.yaml
+    - hlf-psp.yaml
+
+# create the manager
+- name: Create Operator
+  k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'templates/'+target+'/manager/'+item) }}"
+    apply: yes
+  loop:
+    - hlf-operator-manager.yaml.j2
+
+- name: Wait for operator
+  shell: |
+    kubectl -n {{ namespace }} rollout status deploy fabric-operator
+  changed_when: false
