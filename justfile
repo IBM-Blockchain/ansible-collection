@@ -23,6 +23,9 @@ lint:
     shellcheck tutorial/*.sh
     yamllint .
 
+docker:
+    docker build -t fabric-ansible .
+
 # Build the documentation
 docs:
     #!/bin/bash

@@ -4,7 +4,7 @@
 
 # In the first stage, install the common dependencies, and then set up the standard user.
 FROM registry.access.redhat.com/ubi8/ubi-minimal AS base
-RUN microdnf install python38 shadow-utils \
+RUN microdnf install python38 shadow-utils git podman \
     && groupadd -g 7051 ibp-user \
     && useradd -u 7051 -g ibp-user -G root -s /bin/bash ibp-user \
     && chgrp -R root /home/ibp-user /etc/passwd \
@@ -26,8 +26,12 @@ ADD . /tmp/collection
 RUN cd /tmp/collection \
     && ansible-galaxy collection build --output-path /tmp \
     && ansible-galaxy collection install /tmp/ibm-blockchain_platform-*.tar.gz \
+    && ansible-galaxy collection install kubernetes.core \
     && chgrp -R root /home/ibp-user/.ansible \
     && chmod -R g=u /home/ibp-user/.ansible
+RUN curl -sSL "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"  -o /tmp/kubectl \
+    && chmod +x /tmp/kubectl \
+    && mv /tmp/kubectl /home/ibp-user/.local/bin
 
 # In the third stage, build the Hyperledger Fabric binaries with HSM enabled (this is not the default).
 FROM base AS fabric
@@ -54,11 +58,12 @@ RUN cd /go/src/github.com/hyperledger/fabric \
 # In the final stage, copy all the installed Python modules across from the second stage and the Hyperledger
 # Fabric binaries from the third stage.
 FROM base
-COPY --from=builder /home/ibp-user/.local /home/ibp-user/.local
-COPY --from=builder /home/ibp-user/.ansible /home/ibp-user/.ansible
-COPY --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
-COPY --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
-COPY docker/docker-entrypoint.sh /
+COPY --chown=ibp-user --from=builder /home/ibp-user/.local /home/ibp-user/.local
+COPY --chown=ibp-user --from=builder /home/ibp-user/.ansible /home/ibp-user/.ansible
+COPY --chown=ibp-user --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
+COPY --chown=ibp-user --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
+COPY --chown=ibp-user docker/docker-entrypoint.sh /
+RUN mkdir /home/ibp-user/.kube
 ENV FABRIC_CFG_PATH=/opt/fabric/config
 ENV PATH=/opt/fabric/bin:/home/ibp-user/.local/bin:$PATH
 USER 7051

@@ -1,0 +1,16 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Fail if target not specified
+  fail:
+    msg: target not specified or is not one of "kind"
+  when: not target is defined or not target in ("kind")
+
+- name: Create custom resource definitions
+  include_tasks: "create.yml"
+  when: state == "present"
+
+- name: Delete custom resource definitions
+  include_tasks: "delete.yml"
+  when: state == "absent"
