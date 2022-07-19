@@ -41,5 +41,5 @@ init_image_label: latest
 couchdb_image: couchdb
 couchdb_image_label: 3.2.1
 
-tools_image: "{{image_registry}}/fabric-tools"
-tools_image_label: "{{fabric_version}}"
+tools_image: "{{ image_registry }}/fabric-tools"
+tools_image_label: "{{ fabric_version }}"

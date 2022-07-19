@@ -7,17 +7,17 @@ authors = ["Matthew B White <whitemat@uk.ibm.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 yq = "^2.14.0"
 ansible = "2.9"
 
 [tool.poetry.dev-dependencies]
-ansible-lint = "5.3.2"
 yamllint = "^1.26.3"
 flake8 = "^4.0.1"
 ansible-doc-extractor = "^0.1.8"
 Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
+ansible-lint = "^6.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

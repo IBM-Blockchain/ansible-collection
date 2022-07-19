@@ -14,12 +14,12 @@ fabric_ca_version: 1.5.2
 fabric_version: 2.4.3
 
 ca_image: "{{ fabric_container_registry }}/fabric-ca"
-ca_image_label: "{{ fabric_ca_version}}"
-peer_image: "{{ fabric_container_registry}}/fabric-peer"
-peer_image_label: "{{ fabric_version}}"
-orderer_image: "{{ fabric_container_registry}}/fabric-orderer"
+ca_image_label: "{{ fabric_ca_version }}"
+peer_image: "{{ fabric_container_registry }}/fabric-peer"
+peer_image_label: "{{ fabric_version }}"
+orderer_image: "{{ fabric_container_registry }}/fabric-orderer"
 orderer_image_label: "{{ fabric_version }}"
-tools_image: "{{fabric_container_registry }}/fabric-tools"
+tools_image: "{{ fabric_container_registry }}/fabric-tools"
 tools_image_label: "{{ fabric_version }}"
 operator_image: ghcr.io/ibm-blockchain/fabric-operator
 operator_image_label: latest-amd64
@@ -34,10 +34,10 @@ console_image_label: latest
 deployer_image: ghcr.io/ibm-blockchain/fabric-deployer
 deployer_image_label: latest-amd64
 
-fabric_operator_image: "{{operator_image}}:{{ operator_image_label }}"
-fabric_console_image: "{{console_image }}:{{ console_image_label }}"
-fabric_deployer_image: "{{deployer_image }}:{{ deployer_image_label }}"
-fabric_ca_image: "{{ca_image}}:{{ca_image_label}}"
+fabric_operator_image: "{{ operator_image }}:{{ operator_image_label }}"
+fabric_console_image: "{{ console_image }}:{{ console_image_label }}"
+fabric_deployer_image: "{{ deployer_image }}:{{ deployer_image_label }}"
+fabric_ca_image: "{{ ca_image }}:{{ ca_image_label }}"
 fabric_peer_image: "{{ peer_image }}:{{ peer_image_label }}"
 fabric_orderer_image: "{{ orderer_image }}:{{ orderer_image_label }}"
 fabric_tools_image: "{{ tools_image }}:{{ tools_image_label }}"

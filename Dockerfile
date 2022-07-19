@@ -4,7 +4,7 @@
 
 # In the first stage, install the common dependencies, and then set up the standard user.
 FROM registry.access.redhat.com/ubi8/ubi-minimal AS base
-RUN microdnf install python38 shadow-utils git podman \
+RUN microdnf install python39 shadow-utils git \
     && groupadd -g 7051 ibp-user \
     && useradd -u 7051 -g ibp-user -G root -s /bin/bash ibp-user \
     && chgrp -R root /home/ibp-user /etc/passwd \
@@ -58,11 +58,11 @@ RUN cd /go/src/github.com/hyperledger/fabric \
 # In the final stage, copy all the installed Python modules across from the second stage and the Hyperledger
 # Fabric binaries from the third stage.
 FROM base
-COPY --chown=ibp-user --from=builder /home/ibp-user/.local /home/ibp-user/.local
-COPY --chown=ibp-user --from=builder /home/ibp-user/.ansible /home/ibp-user/.ansible
-COPY --chown=ibp-user --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
-COPY --chown=ibp-user --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
-COPY --chown=ibp-user docker/docker-entrypoint.sh /
+COPY --from=builder /home/ibp-user/.local /home/ibp-user/.local
+COPY --from=builder /home/ibp-user/.ansible /home/ibp-user/.ansible
+COPY --from=fabric /go/src/github.com/hyperledger/fabric/build/bin /opt/fabric/bin
+COPY --from=fabric /go/src/github.com/hyperledger/fabric/sampleconfig /opt/fabric/config
+COPY docker/docker-entrypoint.sh /
 RUN mkdir /home/ibp-user/.kube
 ENV FABRIC_CFG_PATH=/opt/fabric/config
 ENV PATH=/opt/fabric/bin:/home/ibp-user/.local/bin:$PATH

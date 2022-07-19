@@ -23,6 +23,38 @@ PyYAML = "*"
 azure = ["packaging", "requests", "xmltodict", "azure-cli-core (==2.0.35)", "azure-cli-nspkg (==3.0.2)", "azure-common (==1.1.11)", "azure-mgmt-authorization (==0.51.1)", "azure-mgmt-batch (==5.0.1)", "azure-mgmt-cdn (==3.0.0)", "azure-mgmt-compute (==4.4.0)", "azure-mgmt-containerinstance (==1.4.0)", "azure-mgmt-containerregistry (==2.0.0)", "azure-mgmt-containerservice (==4.4.0)", "azure-mgmt-dns (==2.1.0)", "azure-mgmt-keyvault (==1.1.0)", "azure-mgmt-marketplaceordering (==0.1.0)", "azure-mgmt-monitor (==0.5.2)", "azure-mgmt-network (==2.3.0)", "azure-mgmt-nspkg (==2.0.0)", "azure-mgmt-redis (==5.0.0)", "azure-mgmt-resource (==2.1.0)", "azure-mgmt-rdbms (==1.4.1)", "azure-mgmt-servicebus (==0.5.3)", "azure-mgmt-sql (==0.10.0)", "azure-mgmt-storage (==3.1.0)", "azure-mgmt-trafficmanager (==0.50.0)", "azure-mgmt-web (==0.41.0)", "azure-nspkg (==2.0.0)", "azure-storage (==0.35.1)", "msrest (==0.6.1)", "msrestazure (==0.5.0)", "azure-keyvault (==1.0.0a1)", "azure-graphrbac (==0.40.0)", "azure-mgmt-cosmosdb (==0.5.2)", "azure-mgmt-hdinsight (==0.1.0)", "azure-mgmt-devtestlabs (==3.0.0)", "azure-mgmt-loganalytics (==0.2.0)", "azure-mgmt-automation (==0.1.1)", "azure-mgmt-iothub (==0.7.0)"]
 
 [[package]]
+name = "ansible-compat"
+version = "2.2.0"
+description = "Ansible compatibility goodies"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+jsonschema = ">=4.6.0"
+PyYAML = "*"
+subprocess-tee = ">=0.3.5"
+
+[package.extras]
+docs = ["sphinx-autobuild (>=0.7.1,<1.0)", "sphinx (>=4.2.0,<5.0)", "sphinx-ansible-theme", "myst-parser"]
+test = ["coverage", "flaky", "pip-tools", "pytest", "pytest-markdown", "pytest-mock", "pytest-plus"]
+
+[[package]]
+name = "ansible-core"
+version = "2.13.2"
+description = "Radically simple IT automation"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+cryptography = "*"
+jinja2 = ">=3.0.0"
+packaging = "*"
+PyYAML = ">=5.1"
+resolvelib = ">=0.5.3,<0.9.0"
+
+[[package]]
 name = "ansible-doc-extractor"
 version = "0.1.8"
 description = "Extract Ansible module documentation"
@@ -41,26 +73,28 @@ core = ["ansible-core"]
 
 [[package]]
 name = "ansible-lint"
-version = "5.3.2"
-description = "Checks playbooks for practices and behaviour that could potentially be improved"
+version = "6.3.0"
+description = "Checks playbooks for practices and behavior that could potentially be improved"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 
 [package.dependencies]
+ansible-compat = ">=2.1.0"
+ansible-core = ">=2.12.0"
 enrich = ">=1.2.6"
+jsonschema = ">=4.6.0"
 packaging = "*"
+pytest = "*"
 pyyaml = "*"
 rich = ">=9.5.1"
-"ruamel.yaml" = {version = ">=0.15.37,<1", markers = "python_version >= \"3.7\""}
-tenacity = "*"
+"ruamel.yaml" = ">=0.15.34,<0.18"
 wcmatch = ">=7.0"
+yamllint = ">=1.25.0"
 
 [package.extras]
-community = ["ansible (>=2.10)"]
-core = ["ansible-core (>=2.11.4)"]
-test = ["flaky (>=3.7.0)", "pytest (>=6.0.1)", "pytest-cov (>=2.10.1)", "pytest-xdist (>=2.1.0)", "psutil"]
-yamllint = ["yamllint (>=1.25.0)"]
+docs = ["myst-parser (>=0.16.1)", "pipdeptree (>=2.2.1)", "sphinx (>=4.4.0)", "sphinx-ansible-theme (>=0.9.1)", "sphinx-rtd-theme (>=0.5.2,<1.0.0)", "sphinxcontrib-apidoc (>=0.3.0)", "sphinxcontrib-programoutput2 (>=2.0a1)", "yamllint (>=1.26.3)"]
+test = ["coverage (>=6.3)", "tomli (>=2.0.0)", "flaky (>=3.7.0)", "pytest (>=6.0.1)", "pytest-cov (>=2.10.1)", "pytest-plus (>=0.2)", "pytest-xdist (>=2.1.0)", "psutil", "black", "mypy", "pylint", "flake8"]
 
 [[package]]
 name = "argcomplete"
@@ -72,6 +106,28 @@ python-versions = ">=3.6"
 
 [package.extras]
 test = ["coverage", "flake8", "pexpect", "wheel"]
+
+[[package]]
+name = "atomicwrites"
+version = "1.4.1"
+description = "Atomic file writes."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "attrs"
+version = "21.4.0"
+description = "Classes Without Boilerplate"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.extras]
+dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
+docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
+tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
+tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
 
 [[package]]
 name = "babel"
@@ -228,6 +284,14 @@ perf = ["ipython"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.3)", "packaging", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "importlib-resources (>=1.3)"]
 
 [[package]]
+name = "iniconfig"
+version = "1.1.1"
+description = "iniconfig: brain-dead simple config-ini parsing"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "jinja2"
 version = "3.1.2"
 description = "A very fast and expressive template engine."
@@ -240,6 +304,22 @@ MarkupSafe = ">=2.0"
 
 [package.extras]
 i18n = ["Babel (>=2.7)"]
+
+[[package]]
+name = "jsonschema"
+version = "4.7.2"
+description = "An implementation of JSON Schema validation for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+attrs = ">=17.4.0"
+pyrsistent = ">=0.14.0,<0.17.0 || >0.17.0,<0.17.1 || >0.17.1,<0.17.2 || >0.17.2"
+
+[package.extras]
+format = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3987", "uri-template", "webcolors (>=1.11)"]
+format-nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3986-validator (>0.1.0)", "uri-template", "webcolors (>=1.11)"]
 
 [[package]]
 name = "markupsafe"
@@ -275,6 +355,26 @@ description = "Utility library for gitignore style pattern matching of file path
 category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+
+[[package]]
+name = "pluggy"
+version = "1.0.0"
+description = "plugin and hook calling mechanisms for python"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
+
+[[package]]
+name = "py"
+version = "1.11.0"
+description = "library with cross-python path, ini-parsing, io, code, log facilities"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "pycodestyle"
@@ -320,6 +420,35 @@ python-versions = ">=3.6.8"
 diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
+name = "pyrsistent"
+version = "0.18.1"
+description = "Persistent/Functional/Immutable data structures"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
+name = "pytest"
+version = "7.1.2"
+description = "pytest: simple powerful testing with Python"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+attrs = ">=19.2.0"
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+iniconfig = "*"
+packaging = "*"
+pluggy = ">=0.12,<2.0"
+py = ">=1.8.2"
+tomli = ">=1.0.0"
+
+[package.extras]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+
+[[package]]
 name = "pytz"
 version = "2022.1"
 description = "World timezone definitions, modern and historical"
@@ -354,6 +483,20 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "resolvelib"
+version = "0.8.1"
+description = "Resolve abstract dependencies into concrete ones"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+examples = ["html5lib", "packaging", "pygraphviz", "requests"]
+lint = ["black", "flake8", "mypy", "isort", "types-requests"]
+release = ["build", "towncrier", "twine"]
+test = ["commentjson", "packaging", "pytest"]
+
+[[package]]
 name = "rich"
 version = "12.5.1"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
@@ -364,7 +507,6 @@ python-versions = ">=3.6.3,<4.0.0"
 [package.dependencies]
 commonmark = ">=0.9.0,<0.10.0"
 pygments = ">=2.6.0,<3.0.0"
-typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9\""}
 
 [package.extras]
 jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
@@ -519,15 +661,15 @@ lint = ["flake8", "mypy", "docutils-stubs"]
 test = ["pytest"]
 
 [[package]]
-name = "tenacity"
-version = "8.0.1"
-description = "Retry code until it succeeds"
+name = "subprocess-tee"
+version = "0.3.5"
+description = "subprocess-tee"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-doc = ["reno", "sphinx", "tornado (>=4.5)"]
+test = ["enrich (>=1.2.6)", "mock (>=4.0.3)", "molecule (>=3.4.0)", "pytest-cov (>=2.12.1)", "pytest-plus (>=0.2)", "pytest-xdist (>=2.3.0)", "pytest (>=6.2.5)"]
 
 [[package]]
 name = "toml"
@@ -538,9 +680,9 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
-name = "typing-extensions"
-version = "4.3.0"
-description = "Backported and Experimental Type Hints for Python 3.7+"
+name = "tomli"
+version = "2.0.1"
+description = "A lil' TOML parser"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
@@ -620,8 +762,8 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "e31ead51b5350ff5a6bf0b829d6f7a1b6e32cbb930bff627e7b2f11e6e4a625c"
+python-versions = "^3.9"
+content-hash = "c76c142efc0d7d391c9b8ccb4ef1c6953f27a024321d652d7b7d6cf1397f4faa"
 
 [metadata.files]
 alabaster = [
@@ -629,18 +771,19 @@ alabaster = [
     {file = "alabaster-0.7.12.tar.gz", hash = "sha256:a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02"},
 ]
 ansible = []
+ansible-compat = []
+ansible-core = []
 ansible-doc-extractor = [
     {file = "ansible-doc-extractor-0.1.8.tar.gz", hash = "sha256:3bb88d45a8bb3f4ec92646da2b6d68be9288e175f4c6ec570428ac3a819e2b87"},
     {file = "ansible_doc_extractor-0.1.8-py3-none-any.whl", hash = "sha256:c381dd9a039c0bb8ba97e754e3fcb1d0f904bbbf8080ea44a4a3391f0f851501"},
 ]
-ansible-lint = [
-    {file = "ansible-lint-5.3.2.tar.gz", hash = "sha256:9ba886db4c44e59360bc8d668f0beae6193c0a1fcbb9e76127000ca3aced7c28"},
-    {file = "ansible_lint-5.3.2-py3-none-any.whl", hash = "sha256:4673e55e61809bbebf5a6376cc5ed9cac32ef5fff6a121db70ea5ab0228cd81f"},
-]
+ansible-lint = []
 argcomplete = [
     {file = "argcomplete-2.0.0-py2.py3-none-any.whl", hash = "sha256:cffa11ea77999bb0dd27bb25ff6dc142a6796142f68d45b1a26b11f58724561e"},
     {file = "argcomplete-2.0.0.tar.gz", hash = "sha256:6372ad78c89d662035101418ae253668445b391755cfe94ea52f1b9d22425b20"},
 ]
+atomicwrites = []
+attrs = []
 babel = []
 bracex = []
 certifi = []
@@ -670,10 +813,12 @@ idna = [
 ]
 imagesize = []
 importlib-metadata = []
+iniconfig = []
 jinja2 = [
     {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
     {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
 ]
+jsonschema = []
 markupsafe = [
     {file = "MarkupSafe-2.1.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:86b1f75c4e7c2ac2ccdaec2b9022845dbb81880ca318bb7a0a01fbf7813e3812"},
     {file = "MarkupSafe-2.1.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:f121a1420d4e173a5d96e47e9a0c0dcff965afdf1626d28de1460815f7c4ee7a"},
@@ -728,6 +873,8 @@ pathspec = [
     {file = "pathspec-0.9.0-py2.py3-none-any.whl", hash = "sha256:7d15c4ddb0b5c802d161efc417ec1a2558ea2653c2e8ad9c19098201dc1c993a"},
     {file = "pathspec-0.9.0.tar.gz", hash = "sha256:e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1"},
 ]
+pluggy = []
+py = []
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
     {file = "pycodestyle-2.8.0.tar.gz", hash = "sha256:eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f"},
@@ -748,6 +895,8 @@ pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
+pyrsistent = []
+pytest = []
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},
     {file = "pytz-2022.1.tar.gz", hash = "sha256:1e760e2fe6a8163bc0b3d9a19c4f84342afa0a2affebfaa84b01b978a02ecaa7"},
@@ -788,6 +937,7 @@ pyyaml = [
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
 ]
 requests = []
+resolvelib = []
 rich = []
 "ruamel.yaml" = [
     {file = "ruamel.yaml-0.17.21-py3-none-any.whl", hash = "sha256:742b35d3d665023981bd6d16b3d24248ce5df75fdb4e2924e93a05c1f8b61ca7"},
@@ -856,15 +1006,15 @@ sphinxcontrib-serializinghtml = [
     {file = "sphinxcontrib-serializinghtml-1.1.5.tar.gz", hash = "sha256:aa5f6de5dfdf809ef505c4895e51ef5c9eac17d0f287933eb49ec495280b6952"},
     {file = "sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl", hash = "sha256:352a9a00ae864471d3a7ead8d7d79f5fc0b57e8b3f95e9867eb9eb28999b92fd"},
 ]
-tenacity = [
-    {file = "tenacity-8.0.1-py3-none-any.whl", hash = "sha256:f78f4ea81b0fabc06728c11dc2a8c01277bfc5181b321a4770471902e3eb844a"},
-    {file = "tenacity-8.0.1.tar.gz", hash = "sha256:43242a20e3e73291a28bcbcacfd6e000b02d3857a9a9fff56b297a27afdc932f"},
-]
+subprocess-tee = []
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
-typing-extensions = []
+tomli = [
+    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
+]
 urllib3 = []
 wcmatch = []
 xmltodict = [
