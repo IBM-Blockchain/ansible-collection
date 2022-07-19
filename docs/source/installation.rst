@@ -38,7 +38,7 @@ Requirements
 
 In order to use this Ansible collection, you must have the following pre-requisite software installed and available:
 
-**Python v3.7+**
+**Python v3.8+**
 
     Python can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc).
     If you install Python from the package manager for your operating system, you must also install the development libraries (usually a package named ``python3-devel``), as these are required when installing modules through ``pip``.
@@ -46,13 +46,13 @@ In order to use this Ansible collection, you must have the following pre-requisi
     - The official Python website: https://www.python.org/downloads/
     - The unofficial Python version manager: https://github.com/pyenv/pyenv
 
-**Ansible v2.8+**
+**Ansible v2.9+**
 
     Ansible can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc). You can also install it using ``pip``, the package manager for Python:
 
     ::
 
-        pip install -U 'ansible>=2.9,<2.10'
+        pip install -U 'ansible'
 
 **Hyperledger Fabric v2.2.1+ binaries**
 
@@ -96,7 +96,7 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
     ::
 
-        pip install -U 'openshift==0.11.2'
+        pip install -U 'openshift'
 
 **Semantic Versioning for Python v2.8.5+**
 
