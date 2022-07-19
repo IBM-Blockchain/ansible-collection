@@ -4,6 +4,7 @@ The IBM Blockchain Platform provides advanced tooling that allows you to quickly
 
 This Ansible collection, provided as part of the IBM Blockchain Platform, enables you to automate the building of Hyperledger Fabric networks.
 
+*Please Note* the main branch is now set to `2.0.0-beta`, the `release-1.2` branch is available. If you build a local copy of Ansible for production, please work from the `release-1.2` branch.
 ## Documentation
 
 Documentation for this Ansible collection is available here: https://ibm-blockchain.github.io/ansible-collection/
