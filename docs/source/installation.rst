@@ -133,12 +133,13 @@ Installing from source
 ----------------------
 
 You can use the ``ansible-galaxy`` command to install a collection built from source. To build your own collection, follow these steps:
+This will build the stable `release-1.2` branch for v1.2.; use the `main` branch for the `2.0.0-beta` level
 
 1. Clone the repository:
 
 ::
 
-    git clone https://github.com/IBM-Blockchain/ansible-collection.git
+    git clone --branch release-1.2 https://github.com/IBM-Blockchain/ansible-collection.git
 
 2. Build the collection artifact:
 

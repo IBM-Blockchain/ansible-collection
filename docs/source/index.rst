@@ -25,6 +25,7 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    :hidden:
 
    installation
+   migrating-v12-v2.rst
 
 .. toctree::
    :maxdepth: 2
