@@ -1,0 +1,14 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+galaxy_info:
+  author: Matthew White
+  description: Ansible role for deploying the Fabric Operator
+  license: Apache-2.0
+  platforms:
+    - name: GenericLinux
+      versions:
+        - all
+  galaxy_tags: []
+  min_ansible_version: "2.9"

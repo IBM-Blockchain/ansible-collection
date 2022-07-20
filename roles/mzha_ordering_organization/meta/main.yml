@@ -12,4 +12,4 @@ galaxy_info:
       versions:
         - all
   galaxy_tags: []
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"

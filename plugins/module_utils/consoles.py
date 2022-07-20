@@ -87,7 +87,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to log in to IBM Cloud', 'url': self.api_token_endpoint, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout)
+                auth_response = open_url(url=self.api_token_endpoint, method='POST', headers=headers, data=data, timeout=self.api_timeout, follow_redirects='all')
                 auth = json.load(auth_response)
                 access_token = auth['access_token']
                 self.authorization = f'Bearer {access_token}'
@@ -116,7 +116,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get console health', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 health = json.load(response)
                 self.module.json_log({'msg': 'got console health', 'health': health})
                 return health
@@ -136,7 +136,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get console settings', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 settings = json.load(response)
                 self.module.json_log({'msg': 'got console settings', 'settings': settings})
                 return settings
@@ -156,7 +156,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all components', 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 parsed_response = json.load(response)
                 components = parsed_response.get('components', list())
                 self.module.json_log({'msg': 'got all components', 'components': components})
@@ -177,7 +177,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get component by id', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'got component by id', 'component': component})
                 return component
@@ -231,7 +231,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created certificate authority', 'component': component})
                 return component
@@ -271,7 +271,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated certificate authority', 'component': component})
                 return component
@@ -290,7 +290,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete certificate authority', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted certificate authority'})
                 return
             except Exception as e:
@@ -325,7 +325,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created external certificate authority', 'component': component})
                 return component
@@ -347,7 +347,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external certificate authority', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated external certificate authority', 'component': component})
                 return component
@@ -366,7 +366,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external certificate authority', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted external certificate authority'})
                 return
             except Exception as e:
@@ -387,7 +387,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created peer', 'component': component})
                 return component
@@ -427,7 +427,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated peer', 'component': component})
                 return component
@@ -446,7 +446,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete peer', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted peer'})
                 return
             except Exception as e:
@@ -481,7 +481,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created external peer', 'component': component})
                 return component
@@ -503,7 +503,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external peer', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated external peer', 'component': component})
                 return component
@@ -522,7 +522,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external peer', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted external peer'})
                 return
             except Exception as e:
@@ -543,7 +543,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create ordering service', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 components = json.load(response)
                 if 'created' in components:
                     components = components['created']
@@ -566,7 +566,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 if response.getcode() == 207:
                     json_response = json.load(response)
                     for deleted in json_response['deleted']:
@@ -579,7 +579,7 @@ class Console:
                             # Blockchain Platform console this time.
                             self.module.json_log({'msg': 'attempting to delete ordering service (not in kubernetes)', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
                             new_url = urllib.parse.urljoin(self.api_endpoint, f'/ak/api/v2/components/tags/{cluster_id}')
-                            open_url(new_url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                            open_url(new_url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                         else:
                             raise Exception(f'{deleted}')
                 self.module.json_log({'msg': 'deleted ordering service'})
@@ -607,7 +607,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external ordering service', 'cluster_id': cluster_id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 if response.getcode() == 207:
                     json_response = json.load(response)
                     for deleted in json_response['deleted']:
@@ -641,7 +641,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to edit ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'edited ordering service node', 'component': component})
                 return component
@@ -681,7 +681,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, serialized_data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated ordering service node', 'component': component})
                 return component
@@ -700,7 +700,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete ordering service node', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted ordering service node'})
                 return
             except Exception as e:
@@ -741,7 +741,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create external ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created external ordering service node', 'component': component})
                 return component
@@ -763,7 +763,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update external ordering service node', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated external ordering service node', 'component': component})
                 return component
@@ -784,7 +784,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete external ordering service node', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted external ordering service node'})
                 return
             except Exception as e:
@@ -809,7 +809,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to edit admin certificates', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'edited admin certificates'})
                 return
             except Exception as e:
@@ -830,7 +830,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create organization', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'created organization', 'component': component})
                 return component
@@ -852,7 +852,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update organization', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 component = json.load(response)
                 self.module.json_log({'msg': 'updated organization', 'component': component})
                 return component
@@ -871,7 +871,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete organization', 'id': id, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted organization'})
                 return
             except Exception as e:
@@ -908,7 +908,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to submit config block', 'data': data, 'url': url, 'attempt': attempt, 'api_timeout': self.api_timeout})
-                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'submitted config block'})
             except Exception as e:
                 self.module.json_log({'msg': 'failed to submit config block', 'error': str(e)})
@@ -1008,7 +1008,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all console users', 'url': url, 'attempt': attempt})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 break
             except Exception as e:
                 self.module.json_log({'msg': 'failed to get all console users', 'error': str(e)})
@@ -1050,7 +1050,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to create console user', 'data': data, 'url': url, 'attempt': attempt})
-                open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, data, headers, 'POST', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 break
             except Exception as e:
                 self.module.json_log({'msg': 'failed to create console user', 'error': str(e)})
@@ -1082,7 +1082,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to update console user', 'data': data, 'url': url, 'attempt': attempt})
-                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, data, headers, 'PUT', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 break
             except Exception as e:
                 self.module.json_log({'msg': 'failed to update console user', 'error': str(e)})
@@ -1106,7 +1106,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to delete console user', 'email': email, 'url': url, 'attempt': attempt})
-                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout)
+                open_url(url, None, headers, 'DELETE', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 self.module.json_log({'msg': 'deleted console user'})
                 return
             except Exception as e:
@@ -1125,7 +1125,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get msps by msp id', 'url': url, 'attempt': attempt})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 parsed_response = json.load(response)
                 msps = parsed_response.get('msps', list())
                 self.module.json_log({'msg': 'got msps by msp id', 'msps': msps})
@@ -1146,7 +1146,7 @@ class Console:
         for attempt in range(1, self.retries + 1):
             try:
                 self.module.json_log({'msg': 'attempting to get all available fabric versions', 'url': url, 'attempt': attempt})
-                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout)
+                response = open_url(url, None, headers, 'GET', validate_certs=False, timeout=self.api_timeout, follow_redirects='all')
                 parsed_response = json.load(response)
                 versions = parsed_response.get('versions', dict())
                 self.module.json_log({'msg': 'got all available fabric versions', 'versions': versions})
