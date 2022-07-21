@@ -26,7 +26,13 @@ spec:
     configtxlatorImage: "{{tools_image}}"
     configtxlatorTag: "{{tools_image_label}}"
     couchdbImage: "{{couchdb_image}}"
-    couchdbTag: "{{couchdb_image_label}}" #}
+    couchdbTag: "{{couchdb_image_label}}"
+    peerImage: ghcr.io/hyperledgendary/k8s-fabric-peer
+    peerTag: v0.6.0
+{%+ if console_versions is defined %}
+  versions:
+    {{ console_versions | to_nice_yaml(indent=2, width=1024) | indent(4, false) }}
+{% endif %}
   networkinfo:
     domain: "{{console_domain}}"
   storage:
