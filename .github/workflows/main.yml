@@ -292,3 +292,34 @@ jobs:
           docker login -u ${DOCKER_HUB_USER_NAME} -p ${DOCKER_HUB_ACCESS_TOKEN}
           docker push ibmcom/ibp-ansible:${VERSION}
           docker push ibmcom/ibp-ansible:latest
+  publish_beta_docker_image:
+    name: Publish Docker image
+    needs: tests
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: Docker image
+      - name: Load Docker image
+        run: gunzip -c image.tar.gz | docker load
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+      - name: Publish Docker image to Docker Hub
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          docker push ibmcom/ibp-ansible:${VERSION}
+          docker push ibmcom/ibp-ansible:latest
