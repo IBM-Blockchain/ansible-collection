@@ -34,6 +34,40 @@ def get_console(module):
     return console
 
 
+def get_component(console, component_type, name, id='', mapping='as_is', deployment_attrs='included'):
+    if mapping == 'as_is':
+        # pass the id and name as is, unless the id is emptry
+        if id == '':
+            component = console.get_component_by_display_name(component_type, name, deployment_attrs)
+        else:
+            component = console.get_component_by_id(id, deployment_attrs)
+
+    elif mapping == 'id_is_name':
+        # set the id from the name
+        component = console.get_component_by_id(name, deployment_attrs)
+
+    elif mapping == 'id_from_name':
+        component = console.get_component_by_id(console.map_id_from_name(name), deployment_attrs)
+
+    else:
+        raise Exception('unknown mapping string:' + mapping)
+
+    return component
+
+
+def get_certificate_authority(console, name, id, mapping, fail_on_missing=True):
+
+    # Look up the certificate authority by name.
+    component = get_component(console, 'fabric-ca', name, id, mapping)
+    if component is None:
+        if fail_on_missing:
+            raise Exception(f'The certificate authority name:{name} id:{id} does not exist')
+        else:
+            return None
+    data = console.extract_ca_info(component)
+    return CertificateAuthority.from_json(data)
+
+
 def get_certificate_authority_by_name(console, name, fail_on_missing=True):
 
     # Look up the certificate authority by name.

@@ -126,6 +126,18 @@ class Console:
                     continue
                 return self.handle_error('Failed to get console health', e)
 
+    def map_id_from_name(self, name):
+        if (len(name) < 3):
+            raise Exception('Name is too short')
+
+        regex = r"[a-z][a-z0-9]{2,7}"
+
+        result = re.search(regex, name.lower().replace(' ', ''))
+        if result:
+            return result.group()
+        else:
+            raise Exception("Unable to co-erce display name to id")
+
     def get_settings(self):
         self._ensure_loggedin()
         url = urllib.parse.urljoin(self.api_base_url, './settings')

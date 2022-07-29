@@ -1,7 +1,8 @@
 {
     "editor.formatOnSave": true,
     "files.trimTrailingWhitespace": true,
-    "python.formatting.provider": "autopep8",
+    "python.poetryPath": "/home/matthew/.local/bin/poetry",
+    "python.venvPath": "/home/matthew/.cache/pypoetry/virtualenvs",
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true
 }

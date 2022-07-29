@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console, get_certificate_authority_by_name
+from ..module_utils.utils import get_console, get_certificate_authority
 
 from ansible.module_utils._text import to_native
 
@@ -61,13 +61,29 @@ options:
         default: https://iam.cloud.ibm.com/identity/token
     name:
         description:
-            - The name of the certificate authority.
+            - The display name of the certificate authority.
+        type: str
         required: true
+    id:
+        description:
+            - The unique identifier of the certifcate authority, will be created from name, but is recommended to be set
+        type: str
+        required: false
     wait_timeout:
         description:
             - The timeout, in seconds, to wait until the certificate authority is available.
         type: int
         default: 60
+    id_name_mapping:
+        description:
+            - C(as_set) the values of name and id are used exactly as they have been passed in (id of "" is removed and not used)
+            - C(id_is_name) the id value is taken directly from the name as is. This may limit the format of the name as there are restrictions on the id length
+            - C(id_from_name) this id is generated from the name.
+        type: str
+        choices:
+            - as_set
+            - id_is_name
+            - id_from_name
 notes: []
 requirements: []
 '''
@@ -156,6 +172,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
+        id=dict(type='str', required=False, default=''),  # Note set to false for backward compatibility
+        id_name_mapping=dict(type='str', required=False, choices=['as_is', 'is_is_name', 'id_from_name'], default='as_is'),
         wait_timeout=dict(type='int', default=60)
     )
     required_if = [
@@ -170,7 +188,7 @@ def main():
         console = get_console(module)
 
         # Determine if the certificate authority exists.
-        certificate_authority = get_certificate_authority_by_name(console, module.params['name'], fail_on_missing=False)
+        certificate_authority = get_certificate_authority(console, module.params['name'], module.params['id'], module.params['id_name_mapping'], fail_on_missing=False)
 
         # If it doesn't exist, return now.
         if certificate_authority is None:

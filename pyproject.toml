@@ -18,7 +18,9 @@ ansible-doc-extractor = "^0.1.8"
 Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
 ansible-lint = "^6.3.0"
+autopep8 = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+

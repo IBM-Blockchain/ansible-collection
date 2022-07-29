@@ -16,7 +16,7 @@ from ..module_utils.certificate_authorities import CertificateAuthority
 from ..module_utils.dict_utils import (copy_dict, diff_dicts, equal_dicts,
                                        merge_dicts)
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import get_console
+from ..module_utils.utils import get_component, get_console
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
@@ -81,9 +81,14 @@ options:
             - present
     name:
         description:
-            - The name of the certificate authority.
+            - The display name of the certificate authority.
         type: str
         required: true
+    id:
+        description:
+            - The unique identifier of the certifcate authority, will be created from name, but is recommended to be set
+        type: str
+        required: false
     config_override:
         description:
             - The configuration overrides for the root certificate authority and the TLS certificate authority.
@@ -189,6 +194,16 @@ options:
             - The timeout, in seconds, to wait until the certificate authority is available.
         type: int
         default: 60
+    id_name_mapping:
+        description:
+            - C(as_set) the values of name and id are used exactly as they have been passed in (id of "" is removed and not used)
+            - C(id_is_name) the id value is taken directly from the name as is. This may limit the format of the name as there are restrictions on the id length
+            - C(id_from_name) this id is generated from the name.
+        type: str
+        choices:
+            - as_set
+            - id_is_name
+            - id_from_name
 notes: []
 requirements: []
 '''
@@ -365,6 +380,8 @@ def main():
         api_timeout=dict(type='int', default=60),
         api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
         name=dict(type='str', required=True),
+        id=dict(type='str', required=False, default=''),  # Note set to false for backward compatibility
+        id_name_mapping=dict(type='str', required=False, choices=['as_is', 'is_is_name', 'id_from_name'], default='as_is'),
         config_override=dict(type='dict', default=dict(), options=dict(
             ca=dict(type='dict'),
             tlsca=dict(type='dict'),
@@ -409,7 +426,9 @@ def main():
 
         # Determine if the certificate authority exists.
         name = module.params['name']
-        certificate_authority = console.get_component_by_display_name('fabric-ca', name, deployment_attrs='included')
+        certificate_authority = get_component(console, 'fabric-ca', name, module.params['name'], module.params['id'], module.params['mapping'])
+        # certificate_authority = console.get_component_by_display_name('fabric-ca', name, deployment_attrs='included')
+
         certificate_authority_exists = certificate_authority is not None
         certificate_authority_corrupt = certificate_authority is not None and 'deployment_attrs_missing' in certificate_authority
         module.json_log({
@@ -468,8 +487,12 @@ def main():
             display_name=name,
             config_override=config_override,
             resources=module.params['resources'],
-            storage=storage
+            storage=storage,
+            id=module.params['id']
         )
+
+        # if 'id' in module.params:
+        # expected_certificate_authority['id'] = module.params['id']
 
         # Add the HSM configuration if it is specified.
         hsm = module.params['hsm']

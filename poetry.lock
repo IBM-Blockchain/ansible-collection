@@ -130,6 +130,18 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
 
 [[package]]
+name = "autopep8"
+version = "1.6.0"
+description = "A tool that automatically formats Python code to conform to the PEP 8 style guide"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycodestyle = ">=2.8.0"
+toml = "*"
+
+[[package]]
 name = "babel"
 version = "2.10.3"
 description = "Internationalization utilities"
@@ -763,7 +775,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "c76c142efc0d7d391c9b8ccb4ef1c6953f27a024321d652d7b7d6cf1397f4faa"
+content-hash = "4c64b473c51bd6f8777ca48edcd0b9e686e48a1ee994d8f7dfc1f7c0f0470ef2"
 
 [metadata.files]
 alabaster = [
@@ -784,6 +796,7 @@ argcomplete = [
 ]
 atomicwrites = []
 attrs = []
+autopep8 = []
 babel = []
 bracex = []
 certifi = []
