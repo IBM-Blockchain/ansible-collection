@@ -21,7 +21,7 @@ orderer_image: "{{ fabric_container_registry }}/fabric-orderer"
 orderer_image_label: "{{ fabric_version }}"
 tools_image: "{{ fabric_container_registry }}/fabric-tools"
 tools_image_label: "{{ fabric_version }}"
-operator_image: ghcr.io/ibm-blockchain/fabric-operator
+operator_image: ghcr.io/hyperledger-labs/fabric-operator
 operator_image_label: latest-amd64
 init_image: registry.access.redhat.com/ubi8/ubi-minimal
 init_image_label: latest
