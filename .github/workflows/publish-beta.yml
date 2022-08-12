@@ -94,7 +94,7 @@ jobs:
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{steps.version.outputs.result}}
+            type=semver,pattern={{steps.version.outputs.result}}2
             type=sha
 
       # in the future we should add linux/arm64 to the platforms
