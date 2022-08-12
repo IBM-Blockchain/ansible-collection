@@ -1,0 +1,108 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: CI
+on:
+  workflow_dispatch:
+jobs:
+  build_collection:
+    name: Build collection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build collection artifact
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          ansible-galaxy collection build
+          mv ibm-blockchain_platform-${VERSION}.tar.gz beta-ansible-collection.tar.gz
+      - name: Publish collection
+        uses: actions/upload-artifact@v2
+        with:
+          name: Collection
+          path: beta-ansible-collection.tar.gz
+  build_documentation:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build documentation
+        run: |
+          cd docs
+          make
+          cd ..
+          tar cf documentation.tar.gz docs/build
+      - name: Publish documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: Documentation
+          path: beta-documentation.tar.gz
+
+  # build the docker image and push to ghcr.io
+  # setup ready to be able to do multiarchiecture images
+  # https://github.com/docker/setup-qemu-action
+  # https://github.com/docker/setup-buildx-action
+  build_docker_image:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get the version number
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.version' 'galaxy.yml'
+
+      - name: Docker meta
+        id: ansible-beta-docker
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ghcr.io/ibm-blockchain/ofs-ansibe
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{steps.version.output.result}}
+            type=sha
+
+      # in the future we should add linux/arm64 to the platforms
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.ansible-beta-docker.outputs.tags }}
+          labels: ${{ steps.ansible-beta-docker.outputs.labels }}
