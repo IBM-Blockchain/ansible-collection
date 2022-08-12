@@ -85,7 +85,7 @@ jobs:
           cmd: yq '.version' 'galaxy.yml'
 
       - name: DEBUG echo the version
-        run: echo ${{step.sversion.outputs.result}}
+        run: echo ${{steps.version.outputs.result}}
 
       - name: Docker meta
         id: ansible-beta-docker
