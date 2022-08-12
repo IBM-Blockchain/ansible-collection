@@ -28,6 +28,7 @@ spec:
         - name: controller
           args:
             - /nginx-ingress-controller
+            - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
             - --election-id=ingress-controller-leader
             - --controller-class=k8s.io/ingress-nginx
             - --ingress-class=nginx
@@ -35,6 +36,4 @@ spec:
             - --validating-webhook=:8443
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
-            - --watch-ingress-without-class=true
-            - --publish-status-address=localhost
             - --enable-ssl-passthrough

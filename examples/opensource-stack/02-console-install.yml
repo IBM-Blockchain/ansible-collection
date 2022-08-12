@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-- name: Deploy Opensource Console
+- name: Deploy Fabric Operations Console
   hosts: localhost
   vars_files:
     - vars.yml

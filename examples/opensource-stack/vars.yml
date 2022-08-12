@@ -3,7 +3,7 @@
 #
 ---
 # The type of K8S cluster this is using
-target: kind
+target: k8s
 arch: amd64
 
 # k8s namespace for the operator and console

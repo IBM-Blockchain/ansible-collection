@@ -4,8 +4,8 @@
 ---
 - name: Fail if architecture not specified
   fail:
-    msg: arch not specified or is not one of "amd64" or "s390x"
-  when: not arch is defined or not arch in ("amd64", "s390x")
+    msg: arch not specified or is not one of "amd64"
+  when: not arch is defined or not arch in ("amd64")
 
 - name: Create custom resource definitions
   include_tasks: "{{ target }}/create.yml"

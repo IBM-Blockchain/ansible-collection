@@ -56,4 +56,4 @@
 
 - name: Print console URL
   debug:
-    msg: IBM Blockchain Platform console available at {{ create_console }}
+    msg: IBM Blockchain Platform console available at "https://{{ namespace }}-{{ console_name }}-console.{{ console_domain }}"
