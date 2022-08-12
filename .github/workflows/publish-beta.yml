@@ -84,6 +84,9 @@ jobs:
         with:
           cmd: yq '.version' 'galaxy.yml'
 
+      - name: DEBUG echo the version
+        run: echo ${{step.sversion.outputs.result}}
+
       - name: Docker meta
         id: ansible-beta-docker
         uses: docker/metadata-action@v3
@@ -94,7 +97,7 @@ jobs:
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{steps.version.outputs.result}}
+            type=semver,pattern=${{steps.version.outputs.result}}
             type=sha
 
       # in the future we should add linux/arm64 to the platforms
