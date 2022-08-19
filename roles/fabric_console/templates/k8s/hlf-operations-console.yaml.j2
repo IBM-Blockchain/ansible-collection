@@ -39,6 +39,16 @@ spec:
     console:
       class: "{{ console_storage_class }}"
       size: "{{ console_storage_size }}"
+{%+ if console_tls_secret is defined %}
+  tlsSecretName: "{{ console_tls_secret }}"
+{% endif %}
+{%+ if zones is defined %}
+  clusterdata:
+    zones:
+{%+ for zone in zones %}
+    - "{{ zone }}"
+{% endfor %}
+{% endif %}
   usetags: true
   version: 1.0.0
   resources:
