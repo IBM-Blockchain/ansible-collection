@@ -4,8 +4,8 @@
 ---
 - name: Fail if target not specified
   fail:
-    msg: target not specified or is not one of "k8s"
-  when: not target is defined or not target in ("k8s")
+    msg: target not specified or is not one of "k8s" or "openshift"
+  when: not target is defined or not target in ("k8s","openshift")
 
 - name: Create custom resource definitions
   include_tasks: "create.yml"

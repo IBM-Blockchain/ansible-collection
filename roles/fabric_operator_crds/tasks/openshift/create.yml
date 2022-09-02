@@ -1,0 +1,64 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Creating CRDs
+  k8s:
+    definition: "{{ lookup('kubernetes.core.kustomize',dir=role_path+'/templates/'+target+'/crd') }}"
+  register: resultcrds
+
+# Create the namespace for the operator
+
+- name: Fail if project not specified
+  fail:
+    msg: project not specified or is empty
+  when: not project is defined or not project
+
+- name: Determine if project exists
+  k8s_info:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ project }}"
+  register: project_info
+
+- name: Create project
+  k8s:
+    state: present
+    api_version: project.openshift.io/v1
+    kind: ProjectRequest
+    name: "{{ project }}"
+  when: not project_info.resources
+
+- name: Create security context constraints
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
+
+# Create the Role based Access Control
+- name: Create Role Based Access Control
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'templates/'+target+'/rbac/'+item) }}"
+    apply: yes
+  loop:
+    - hlf-operator-clusterrole.yaml
+    - hlf-operator-clusterrolebinding.yaml.j2
+    - hlf-operator-serviceaccount.yaml
+    - hlf-psp.yaml
+
+# create the manager
+- name: Create Operator
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'templates/'+target+'/manager/'+item) }}"
+    apply: yes
+  loop:
+    - hlf-operator-manager.yaml.j2
+
+- name: Wait for operator
+  shell: |
+    kubectl -n {{ project }} rollout status deploy fabric-operator
+  changed_when: false
