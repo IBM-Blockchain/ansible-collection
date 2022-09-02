@@ -5,7 +5,7 @@
 - name: Fail if target not specified
   fail:
     msg: target not specified or is not one of "k8s"
-  when: not target is defined or not target in ("k8s")
+  when: not target is defined or not target in ("k8s","openshift")
 
 - name: Create console
   include_tasks: "create.yml"

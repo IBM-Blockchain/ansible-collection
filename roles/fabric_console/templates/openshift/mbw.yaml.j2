@@ -1,0 +1,113 @@
+---
+apiVersion: ibp.com/v1beta1
+kind: IBPConsole
+metadata:
+  name: "{{ console_name }}"
+spec:
+  arch:
+    - "{{ arch }}"
+  license:
+    accept: true
+  serviceAccountName: "{{ service_account }}"
+  email: "{{ console_email }}"
+  password: "{{ console_default_password }}"
+  allowDefaultPassword: true
+  imagePullSecrets:
+    - "{{ image_pull_secret }}"
+  networkinfo:
+    domain: "{{ console_domain }}"
+  images:
+    deployerImage: "{{ deployer_image }}"
+    deployerTag: "{{ deployer_image_label }}"
+    consoleInitImage: "{{ init_image }}"
+    consoleInitTag: "{{ init_image_label }}"
+    consoleImage: "{{ console_image }}"
+    consoleTag: "{{ console_image_label }}"
+    configtxlatorImage: "{{ tools_image }}"
+    configtxlatorTag: "{{ tools_image_label }}"
+    couchdbImage: "{{ couchdb_image }}"
+    couchdbTag: "{{ couchdb_image_label }}"
+  versions:
+    ca:
+      1.5.3-1:
+        default: true
+        version: 1.5.3-1
+        image:
+          caInitImage: registry.access.redhat.com/ubi8/ubi-minimal
+          caInitTag: latest
+          caImage: hyperledger/fabric-ca
+          caTag: 1.5.3
+    peer:
+      2.4.3-1:
+        default: true
+        version: 2.4.3-1
+        image:
+          peerInitImage: registry.access.redhat.com/ubi8/ubi-minimal
+          peerInitTag: latest
+          peerImage: ghcr.io/hyperledger-labs/k8s-fabric-peer
+          peerTag: v0.7.2
+          couchdbImage: couchdb
+          couchdbTag: 3.1.2
+          grpcwebImage: ghcr.io/hyperledger-labs/grpc-web
+          grpcwebTag: latest
+    orderer:
+      2.4.3-1:
+        default: true
+        version: 2.4.3-1
+        image:
+          ordererInitImage: registry.access.redhat.com/ubi8/ubi-minimal
+          ordererInitTag: latest
+          ordererImage: hyperledger/fabric-orderer
+          ordererTag: 2.4.3
+          grpcwebImage: ghcr.io/hyperledger-labs/grpc-web
+          grpcwebTag: latest
+  storage:
+    console:
+      class: "{{ console_storage_class }}"
+      size: "{{ console_storage_size }}"
+  usetags: true
+  version: 1.0.0
+  resources:
+    init:
+      limits:
+        cpu: 100m
+        memory: 200M
+      requests:
+        cpu: 10m
+        memory: 20M
+    configtxlator:
+      limits:
+        cpu: 25m
+        ephemeral-storage: 1G
+        memory: 50Mi
+      requests:
+        cpu: 25m
+        ephemeral-storage: 100M
+        memory: 50Mi
+    couchdb:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 1Gi
+        memory: 1000Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 100Mi
+        memory: 128Mi
+    deployer:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 1G
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 100M
+        memory: 128Mi
+    console:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 1G
+        memory: 1000Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 100M
+        memory: 128Mi
