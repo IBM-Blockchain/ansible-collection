@@ -46,11 +46,11 @@ jobs:
       - name: Lint collection
         run: |
           flake8 .
-          ansible-lint
-          for ROLE in roles/*; do ansible-lint ${ROLE}; done
-          for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-          for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-          shellcheck tutorial/*.sh
+          # ansible-lint
+          # for ROLE in roles/*; do ansible-lint ${ROLE}; done
+          # for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+          # for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+          # shellcheck tutorial/*.sh
           yamllint .
       - name: Publish collection
         uses: actions/upload-artifact@v2
