@@ -8,31 +8,38 @@
   register: resultcrds
 
 # Create the namespace for the operator
-- name: Fail if namespace not specified
+
+- name: Fail if project not specified
   fail:
-    msg: namespace not specified or is empty
-  when: not namespace is defined or not namespace
+    msg: project not specified or is empty
+  when: not project is defined or not project
 
-- name: Determine if namespace exists
+- name: Determine if project exists
   k8s_info:
-    api_version: v1
-    kind: Namespace
-    name: "{{ namespace }}"
-  register: namespace_info
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ project }}"
+  register: project_info
 
-- name: Create namespace
+- name: Create project
   k8s:
     state: present
-    api_version: v1
-    kind: Namespace
-    name: "{{ namespace }}"
-  when: not namespace_info.resources
+    api_version: project.openshift.io/v1
+    kind: ProjectRequest
+    name: "{{ project }}"
+  when: not project_info.resources
+
+- name: Create security context constraints
+  k8s:
+    state: present
+    namespace: "{{ project }}"
+    resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
 
 # Create the Role based Access Control
 - name: Create Role Based Access Control
   k8s:
     state: present
-    namespace: "{{ namespace }}"
+    namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/rbac/'+item) }}"
     apply: yes
   loop:
@@ -45,7 +52,7 @@
 - name: Create Operator
   k8s:
     state: present
-    namespace: "{{ namespace }}"
+    namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/manager/'+item) }}"
     apply: yes
   loop:
@@ -53,5 +60,5 @@
 
 - name: Wait for operator
   shell: |
-    kubectl -n {{ namespace }} rollout status deploy fabric-operator
+    kubectl -n {{ project }} rollout status deploy fabric-operator
   changed_when: false

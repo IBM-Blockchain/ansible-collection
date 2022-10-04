@@ -27,7 +27,7 @@ spec:
     configtxlatorTag: "{{tools_image_label}}"
     couchdbImage: "{{couchdb_image}}"
     couchdbTag: "{{couchdb_image_label}}"
-{%+ if console_versions is defined %}
+{% if console_versions is defined %}
   versions:
     {{ console_versions | to_nice_yaml(indent=2, width=1024) | indent(4, false) }}
 {% endif %}
@@ -37,16 +37,6 @@ spec:
     console:
       class: "{{ console_storage_class }}"
       size: "{{ console_storage_size }}"
-{%+ if console_tls_secret is defined %}
-  tlsSecretName: "{{ console_tls_secret }}"
-{% endif %}
-{%+ if zones is defined %}
-  clusterdata:
-    zones:
-{%+ for zone in zones %}
-    - "{{ zone }}"
-{% endfor %}
-{% endif %}
   usetags: true
   version: 1.0.0
   resources:

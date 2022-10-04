@@ -17,11 +17,11 @@ lint:
 
     flake8 .
     ansible-lint
-    for ROLE in roles/*; do ansible-lint ${ROLE}; done
-    for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-    for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
-    shellcheck tutorial/*.sh
-    yamllint .
+    # for ROLE in roles/*; do ansible-lint ${ROLE}; done
+    # for PLAYBOOK in tutorial/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+    # for PLAYBOOK in tutorial/v1.x/??-*.yml; do ansible-lint ${PLAYBOOK}; done
+    # shellcheck tutorial/*.sh
+    # yamllint .
 
 docker:
     docker build -t fabric-ansible .
