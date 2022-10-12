@@ -32,6 +32,7 @@ This Ansible collection is maintained by the IBM Blockchain Platform development
    :caption: Tutorials
    :hidden:
 
+   tutorials/oss-installing
    tutorials/hlfsupport-installing
    tutorials/installing
    tutorials/building
