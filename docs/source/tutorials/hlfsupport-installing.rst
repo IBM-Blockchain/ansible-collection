@@ -16,7 +16,7 @@ Before you start
 
 Ensure that you have installed all of the prerequisite software described in `Installation <../installation.html>`_.
 
-You must have access to a  Red Hat OpenShift cluster that is supported for use with IBM Support for Hyperledger Fabric. Review the list of supported platforms in the IBM Support for Hyperledger Fabric documentation: `Supported Platforms <https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-prerequisites>`_
+You must have access to a  Red Hat OpenShift cluster that is supported for use with IBM Support for Hyperledger Fabric. Review the list of supported platforms in the IBM Support for Hyperledger Fabric documentation: `Supported Platforms <https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=started-about-support-hyperledger-fabric#console-ocp-about-prerequisites>`_
 
 If you have a Kubernetes cluster, you must have the Kubernetes CLI (``kubectl``) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:
 

@@ -16,7 +16,7 @@ Before you start
 
 Ensure that you have installed all of the pre-requisite software described in `Installation <../installation.html>`_.
 
-You must have access to a Kubernetes or Red Hat OpenShift cluster that is supported for use with the IBM Blockchain Platform. Review the list of supported platforms in the IBM Blockchain Platform documentation: `Supported Platforms <https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-prerequisites>`_
+You must have access to a Kubernetes or Red Hat OpenShift cluster that is supported for use with the IBM Blockchain Platform. Review the list of supported platforms in the IBM Blockchain Platform documentation: `Supported Platforms <https://www.ibm.com/docs/en/blockchain-platform/2.5.3?topic=started-about-blockchain-platform-253#console-ocp-about-prerequisites>`_
 
 If you have a Kubernetes cluster, you must have the Kubernetes CLI (``kubectl``) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:
 
