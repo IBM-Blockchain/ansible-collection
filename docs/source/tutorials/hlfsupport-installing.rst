@@ -16,7 +16,7 @@ Before you start
 
 Ensure that you have installed all of the prerequisite software described in `Installation <../installation.html>`_.
 
-You must have access to a  Red Hat OpenShift cluster that is supported for use with IBM Support for Hyperledger Fabric. Review the list of supported platforms in the IBM Support for Hyperledger Fabric documentation: `Supported Platforms <https://cloud.ibm.com/docs/blockchain-sw-25?topic=blockchain-sw-25-console-ocp-about#console-ocp-about-prerequisites>`_
+You must have access to a  Red Hat OpenShift cluster that is supported for use with IBM Support for Hyperledger Fabric. Review the list of supported platforms in the IBM Support for Hyperledger Fabric documentation: `Supported Platforms <https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=started-about-support-hyperledger-fabric#console-ocp-about-prerequisites>`_
 
 If you have a Kubernetes cluster, you must have the Kubernetes CLI (``kubectl``) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:
 
@@ -44,6 +44,41 @@ Creating the playbook
 ---------------------
 
 Create a new Ansible playbook file called `install-ibm-hlfsupport.yml`. Copy and paste the content for  Red Hat OpenShift into this new playbook, depending on the type of cluster that you are using:
+**Kubernetes**
+
+    .. highlight:: yaml
+
+    ::
+
+        ---
+        - name: Deploy IBM Support for Hyperledger Fabric custom resource definitions
+          hosts: localhost
+          vars:
+            state: present
+            target: k8s
+            arch: amd64
+            namespace: ibm-hlfsupport-infra
+            image_registry_password: <image_registry_password>
+            image_registry_email: <image_registry_email>
+            wait_timeout: 3600
+          roles:
+            - ibm.blockchain_platform.hlfsupport_crds
+
+        - name: Deploy IBM Support for Hyperledger Fabric console
+          hosts: localhost
+          vars:
+            state: present
+            target: k8s
+            arch: amd64
+            namespace: <namespace>
+            image_registry_password: <image_registry_password>
+            image_registry_email: <image_registry_email>
+            console_domain: <console_domain>
+            console_email: <console_email>
+            console_default_password: <console_default_password>
+            wait_timeout: 3600
+          roles:
+            - ibm.blockchain_platform.hlfsupport_console
 
 **Red Hat OpenShift**
 
