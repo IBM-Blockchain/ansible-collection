@@ -19,7 +19,7 @@ RUN microdnf install gcc gzip python39-devel tar \
     && microdnf clean all
 USER ibp-user
 ENV PATH=/home/ibp-user/.local/bin:$PATH
-RUN pip3.9 install --user -U 'ansible' fabric-sdk-py python-pkcs11 'openshift' semantic_version \
+RUN pip3.9 install --user -U 'ansible' fabric-sdk-py python-pkcs11 'openshift' semantic_version jmespath \
     && chgrp -R root /home/ibp-user/.local \
     && chmod -R g=u /home/ibp-user/.local
 ADD . /tmp/collection
