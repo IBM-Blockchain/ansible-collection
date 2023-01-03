@@ -11,6 +11,8 @@ python = "^3.9"
 yq = "^2.14.0"
 ansible = "2.9"
 jinja2-cli = "^0.8.2"
+kubernetes = "^25.3.0"
+jmespath = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 yamllint = "^1.26.3"
