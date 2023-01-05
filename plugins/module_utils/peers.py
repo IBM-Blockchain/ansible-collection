@@ -354,6 +354,16 @@ class PeerConnection:
         else:
             raise Exception(f'Failed to approve chaincode on peer: {process.stdout}')
 
+    def query_approved_chaincodes(self, channel):
+        env = self._get_environ()
+        args = ['peer', 'lifecycle', 'chaincode', 'queryapproved', '-C', channel, '-O', 'json']
+        process = self._run_command(args, env)
+        if process.returncode == 0:
+            data = json.loads(process.stdout)
+            return data.get('chaincode_definitions', [])
+        else:
+            raise Exception(f'Failed to query approved chaincodes on peer: {process.stdout}')
+
     def query_committed_chaincodes(self, channel):
         env = self._get_environ()
         args = ['peer', 'lifecycle', 'chaincode', 'querycommitted', '-C', channel, '-O', 'json']
