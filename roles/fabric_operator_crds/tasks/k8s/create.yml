@@ -23,9 +23,13 @@
 - name: Create namespace
   k8s:
     state: present
-    api_version: v1
-    kind: Namespace
-    name: "{{ namespace }}"
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: "{{ namespace }}"
+        labels:
+          'pod-security.kubernetes.io/enforce': baseline
   when: not namespace_info.resources
 
 # Create the Role based Access Control
@@ -39,7 +43,6 @@
     - hlf-operator-clusterrole.yaml
     - hlf-operator-clusterrolebinding.yaml.j2
     - hlf-operator-serviceaccount.yaml
-    - hlf-psp.yaml
 
 # create the manager
 - name: Create Operator
