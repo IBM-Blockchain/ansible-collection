@@ -24,9 +24,13 @@
 - name: Create project
   k8s:
     state: present
-    api_version: project.openshift.io/v1
-    kind: ProjectRequest
-    name: "{{ project }}"
+    definition:
+      api_version: project.openshift.io/v1
+      kind: ProjectRequest
+      metadata:
+        name: "{{ project }}"
+        labels:
+          'pod-security.kubernetes.io/enforce': baseline
   when: not project_info.resources
 
 - name: Create security context constraints
@@ -46,7 +50,6 @@
     - hlf-operator-clusterrole.yaml
     - hlf-operator-clusterrolebinding.yaml.j2
     - hlf-operator-serviceaccount.yaml
-    - hlf-psp.yaml
 
 # create the manager
 - name: Create Operator
