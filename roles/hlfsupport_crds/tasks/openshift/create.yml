@@ -17,9 +17,13 @@
 - name: Create project
   k8s:
     state: present
-    api_version: project.openshift.io/v1
-    kind: ProjectRequest
-    name: "{{ project }}"
+    definition:
+      api_version: project.openshift.io/v1
+      kind: ProjectRequest
+      metadata:
+        name: "{{ project }}"
+        labels:
+          'pod-security.kubernetes.io/enforce': baseline
   when: not project_info.resources
 
 - name: Create security context constraints
