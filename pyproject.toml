@@ -9,7 +9,7 @@ license = "Apache-2.0"
 [tool.poetry.dependencies]
 python = "^3.9"
 yq = "^2.14.0"
-ansible = "2.9"
+ansible = "7.0.0"
 jinja2-cli = "^0.8.2"
 kubernetes = "^25.3.0"
 jmespath = "^1.0.1"
