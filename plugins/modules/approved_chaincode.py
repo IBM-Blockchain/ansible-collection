@@ -10,12 +10,15 @@ __metaclass__ = type
 from ansible.module_utils._text import to_native
 
 from ..module_utils.module import BlockchainModule
-from ..module_utils.utils import (get_console, get_identity_by_module, get_ordering_service_by_name,
+from ..module_utils.utils import (get_console, get_identity_by_module,
+                                  get_ordering_service_by_name,
                                   get_peer_by_module, resolve_identity)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
 
 DOCUMENTATION = '''
 ---
@@ -136,7 +139,10 @@ options:
         required: true
     sequence:
         description:
-            - The sequence number of the chaincode definition.
+            - The sequence number of the chaincode definition. If and only if this is set to 0 the next sequence
+              number of chaincode will be calculated. This uses the 'name' as the key to check
+              existing committed chaincodes. If one exists, the highest sequence + 1 is used. Otherwise 1 is used.
+              Makesure to check the return value for the new sequence number
         type: int
         required: true
     endorsement_policy_ref:
@@ -290,21 +296,28 @@ def main():
 
     # Create the module.
     argument_spec = dict(
-        state=dict(type='str', default='present', choices=['present', 'absent']),
+        state=dict(type='str',
+                   default='present',
+                   choices=['present', 'absent']),
         api_endpoint=dict(type='str', required=True),
-        api_authtype=dict(type='str', required=True, choices=['ibmcloud', 'basic']),
+        api_authtype=dict(type='str',
+                          required=True,
+                          choices=['ibmcloud', 'basic']),
         api_key=dict(type='str', required=True, no_log=True),
         api_secret=dict(type='str', no_log=True),
         api_timeout=dict(type='int', default=60),
-        api_token_endpoint=dict(type='str', default='https://iam.cloud.ibm.com/identity/token'),
+        api_token_endpoint=dict(
+            type='str', default='https://iam.cloud.ibm.com/identity/token'),
         peer=dict(type='raw', required=True),
         identity=dict(type='raw', required=True),
         msp_id=dict(type='str', required=True),
-        hsm=dict(type='dict', options=dict(
-            pkcs11library=dict(type='str', required=True),
-            label=dict(type='str', required=True, no_log=True),
-            pin=dict(type='str', required=True, no_log=True)
-        )),
+        hsm=dict(type='dict',
+                 options=dict(pkcs11library=dict(type='str', required=True),
+                              label=dict(type='str',
+                                         required=True,
+                                         no_log=True),
+                              pin=dict(type='str', required=True,
+                                       no_log=True))),
         channel=dict(type='str', required=True),
         name=dict(type='str', required=True),
         version=dict(type='str', required=True),
@@ -316,20 +329,14 @@ def main():
         validation_plugin=dict(type='str'),
         init_required=dict(type='bool'),
         collections_config=dict(type='str'),
-        orderer_name=dict(type='str')
-    )
-    required_if = [
-        ('api_authtype', 'basic', ['api_secret'])
-    ]
-    mutually_exclusive = [
-        ['endorsement_policy_ref', 'endorsement_policy']
-    ]
-    module = BlockchainModule(
-        min_fabric_version='2.1.1',
-        argument_spec=argument_spec,
-        supports_check_mode=True,
-        required_if=required_if,
-        mutually_exclusive=mutually_exclusive)
+        orderer_name=dict(type='str'))
+    required_if = [('api_authtype', 'basic', ['api_secret'])]
+    mutually_exclusive = [['endorsement_policy_ref', 'endorsement_policy']]
+    module = BlockchainModule(min_fabric_version='2.1.1',
+                              argument_spec=argument_spec,
+                              supports_check_mode=True,
+                              required_if=required_if,
+                              mutually_exclusive=mutually_exclusive)
 
     # Validate HSM requirements if HSM is specified.
     if module.params['hsm']:
@@ -349,7 +356,8 @@ def main():
         identity = resolve_identity(console, module, identity, msp_id)
 
         if module.params['orderer_name']:
-            orderer = get_ordering_service_by_name(console, module.params['orderer_name'])
+            orderer = get_ordering_service_by_name(
+                console, module.params['orderer_name'])
         else:
             orderer = None
 
@@ -374,17 +382,58 @@ def main():
         # - If not, check the commit readiness for the name, version, and sequence number.
         approval_exists = False
         with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-            committed_chaincodes = peer_connection.query_committed_chaincodes(channel)
+            committed_chaincodes = peer_connection.query_committed_chaincodes(
+                channel)
             found = False
+            highest_sequence = 0
+
+            # search committed for any definitions that match exact name/version/sequence
+            # also note if the name matches what is the highest sequence number we get to
             for committed_chaincode in committed_chaincodes:
-                if committed_chaincode['name'] == name and committed_chaincode['version'] == version and committed_chaincode['sequence'] == sequence:
+                if committed_chaincode['name'] == name:
+                    module.json_log({
+                        'msg': 'found name match',
+                        'sequence': committed_chaincode['sequence']
+                    })
+                    int_sequence = int(committed_chaincode['sequence'])
+                    if int_sequence > highest_sequence:
+                        highest_sequence = int_sequence
+                if committed_chaincode['name'] == name and committed_chaincode[
+                        'version'] == version and committed_chaincode[
+                            'sequence'] == sequence:
                     found = True
                     break
+
             if found:
-                committed_chaincode = peer_connection.query_committed_chaincode(channel, name)
-                approval_exists = msp_id in committed_chaincode.get('approvals', dict())
+                # there is a committed chaincode that matches the name/version/sequence so has
+                # had sufficient approvals, but it might be that this msp_id hasn't done the approval
+                # yet, which it is still permitted to do
+                committed_chaincode = peer_connection.query_committed_chaincode(
+                    channel, name)
+                approval_exists = msp_id in committed_chaincode.get(
+                    'approvals', dict())
             else:
-                commit_readiness = peer_connection.check_commit_readiness(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config)
+                # Nothing committed yet, so one of two cases. This name/version/sequence needs to be approved for this msp_id
+                # and it hasn't been yet. Or sequence number needs to be higher
+                module.json_log({
+                    'msg': 'Nothing committed for this version/name/sequence',
+                    'highest_sequence': highest_sequence
+                })
+
+                # optional automatic update
+                # if the highest_sequence = 0 then nothing was found in the committed
+                # so the implication is that this first time this has been approved therefore sequence ==1
+                if sequence == 0:
+                    if highest_sequence == 0:
+                        sequence = 1
+                    else:
+                        sequence = highest_sequence + 1
+
+                commit_readiness = peer_connection.check_commit_readiness(
+                    channel, name, version, package_id, sequence,
+                    endorsement_policy_ref, endorsement_policy,
+                    endorsement_plugin, validation_plugin, init_required,
+                    collections_config)
                 approval_exists = commit_readiness.get(msp_id, False)
 
         # Handle the cases when the approval should be absent.
@@ -393,7 +442,9 @@ def main():
 
             # The chaincode should not be approved, but it is.
             # We can't remove it, so throw an exception.
-            raise Exception(f'cannot remove approved chaincode {name}@{version} from channel')
+            raise Exception(
+                f'cannot remove approved chaincode {name}@{version} from channel'
+            )
 
         elif state == 'absent':
 
@@ -405,12 +456,30 @@ def main():
         if not approval_exists:
 
             # Approve the chaincode.
-            with peer.connect(module, identity, msp_id, hsm) as peer_connection:
-                peer_connection.approve_chaincode(channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer)
+            with peer.connect(module, identity, msp_id,
+                              hsm) as peer_connection:
+                peer_connection.approve_chaincode(
+                    channel, name, version, package_id, sequence,
+                    endorsement_policy_ref, endorsement_policy,
+                    endorsement_plugin, validation_plugin, init_required,
+                    collections_config, timeout, orderer)
                 changed = True
 
         # Return the approved chaincode.
-        return module.exit_json(changed=changed, approved_chaincode=dict(channel=channel, name=name, version=version, package_id=package_id, sequence=sequence, endorsement_policy_ref=endorsement_policy_ref, endorsement_policy=endorsement_policy, endorsement_plugin=endorsement_plugin, validation_plugin=validation_plugin, init_required=init_required, collections_config=collections_config))
+        return module.exit_json(
+            changed=changed,
+            approved_chaincode=dict(
+                channel=channel,
+                name=name,
+                version=version,
+                package_id=package_id,
+                sequence=sequence,
+                endorsement_policy_ref=endorsement_policy_ref,
+                endorsement_policy=endorsement_policy,
+                endorsement_plugin=endorsement_plugin,
+                validation_plugin=validation_plugin,
+                init_required=init_required,
+                collections_config=collections_config))
 
     # Notify Ansible of the exception.
     except Exception as e:

@@ -159,7 +159,7 @@ class PeerConnection:
                     channels.append(line)
             return channels
         else:
-            raise Exception(f'Failed to list channels on peer: {process.stdout}')
+            raise Exception(f'Failed to list channels on peer: {process.stdout} {process.stderr}')
 
     def join_channel(self, path):
         env = self._get_environ()
@@ -168,7 +168,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to join channel on peer: {process.stdout}')
+            raise Exception(f'Failed to join channel on peer: {process.stdout} {process.stderr}')
 
     def fetch_channel(self, channel, target, path):
         env = self._get_environ()
@@ -177,7 +177,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to fetch block from peer: {process.stdout}')
+            raise Exception(f'Failed to fetch block from peer: {process.stdout} {process.stderr}')
 
     def list_installed_chaincodes_oldlc(self):
         env = self._get_environ()
@@ -198,7 +198,7 @@ class PeerConnection:
                     chaincodes.append(dict(name=name, version=version, path=path, id=id))
             return chaincodes
         else:
-            raise Exception(f'Failed to list installed chaincodes on peer: {process.stdout}')
+            raise Exception(f'Failed to list installed chaincodes on peer: {process.stdout} {process.stderr}')
 
     def install_chaincode_oldlc(self, path):
         env = self._get_environ()
@@ -207,7 +207,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to install chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to install chaincode on peer: {process.stdout} {process.stderr}')
 
     def list_instantiated_chaincodes(self, channel):
         env = self._get_environ()
@@ -228,7 +228,7 @@ class PeerConnection:
                     chaincodes.append(dict(name=name, version=version, path=path, input=input, escc=escc, vscc=vscc))
             return chaincodes
         else:
-            raise Exception(f'Failed to list instantiated chaincodes on peer: {process.stdout}')
+            raise Exception(f'Failed to list instantiated chaincodes on peer: {process.stdout} {process.stderr}')
 
     def instantiate_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc, orderer):
         env = self._get_environ()
@@ -252,7 +252,7 @@ class PeerConnection:
             else:
                 raise Exception('Failed to instantiate chaincode on channel, transaction not committed')
         else:
-            raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout}')
+            raise Exception(f'Failed to instantiate chaincode on channel: {process.stdout} {process.stderr}')
 
     def upgrade_chaincode(self, channel, name, version, ctor, endorsement_policy, collections_config, escc, vscc, orderer):
         env = self._get_environ()
@@ -276,7 +276,7 @@ class PeerConnection:
             else:
                 raise Exception('Failed to upgrade chaincode on channel, transaction not committed')
         else:
-            raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout}')
+            raise Exception(f'Failed to upgrade chaincode on channel: {process.stdout} {process.stderr}')
 
     def wait_for_chaincode(self, channel, name, version):
         # The commands for instantiating and upgrading chaincode do not
@@ -299,7 +299,7 @@ class PeerConnection:
             data = json.loads(process.stdout)
             return data.get('installed_chaincodes', [])
         else:
-            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to list installed chaincode on peer: {process.stdout} {process.stderr}')
 
     def install_chaincode_newlc(self, path):
         env = self._get_environ()
@@ -308,7 +308,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to install chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to install chaincode on peer: {process.stdout} {process.stderr}')
 
     def check_commit_readiness(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config):
         env = self._get_environ()
@@ -330,7 +330,7 @@ class PeerConnection:
             data = json.loads(process.stdout)
             return data.get('approvals', {})
         else:
-            raise Exception(f'Failed to check commit readiness on peer: {process.stdout}')
+            raise Exception(f'Failed to check commit readiness on peer: {process.stdout} {process.stderr}')
 
     def approve_chaincode(self, channel, name, version, package_id, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer):
         env = self._get_environ()
@@ -352,17 +352,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to approve chaincode on peer: {process.stdout}')
-
-    def query_approved_chaincodes(self, channel):
-        env = self._get_environ()
-        args = ['peer', 'lifecycle', 'chaincode', 'queryapproved', '-C', channel, '-O', 'json']
-        process = self._run_command(args, env)
-        if process.returncode == 0:
-            data = json.loads(process.stdout)
-            return data.get('chaincode_definitions', [])
-        else:
-            raise Exception(f'Failed to query approved chaincodes on peer: {process.stdout}')
+            raise Exception(f'Failed to approve chaincode on peer: {process.stdout} {process.stderr}')
 
     def query_committed_chaincodes(self, channel):
         env = self._get_environ()
@@ -372,7 +362,7 @@ class PeerConnection:
             data = json.loads(process.stdout)
             return data.get('chaincode_definitions', [])
         else:
-            raise Exception(f'Failed to query committed chaincodes on peer: {process.stdout}')
+            raise Exception(f'Failed to query committed chaincodes on peer: {process.stdout} {process.stderr}')
 
     def query_committed_chaincode(self, channel, name):
         env = self._get_environ()
@@ -381,7 +371,7 @@ class PeerConnection:
         if process.returncode == 0:
             return json.loads(process.stdout)
         else:
-            raise Exception(f'Failed to query committed chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to query committed chaincode on peer: {process.stdout} {process.stderr}')
 
     def commit_chaincode(self, channel, msp_ids, name, version, sequence, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, init_required, collections_config, timeout, orderer):
         env = self._get_environ()
@@ -404,7 +394,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to commit chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to commit chaincode on peer: {process.stdout} {process.stderr}')
 
     def init_chaincode(self, channel, msp_ids, name, initJsonStr, endorsement_policy_ref, endorsement_policy, endorsement_plugin, validation_plugin, timeout, orderer):
         env = self._get_environ()
@@ -423,7 +413,7 @@ class PeerConnection:
         if process.returncode == 0:
             return
         else:
-            raise Exception(f'Failed to init legacy chaincode on peer: {process.stdout}')
+            raise Exception(f'Failed to init legacy chaincode on peer: {process.stdout} {process.stderr}')
 
     def _get_environ(self):
         api_url_parsed = urllib.parse.urlparse(self.peer.api_url)
