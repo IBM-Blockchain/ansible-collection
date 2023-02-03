@@ -1,0 +1,86 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# An example of how to the the chaincode_list_info module and the approved_chaincode module
+# to handle the sequence numbers
+#
+# This is not a working example - as there's no script to setup a Fabric network etc.
+# but hopefully the variable names are sufficient to understand what information is required
+---
+- name: Commit chaincode
+  hosts: localhost
+  vars:
+    cfg: "{{ROOT}}/_cfg"
+  vars_files:
+    # Information about the chaincode to deployed: name, version, endorsement or collections config
+    - "{{ROOT}}/_cfg/asset-transfer-chaincode-vars.yml"
+    # organization information here for example 2 orgs
+    - "{{ROOT}}/_cfg/fabric-common-vars.yml"
+    - "{{ROOT}}/_cfg/fabric-org1-vars.yml"
+    - "{{ROOT}}/_cfg/fabric-org2-vars.yml"
+    # Authentication information
+    - "{{ROOT}}/_cfg/auth-vars.yml"
+
+  tasks:
+    # chaincode_list_info works against a peer, and will return information about both the installed and committed
+    # chaincodes on a channel.
+    #
+    # a general list of approved can't be given as you the peer only has the API to ask if a certain combination
+    # of properties represents and approved chaincode.
+    - name: Get the peers chaincode information
+      ibm.blockchain_platform.chaincode_list_info:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        peer: "{{ org1_peer_name }}"
+        identity: "{{ cfg }}/{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        channel: "{{ channel_name }}"
+      register: result
+
+    - name: Full information
+      debug:
+        msg: "{{result}}"
+
+    # It is possible then to manually calculate the next sequence number
+    # based on the smart contract name, you can extract the sequence number and then increment
+    - name: "{{smart_contract_name}} current sequence"
+      set_fact:
+        sequence: "{{ result | json_query(query) | first }}"
+      vars:
+        query: "committed_chaincodes[?name=='{{smart_contract_name}}'].sequence"
+
+    - name: debug
+      debug:
+        msg: "{{ sequence | int + 1}}"
+
+    # The approved_chaincode module has been updated to support passing the
+    # sequence as 0
+    #
+    # this will attempt to automatically update the sequence to the next one that is available.
+    # the chosen value will be returned. It is important to keep this for later
+    - name: Approve the chaincode on the channel
+      ibm.blockchain_platform.approved_chaincode:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        peer: "{{ org1_peer_name }}"
+        identity: "{{ cfg }}/{{ org1_name }} Admin.json"
+        msp_id: "{{ org1_msp_id }}"
+        channel: "{{ channel_name }}"
+        name: "{{ smart_contract_name }}"
+        version: "{{ smart_contract_version }}_"
+        package_id: "assettxts:8d74d5220dad81e0b5c09eed66d42cca463dfc59fe22650e8115f43376a57afe"
+        # sequence: "{{ smart_contract_sequence }}"  - usual way of doing this
+        sequence: "0"
+        endorsement_policy: "{{ smart_contract_endorsement_policy | default(omit) }}"
+        collections_config: "{{ smart_contract_collections_file | default(omit) }}"
+      register: ccresult
+
+    - name: Post approve information
+      debug:
+        msg: "{{ccresult.approved_chaincode}}"
