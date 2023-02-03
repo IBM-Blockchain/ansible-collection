@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IBM Blockchain Platform collection for Ansible &mdash; Ansible Collection  documentation</title>
+  <title>IBM Blockchain collection for Ansible &mdash; Ansible Collection  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -40,10 +42,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/joining.html">Joining a network</a></li>
@@ -80,8 +84,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>IBM Blockchain Platform collection for Ansible</li>
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">IBM Blockchain collection for Ansible</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/index.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -91,18 +95,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ibm-blockchain-platform-collection-for-ansible">
-<h1>IBM Blockchain Platform collection for Ansible<a class="headerlink" href="#ibm-blockchain-platform-collection-for-ansible" title="Permalink to this headline"></a></h1>
-<p>The IBM Blockchain Platform provides advanced tooling that allows you to quickly build, operate &amp; govern and grow blockchain networks. It uses Hyperledger Fabric, the open source, industry standard for enterprise blockchain. It also helps you to deploy Hyperledger Fabric networks anywhere, either to cloud or on-premises, using Kubernetes.</p>
-<p>This Ansible collection, provided as part of the IBM Blockchain Platform, enables you to automate the building of Hyperledger Fabric networks.</p>
+  <section id="ibm-blockchain-collection-for-ansible">
+<h1>IBM Blockchain collection for Ansible<a class="headerlink" href="#ibm-blockchain-collection-for-ansible" title="Permalink to this heading"></a></h1>
+<p>This Ansible collection, enables you to automate the building of Hyperledger Fabric networks.</p>
+<p>It supports creating these networks within
+- the IBM Hyperledger Fabric Support Offering
+- Fabric Open Source Stack (Hyperledger Labs <a class="reference external" href="https://github.com/hyperledger-labs/fabric-operator">Fabric Operations</a>  and <a class="reference external" href="https://github.com/hyperledger-labs/fabric-operations-console">Fabric Operations Console</a>)</p>
+<p>Roles are provided to install the operations console and operator; additional roles and modules can then create the Fabric Network.</p>
 </section>
 <section id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this headline"></a></h1>
+<h1>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h1>
 <p>Apache-2.0</p>
 </section>
 <section id="author-information">
-<h1>Author Information<a class="headerlink" href="#author-information" title="Permalink to this headline"></a></h1>
-<p>This Ansible collection is maintained by the IBM Blockchain Platform development team. For more information on the IBM Blockchain Platform, visit the following website: <a class="reference external" href="https://www.ibm.com/cloud/blockchain-platform">https://www.ibm.com/cloud/blockchain-platform</a></p>
+<h1>Author Information<a class="headerlink" href="#author-information" title="Permalink to this heading"></a></h1>
+<p>This Ansible collection is maintained by the IBM Blockchain development team.</p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">

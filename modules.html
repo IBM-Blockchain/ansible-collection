@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/joining.html">Joining a network</a></li>
@@ -66,6 +70,7 @@
 <li class="toctree-l3"><a class="reference internal" href="modules/approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/chaincode_list_info.html">chaincode_list_info – Get information about all installed and committed chaincodes on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/channel_acl.html">channel_acl – Manage an ACL for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
@@ -125,8 +130,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Modules</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Modules</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/modules.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -137,21 +142,21 @@
            <div itemprop="articleBody">
              
   <section id="modules">
-<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline"></a></h1>
+<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h1>
 <p>Modules can be used from the command line or in a playbook task. Ansible
 executes each module, usually on the remote target node, and collects return
 values.</p>
 <p>While different modules perform different tasks, their interfaces and responses
 follow similar patterns.</p>
 <section id="invoking-transactions">
-<h2>Invoking transactions<a class="headerlink" href="#invoking-transactions" title="Permalink to this headline"></a></h2>
+<h2>Invoking transactions<a class="headerlink" href="#invoking-transactions" title="Permalink to this heading"></a></h2>
 <p>Ansible modules should work on the principle that they are idempotent; the same playbook
 can be executed more than once safetly. Submmiting a transactions to Fabric would break this concept.</p>
 <p>The modules here are intended for administrative purposes; for this reason and to main the modules
 as being idempotent there are no modules for general purpose transaction invoking.</p>
 </section>
 <section id="module-reference">
-<h2>Module reference<a class="headerlink" href="#module-reference" title="Permalink to this headline"></a></h2>
+<h2>Module reference<a class="headerlink" href="#module-reference" title="Permalink to this heading"></a></h2>
 <p>Reference material for each module contains documentation on what parameters
 certain modules accept and what values they expect those parameters to be.</p>
 <div class="toctree-wrapper compound">
@@ -160,6 +165,7 @@ certain modules accept and what values they expect those parameters to be.</p>
 <li class="toctree-l1"><a class="reference internal" href="modules/approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chaincode_list_info.html">chaincode_list_info – Get information about all installed and committed chaincodes on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/channel_acl.html">channel_acl – Manage an ACL for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>

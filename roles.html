@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/joining.html">Joining a network</a></li>
@@ -66,6 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="roles/console.html">console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roles/crds.html">crds – Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roles/endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roles/fabric-console.html">fabric-console – Deploy the Fabric Operations Console into Kubernetes or Red Hat OpenShift</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roles/fabric-operator-crds.html">fabric-operator-crds – Deploy the Fabric Operator and custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roles/hlfsupport_console.html">console – Deploy the IBM Support for Hyperledger Fabric console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roles/hlfsupport_crds.html">crds – Deploy the IBM Support for Hyperledger Fabric custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roles/mrha_endorsing_organization.html">mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</a></li>
@@ -96,8 +102,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Roles</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Roles</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/roles.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -108,14 +114,14 @@
            <div itemprop="articleBody">
              
   <section id="roles">
-<h1>Roles<a class="headerlink" href="#roles" title="Permalink to this headline"></a></h1>
+<h1>Roles<a class="headerlink" href="#roles" title="Permalink to this heading"></a></h1>
 <p>Roles can be used from the command line or in a playbook task. Ansible
 executes each role, usually on the remote target node, and collects return
 values.</p>
 <p>While different roles perform different tasks, their interfaces and responses
 follow similar patterns.</p>
 <section id="role-reference">
-<h2>Role reference<a class="headerlink" href="#role-reference" title="Permalink to this headline"></a></h2>
+<h2>Role reference<a class="headerlink" href="#role-reference" title="Permalink to this heading"></a></h2>
 <p>Reference material for each role contains documentation on what parameters
 certain roles accept and what values they expect those parameters to be.</p>
 <div class="toctree-wrapper compound">
@@ -124,6 +130,8 @@ certain roles accept and what values they expect those parameters to be.</p>
 <li class="toctree-l1"><a class="reference internal" href="roles/console.html">console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roles/crds.html">crds – Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roles/endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roles/fabric-console.html">fabric-console – Deploy the Fabric Operations Console into Kubernetes or Red Hat OpenShift</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roles/fabric-operator-crds.html">fabric-operator-crds – Deploy the Fabric Operator and custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roles/hlfsupport_console.html">console – Deploy the IBM Support for Hyperledger Fabric console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roles/hlfsupport_crds.html">crds – Deploy the IBM Support for Hyperledger Fabric custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roles/mrha_endorsing_organization.html">mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</a></li>

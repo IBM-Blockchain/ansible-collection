@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
@@ -71,6 +75,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="crds.html">crds – Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fabric-console.html">fabric-console – Deploy the Fabric Operations Console into Kubernetes or Red Hat OpenShift</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fabric-operator-crds.html">fabric-operator-crds – Deploy the Fabric Operator and custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hlfsupport_console.html">console – Deploy the IBM Support for Hyperledger Fabric console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hlfsupport_crds.html">crds – Deploy the IBM Support for Hyperledger Fabric custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mrha_endorsing_organization.html">mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</a></li>
@@ -101,9 +107,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../roles.html">Roles</a> &raquo;</li>
-      <li>console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../roles.html">Roles</a></li>
+      <li class="breadcrumb-item active">console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
               <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/console.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -115,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="console-deploy-the-ibm-blockchain-platform-console-into-kubernetes-or-red-hat-openshift">
-<h1>console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift<a class="headerlink" href="#console-deploy-the-ibm-blockchain-platform-console-into-kubernetes-or-red-hat-openshift" title="Permalink to this headline"></a></h1>
+<h1>console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift<a class="headerlink" href="#console-deploy-the-ibm-blockchain-platform-console-into-kubernetes-or-red-hat-openshift" title="Permalink to this heading"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -124,12 +130,12 @@
 </ul>
 </div>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <p>This role allows you to quickly deploy the IBM Blockchain Platform console.</p>
 <p>This role works with both Kubernetes clusters and Red Hat OpenShift clusters, running on either x86-64 or IBM Z hardware.</p>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><dl>
 <dt>state</dt><dd><p><code class="docutils literal notranslate"><span class="pre">absent</span></code> - All components for the console will be stopped and removed, if they exist.</p>
@@ -322,60 +328,60 @@
 </div></blockquote>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Kubernetes</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span><span class="w"></span>
-<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
-<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-namespace</span><span class="w"></span>
-<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span><span class="w"></span>
-<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passw0rd</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
+<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Kubernetes</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-namespace</span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.org</span>
+<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passw0rd</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Red Hat OpenShift</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span><span class="w"></span>
-<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
-<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-project</span><span class="w"></span>
-<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span><span class="w"></span>
-<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passw0rd</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy IBM Blockchain Platform console on Red Hat OpenShift</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-project</span>
+<span class="w">    </span><span class="nt">image_registry_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+<span class="w">    </span><span class="nt">image_registry_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+<span class="w">    </span><span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.org</span>
+<span class="w">    </span><span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin@example.org</span>
+<span class="w">    </span><span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passw0rd</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Kubernetes</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span><span class="w"></span>
-<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
-<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-namespace</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Kubernetes</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-namespace</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Red Hat OpenShift</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span><span class="w"></span>
-<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span><span class="w"></span>
-<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-project</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove IBM Blockchain Platform console from Red Hat OpenShift</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift</span>
+<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-project</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.console</span>
 </pre></div>
 </div>
 </section>

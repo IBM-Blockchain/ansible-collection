@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
@@ -66,6 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="console.html">console – Deploy the IBM Blockchain Platform console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crds.html">crds – Deploy the IBM Blockchain Platform custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="endorsing_organization.html">endorsing_organization – Build Hyperledger Fabric components for an endorsing organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fabric-console.html">fabric-console – Deploy the Fabric Operations Console into Kubernetes or Red Hat OpenShift</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fabric-operator-crds.html">fabric-operator-crds – Deploy the Fabric Operator and custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hlfsupport_console.html">console – Deploy the IBM Support for Hyperledger Fabric console into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hlfsupport_crds.html">crds – Deploy the IBM Support for Hyperledger Fabric custom resource definitions into Kubernetes or Red Hat OpenShift</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</a><ul>
@@ -101,9 +107,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../roles.html">Roles</a> &raquo;</li>
-      <li>mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../roles.html">Roles</a></li>
+      <li class="breadcrumb-item active">mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
               <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/main/docs/source/roles/mrha_endorsing_organization.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -115,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="mrha-endorsing-organization-build-hyperledger-fabric-components-for-a-multi-region-highly-available-endorsing-organization">
-<h1>mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization<a class="headerlink" href="#mrha-endorsing-organization-build-hyperledger-fabric-components-for-a-multi-region-highly-available-endorsing-organization" title="Permalink to this headline"></a></h1>
+<h1>mrha_endorsing_organization – Build Hyperledger Fabric components for a multi-region, highly available endorsing organization<a class="headerlink" href="#mrha-endorsing-organization-build-hyperledger-fabric-components-for-a-multi-region-highly-available-endorsing-organization" title="Permalink to this heading"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id3">Synopsis</a></p></li>
@@ -124,7 +130,7 @@
 </ul>
 </div>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id3">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id3">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <p>This role allows you to quickly build Hyperledger Fabric components for a multi-region, highly available endorsing organization. A multi-region, highly available endorsing organization
 has a certificate authority with multiple replicas and multiple peers distributed across multiple region.</p>
 <p>This role works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.
@@ -132,7 +138,7 @@ You will need separate instances of the IBM Blockchain Platform for each region,
 <p>Consult the IBM Blockchain Platform documentation for more information on high availability configurations: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-ha">https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-ha</a></p>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id4">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id4">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><dl>
 <dt>regions (required)</dt><dd><p>The list of regions to use to build the components for a multi-region, highly available endorsing organization.</p>
@@ -352,58 +358,58 @@ You will need separate instances of the IBM Blockchain Platform for each region,
 </div></blockquote>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create components for a multi-region, highly available endorsing organization</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
-<span class="w">    </span><span class="nt">regions</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-dallas.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-london.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-tokyo.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">organization_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">organization_msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ca_admin_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ca_admin_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminpw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ca_db_datasource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host=postgresql.example.org port=5432 user=myuser password=mypassword dbname=mydb sslmode=verify-full</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ca_db_tls_certfiles</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span><span class="w"></span>
-<span class="w">    </span><span class="nt">organization_admin_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1admin</span><span class="w"></span>
-<span class="w">    </span><span class="nt">organization_admin_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1adminpw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">peer_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1peer</span><span class="w"></span>
-<span class="w">    </span><span class="nt">peer_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1peerpw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mrha_endorsing_organization</span><span class="w"></span>
+<h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create components for a multi-region, highly available endorsing organization</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">regions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-dallas.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-london.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-tokyo.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">    </span><span class="nt">organization_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1</span>
+<span class="w">    </span><span class="nt">organization_msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
+<span class="w">    </span><span class="nt">ca_admin_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="w">    </span><span class="nt">ca_admin_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminpw</span>
+<span class="w">    </span><span class="nt">ca_db_datasource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host=postgresql.example.org port=5432 user=myuser password=mypassword dbname=mydb sslmode=verify-full</span>
+<span class="w">    </span><span class="nt">ca_db_tls_certfiles</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...</span>
+<span class="w">    </span><span class="nt">organization_admin_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1admin</span>
+<span class="w">    </span><span class="nt">organization_admin_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1adminpw</span>
+<span class="w">    </span><span class="nt">peer_enrollment_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1peer</span>
+<span class="w">    </span><span class="nt">peer_enrollment_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org1peerpw</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mrha_endorsing_organization</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Destroy components for a multi-region, highly available endorsing organization</span><span class="w"></span>
-<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span><span class="w"></span>
-<span class="w">    </span><span class="nt">regions</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-dallas.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-london.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-tokyo.example.org:32000</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">organization_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">  </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mrha_endorsing_organization</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Destroy components for a multi-region, highly available endorsing organization</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">regions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-dallas.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-london.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console-tokyo.example.org:32000</span>
+<span class="w">        </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">        </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">        </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">    </span><span class="nt">organization_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.mrha_endorsing_organization</span>
 </pre></div>
 </div>
 </section>

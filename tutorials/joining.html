@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Joining a network</a><ul>
@@ -89,8 +93,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Joining a network</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Joining a network</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/joining.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -101,12 +105,12 @@
            <div itemprop="articleBody">
              
   <section id="joining-a-network">
-<h1>Joining a network<a class="headerlink" href="#joining-a-network" title="Permalink to this headline"></a></h1>
+<h1>Joining a network<a class="headerlink" href="#joining-a-network" title="Permalink to this heading"></a></h1>
 <p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of joining an existing Hyperledger Fabric network.</p>
 <p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to join an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has two organizations - an ordering organization “Ordering Org”, and an endorsing organization “Org1”. You will create a new endorsing organization “Org2”, and that organization will run a peer. You will add the new organization “Org2” into an existing channel, and join the new organizations peer into that channel.</p>
 <p>For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 <section id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this heading"></a></h2>
 <p>This tutorial builds upon the Hyperledger Fabric that is created as part of the <a class="reference external" href="./building.html">Building a network</a> tutorial. Ensure that you have followed this tutorial, and that you have the network up and running.</p>
 <p>If you used separate IBM Blockchain Platform instances for each organization in the previous tutorial, you will need another IBM Blockchain Platform instance for the new organization created during this tutorial. Again, if you use separate IBM Blockchain Platform instances, then there are additional steps that you must follow which will be described below.</p>
 <p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorial directory:</p>
@@ -117,7 +121,7 @@
 </div></blockquote>
 </section>
 <section id="editing-the-variable-file">
-<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline"></a></h2>
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this heading"></a></h2>
 <p>Variable files are used to store variables that are used across multiple Ansible playbooks. Each organization has their own variable file, and you must edit these files to specify the connection details for the IBM Blockchain Platform instance for that organization.</p>
 <p>In the previous tutorial, you edited the variable files <cite>ordering-org-vars.yml</cite> (for Ordering Org) and <cite>org1-vars.yml</cite> (for Org1).</p>
 <p>You must now edit the variable file for the new organization Org2, <cite>org2-vars.yml</cite>. The values you set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
@@ -147,7 +151,7 @@
 <p>Finally, all of the organization specific variable files contain a <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> variable, with the default set to <code class="docutils literal notranslate"><span class="pre">600</span></code> (seconds). This is the amount of time in seconds to wait for certificate authorities, peers, and ordering services to start. Depending on your environment, you may need to increase this timeout, for example if it takes a long time to provision the persistent volumes for each component.</p>
 </section>
 <section id="joining-the-network">
-<h2>Joining the network<a class="headerlink" href="#joining-the-network" title="Permalink to this headline"></a></h2>
+<h2>Joining the network<a class="headerlink" href="#joining-the-network" title="Permalink to this heading"></a></h2>
 <p>There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to build the network. Each of the Ansible playbooks is run as either the existing endorsing organization “Org1”, or the new endorsing organization “Org2”.</p>
 <p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/join_network.sh">join_network.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
 <p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command. This is required as organization and ordering service information must be exported and then imported into the other IBM Blockchain Platform instance.</p>
@@ -188,7 +192,7 @@
 <p>After the script has finished, you should examine the output of the script to check that no errors have occurred whilst running the Ansible playbooks. After each Ansible playbook runs, Ansible outputs a <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section that details how many tasks have been executed, and how many of those tasks have failed.</p>
 </section>
 <section id="exploring-the-network">
-<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this headline"></a></h2>
+<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this heading"></a></h2>
 <p>The Ansible playbooks that you just ran created the following new components:</p>
 <ul class="simple">
 <li><p>An endorsing organization named <cite>Org2</cite>, with a certificate authority named <cite>Org2 CA</cite>, and a peer named <cite>Org2 Peer</cite>.</p></li>
@@ -212,7 +216,7 @@
 <p>You can also import the JSON files containing the identities listed above into the IBM Blockchain Platform console wallet. Once all of the identities have been imported, you can associate each component with the appropriate identity. This will allow you to manage and view those components using the IBM Blockchain Platform console.</p>
 </section>
 <section id="exploring-the-playbooks">
-<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline"></a></h2>
+<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this heading"></a></h2>
 <p>When you ran the script <cite>join_network.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of joining the network. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
 <p>Here are the Ansible playbooks that were executed by the script above:</p>
 <ul>
@@ -357,7 +361,7 @@
 </ul>
 </section>
 <section id="destroying-the-network">
-<h2>Destroying the network<a class="headerlink" href="#destroying-the-network" title="Permalink to this headline"></a></h2>
+<h2>Destroying the network<a class="headerlink" href="#destroying-the-network" title="Permalink to this heading"></a></h2>
 <p>If you wish to destroy the network in order to remove all of the components created by this tutorial, then you can run additional Ansible playbooks to do this for you. You can use the <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/join_network.sh">join_network.sh</a> script again to run these Ansible playbooks. This script will also remove all of the components for the organizations <cite>Ordering Org</cite> and <cite>Org1</cite> created by the previous tutorial.</p>
 <p>Note that if each organization has their own IBM Blockchain Platform instance, you must run a different command.</p>
 <p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>

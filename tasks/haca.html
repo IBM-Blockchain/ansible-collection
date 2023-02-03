@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
@@ -87,8 +91,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Creating a highly available Certificate Authority</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Creating a highly available Certificate Authority</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tasks/haca.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -99,16 +103,16 @@
            <div itemprop="articleBody">
              
   <section id="creating-a-highly-available-certificate-authority">
-<h1>Creating a highly available Certificate Authority<a class="headerlink" href="#creating-a-highly-available-certificate-authority" title="Permalink to this headline"></a></h1>
+<h1>Creating a highly available Certificate Authority<a class="headerlink" href="#creating-a-highly-available-certificate-authority" title="Permalink to this heading"></a></h1>
 <p>The default certificate authority in IBM Blockchain Platform is a single replica with an integrated SQLite database, however it is possible to configure the certificate authority to have an external PostgresSQL database and have multiple replicas of the certificate authority.</p>
 <p>The IBM Blockchain Platform documentation describes some limitations with the creation of replicas, including the restriction that an existing certificate authority with an integrated SQLite database cannot be upgraded to use a PostgresSQL database.  Consequently, the playbook for this task checks for the existence of the named certificate authority and fails if it already exists.</p>
 <section id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this heading"></a></h2>
 <p>This task guide assumes that you have installed Ansible and the IBM Blockchain Platform collection for Ansible, and are familiar with how to use these technologies.</p>
 <p>This task guide also assumes that you have created a PostgresSQL database and that you have the connection details available.</p>
 </section>
 <section id="cloning-the-repository">
-<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline"></a></h2>
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this heading"></a></h2>
 <p>This task guide uses a set of example playbooks which are stored in a GitHub repository. You must clone this GitHub repository in order to run the playbooks locally:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/IBM-Blockchain/ansible-collection.git
@@ -123,7 +127,7 @@
 </div></blockquote>
 </section>
 <section id="editing-the-variable-file">
-<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this headline"></a></h2>
+<h2>Editing the variable file<a class="headerlink" href="#editing-the-variable-file" title="Permalink to this heading"></a></h2>
 <p>You need to edit the variable file <code class="docutils literal notranslate"><span class="pre">vars.yml</span></code>. This file is used to pass information about your network into the example Ansible playbook.</p>
 <p>The first set of values that you must set depend on whether the organization is using the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software:</p>
 <ul class="simple">
@@ -164,7 +168,7 @@
 </ul>
 </section>
 <section id="creating-the-certificate-authority">
-<h2>Creating the certificate authority<a class="headerlink" href="#creating-the-certificate-authority" title="Permalink to this headline"></a></h2>
+<h2>Creating the certificate authority<a class="headerlink" href="#creating-the-certificate-authority" title="Permalink to this heading"></a></h2>
 <p>Review the example playbook <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/examples/haca/create-ha-ca.yml">create-ha-ca.yml</a>, then run it as follows:</p>
 <blockquote>
 <div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook create-ha-ca.yml

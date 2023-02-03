@@ -141,7 +141,7 @@ Parameters
     | **Type**: str
 
   sequence (required)
-    The sequence number of the chaincode definition.
+    The sequence number of the chaincode definition. If and only if this is set to 0 the next sequence number of chaincode will be calculated. This uses the 'name' as the key to check existing committed chaincodes. If one exists, the highest sequence + 1 is used. Otherwise 1 is used. Makesure to check the return value for the new sequence number
 
     | **Type**: int
 

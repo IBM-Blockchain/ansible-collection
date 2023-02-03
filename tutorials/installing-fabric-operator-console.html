@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installing the Fabric Operations Console and Operator &mdash; Ansible Collection  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Ansible Collection
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joining.html">Joining a network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploying.html">Deploying a smart contract</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/addadmincert.html">Adding an administrator certificate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/enable-fabricv2-capability.html">Enable Hyperledger Fabric v2.x capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/haca.html">Creating a highly available Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/intermediateCA.html">Creating an Intermediate Certificate Authority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/update-channel-parameters.html">Updating channel parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roles.html">Roles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Getting support</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Installing the Fabric Operations Console and Operator</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/installing-fabric-operator-console.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installing-the-fabric-operations-console-and-operator">
+<span id="open-console-operator-tutorial"></span><h1>Installing the Fabric Operations Console and Operator<a class="headerlink" href="#installing-the-fabric-operations-console-and-operator" title="Permalink to this heading"></a></h1>
+<p>This tutorial will demonstrate how to use the Fabric Operations Console and Fabric Operator roles to automate the installation of the IBM Support for Hyperledger Fabric software s Kubernetes cluster</p>
+<p>This tutorial uses the Ansible roles <a class="reference external" href="../roles/fabric-operator-crds.html">fabric-operator-crds</a> and <a class="reference external" href="../roles/fabric-console.html">fabric-console</a> to install the Fabric Operations Console and Fabric Operator software. If you wish to customize the installation process, then you should review the documentation for these roles.</p>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this heading"></a></h2>
+<p>Ensure that you have installed all of the pre-requisite software described in <a class="reference external" href="../installation.html">Installation</a>.</p>
+<p>If you have a Kubernetes cluster, you must have the Kubernetes CLI (<code class="docutils literal notranslate"><span class="pre">kubectl</span></code>) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">get</span> <span class="n">nodes</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The Ansible collection will attempt to automatically create both of the namespaces or projects it needs for you. If you do not have permissions to create a namespace or project, then ask your administrator to create them for you.</p>
+<p>Ingress Controllers.  You must have a ingress controlled installed for the console and operator to route traffic. Note that other software installed by roles in this collection will handle this; the Fabric Operations Console and Fabric Operator will <strong>not</strong> do this for you.</p>
+<p>Examples are given below of setting up such ingress controllers, primarily from a development perspective. These should be considered examples, for more details refer to you kubernetes administrator, and the Fabric Operations Console and Fabric Operator documentation.</p>
+</section>
+<section id="creating-the-playbook">
+<h2>Creating the playbook<a class="headerlink" href="#creating-the-playbook" title="Permalink to this heading"></a></h2>
+<p>Versions of the files shown here are in the github repo under the <cite>examples/opensource-stack</cite> directory</p>
+<p>Create a new Ansible playbook file called <cite>install-ofs.yml</cite>. Copy the following content</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Opensource custom resource definitions and operator</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars_files</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars.yml</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.fabric_operator_crds</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Fabric Operations Console</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">vars_files</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars.yml</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">wait_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm.blockchain_platform.fabric_console</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="kind-ingress-configuration">
+<h2>KIND Ingress configuration<a class="headerlink" href="#kind-ingress-configuration" title="Permalink to this heading"></a></h2>
+<p>This configuration works well with the KIND cluster; KIND works well in development as it runs the whole
+Kubernetes inside a docker container. The playbook is below; this file and templates are in the <cite>examples/opensource-stack</cite> directory</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup ingress for KIND for use with Fabric Operator/Console</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create kubernetes resources for the ingress</span>
+<span class="w">      </span><span class="nt">k8s</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">definition</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;kubernetes.core.kustomize&#39;,</span><span class="nv"> </span><span class="s">dir=&#39;templates/ingress&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resultingress</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait for the ingress</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=2m</span>
+<span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">    </span><span class="c1"># Override the cluster DNS with a local override to refer pods to the HOST interface</span>
+<span class="w">    </span><span class="c1"># when connecting to ingress.</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Need the cluster ip address</span>
+<span class="w">      </span><span class="nt">k8s_info</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">api_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress-nginx</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ingress-nginx-controller&quot;</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress_info</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Applying CoreDNS overrides for ingress domain</span>
+<span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">clusterip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ingress_info.resources[0].spec.clusterIP</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">      </span><span class="nt">k8s</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+<span class="w">        </span><span class="nt">resource_definition</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;template&#39;,&#39;templates/coredns/coredns.yaml.j2&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="nt">apply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rollout the CoreDNS</span>
+<span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">kubectl -n kube-system rollout restart deployment/coredns</span>
+<span class="w">        </span><span class="no">kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=2m</span>
+<span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="running-the-playbook">
+<h2>Running the playbook<a class="headerlink" href="#running-the-playbook" title="Permalink to this heading"></a></h2>
+<p>Create a <cite>vars.yml</cite> file as follows:</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># The type of K8S cluster this is using</span>
+<span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s</span>
+<span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+
+<span class="c1"># k8s namespace for the operator and console</span>
+<span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fabricinfra</span>
+
+<span class="c1"># Console name/domain</span>
+<span class="nt">console_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hlf-console</span>
+<span class="nt">console_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localho.st</span>
+
+<span class="c1">#  default configuration for the console</span>
+<span class="c1"># password reset will be required on first login</span>
+<span class="nt">console_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="nt">console_default_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
+
+<span class="c1"># different k8s clusters will be shipped with differently named default storage providers</span>
+<span class="c1"># or none at all.  KIND for example has one called &#39;standard&#39;</span>
+<span class="nt">console_storage_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Please note the <cite>console_domain</cite> for KIND should be <cite>localho.st</cite>
+The <cite>console_storage_class</cite> needs to be changed to match a storage class in the cluster. (<cite>standard</cite> for KIND)</p>
+<p>Run the Ansible playbook file you created in the previous step by running the following command:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>::</dt><dd><p>ansible-playbook install-ofs.yml</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>The Ansible playbook will take some time to run. As the playbook runs, it will output information on the tasks being executed.</p>
+<p>At the end of the output, you should see text similar to the following:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>TASK [console : Wait for console to start] ***********************************************************************
+ok: [localhost]
+
+TASK [console : Print console URL] *******************************************************************************
+ok: [localhost] =&gt; {
+    &quot;msg&quot;: &quot;Hyperledger Fabric console available at https://my-namespace-ibp-console-console.apps.my-openshift-cluster.example.org&quot;
+}
+
+TASK [console : Delete console] **********************************************************************************
+skipping: [localhost]
+
+PLAY RECAP *******************************************************************************************************
+localhost                  : ok=19   changed=4    unreachable=0    failed=0    skipped=13   rescued=0    ignored=0
+</pre></div>
+</div>
+</div></blockquote>
+<p>Ensure that no errors are reported in the output. Ensure that the failure count in the final <code class="docutils literal notranslate"><span class="pre">PLAY</span> <span class="pre">RECAP</span></code> section is 0.</p>
+<p>The URL of the console is displayed as part of the output for the <code class="docutils literal notranslate"><span class="pre">Print</span> <span class="pre">console</span> <span class="pre">URL</span></code> task. When you access this URL, you can log in with the email and default password that you specified in your Ansible playbook.</p>
+<p>You have now finished installing the Hyperledger Fabric software.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright IBM Corporation 2020.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

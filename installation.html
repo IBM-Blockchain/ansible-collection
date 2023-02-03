@@ -15,12 +15,14 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installing the IBM Support for Hyperledger Fabric" href="tutorials/hlfsupport-installing.html" />
-    <link rel="prev" title="IBM Blockchain Platform collection for Ansible" href="index.html" /> 
+    <link rel="next" title="Migrating from v1.2 to version 2" href="migrating-v12-v2.html" />
+    <link rel="prev" title="IBM Blockchain collection for Ansible" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,10 +49,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#using-a-docker-image">Using a Docker image</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/joining.html">Joining a network</a></li>
@@ -87,8 +91,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installation</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/installation.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -99,7 +103,7 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <p>There are three options for installing the IBM Blockchain Platform collection for Ansible:</p>
 <ul>
 <li><p>Installing using Ansible Galaxy</p>
@@ -127,9 +131,9 @@
 </li>
 </ul>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>In order to use this Ansible collection, you must have the following pre-requisite software installed and available:</p>
-<p><strong>Python v3.7+</strong></p>
+<p><strong>Python v3.8+</strong></p>
 <blockquote>
 <div><p>Python can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc).
 If you install Python from the package manager for your operating system, you must also install the development libraries (usually a package named <code class="docutils literal notranslate"><span class="pre">python3-devel</span></code>), as these are required when installing modules through <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
@@ -138,17 +142,17 @@ If you install Python from the package manager for your operating system, you mu
 <li><p>The unofficial Python version manager: <a class="reference external" href="https://github.com/pyenv/pyenv">https://github.com/pyenv/pyenv</a></p></li>
 </ul>
 </div></blockquote>
-<p><strong>Ansible v2.8+</strong></p>
+<p><strong>Ansible v2.9+</strong></p>
 <blockquote>
 <div><p>Ansible can be installed from a variety of sources, including the package manager for your operating system (apt, yum, etc). You can also install it using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, the package manager for Python:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s1">&#39;ansible&gt;=2.9,&lt;2.10&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s1">&#39;ansible&#39;</span>
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>Hyperledger Fabric v2.2.1+ binaries</strong></p>
+<p><strong>Hyperledger Fabric v2.4.7+ binaries</strong></p>
 <blockquote>
-<div><p>This Ansible collection requires use of the binaries from Hyperledger Fabric v2.2.1 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxlator</span></code> and <code class="docutils literal notranslate"><span class="pre">peer</span></code>.</p>
-<p>You can install these binaries by following the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html">https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html</a></p>
+<div><p>This Ansible collection requires use of the binaries from Hyperledger Fabric v2.4.7 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include <code class="docutils literal notranslate"><span class="pre">configtxlator</span></code> and <code class="docutils literal notranslate"><span class="pre">peer</span></code>.</p>
+<p>You can install these binaries by following the Hyperledger Fabric documentation: <a class="reference external" href="https://hyperledger-fabric.readthedocs.io/en/release-2.5/install.html">https://hyperledger-fabric.readthedocs.io/en/release-2.5/install.html</a></p>
 <p>These binaries must be on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> of the system that will be used to run your Ansible Playbooks. You can check that the binaries are installed correctly by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">peer</span> <span class="n">version</span>
 </pre></div>
@@ -175,7 +179,7 @@ If you install Python from the package manager for your operating system, you mu
 <blockquote>
 <div><p>This Ansible collection uses the OpenShift client for Python to interact with your Red Hat OpenShift or Kubernetes cluster when installing the IBM Blockchain Platform software.</p>
 <p>You can install this SDK using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, the package manager for Python:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s1">&#39;openshift==0.11.2&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s1">&#39;openshift&#39;</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -197,19 +201,20 @@ If you install Python from the package manager for your operating system, you mu
 </div></blockquote>
 </section>
 <section id="installing-using-ansible-galaxy">
-<h2>Installing using Ansible Galaxy<a class="headerlink" href="#installing-using-ansible-galaxy" title="Permalink to this headline"></a></h2>
+<h2>Installing using Ansible Galaxy<a class="headerlink" href="#installing-using-ansible-galaxy" title="Permalink to this heading"></a></h2>
 <p>You can use the <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span></code> command to install a collection from Ansible Galaxy, the package manager for Ansible:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ansible</span><span class="o">-</span><span class="n">galaxy</span> <span class="n">collection</span> <span class="n">install</span> <span class="n">ibm</span><span class="o">.</span><span class="n">blockchain_platform</span>
 </pre></div>
 </div>
 </section>
 <section id="installing-from-source">
-<h2>Installing from source<a class="headerlink" href="#installing-from-source" title="Permalink to this headline"></a></h2>
-<p>You can use the <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span></code> command to install a collection built from source. To build your own collection, follow these steps:</p>
+<h2>Installing from source<a class="headerlink" href="#installing-from-source" title="Permalink to this heading"></a></h2>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span></code> command to install a collection built from source. To build your own collection, follow these steps:
+This will build the stable <cite>release-1.2</cite> branch for v1.2.; use the <cite>main</cite> branch for the <cite>2.0.0-beta</cite> level</p>
 <ol class="arabic simple">
 <li><p>Clone the repository:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">IBM</span><span class="o">-</span><span class="n">Blockchain</span><span class="o">/</span><span class="n">ansible</span><span class="o">-</span><span class="n">collection</span><span class="o">.</span><span class="n">git</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">branch</span> <span class="n">main</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">IBM</span><span class="o">-</span><span class="n">Blockchain</span><span class="o">/</span><span class="n">ansible</span><span class="o">-</span><span class="n">collection</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
@@ -227,12 +232,12 @@ If you install Python from the package manager for your operating system, you mu
 </div>
 </section>
 <section id="using-a-docker-image">
-<h2>Using a Docker image<a class="headerlink" href="#using-a-docker-image" title="Permalink to this headline"></a></h2>
+<h2>Using a Docker image<a class="headerlink" href="#using-a-docker-image" title="Permalink to this heading"></a></h2>
 <p>As an alternative to installing all of the requirements on your system, you can use a Docker image that contains all of the requirements.
 You can then use that Docker image to run your playbooks.</p>
-<p>A Docker image, <code class="docutils literal notranslate"><span class="pre">ibmcom/ibp-ansible</span></code>, has been published to Docker Hub.</p>
+<p>A Docker image, <code class="docutils literal notranslate"><span class="pre">ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e</span></code>, has been published to Docker Hub.</p>
 <p>You can run a playbook using this Docker image, by volume mounting the playbook into the Docker container and running the <code class="docutils literal notranslate"><span class="pre">ansible-playbook</span></code> command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e ansible-playbook /playbooks/playbook.yml
 </pre></div>
 </div>
 <p>Note that the UID flag <code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">$(id</span> <span class="pre">-u)</span></code> ensures that Ansible can write connection profile and identity files to the volume mount.</p>
@@ -245,8 +250,8 @@ You can then use that Docker image to run your playbooks.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="IBM Blockchain Platform collection for Ansible" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tutorials/hlfsupport-installing.html" class="btn btn-neutral float-right" title="Installing the IBM Support for Hyperledger Fabric" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="IBM Blockchain collection for Ansible" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="migrating-v12-v2.html" class="btn btn-neutral float-right" title="Migrating from v1.2 to version 2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

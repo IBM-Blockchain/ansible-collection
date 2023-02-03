@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="joining.html">Joining a network</a></li>
@@ -87,8 +91,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Deploying a smart contract</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Deploying a smart contract</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/deploying.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -99,12 +103,12 @@
            <div itemprop="articleBody">
              
   <section id="deploying-a-smart-contract">
-<h1>Deploying a smart contract<a class="headerlink" href="#deploying-a-smart-contract" title="Permalink to this headline"></a></h1>
+<h1>Deploying a smart contract<a class="headerlink" href="#deploying-a-smart-contract" title="Permalink to this heading"></a></h1>
 <p>This tutorial will demonstrate how to use the IBM Blockchain Platform collection for Ansible to automate the process of deploying a smart contract to an existing Hyperledger Fabric network.</p>
 <p>In this tutorial, you will use the IBM Blockchain Platform collection for Ansible to deploy the FabCar sample smart contract to an existing Hyperledger Fabric network. The existing Hyperledger Fabric network has three organizations - an ordering organization “Ordering Org”, and two endorsing organizations “Org1” and “Org2”. Both organizations are members of an existing channel called “mychannel”. You will install the FabCar sample smart contract onto the peers for both “Org1” and “Org2”, approve the FabCar smart contract definition on the channel “mychannel” as both organizations, and then commit that smart contract definition.</p>
 <p>For this tutorial, you can use the IBM Blockchain Platform on IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 <section id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this headline"></a></h2>
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this heading"></a></h2>
 <p>This tutorial builds upon the Hyperledger Fabric that is created as part of the <a class="reference external" href="./building.html">Building a network</a> and the <a class="reference external" href="./joining.html">Joining a network</a> tutorials. Ensure that you have followed these tutorials, and that you have the network up and running.</p>
 <p>You will need to use the GitHub repository that you cloned in the previous tutorial. Ensure that you are in the tutorial directory:</p>
 <blockquote>
@@ -114,7 +118,7 @@
 </div></blockquote>
 </section>
 <section id="deploying-the-smart-contract">
-<h2>Deploying the smart contract<a class="headerlink" href="#deploying-the-smart-contract" title="Permalink to this headline"></a></h2>
+<h2>Deploying the smart contract<a class="headerlink" href="#deploying-the-smart-contract" title="Permalink to this heading"></a></h2>
 <p>There are multiple Ansible playbooks used in this tutorial. Each Ansible playbook performs a part of the set of tasks required to deploy the smart contract. Each of the Ansible playbooks is run as one of the endorsing organizations “Org1” or “Org2”.</p>
 <p>The contents of these playbooks are explored at the end of this tutorial. For now, a script <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/tutorial/deploy_smart_contract.sh">deploy_smart_contract.sh</a> has been provided which runs these Ansible playbooks in order for you.</p>
 <p>If you have installed the collection using Ansible Galaxy, or from source, then run the script as follows:</p>
@@ -131,7 +135,7 @@
 </div></blockquote>
 </section>
 <section id="exploring-the-network">
-<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this headline"></a></h2>
+<h2>Exploring the network<a class="headerlink" href="#exploring-the-network" title="Permalink to this heading"></a></h2>
 <p>The Ansible playbooks that you just ran installed the FabCar smart contract onto the peers <cite>Org1 Peer</cite> and <cite>Org2 Peer</cite>. The Ansible playbooks also approved the FabCar smart contract definition on the channel <cite>mychannel</cite> as both organizations, and then committed that smart contract definition.</p>
 <p>At this point, the FabCar smart contract is deployed and ready for applications to connect to the network and submit transactions. An application that wishes to connect to the network requires two things: an identity and a connection profile. The connection profile is a JSON document that provides the application with a list of endpoints or URLs that the application can use to connect to the network.</p>
 <p>The Ansible playbooks registered an application identity for each organization. The organization <cite>Org1</cite> has an application identity named <cite>org1app</cite>, with an enrollment secret of <cite>org1apppw</cite>. The organization <cite>Org2</cite> has an application identity named <cite>org2app</cite>, with an enrollment secret of <cite>org2apppw</cite>. You can use this information to enroll the identity against the respective organizations certificate authority, <cite>Org1 CA</cite> or <cite>Org2 CA</cite>.</p>
@@ -143,7 +147,7 @@
 <p>An application that uses one of the available Fabric SDKs (Go, Java, or Node.js) can use the identity and connection profile for an organization to connect to the network and submit a transaction. You could also try using the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform">IBM Blockchain Platform extension for Visual Studio Code</a> to connect to the network and submit a transaction.</p>
 </section>
 <section id="exploring-the-playbooks">
-<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this headline"></a></h2>
+<h2>Exploring the playbooks<a class="headerlink" href="#exploring-the-playbooks" title="Permalink to this heading"></a></h2>
 <p>When you ran the script <cite>deploy_smart_contract.sh</cite>, you ran multiple Ansible playbooks. Each Ansible playbook performed a different part of deploying the smart contract. This section will explain which organization ran each Ansible playbook, and what each of the playbooks did.</p>
 <p>Here are the Ansible playbooks that were executed by the script above:</p>
 <ul>

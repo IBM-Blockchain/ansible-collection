@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -41,10 +43,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/joining.html">Joining a network</a></li>
@@ -66,6 +70,7 @@
 <li class="toctree-l3"><a class="reference internal" href="approved_chaincode.html">approved_chaincode – Manage an approved chaincode on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority.html">certificate_authority – Manage a Hyperledger Fabric certificate authority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="certificate_authority_info.html">certificate_authority_info – Get information about a Hyperledger Fabric certificate authority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chaincode_list_info.html">chaincode_list_info – Get information about all installed and committed chaincodes on a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_acl.html">channel_acl – Manage an ACL for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_block.html">channel_block – Fetch blocks for a Hyperledger Fabric channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="channel_capabilities.html">channel_capabilities – Manage the capabilities for a Hyperledger Fabric channel</a></li>
@@ -130,9 +135,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../modules.html">Modules</a> &raquo;</li>
-      <li>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Modules</a></li>
+      <li class="breadcrumb-item active">peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
               <a href="https://github.com/IBM-Blockchain/ansible-collection/edit/main/plugins/modules/peer_channel.py" class="fa fa-github"> Edit on GitHub</a>
@@ -144,7 +149,7 @@
            <div itemprop="articleBody">
              
   <section id="peer-channel-manage-the-list-of-channels-joined-by-a-hyperledger-fabric-peer">
-<h1>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer<a class="headerlink" href="#peer-channel-manage-the-list-of-channels-joined-by-a-hyperledger-fabric-peer" title="Permalink to this headline"></a></h1>
+<h1>peer_channel – Manage the list of channels joined by a Hyperledger Fabric peer<a class="headerlink" href="#peer-channel-manage-the-list-of-channels-joined-by-a-hyperledger-fabric-peer" title="Permalink to this heading"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -153,12 +158,12 @@
 </ul>
 </div>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <p>Join a Hyperledger Fabric peer to a channel by using the IBM Blockchain Platform.</p>
 <p>This module works with the IBM Blockchain Platform managed service running in IBM Cloud, or the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster.</p>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><dl>
 <dt>api_endpoint (required)</dt><dd><p>The URL for the IBM Blockchain Platform console.</p>
@@ -261,30 +266,30 @@
 </div></blockquote>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Join the peer to the channel</span><span class="w"></span>
-<span class="w">  </span><span class="nt">ibm.blockchain_platform.peer_channel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">peer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span><span class="w"></span>
-<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span><span class="w"></span>
-<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_genesis_block.bin</span><span class="w"></span>
+<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Join the peer to the channel</span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.peer_channel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">    </span><span class="nt">peer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
+<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
+<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel_genesis_block.bin</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure the peer is not joined to the channel</span><span class="w"></span>
-<span class="w">  </span><span class="nt">ibm.blockchain_platform.peer_channel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">peer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span><span class="w"></span>
-<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span><span class="w"></span>
-<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel1</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure the peer is not joined to the channel</span>
+<span class="w">  </span><span class="nt">ibm.blockchain_platform.peer_channel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ibp-console.example.org:32000</span>
+<span class="w">    </span><span class="nt">api_authtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxx</span>
+<span class="w">    </span><span class="nt">api_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="w">    </span><span class="nt">peer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Peer</span>
+<span class="w">    </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1 Admin.json</span>
+<span class="w">    </span><span class="nt">msp_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Org1MSP</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel1</span>
 </pre></div>
 </div>
 </section>

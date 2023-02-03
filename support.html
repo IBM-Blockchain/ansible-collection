@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -40,10 +42,12 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrating-v12-v2.html">Migrating from v1.2 to version 2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing the IBM Support for Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/oss-installing.html">Installing Open Source Hyperledger Fabric</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/hlfsupport-installing.html">Installing IBM Support for Hyperledger Fabric</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/installing.html">Installing the IBM Blockchain Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/building.html">Building a network</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/joining.html">Joining a network</a></li>
@@ -85,8 +89,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Getting support</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Getting support</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/support.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
@@ -97,14 +101,14 @@
            <div itemprop="articleBody">
              
   <section id="getting-support">
-<h1>Getting support<a class="headerlink" href="#getting-support" title="Permalink to this headline"></a></h1>
+<h1>Getting support<a class="headerlink" href="#getting-support" title="Permalink to this heading"></a></h1>
 <p>If you have a problem with the IBM Blockchain Platform collection for Ansible, then there are several avenues provided for requesting support.</p>
 <p>The first avenue is to open an issue on GitHub. Support is provided a best can do basis by IBM and the community. There are no guarantees provided around response times for GitHub issues.</p>
 <p>The second avenue is to open an IBM support ticket. Support for the IBM Blockchain Platform collection for Ansible is included as part of support for the IBM Blockchain Platform.</p>
 <p>The final avenue, available to <strong>IBM employees only</strong>, is to request help in the <a class="reference external" href="https://ibm-blockchain.slack.com/archives/C013KULGEPR">#ibp-ansible</a> channel on the IBM internal Slack workspace.</p>
 <p>Regardless of the avenue you choose, you must gather and provide as much data as possible to help us diagnose your issue.</p>
 <section id="gathering-data">
-<h2>Gathering data<a class="headerlink" href="#gathering-data" title="Permalink to this headline"></a></h2>
+<h2>Gathering data<a class="headerlink" href="#gathering-data" title="Permalink to this heading"></a></h2>
 <p>When requesting support, please gather and provide as much data as possible from the following list:</p>
 <ul>
 <li><p>Version information</p>
@@ -147,11 +151,11 @@ docker run --rm -e IBP_ANSIBLE_LOG_FILENAME -u $(id -u) -v /path/to/playbooks:/p
 </ul>
 </section>
 <section id="opening-an-issue-on-github">
-<h2>Opening an issue on GitHub<a class="headerlink" href="#opening-an-issue-on-github" title="Permalink to this headline"></a></h2>
+<h2>Opening an issue on GitHub<a class="headerlink" href="#opening-an-issue-on-github" title="Permalink to this heading"></a></h2>
 <p>You can request support by opening an issue on GitHub: <a class="reference external" href="https://github.com/IBM-Blockchain/ansible-collection/issues/new">https://github.com/IBM-Blockchain/ansible-collection/issues/new</a></p>
 </section>
 <section id="opening-an-ibm-support-ticket">
-<h2>Opening an IBM support ticket<a class="headerlink" href="#opening-an-ibm-support-ticket" title="Permalink to this headline"></a></h2>
+<h2>Opening an IBM support ticket<a class="headerlink" href="#opening-an-ibm-support-ticket" title="Permalink to this heading"></a></h2>
 <p>If you are using the IBM Blockchain Platform on IBM Cloud, then follow the documentation here for submitting a support case: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain?topic=blockchain-blockchain-support">https://cloud.ibm.com/docs/blockchain?topic=blockchain-blockchain-support</a></p>
 <p>If you are using the IBM Blockchain Platform software running in a Red Hat OpenShift or Kubernetes cluster, then follow the documentation here: <a class="reference external" href="https://cloud.ibm.com/docs/blockchain-sw-251?topic=blockchain-sw-251-blockchain-support">https://cloud.ibm.com/docs/blockchain-sw-251?topic=blockchain-sw-251-blockchain-support</a></p>
 </section>
