@@ -14,14 +14,6 @@ metadata:
     app.kubernetes.io/managed-by: "ibm-hlfsupport-operator"
 rules:
 - apiGroups:
-  - extensions
-  resourceNames:
-  - "{{ pod_security_policy }}"
-  resources:
-  - podsecuritypolicies
-  verbs:
-  - use
-- apiGroups:
   - apiextensions.k8s.io
   resources:
   - persistentvolumeclaims

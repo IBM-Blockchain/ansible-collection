@@ -17,16 +17,14 @@
 - name: Create namespace
   kubernetes.core.k8s:
     state: present
-    api_version: v1
-    kind: Namespace
-    name: "{{ namespace }}"
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: "{{ namespace }}"
+        labels:
+          'pod-security.kubernetes.io/enforce': baseline
   when: not namespace_info.resources
-
-- name: Create pod security policy
-  kubernetes.core.k8s:
-    state: present
-    namespace: "{{ namespace }}"
-    resource_definition: "{{ lookup('template', 'k8s/pod_security_policy.yml.j2') }}"
 
 - name: Create cluster role
   kubernetes.core.k8s:

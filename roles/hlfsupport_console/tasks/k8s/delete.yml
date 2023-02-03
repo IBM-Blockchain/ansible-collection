@@ -76,12 +76,3 @@
     kind: ClusterRole
     name: "{{ cluster_role }}"
   when: namespace_info.resources
-
-- name: Delete pod security policy
-  kubernetes.core.k8s:
-    state: absent
-    namespace: "{{ namespace }}"
-    api_version: policy/v1beta1
-    kind: PodSecurityPolicy
-    name: "{{ pod_security_policy }}"
-  when: namespace_info.resources
