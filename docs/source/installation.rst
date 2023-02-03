@@ -54,11 +54,11 @@ In order to use this Ansible collection, you must have the following pre-requisi
 
         pip install -U 'ansible'
 
-**Hyperledger Fabric v2.2.1+ binaries**
+**Hyperledger Fabric v2.4.7+ binaries**
 
-    This Ansible collection requires use of the binaries from Hyperledger Fabric v2.2.1 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxlator`` and ``peer``.
+    This Ansible collection requires use of the binaries from Hyperledger Fabric v2.4.7 or later to interact with the peers and ordering services in your Hyperledger Fabric networks. These binaries include ``configtxlator`` and ``peer``.
 
-    You can install these binaries by following the Hyperledger Fabric documentation: https://hyperledger-fabric.readthedocs.io/en/release-2.2/install.html
+    You can install these binaries by following the Hyperledger Fabric documentation: https://hyperledger-fabric.readthedocs.io/en/release-2.5/install.html
 
     These binaries must be on the ``PATH`` of the system that will be used to run your Ansible Playbooks. You can check that the binaries are installed correctly by running:
 
@@ -139,7 +139,7 @@ This will build the stable `release-1.2` branch for v1.2.; use the `main` branch
 
 ::
 
-    git clone --branch release-1.2 https://github.com/IBM-Blockchain/ansible-collection.git
+    git clone --branch main https://github.com/IBM-Blockchain/ansible-collection.git
 
 2. Build the collection artifact:
 
@@ -160,13 +160,13 @@ Using a Docker image
 As an alternative to installing all of the requirements on your system, you can use a Docker image that contains all of the requirements.
 You can then use that Docker image to run your playbooks.
 
-A Docker image, ``ibmcom/ibp-ansible``, has been published to Docker Hub.
+A Docker image, ``ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e``, has been published to Docker Hub.
 
 You can run a playbook using this Docker image, by volume mounting the playbook into the Docker container and running the ``ansible-playbook`` command:
 
 ::
 
-    docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+    docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e ansible-playbook /playbooks/playbook.yml
 
 Note that the UID flag ``-u $(id -u)`` ensures that Ansible can write connection profile and identity files to the volume mount.
 

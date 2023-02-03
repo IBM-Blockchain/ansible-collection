@@ -1,0 +1,53 @@
+# Copyright the Hyperledger Fabric contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+---
+name: FV Testing using KIND
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - uses: BSFishy/pip-action@v1
+        with:
+          requirements: requirements.txt
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
+        with:
+          install_only: true
+      - name: Setup and create the KIND cluster
+        run: |
+          set -xev
+          # determine the IP Address of the Host running this
+
+          export KIND_API_SERVER_ADDRESS=$(sh .github/scripts/get-host-ip.sh)
+
+          # Start KIND with correct configuration and the API port exposed on the above Address
+          # defaults to local host otherwise
+          .github/scripts/kind_with_nginx.sh
+
+          # export the kubeconfig (and make sure the api server address is correct)
+          mkdir -p _cfg
+          kubectl config view --raw | sed "s/127.0.0.1/$KIND_API_SERVER_ADDRESS/g" > _cfg/k8s_context.yaml
+
+          # also need to use API address as a domain name for the operations Console
+          # use nip.io here to resolve
+          export TEST_NETWORK_INGRESS_DOMAIN=$(echo $KIND_API_SERVER_ADDRESS | tr -s '.' '-').nip.io
+          echo "console_domain: $TEST_NETWORK_INGRESS_DOMAIN" >> _cfg/domain.yml
+      - name: Build collection
+        run: |
+          ansible-galaxy collection build -f
+          ansible-galaxy collection install $(ls -1 | grep ibm-blockchain_platform) -f
+      - name: Install the 2.4.7 release specifically
+        uses: hyperledgendary/setup-hyperledger-fabric-action@v0.0.1
+        with:
+          version: 2.4.7
+      - name: Run the tests
+        run: |
+          .github/scripts/run-tests.sh

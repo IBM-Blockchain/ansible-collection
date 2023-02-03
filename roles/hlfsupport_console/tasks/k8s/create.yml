@@ -8,14 +8,14 @@
   when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Namespace
     name: "{{ namespace }}"
   register: namespace_info
 
 - name: Create namespace
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       api_version: v1
@@ -27,31 +27,31 @@
   when: not namespace_info.resources
 
 - name: Create cluster role
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/cluster_role.yml.j2') }}"
 
 - name: Create cluster role binding
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/cluster_role_binding.yml.j2') }}"
 
-# - name: Create role binding
-#   k8s:
-#     state: present
-#     namespace: "{{ namespace }}"
-#     resource_definition: "{{ lookup('template', 'k8s/role_binding.yml.j2') }}"
+- name: Create role binding
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ namespace }}"
+    resource_definition: "{{ lookup('template', 'k8s/role_binding.yml.j2') }}"
 
 - name: Create image secret
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/image_pull_secret.yml.j2') }}"
 
 - name: Determine if operator exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: apps/v1
     kind: Deployment
@@ -75,7 +75,7 @@
   when: not existing_operator.resources
 
 - name: Create operator
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/operator.yml.j2') }}"
@@ -83,7 +83,7 @@
     wait_timeout: "{{ wait_timeout }}"
 
 - name: Determine if console exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: "ibp.com/v1alpha2"
     kind: IBPConsole
@@ -91,7 +91,7 @@
   register: existing_console
 
 - name: Create console
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/console.yml.j2') }}"
@@ -99,7 +99,7 @@
   register: create_console
 
 - name: Delete console config maps if it is being modified or upgraded
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
@@ -112,7 +112,7 @@
   when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Delete console deployment if it is being modified or upgraded
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: apps/v1
@@ -121,7 +121,7 @@
   when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Wait for console deployment to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: apps/v1
     kind: Deployment
@@ -132,7 +132,7 @@
   delay: 1
 
 - name: Wait for console deployment to start
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     api_version: apps/v1
@@ -143,7 +143,7 @@
   changed_when: False
 
 - name: Wait for console ingress to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: networking.k8s.io/v1
     kind: Ingress

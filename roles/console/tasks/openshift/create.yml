@@ -8,14 +8,14 @@
   when: not project is defined or not project
 
 - name: Determine if project exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: project.openshift.io/v1
     kind: Project
     name: "{{ project }}"
   register: project_info
 
 - name: Create project
-  k8s:
+  kubernetes.core.k8s:
     state: present
     api_version: project.openshift.io/v1
     kind: ProjectRequest
@@ -23,31 +23,31 @@
   when: not project_info.resources
 
 - name: Create security context constraints
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
 
 - name: Create cluster role
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/cluster_role.yml.j2') }}"
 
 - name: Create cluster role binding
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/cluster_role_binding.yml.j2') }}"
 
 - name: Create image secret
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/image_pull_secret.yml.j2') }}"
 
 - name: Determine if operator exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ project }}"
     api_version: apps/v1
     kind: Deployment
@@ -71,7 +71,7 @@
   when: not existing_operator.resources
 
 - name: Create operator
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/operator.yml.j2') }}"
@@ -79,7 +79,7 @@
     wait_timeout: "{{ wait_timeout }}"
 
 - name: Determine if console exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ project }}"
     api_version: "{{ 'ibp.com/v1alpha2' if product_version is version('2.5.0', '>=') else 'ibp.com/v1alpha1' }}"
     kind: IBPConsole
@@ -87,7 +87,7 @@
   register: existing_console
 
 - name: Create console
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/console.yml.j2') }}"
@@ -95,7 +95,7 @@
   register: create_console
 
 - name: Delete console config maps if it is being modified or upgraded
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ project }}"
     api_version: v1
@@ -108,7 +108,7 @@
   when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Delete console deployment if it is being modified or upgraded
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ project }}"
     api_version: apps/v1
@@ -117,7 +117,7 @@
   when: (operator_upgrade or create_console.changed) and existing_console.resources # noqa no-handler
 
 - name: Wait for console deployment to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ project }}"
     api_version: apps/v1
     kind: Deployment
@@ -128,7 +128,7 @@
   delay: 1
 
 - name: Wait for console deployment to start
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     api_version: apps/v1
@@ -139,7 +139,7 @@
   changed_when: False
 
 - name: Wait for console route to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ project }}"
     api_version: route.openshift.io/v1
     kind: Route

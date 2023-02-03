@@ -8,14 +8,14 @@
   when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Namespace
     name: "{{ namespace }}"
   register: namespace_info
 
 - name: Delete custom resource definitions
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: apiextensions.k8s.io/v1beta1
@@ -29,7 +29,7 @@
   when: namespace_info.resources
 
 - name: Delete service
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
@@ -40,7 +40,7 @@
   when: namespace_info.resources
 
 - name: Delete deployment
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
@@ -51,7 +51,7 @@
   when: namespace_info.resources
 
 - name: Delete secrets
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
@@ -65,7 +65,7 @@
   when: namespace_info.resources
 
 - name: Delete role binding
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: rbac.authorization.k8s.io/v1
@@ -74,7 +74,7 @@
   when: namespace_info.resources
 
 - name: Delete role
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: rbac.authorization.k8s.io/v1
@@ -83,7 +83,7 @@
   when: namespace_info.resources
 
 - name: Delete image secret
-  k8s:
+  kubernetes.core.k8s:
     state: absent
     namespace: "{{ namespace }}"
     api_version: v1
