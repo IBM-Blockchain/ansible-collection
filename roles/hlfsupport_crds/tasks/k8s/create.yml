@@ -8,14 +8,14 @@
   when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Namespace
     name: "{{ namespace }}"
   register: namespace_info
 
 - name: Create namespace
-  k8s:
+  kubernetes.core.k8s:
     state: present
     api_version: v1
     kind: Namespace
@@ -23,25 +23,25 @@
   when: not namespace_info.resources
 
 - name: Create image secret
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/image_pull_secret.yml.j2') }}"
 
 - name: Create role
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/role.yml.j2') }}"
 
 - name: Create role binding
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/role_binding.yml.j2') }}"
 
 - name: Create deployment
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/deployment.yml.j2') }}"
@@ -49,13 +49,13 @@
     wait_timeout: "{{ wait_timeout }}"
 
 - name: Create service
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/service.yml.j2') }}"
 
 - name: Wait for secret to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: v1
     kind: Secret
@@ -70,7 +70,7 @@
     webhook_tls_cert: "{{ webhook_secret.resources[0].data['cert.pem'] }}"
 
 - name: Create custom resource definitions
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', item) }}"

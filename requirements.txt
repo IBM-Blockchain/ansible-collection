@@ -13,3 +13,4 @@ sphinx
 sphinx-rtd-theme
 yamllint
 yq
+pytest

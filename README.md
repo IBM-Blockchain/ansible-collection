@@ -16,6 +16,53 @@ Currently the installation of the Operator and Console are available via Playboo
 
 Please see the [README](./examples/opensource-stack/README.md) in the `opensource-stack` example for more information.
 
+## Noteable Updates
+
+- there should be support now for IKS1.25 in the HLFSupport and OpenSource consoles/operators
+- there is now a chaincode information module `chaincode_list_info` to get details of chaincodes in a peer
+- the approved chaincode module can now handle automatic sequence numbers. See the [example](./examples/chaincode_info/00-org1-chaincode-info.yml) playbook for how to use these two new chaincode abilities
+
+- Note only the `fabric-console/fabric-operator-crds` and `hlfsupport-console/hlf-crds` should be used. The IBP-centric `console/crd` should be considered deprecated.
+
+## Using the collection
+
+The choice will depend on what context you want to use ansible in.
+
+- If you've existing Ansible configurations you can install the v1.2 collection via `ansible-galaxy collection install ibm.blockchain_platform`. For v2 install from source (see next option).
+- Install from source; clone this github repo, and run
+```
+    ansible-galaxy collection build -f
+    ansible-galaxy collection install $(ls -1 | grep ibm-blockchain_platform) -f
+```
+- Using a Docker container.
+  For v1.2, a Docker image, ``ibmcom/ibp-ansible``, has been published to Docker Hub.
+
+  You can run a playbook using this Docker image, by volume mounting the playbook into the Docker container and running the ``ansible-playbook`` command:
+
+  ```
+  docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ibmcom/ibp-ansible ansible-playbook /playbooks/playbook.yml
+  ```
+
+    Note that the UID flag ``-u $(id -u)`` ensures that Ansible can write connection profile and identity files to the volume mount.
+
+    For v2.0, the docker image is in the `ghcr.io` [registry](https://github.com/IBM-Blockchain/ansible-collection/pkgs/container/ofs-ansibe). It can be run in the same way
+
+  ```
+  docker pull ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e
+  docker run --rm -u $(id -u) -v /path/to/playbooks:/playbooks ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e ansible-playbook /playbooks/playbook.yml
+  ```
+
+- If you are using github actions for CI/CD there is a [github action](https://github.com/hyperledgendary/fabric-cloud-infrastructure/tree/main/fabric-ansible-action) that uses the same docker image as the basis.
+  For example; note this action needs to still be published. In the interim please copy this to your own repository
+
+  ```
+    - name: Create the Fabric CRDs/Operator
+      id: operatorinstall
+      uses: ./fabric-ansible-action
+      with:
+        playbook: playbooks/operator_console_playbooks/01-operator-install.yml
+  ```
+
 ## Documentation
 
 Documentation for this Ansible collection is available here: https://ibm-blockchain.github.io/ansible-collection/

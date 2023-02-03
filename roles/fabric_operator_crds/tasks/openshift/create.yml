@@ -3,7 +3,7 @@
 #
 ---
 - name: Creating CRDs
-  k8s:
+  kubernetes.core.k8s:
     definition: "{{ lookup('kubernetes.core.kustomize',dir='https://github.com/hyperledger-labs/fabric-operator.git/config/crd') }}"
   register: resultcrds
 
@@ -15,14 +15,14 @@
   when: not project is defined or not project
 
 - name: Determine if project exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: project.openshift.io/v1
     kind: Project
     name: "{{ project }}"
   register: project_info
 
 - name: Create project
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       api_version: project.openshift.io/v1
@@ -34,14 +34,14 @@
   when: not project_info.resources
 
 - name: Create security context constraints
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'openshift/security_context_constraints.yml.j2') }}"
 
 # Create the Role based Access Control
 - name: Create Role Based Access Control
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/rbac/'+item) }}"
@@ -53,7 +53,7 @@
 
 # create the manager
 - name: Create Operator
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ project }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/manager/'+item) }}"

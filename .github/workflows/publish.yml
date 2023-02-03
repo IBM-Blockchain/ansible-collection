@@ -1,0 +1,140 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: Publish to Galaxy, GHPages, and ghcr.io
+on:
+  create:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+
+  # Publication jobs
+  publish_collection:
+    name: Publish collection
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Build Collectoin
+        run: ansible-galaxy collection build
+      - name: Publish collection to Ansible Galaxy
+        env:
+          ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} ibm-blockchain_platform-${VERSION}.tar.gz
+      - name: Set GitHub user name and email
+        env:
+          DOCS_GITHUB_NAME: ${{ secrets.DOCS_GITHUB_NAME }}
+          DOCS_GITHUB_EMAIL: ${{ secrets.DOCS_GITHUB_EMAIL }}
+        run: |
+          git config --local user.email ${DOCS_GITHUB_EMAIL}
+          git config --local user.name ${DOCS_GITHUB_NAME}
+          git config --local --unset-all http.${GITHUB_SERVER_URL}/.extraheader
+      - name: Bump version
+        run: .github/scripts/bump.sh
+      - name: Commit version bump
+        run: |
+          VERSION=$(yq -r .version galaxy.yml)
+          git commit -asm "Automatic version bump to ${VERSION}"
+      - name: Push commit to GitHub
+        env:
+          DOCS_GITHUB_NAME: ${{ secrets.DOCS_GITHUB_NAME }}
+          DOCS_GITHUB_ACCESS_TOKEN: ${{ secrets.DOCS_GITHUB_ACCESS_TOKEN }}
+        run: |
+          git -c http.extraheader="Authorization: Basic $(echo -n ${DOCS_GITHUB_NAME}:${DOCS_GITHUB_ACCESS_TOKEN} | base64)" push ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY} HEAD:main -f
+
+  publish_documentation:
+    name: Publish documentation
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: pip install -Ur requirements.txt
+      - name: Create Documentation
+        run: |
+          pushd docs
+          make
+          popd
+      - name: Publish documentation to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: docs/build
+          token: ${{ secrets.DOCS_GITHUB_ACCESS_TOKEN }}
+          git-config-name: ${{ secrets.DOCS_GITHUB_NAME }}
+          git-config-email: ${{ secrets.DOCS_GITHUB_EMAIL }}
+
+  # build the docker image and push to ghcr.io
+  # setup ready to be able to do multiarchiecture images
+  # https://github.com/docker/setup-qemu-action
+  # https://github.com/docker/setup-buildx-action
+  build_docker_image:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get the version number
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.version' 'galaxy.yml'
+
+      - name: DEBUG echo the version
+        run: echo ${{steps.version.outputs.result}}
+
+      - name: Docker meta
+        id: ansible-beta-docker
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ghcr.io/ibm-blockchain/fabric-ansible
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern=${{steps.version.outputs.result}}
+            type=sha
+
+      # in the future we should add linux/arm64 to the platforms
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.ansible-beta-docker.outputs.tags }}
+          labels: ${{ steps.ansible-beta-docker.outputs.labels }}

@@ -2,12 +2,16 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
-IBM Blockchain Platform collection for Ansible
+IBM Blockchain collection for Ansible
 ==============================================
 
-The IBM Blockchain Platform provides advanced tooling that allows you to quickly build, operate & govern and grow blockchain networks. It uses Hyperledger Fabric, the open source, industry standard for enterprise blockchain. It also helps you to deploy Hyperledger Fabric networks anywhere, either to cloud or on-premises, using Kubernetes.
+This Ansible collection, enables you to automate the building of Hyperledger Fabric networks.
 
-This Ansible collection, provided as part of the IBM Blockchain Platform, enables you to automate the building of Hyperledger Fabric networks.
+It supports creating these networks within
+- the IBM Hyperledger Fabric Support Offering
+- Fabric Open Source Stack (Hyperledger Labs `Fabric Operations <https://github.com/hyperledger-labs/fabric-operator>`_  and `Fabric Operations Console <https://github.com/hyperledger-labs/fabric-operations-console>`_)
+
+Roles are provided to install the operations console and operator; additional roles and modules can then create the Fabric Network.
 
 License
 =======
@@ -17,7 +21,10 @@ Apache-2.0
 Author Information
 ==================
 
-This Ansible collection is maintained by the IBM Blockchain Platform development team. For more information on the IBM Blockchain Platform, visit the following website: https://www.ibm.com/cloud/blockchain-platform
+This Ansible collection is maintained by the IBM Blockchain development team.
+
+..
+.. Fabric Operator:
 
 .. toctree::
    :maxdepth: 2

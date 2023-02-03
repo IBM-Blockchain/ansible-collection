@@ -8,14 +8,14 @@
   when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Namespace
     name: "{{ namespace }}"
   register: namespace_info
 
 - name: Determine if console exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: "ibp.com/v1alpha2"
     kind: IBPConsole
@@ -25,7 +25,7 @@
 # deletion of existin config maps? Other roles do this,, but AFTER the console creation has started?
 
 - name: Create console
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'k8s/hlf-operations-console.yaml.j2') }}"
@@ -33,7 +33,7 @@
   register: create_console
 
 - name: Wait for console deployment to exist
-  k8s_info:
+  kubernetes.core.k8s_info:
     namespace: "{{ namespace }}"
     api_version: apps/v1
     kind: Deployment
@@ -44,7 +44,7 @@
   delay: 1
 
 - name: Wait for console deployment to start
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     api_version: apps/v1
