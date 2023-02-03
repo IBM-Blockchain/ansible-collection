@@ -4,9 +4,6 @@
 ---
 name: PR Build
 on:
-  push:
-    branches-ignore:
-      - gh-pages
   pull_request:
     branches-ignore:
       - gh-pages
@@ -44,7 +41,7 @@ jobs:
           shellcheck tutorial/*.sh
           yamllint .
       - name: Publish collection
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Collection
           path: ibm-blockchain_platform.tar.gz
@@ -56,7 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Use Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Install Python dependencies
@@ -68,7 +65,7 @@ jobs:
           cd ..
           tar cf documentation.tar.gz docs/build
       - name: Publish documentation
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Documentation
           path: documentation.tar.gz
