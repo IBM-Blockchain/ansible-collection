@@ -9,4 +9,5 @@ Consistent with a major version upgrade, the following are important changes bet
 
 - For the latest ansible(current is 2.13.1), Your python3 version should at least be 3.8.
     python3.9 is used for the docker image. And we do not test against python3.11.
-- All the dependencies in requirent.txt should be the latest version.
+- All the dependencies in requirment.txt should be the latest version.
+- Note that the versions of Kubernetes supported are up to 1.25

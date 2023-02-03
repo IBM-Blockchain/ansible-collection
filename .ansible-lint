@@ -2,6 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
+exclude_paths:
+    - examples
+    - tutorial
+    - tests
+    - .github
+    - meta
+
 skip_list:
     - risky-file-permissions
     - 'fqcn-builtins'

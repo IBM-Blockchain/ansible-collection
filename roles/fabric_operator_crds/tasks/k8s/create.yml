@@ -3,7 +3,7 @@
 #
 ---
 - name: Creating CRDs
-  k8s:
+  kubernetes.core.k8s:
     definition: "{{ lookup('kubernetes.core.kustomize',dir='https://github.com/hyperledger-labs/fabric-operator.git/config/crd') }}"
   register: resultcrds
 
@@ -14,14 +14,14 @@
   when: not namespace is defined or not namespace
 
 - name: Determine if namespace exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: Namespace
     name: "{{ namespace }}"
   register: namespace_info
 
 - name: Create namespace
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       api_version: v1
@@ -34,7 +34,7 @@
 
 # Create the Role based Access Control
 - name: Create Role Based Access Control
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/rbac/'+item) }}"
@@ -46,7 +46,7 @@
 
 # create the manager
 - name: Create Operator
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: "{{ namespace }}"
     resource_definition: "{{ lookup('template', 'templates/'+target+'/manager/'+item) }}"
