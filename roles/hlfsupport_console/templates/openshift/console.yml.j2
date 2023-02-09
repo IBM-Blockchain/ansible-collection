@@ -18,6 +18,18 @@ spec:
   registryURL: "{{ image_registry_url }}"
   imagePullSecrets:
   - "{{ image_pull_secret }}"
+  usetags: true
+  images:
+    deployerImage: "{{deployer_image}}"
+    deployerTag: "{{deployer_image_label}}"
+    consoleInitImage: "{{init_image}}"
+    consoleInitTag: "{{init_image_label}}"
+    consoleImage: "{{console_image}}"
+    consoleTag: "{{console_image_label}}"
+    configtxlatorImage: "{{tools_image}}"
+    configtxlatorTag: "{{tools_image_label}}"
+    couchdbImage: "{{couchdb_image}}"
+    couchdbTag: "{{couchdb_image_label}}"
   networkinfo:
     domain: "{{ console_domain }}"
   storage:
