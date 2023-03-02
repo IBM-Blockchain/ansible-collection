@@ -7,7 +7,6 @@ In order to contribute to this Ansible collection, you will may need skills in:
 - Ansible
 - Python
 - Hyperledger Fabric
-- IBM Blockchain Platform
 - Docker
 - Red Hat OpenShift/Kubernetes
 - ReStructed Text

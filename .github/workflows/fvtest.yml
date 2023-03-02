@@ -43,7 +43,7 @@ jobs:
       - name: Build collection
         run: |
           ansible-galaxy collection build -f
-          ansible-galaxy collection install $(ls -1 | grep ibm-blockchain_platform) -f
+          ansible-galaxy collection install $(ls -1 | grep fabric_ansible_collection) -f
       - name: Install the 2.4.7 release specifically
         uses: hyperledgendary/setup-hyperledger-fabric-action@v0.0.1
         with:

@@ -2,24 +2,23 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-namespace: ibm
-name: blockchain_platform
+namespace: hyperledger
+name: fabric_ansible_collection
 version: 2.0.0
 readme: README.md
 authors:
   - Simon Stone/Matthew White
-description: Ansible collection for building Hyperledger Fabric networks using the IBM Blockchain Platform
+description: Ansible collection for building Hyperledger Fabric networks
 license:
   - Apache-2.0
 tags:
-  - ibm
   - enterprise
   - blockchain
   - dlt
   - hyperledger
   - fabric
   - blockchain
-repository: https://github.com/IBM-Blockchain/ansible-collection
-documentation: https://ibm-blockchain.github.io/ansible-collection/
-homepage: https://www.ibm.com/cloud/blockchain-platform
-issues: https://github.com/IBM-Blockchain/ansible-collection/issues
+repository: https://github.com/hyperledger-labs/fabric-ansible-collection
+documentation: https://hyperledger-labs.github.io/fabric-ansible-collection
+homepage: https://github.com/hyperledger-labs/fabric-ansible-collection
+issues: https://github.com/hyperledger-labs/fabric-ansible-collection/issues
