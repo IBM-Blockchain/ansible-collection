@@ -111,7 +111,7 @@ options:
 
 EXAMPLES = '''
 - name: Show information on 'Org1 Peer' chaincodes
-  ibm.blockchain_platform.committed_chaincode:
+  hyperledger.fabric-ansible-collection.committed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

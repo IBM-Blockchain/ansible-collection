@@ -14,4 +14,4 @@
     - common-vars.yml
     - org1-vars.yml
   roles:
-    - ibm.blockchain_platform.endorsing_organization
+    - hyperledger.fabric-ansible-collection.endorsing_organization

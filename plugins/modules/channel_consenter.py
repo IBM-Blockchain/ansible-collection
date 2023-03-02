@@ -97,7 +97,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add consenter to channel
-  ibm.blockchain_platform.channel_consenters:
+  hyperledger.fabric-ansible-collection.channel_consenters:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -107,7 +107,7 @@ EXAMPLES = '''
     ordering_service_node: Ordering Service_1
 
 - name: Remove consenter from channel
-  ibm.blockchain_platform.channel_consenters:
+  hyperledger.fabric-ansible-collection.channel_consenters:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

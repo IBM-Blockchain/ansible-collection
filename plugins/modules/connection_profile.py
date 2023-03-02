@@ -115,7 +115,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create a connection profile
-  ibm.blockchain_platform.connection_profile:
+  hyperledger.fabric-ansible-collection.connection_profile:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -129,7 +129,7 @@ EXAMPLES = '''
       - Org1 Peer
 
 - name: Delete a connection profile
-  ibm.blockchain_platform.connection_profile:
+  hyperledger.fabric-ansible-collection.connection_profile:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

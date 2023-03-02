@@ -62,14 +62,14 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add the ACL to the channel
-  ibm.blockchain_platform.channel_acl:
+  hyperledger.fabric-ansible-collection.channel_acl:
     state: present
     name: lscc/ChaincodeExists
     policy: /Channel/Application/Admins
     path: channel_config.bin
 
 - name: Remove the ACL from the channel
-  ibm.blockchain_platform.channel_acl:
+  hyperledger.fabric-ansible-collection.channel_acl:
     state: absent
     name: lscc/ChaincodeExists
     path: channel_config.bin

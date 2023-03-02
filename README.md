@@ -28,7 +28,7 @@ Please see the [README](./examples/opensource-stack/README.md) in the `opensourc
 
 The choice will depend on what context you want to use ansible in.
 
-- If you've existing Ansible configurations you can install the v1.2 collection via `ansible-galaxy collection install ibm.blockchain_platform`. For v2 install from source (see next option).
+- If you've existing Ansible configurations you can install the v1.2 collection via `ansible-galaxy collection install hyperledger.fabric-ansible-collection`. For v2 install from source (see next option).
 - Install from source; clone this github repo, and run
 ```
     ansible-galaxy collection build -f

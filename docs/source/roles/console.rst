@@ -255,7 +255,7 @@ Examples
         console_default_password: passw0rd
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.console
+        - hyperledger.fabric-ansible-collection.console
 
     - name: Deploy IBM Blockchain Platform console on Red Hat OpenShift
       hosts: localhost
@@ -271,7 +271,7 @@ Examples
         console_default_password: passw0rd
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.console
+        - hyperledger.fabric-ansible-collection.console
 
     - name: Remove IBM Blockchain Platform console from Kubernetes
       hosts: localhost
@@ -282,7 +282,7 @@ Examples
         namespace: my-namespace
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.console
+        - hyperledger.fabric-ansible-collection.console
 
     - name: Remove IBM Blockchain Platform console from Red Hat OpenShift
       hosts: localhost
@@ -293,4 +293,4 @@ Examples
         project: my-project
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.console
+        - hyperledger.fabric-ansible-collection.console

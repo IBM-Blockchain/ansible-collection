@@ -63,7 +63,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
             image_registry_email: <image_registry_email>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.crds
+            - hyperledger.fabric-ansible-collection.crds
 
         - name: Deploy IBM Blockchain Platform console
           hosts: localhost
@@ -79,7 +79,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
             console_default_password: <console_default_password>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.console
+            - hyperledger.fabric-ansible-collection.console
 
 **Red Hat OpenShift**
 
@@ -99,7 +99,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
             image_registry_email: <image_registry_email>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.crds
+            - hyperledger.fabric-ansible-collection.crds
 
         - name: Deploy IBM Blockchain Platform console
           hosts: localhost
@@ -115,7 +115,7 @@ Create a new Ansible playbook file called `install-ibp.yml`. Copy and paste the 
             console_default_password: <console_default_password>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.console
+            - hyperledger.fabric-ansible-collection.console
 
 Next, you will need to replace the variable placeholders with the required values.
 

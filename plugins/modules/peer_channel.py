@@ -131,7 +131,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Join the peer to the channel
-  ibm.blockchain_platform.peer_channel:
+  hyperledger.fabric-ansible-collection.peer_channel:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -143,7 +143,7 @@ EXAMPLES = '''
     path: channel_genesis_block.bin
 
 - name: Ensure the peer is not joined to the channel
-  ibm.blockchain_platform.peer_channel:
+  hyperledger.fabric-ansible-collection.peer_channel:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

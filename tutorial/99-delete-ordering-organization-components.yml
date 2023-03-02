@@ -11,7 +11,7 @@
     - common-vars.yml
     - ordering-org-vars.yml
   roles:
-    - ibm.blockchain_platform.ordering_organization
+    - hyperledger.fabric-ansible-collection.ordering_organization
 
 - name: Remove imported components
   hosts: localhost
@@ -20,7 +20,7 @@
     - ordering-org-vars.yml
   tasks:
     - name: Remove imported organization
-      ibm.blockchain_platform.external_organization:
+      hyperledger.fabric-ansible-collection.external_organization:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

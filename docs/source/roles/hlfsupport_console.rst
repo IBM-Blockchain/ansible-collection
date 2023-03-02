@@ -256,7 +256,7 @@ Examples
         console_default_password: passw0rd
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.hlfsupport_console
+        - hyperledger.fabric-ansible-collection.hlfsupport_console
 
     - name: Remove IBM Support for Hyperledger Fabric console from Red Hat OpenShift
       hosts: localhost
@@ -267,4 +267,4 @@ Examples
         project: my-project
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.hlfsupport_console
+        - hyperledger.fabric-ansible-collection.hlfsupport_console

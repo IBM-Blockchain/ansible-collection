@@ -18,6 +18,7 @@ tags:
   - hyperledger
   - fabric
   - blockchain
+  - infrastructure
 repository: https://github.com/hyperledger-labs/fabric-ansible-collection
 documentation: https://hyperledger-labs.github.io/fabric-ansible-collection
 homepage: https://github.com/hyperledger-labs/fabric-ansible-collection

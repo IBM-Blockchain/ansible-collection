@@ -74,7 +74,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get peer
-  ibm.blockchain_platform.peer_info:
+  hyperledger.fabric-ansible-collection.peer_info:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx

@@ -12,4 +12,4 @@
     - common-vars.yml
     - ordering-org-vars.yml
   roles:
-    - ibm.blockchain_platform.ordering_organization
+    - hyperledger.fabric-ansible-collection.ordering_organization

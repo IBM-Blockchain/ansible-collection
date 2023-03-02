@@ -8,7 +8,7 @@
     - vars.yml
   tasks:
     - name: Get the parent certificate authority details
-      ibm.blockchain_platform.certificate_authority_info:
+      hyperledger.fabric-ansible-collection.certificate_authority_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -22,7 +22,7 @@
       when: parent_certificate_authority_info.exists
 
     - name: Create parent certificate authority
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
@@ -49,7 +49,7 @@
       register: parent_ca_info
 
     - name: Enroll parent certificate authority admin
-      ibm.blockchain_platform.enrolled_identity:
+      hyperledger.fabric-ansible-collection.enrolled_identity:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
@@ -62,7 +62,7 @@
         path: "{{ parent_ca_name }} Admin.json"
 
     - name: Register the Intermediate CA
-      ibm.blockchain_platform.registered_identity:
+      hyperledger.fabric-ansible-collection.registered_identity:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
@@ -80,7 +80,7 @@
             ecert: true
 
     - name: Register the Intermediate CA tls
-      ibm.blockchain_platform.registered_identity:
+      hyperledger.fabric-ansible-collection.registered_identity:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
@@ -98,7 +98,7 @@
             ecert: true
 
     - name: Get the intermediate certificate authority details
-      ibm.blockchain_platform.certificate_authority_info:
+      hyperledger.fabric-ansible-collection.certificate_authority_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -112,7 +112,7 @@
       when: int_certificate_authority_info.exists
 
     - name: Create intermediate certificate authority
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"

@@ -3,7 +3,7 @@
 #
 ---
 - name: Fetch the channel configuration
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
@@ -27,19 +27,19 @@
     dest: updated_config.bin
 
 - name: Enable Fabric v2.x capabilities
-  ibm.blockchain_platform.channel_capabilities:
+  hyperledger.fabric-ansible-collection.channel_capabilities:
     path: updated_config.bin
     channel: V2_0
     application: V2_0
 
 - name: Add Endorsement Policy
-  ibm.blockchain_platform.channel_policy:
+  hyperledger.fabric-ansible-collection.channel_policy:
     name: Endorsement
     policy: endorsement-policy.json
     path: updated_config.bin
 
 - name: Compute the channel configuration update
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: compute_update
     name: "{{ channel_name }}"
     original: original_config.bin
@@ -48,7 +48,7 @@
   register: compute_update
 
 - name: Sign the channel configuration update with Ordering Svc Admin
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: sign_update
     identity: "{{ ordering_service_admin_identity }}"
     msp_id: "{{ ordering_service_msp }}"
@@ -57,7 +57,7 @@
   when: compute_update.path
 
 - name: Sign the channel configuration update with Organization Admin
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: sign_update
     identity: "{{ organization_admin_identity }}"
     msp_id: "{{ organization_msp }}"
@@ -66,7 +66,7 @@
   when: compute_update.path
 
 - name: Apply the channel configuration update
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"

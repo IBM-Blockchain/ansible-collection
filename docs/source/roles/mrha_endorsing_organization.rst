@@ -299,7 +299,7 @@ Examples
       peer_enrollment_secret: org1peerpw
       wait_timeout: 3600
     roles:
-      - ibm.blockchain_platform.mrha_endorsing_organization
+      - hyperledger.fabric-ansible-collection.mrha_endorsing_organization
 
   - name: Destroy components for a multi-region, highly available endorsing organization
     vars:
@@ -320,4 +320,4 @@ Examples
       organization_name: Org1
       wait_timeout: 3600
     roles:
-      - ibm.blockchain_platform.mrha_endorsing_organization
+      - hyperledger.fabric-ansible-collection.mrha_endorsing_organization

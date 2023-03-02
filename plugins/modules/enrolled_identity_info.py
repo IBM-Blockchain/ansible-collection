@@ -39,7 +39,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get enrolled identity
-  ibm.blockchain_platform.enrolled_identity_info:
+  hyperledger.fabric-ansible-collectionble-collection.enrolled_identity_info:
     path: Org1 Admin.json
 '''
 

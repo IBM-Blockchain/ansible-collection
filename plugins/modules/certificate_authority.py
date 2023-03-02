@@ -195,7 +195,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create certificate authority
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -221,7 +221,7 @@ EXAMPLES = '''
               hf.AffiliationMgr: true
 
 - name: Create certificate authority with custom resources and storage
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -256,7 +256,7 @@ EXAMPLES = '''
         class: ibmc-file-gold
 
 - name: Create certificate authority that uses an HSM
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -286,7 +286,7 @@ EXAMPLES = '''
       pin: 12345678
 
 - name: Destroy certificate authority
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

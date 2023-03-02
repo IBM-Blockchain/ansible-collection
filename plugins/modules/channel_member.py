@@ -122,7 +122,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add the organization to the channel
-  ibm.blockchain_platform.channel_member:
+  hyperledger.fabric-ansible-collection.channel_member:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -132,7 +132,7 @@ EXAMPLES = '''
     path: channel_config.bin
 
 - name: Update the organization in the channel with anchor peers
-  ibm.blockchain_platform.channel_member:
+  hyperledger.fabric-ansible-collection.channel_member:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -144,7 +144,7 @@ EXAMPLES = '''
       - Org2 Peer
 
 - name: Remove the organization from the channel
-  ibm.blockchain_platform.channel_member:
+  hyperledger.fabric-ansible-collection.channel_member:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

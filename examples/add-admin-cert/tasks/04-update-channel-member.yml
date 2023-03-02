@@ -3,7 +3,7 @@
 #
 ---
 - name: Fetch the channel configuration
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"
@@ -23,7 +23,7 @@
   changed_when: False
 
 - name: Update the organization in the set of channel members
-  ibm.blockchain_platform.channel_member:
+  hyperledger.fabric-ansible-collection.channel_member:
     state: present
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -33,7 +33,7 @@
     path: updated_config.bin
 
 - name: Compute the channel configuration update
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: compute_update
     name: "{{ channel_name }}"
     original: original_config.bin
@@ -43,7 +43,7 @@
   changed_when: False
 
 - name: Sign the channel configuration update
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: sign_update
     identity: "{{ organization_old_admin_identity }}"
     msp_id: "{{ organization_msp_id }}"
@@ -52,7 +52,7 @@
   when: compute_update.path
 
 - name: Apply the channel configuration update
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
     api_key: "{{ api_key }}"

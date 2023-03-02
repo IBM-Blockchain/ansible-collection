@@ -180,7 +180,7 @@ Examples
         image_registry_email: admin@example.org
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.hlfsupport_crds
+        - hyperledger.fabric-ansible-collection.hlfsupport_crds
 
     - name: Remove IBM HLF Support console custom resource definitions from Red Hat OpenShift
       hosts: localhost
@@ -191,4 +191,4 @@ Examples
         project: ibm-hlfsupport-infra
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.hlfsupport_crds
+        - hyperledger.fabric-ansible-collection.hlfsupport_crds

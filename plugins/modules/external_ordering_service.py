@@ -150,7 +150,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Import the ordering service
-  ibm.blockchain_platform.external_ordering_service:
+  hyperledger.fabric-ansible-collection.external_ordering_service:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -159,7 +159,7 @@ EXAMPLES = '''
     ordering_service: "{{ lookup('file', 'Ordering Service.json') }}"
 
 - name: Remove the imported ordering service
-  ibm.blockchain_platform.external_ordering_service:
+  hyperledger.fabric-ansible-collection.external_ordering_service:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

@@ -20,7 +20,7 @@
   block:
     - name: Create ordering organization
       include_role:
-        name: ibm.blockchain_platform.ordering_organization
+        name: hyperledger.fabric-ansible-collection.ordering_organization
       vars:
         state: present
       register: result
@@ -28,6 +28,6 @@
   always:
     - name: Delete ordering organization
       include_role:
-        name: ibm.blockchain_platform.ordering_organization
+        name: hyperledger.fabric-ansible-collection.ordering_organization
       vars:
         state: absent

@@ -35,7 +35,7 @@
 - name: Run tests
   block:
     - name: Create certificate authority
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         <<: *ibp_connection_info
         name: "{{ ca_name }}"
@@ -53,7 +53,7 @@
         expected_storage_size: 20Gi
 
     - name: Ensure idempotency
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         <<: *ibp_connection_info
         name: "{{ ca_name }}"
@@ -71,7 +71,7 @@
         expected_storage_size: 20Gi
 
     - name: Change resources
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         <<: *ibp_connection_info
         name: "{{ ca_name }}"
@@ -94,7 +94,7 @@
         expected_storage_size: 20Gi
 
     - name: Ensure idempotency
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: present
         <<: *ibp_connection_info
         name: "{{ ca_name }}"
@@ -118,7 +118,7 @@
 
   always:
     - name: Delete certificate authority
-      ibm.blockchain_platform.certificate_authority:
+      hyperledger.fabric-ansible-collection.certificate_authority:
         state: absent
         <<: *ibp_connection_info
         name: "{{ ca_name }}"

@@ -70,7 +70,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get the ordering service node
-  ibm.blockchain_platform.ordering_service_node_info:
+  hyperledger.fabric-ansible-collection.ordering_service_node_info:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx

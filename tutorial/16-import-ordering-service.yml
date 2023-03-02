@@ -9,7 +9,7 @@
     - org2-vars.yml
   tasks:
     - name: Import the ordering service
-      ibm.blockchain_platform.external_ordering_service:
+      hyperledger.fabric-ansible-collection.external_ordering_service:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

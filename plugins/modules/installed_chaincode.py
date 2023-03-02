@@ -161,7 +161,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Install the chaincode on the peer using Hyperledger Fabric v1.4 lifecycle
-  ibm.blockchain_platform.installed_chaincode:
+  hyperledger.fabric-ansible-collection.installed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -173,7 +173,7 @@ EXAMPLES = '''
     path: fabcar@1.0.0.cds
 
 - name: Install the chaincode on the peer using Hyperledger Fabric v2.x lifecycle
-  ibm.blockchain_platform.installed_chaincode:
+  hyperledger.fabric-ansible-collection.installed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -185,7 +185,7 @@ EXAMPLES = '''
     path: fabcar@1.0.0.tgz
 
 - name: Ensure the chaincode is not installed on the peer using Hyperledger Fabric v1.4 lifecycle
-  ibm.blockchain_platform.installed_chaincode:
+  hyperledger.fabric-ansible-collection.installed_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -198,7 +198,7 @@ EXAMPLES = '''
     version: 1.0.0
 
 - name: Ensure the chaincode is not installed on the peer using Hyperledger Fabric v2.x lifecycle
-  ibm.blockchain_platform.installed_chaincode:
+  hyperledger.fabric-ansible-collection.installed_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

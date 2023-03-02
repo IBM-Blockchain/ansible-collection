@@ -9,7 +9,7 @@
     - org2-vars.yml
   tasks:
     - name: Get the organization
-      ibm.blockchain_platform.organization_info:
+      hyperledger.fabric-ansible-collection.organization_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

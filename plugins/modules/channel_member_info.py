@@ -45,7 +45,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get the organization from the channel
-  ibm.blockchain_platform.channel_member_info:
+  hyperledger.fabric-ansible-collectionble-collection.channel_member_info:
     path: channel_config.bin
     msp_id: Org1MSP
 '''

@@ -9,7 +9,7 @@
     - org2-vars.yml
   tasks:
     - name: Install the chaincode on the peer
-      ibm.blockchain_platform.installed_chaincode:
+      hyperledger.fabric-ansible-collection.installed_chaincode:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -22,7 +22,7 @@
       register: result
 
     - name: Approve the chaincode on the channel
-      ibm.blockchain_platform.approved_chaincode:
+      hyperledger.fabric-ansible-collection.approved_chaincode:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

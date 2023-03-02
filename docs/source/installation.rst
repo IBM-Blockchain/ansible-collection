@@ -127,7 +127,7 @@ You can use the ``ansible-galaxy`` command to install a collection from Ansible 
 
 ::
 
-    ansible-galaxy collection install ibm.blockchain_platform
+    ansible-galaxy collection install hyperledger.fabric-ansible-collection
 
 Installing from source
 ----------------------

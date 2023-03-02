@@ -180,7 +180,7 @@ options:
 
 EXAMPLES = '''
 - name: Approve the chaincode definition on the channel
-  ibm.blockchain_platform.approved_chaincode:
+  hyperledger.fabric-ansible-collection.approved_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -196,7 +196,7 @@ EXAMPLES = '''
     package_id: fabcar@1.0.0:eb4bd64f7014f7d42e9d358035802242741b974e8dfcd37c59f9c21ce29d781e
 
 - name: Approve the chaincode definition on the channel with an endorsement policy and collection configuration
-  ibm.blockchain_platform.approved_chaincode:
+  hyperledger.fabric-ansible-collection.approved_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -214,7 +214,7 @@ EXAMPLES = '''
     collections_config: collections-config.json
 
 - name: Ensure the chaincode definition is not approved on the channel
-  ibm.blockchain_platform.approved_chaincode:
+  hyperledger.fabric-ansible-collection.approved_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

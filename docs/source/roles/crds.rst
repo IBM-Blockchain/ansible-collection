@@ -180,7 +180,7 @@ Examples
         image_registry_email: admin@example.org
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.crds
+        - hyperledger.fabric-ansible-collection.crds
 
     - name: Deploy IBM Blockchain Platform custom resource definitions on Red Hat OpenShift
       hosts: localhost
@@ -193,7 +193,7 @@ Examples
         image_registry_email: admin@example.org
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.crds
+        - hyperledger.fabric-ansible-collection.crds
 
     - name: Remove IBM Blockchain Platform custom resource definitions from Kubernetes
       hosts: localhost
@@ -204,7 +204,7 @@ Examples
         namespace: ibpinfra
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.crds
+        - hyperledger.fabric-ansible-collection.crds
 
     - name: Remove IBM Blockchain Platform custom resource definitions from Red Hat OpenShift
       hosts: localhost
@@ -215,4 +215,4 @@ Examples
         project: ibpinfra
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.crds
+        - hyperledger.fabric-ansible-collection.crds

@@ -160,7 +160,7 @@ When the Ansible playbooks are run, Ansible loads all variables from all variabl
 
   ::
 
-    ibm.blockchain_platform.channel_block:
+    hyperledger.fabric-ansible-collection.channel_block:
       api_endpoint: "{{ api_endpoint }}"
       api_authtype: "{{ api_authtype }}"
       api_key: "{{ api_key }}"

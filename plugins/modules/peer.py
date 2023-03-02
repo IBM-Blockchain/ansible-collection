@@ -324,7 +324,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create peer
-  ibm.blockchain_platform.peer:
+  hyperledger.fabric-ansible-collection.peer:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -339,7 +339,7 @@ EXAMPLES = '''
       - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 
 - name: Create peer with custom resources and storage
-  ibm.blockchain_platform.peer:
+  hyperledger.fabric-ansible-collection.peer:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -363,7 +363,7 @@ EXAMPLES = '''
         class: ibmc-file-gold
 
 - name: Create peer that uses an HSM
-  ibm.blockchain_platform.peer:
+  hyperledger.fabric-ansible-collection.peer:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -382,7 +382,7 @@ EXAMPLES = '''
       pin: 12345678
 
 - name: Destroy peer
-  ibm.blockchain_platform.peer:
+  hyperledger.fabric-ansible-collection.peer:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

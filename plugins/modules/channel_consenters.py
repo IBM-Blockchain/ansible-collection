@@ -97,7 +97,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Set channel consenters from ordering service
-  ibm.blockchain_platform.channel_consenters:
+  hyperledger.fabric-ansible-collection.channel_consenters:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx
@@ -106,7 +106,7 @@ EXAMPLES = '''
     ordering_service: Ordering Service
 
 - name: Set channel consenters from ordering service nodes
-  ibm.blockchain_platform.channel_consenters:
+  hyperledger.fabric-ansible-collection.channel_consenters:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx

@@ -43,7 +43,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get the organization from the consortium
-  ibm.blockchain_platform.consortium_member_info:
+  hyperledger.fabric-ansible-collection.consortium_member_info:
     path: channel_config.bin
     msp_id: Org1MSP
 '''

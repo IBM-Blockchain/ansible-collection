@@ -9,7 +9,7 @@
     - org1-vars.yml
   tasks:
     - name: Check to see if the channel already exists
-      ibm.blockchain_platform.channel_block:
+      hyperledger.fabric-ansible-collection.channel_block:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -31,7 +31,7 @@
       when: result.msg is defined and 'NOT_FOUND' not in result.msg
 
     - name: Create the configuration update for the new channel
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -53,7 +53,7 @@
       when: result.msg is defined and 'NOT_FOUND' in result.msg
 
     - name: Sign the channel configuration update for the new channel
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         operation: sign_update
         identity: "{{ org1_name }} Admin.json"
         msp_id: "{{ org1_msp_id }}"
@@ -62,7 +62,7 @@
       when: result.msg is defined and 'NOT_FOUND' in result.msg
 
     - name: Apply the channel configuration update for the new channel
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

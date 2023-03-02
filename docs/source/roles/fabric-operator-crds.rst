@@ -191,7 +191,7 @@ Examples
         state: present
         wait_timeout: 3600
       roles:
-        - ibm.blockchain_platform.fabric_operator_crds
+        - hyperledger.fabric-ansible-collection.fabric_operator_crds
 
 
       # yars.yml

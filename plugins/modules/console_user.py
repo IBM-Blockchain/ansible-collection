@@ -91,7 +91,7 @@ options:
 EXAMPLES = '''
 ---
 - name: Add a user with the manager role to the console
-  ibm.blockchain_platform.console_user:
+  hyperledger.fabric-ansible-collection.console_user:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -102,7 +102,7 @@ EXAMPLES = '''
       - manager
 
 - name: Add a user with the writer role to the console
-  ibm.blockchain_platform.console_user:
+  hyperledger.fabric-ansible-collection.console_user:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -113,7 +113,7 @@ EXAMPLES = '''
       - writer
 
 - name: Add a user with the reader role to the console
-  ibm.blockchain_platform.console_user:
+  hyperledger.fabric-ansible-collection.console_user:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -124,7 +124,7 @@ EXAMPLES = '''
       - reader
 
 - name: Remove the user from the console
-  ibm.blockchain_platform.console_user:
+  hyperledger.fabric-ansible-collectionble-collection.console_user:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

@@ -28,7 +28,7 @@
     # a general list of approved can't be given as you the peer only has the API to ask if a certain combination
     # of properties represents and approved chaincode.
     - name: Get the peers chaincode information
-      ibm.blockchain_platform.chaincode_list_info:
+      hyperledger.fabric-ansible-collection.chaincode_list_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -62,7 +62,7 @@
     # this will attempt to automatically update the sequence to the next one that is available.
     # the chosen value will be returned. It is important to keep this for later
     - name: Approve the chaincode on the channel
-      ibm.blockchain_platform.approved_chaincode:
+      hyperledger.fabric-ansible-collection.approved_chaincode:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

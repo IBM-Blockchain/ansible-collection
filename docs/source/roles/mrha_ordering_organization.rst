@@ -286,7 +286,7 @@ Examples
       ordering_service_enrollment_secret: orderingorgordererpw
       wait_timeout: 3600
     roles:
-      - ibm.blockchain_platform.mrha_ordering_organization
+      - hyperledger.fabric-ansible-collection.mrha_ordering_organization
 
   - name: Destroy components for a multi-region, highly available ordering organization
     vars:
@@ -307,4 +307,4 @@ Examples
       organization_name: Ordering Org
       wait_timeout: 3600
     roles:
-      - ibm.blockchain_platform.mrha_ordering_organization
+      - hyperledger.fabric-ansible-collection.mrha_ordering_organization

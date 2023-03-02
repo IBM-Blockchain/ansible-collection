@@ -139,7 +139,7 @@ dmypy.json
 .pytype/
 
 # collection packages
-ibm-blockchain_platform-*.tar.gz
+hyperledger-fabric_ansible_collection*.tar.gz
 
 # generated documentation
 docs/source/modules/*.rst

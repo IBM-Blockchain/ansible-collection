@@ -131,7 +131,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Import the peer
-  ibm.blockchain_platform.external_peer:
+  hyperledger.fabric-ansible-collection.external_peer:
     status: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -140,7 +140,7 @@ EXAMPLES = '''
     peer: "{{ lookup('file', 'Org1 Peer.json') }}"
 
 - name: Remove the imported peer
-  ibm.blockchain_platform.external_peer:
+  hyperledger.fabric-ansible-collection.external_peer:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

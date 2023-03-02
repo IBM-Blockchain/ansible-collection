@@ -264,7 +264,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create the configuration for a new channel
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx
@@ -280,7 +280,7 @@ EXAMPLES = '''
       Writers: writers-policy.json
 
 - name: Fetch the channel configuration
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx
@@ -293,7 +293,7 @@ EXAMPLES = '''
     path: channel_config.bin
 
 - name: Compute the configuration update for the channel
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: compute_update
     name: mychannel
     original: original_channel_config.bin
@@ -301,7 +301,7 @@ EXAMPLES = '''
     path: channel_config_update.bin
 
 - name: Sign the configuration update for the channel
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     operation: sign_update
     identity: Org1 Admin.json
     msp_id: Org1MSP
@@ -309,7 +309,7 @@ EXAMPLES = '''
     path: channel_config_update.bin
 
 - name: Apply the configuration update for the channel
-  ibm.blockchain_platform.channel_config:
+  hyperledger.fabric-ansible-collection.channel_config:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx

@@ -3,7 +3,7 @@
 #
 ---
 - name: Delete certificate authority
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -14,7 +14,7 @@
     name: "{{ ca_name }}"
 
 - name: Delete certificate authority admin
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -25,7 +25,7 @@
     path: "{{ ca_admin_identity }}"
 
 - name: Delete organization admin
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -36,7 +36,7 @@
     path: "{{ organization_admin_identity }}"
 
 - name: Delete organization
-  ibm.blockchain_platform.organization:
+  hyperledger.fabric-ansible-collection.organization:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -47,7 +47,7 @@
     name: "{{ organization_name }}"
 
 - name: Delete ordering service
-  ibm.blockchain_platform.ordering_service:
+  hyperledger.fabric-ansible-collection.ordering_service:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"

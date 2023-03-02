@@ -112,7 +112,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add the organization to the consortium
-  ibm.blockchain_platform.consortium_member:
+  hyperledger.fabric-ansible-collection.consortium_member:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -122,7 +122,7 @@ EXAMPLES = '''
     path: channel_config.bin
 
 - name: Remove the organization from the consortium
-  ibm.blockchain_platform.consortium_member:
+  hyperledger.fabric-ansible-collectionble-collectionble-collectionble-collection.consortium_member:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

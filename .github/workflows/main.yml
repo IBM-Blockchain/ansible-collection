@@ -28,11 +28,11 @@ jobs:
         run: |
           VERSION=$(yq -r .version galaxy.yml)
           ansible-galaxy collection build
-          mv ibm-blockchain_platform-${VERSION}.tar.gz ibm-blockchain_platform.tar.gz
+          mv hyperledger-fabric_ansible_collection-${VERSION}.tar.gz hyperledger-fabric_ansible_collection.tar.gz
       - name: Install collection
         run: |
           VERSION=$(yq -r .version galaxy.yml)
-          ansible-galaxy collection install ibm-blockchain_platform.tar.gz
+          ansible-galaxy collection install hyperledger-fabric_ansible_collection.tar.gz
       - name: Lint collection
         run: |
           flake8 .
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Collection
-          path: ibm-blockchain_platform.tar.gz
+          path: hyperledger-fabric_ansible_collection.tar.gz
 
   build_documentation:
     name: Build documentation
@@ -70,7 +70,6 @@ jobs:
           name: Documentation
           path: documentation.tar.gz
 
-
   build_docker_image:
     name: Build Docker image
     runs-on: ubuntu-latest
@@ -86,9 +85,9 @@ jobs:
       - name: Build Docker image
         run: |
           VERSION=$(yq -r .version galaxy.yml)
-          docker build -t ibmblockchain/fabric-ansible:${VERSION} .
-          docker tag ibmblockchain/fabric-ansible:${VERSION} ibmblockchain/fabric-ansible:latest
-          docker save ibmblockchain/fabric-ansible:${VERSION} ibmblockchain/fabric-ansible:latest | gzip -c > image.tar.gz
+          docker build -t hyperledger-labs/fabric-ansible-collection:${VERSION} .
+          docker tag hyperledger-labs/fabric-ansible-collection:${VERSION} hyperledger-labs/fabric-ansible-collection:latest
+          docker save hyperledger-labs/fabric-ansible-collection:${VERSION} hyperledger-labs/fabric-ansible-collection:latest | gzip -c > image.tar.gz
       - name: Publish Docker image
         uses: actions/upload-artifact@v2
         with:

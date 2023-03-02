@@ -51,7 +51,7 @@ Create a new Ansible playbook file called `install-ofs.yml`. Copy the following 
             state: present
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_operator_crds
+            - hyperledger.fabric-ansible-collection.fabric_operator_crds
 
         - name: Deploy Fabric Operations Console
           hosts: localhost
@@ -61,7 +61,7 @@ Create a new Ansible playbook file called `install-ofs.yml`. Copy the following 
             state: present
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_console
+            - hyperledger.fabric-ansible-collection.fabric_console
 
 
 KIND Ingress configuration

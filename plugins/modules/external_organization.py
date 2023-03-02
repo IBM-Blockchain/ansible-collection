@@ -231,7 +231,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Import the organization
-  ibm.blockchain_platform.external_organization:
+  hyperledger.fabric-ansible-collection.external_organization:
     status: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -240,7 +240,7 @@ EXAMPLES = '''
     organization: "{{ lookup('file', 'Org1.json') }}"
 
 - name: Remove the imported organization
-  ibm.blockchain_platform.external_organization:
+  hyperledger.fabric-ansible-collection.external_organization:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

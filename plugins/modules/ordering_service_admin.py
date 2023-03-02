@@ -111,7 +111,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add the organization to the list of ordering service admins
-  ibm.blockchain_platform.ordering_service_admin:
+  hyperledger.fabric-ansible-collection.ordering_service_admin:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -121,7 +121,7 @@ EXAMPLES = '''
     path: system_channel_config.bin
 
 - name: Remove the organization from the list of ordering service admins
-  ibm.blockchain_platform.ordering_service_admin:
+  hyperledger.fabric-ansible-collection.ordering_service_admin:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

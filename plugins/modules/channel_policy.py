@@ -69,14 +69,14 @@ requirements: []
 
 EXAMPLES = '''
 - name: Add the policy to the channel
-  ibm.blockchain_platform.channel_policy:
+  hyperledger.fabric-ansible-collection.channel_policy:
     state: present
     name: Admins
     policy: admins-policy.json
     path: channel_config.bin
 
 - name: Remove the policy to the channel
-  ibm.blockchain_platform.channel_policy:
+  hyperledger.fabric-ansible-collectionble-collection.channel_policy:
     state: absent
     name: Admins
     path: channel_config.bin

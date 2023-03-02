@@ -164,7 +164,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Register a new identity
-  ibm.blockchain_platform.registered_identity:
+  hyperledger.fabric-ansible-collection.registered_identity:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -181,7 +181,7 @@ EXAMPLES = '''
         value: "true"
 
 - name: Delete an existing identity
-  ibm.blockchain_platform.registered_identity:
+  hyperledger.fabric-ansible-collection.registered_identity:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

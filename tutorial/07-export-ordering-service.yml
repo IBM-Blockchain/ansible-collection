@@ -9,7 +9,7 @@
     - ordering-org-vars.yml
   tasks:
     - name: Get the ordering service
-      ibm.blockchain_platform.ordering_service_info:
+      hyperledger.fabric-ansible-collection.ordering_service_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

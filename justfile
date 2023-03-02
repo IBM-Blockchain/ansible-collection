@@ -8,7 +8,7 @@ default:
 # Local ansible-galalxy build and install
 local:
     ansible-galaxy collection build -f
-    ansible-galaxy collection install $(ls -1 | grep ibm-blockchain_platform) -f
+    ansible-galaxy collection install $(ls -1 | grep fabric) -f
 
 # Lint the codebase
 lint:

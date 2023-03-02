@@ -69,7 +69,7 @@ The linting uses [shellcheck](https://github.com/koalaman/shellcheck#installing)
 
 ### Ansible modules
 
-Ansible modules, such as `ibm.blockchain_platform.peer`, are provided as Python modules under `plugins/modules`.
+Ansible modules, such as `hyperledger.fabric-ansible-collection.peer`, are provided as Python modules under `plugins/modules`.
 
 Each Ansible module has a `main()` function that is called by Ansible. At the start of each `main()` function, the arguments for the module are defined in a `argument_spec`, and then passed into Ansible by creating a `BlockchainModule` object, which is an instance of `AnsibleModule`.
 
@@ -90,7 +90,7 @@ Code that is used across multiple Ansible modules are provided as Python modules
 
 ### Ansible roles
 
-Ansible roles, such as `ibm.blockchain_platform.endorsing_organization`, can be found under `roles`.
+Ansible roles, such as `hyperledger.fabric-ansible-collection.endorsing_organization`, can be found under `roles`.
 
 Each Ansible role has a set of default parameters in `defaults/main.yml`, metadata in `meta/main.yml`, and the main set of tasks in `tasks/main.yml`. Most of the Ansible roles included in this collection have additional task files under the `tasks` directory that are called from `tasks/main.yml`.
 

@@ -267,7 +267,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create ordering service node
-  ibm.blockchain_platform.ordering_service_node:
+  hyperledger.fabric-ansible-collection.ordering_service_node:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -282,7 +282,7 @@ EXAMPLES = '''
       - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 
 - name: Create ordering service node with custom resources and storage
-  ibm.blockchain_platform.ordering_service_node:
+  hyperledger.fabric-ansible-collection.ordering_service_node:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -306,7 +306,7 @@ EXAMPLES = '''
         class: ibmc-file-gold
 
 - name: Create ordering service node that uses an HSM
-  ibm.blockchain_platform.ordering_service_node:
+  hyperledger.fabric-ansible-collection.ordering_service_node:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -326,7 +326,7 @@ EXAMPLES = '''
       pin: 12345678
 
 - name: Destroy ordering service node
-  ibm.blockchain_platform.ordering_service_node:
+  hyperledger.fabric-ansible-collection.ordering_service_node:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

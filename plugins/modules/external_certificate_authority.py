@@ -130,7 +130,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Import the certificate authority
-  ibm.blockchain_platform.external_certificate_authority:
+  hyperledger.fabric-ansible-collection.external_certificate_authority:
     status: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -139,7 +139,7 @@ EXAMPLES = '''
     certificate_authority: "{{ lookup('file', 'Org1 CA.json') }}"
 
 - name: Remove the imported certificate authority
-  ibm.blockchain_platform.external_certificate_authority:
+  hyperledger.fabric-ansible-collection.external_certificate_authority:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

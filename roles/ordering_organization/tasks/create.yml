@@ -38,7 +38,7 @@
   when: not ordering_service_enrollment_secret is defined or not ordering_service_enrollment_secret
 
 - name: Create certificate authority
-  ibm.blockchain_platform.certificate_authority:
+  hyperledger.fabric-ansible-collection.certificate_authority:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -70,7 +70,7 @@
     wait_timeout: "{{ wait_timeout | default(omit) }}"
 
 - name: Enroll certificate authority admin
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -85,7 +85,7 @@
     path: "{{ ca_admin_identity }}"
 
 - name: Register the organization admin
-  ibm.blockchain_platform.registered_identity:
+  hyperledger.fabric-ansible-collection.registered_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -101,7 +101,7 @@
     type: admin
 
 - name: Register the ordering service
-  ibm.blockchain_platform.registered_identity:
+  hyperledger.fabric-ansible-collection.registered_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -117,7 +117,7 @@
     type: orderer
 
 - name: Enroll the organization admin
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -133,7 +133,7 @@
   register: org_admin
 
 - name: Create organization
-  ibm.blockchain_platform.organization:
+  hyperledger.fabric-ansible-collection.organization:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"
@@ -149,7 +149,7 @@
       - "{{ org_admin.enrolled_identity.cert | default(omit) }}"
 
 - name: Create ordering service
-  ibm.blockchain_platform.ordering_service:
+  hyperledger.fabric-ansible-collection.ordering_service:
     state: "{{ state }}"
     api_endpoint: "{{ api_endpoint }}"
     api_authtype: "{{ api_authtype }}"

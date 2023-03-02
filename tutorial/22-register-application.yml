@@ -9,7 +9,7 @@
     - org1-vars.yml
   tasks:
     - name: Register a new identity
-      ibm.blockchain_platform.registered_identity:
+      hyperledger.fabric-ansible-collection.registered_identity:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -26,7 +26,7 @@
             value: "true"
 
     - name: Create a connection profile
-      ibm.blockchain_platform.connection_profile:
+      hyperledger.fabric-ansible-collection.connection_profile:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

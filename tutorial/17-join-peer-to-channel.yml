@@ -9,7 +9,7 @@
     - org2-vars.yml
   tasks:
     - name: Fetch the genesis block for the channel
-      ibm.blockchain_platform.channel_block:
+      hyperledger.fabric-ansible-collection.channel_block:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -24,7 +24,7 @@
         path: channel_genesis_block.bin
 
     - name: Join the peer to the channel
-      ibm.blockchain_platform.peer_channel:
+      hyperledger.fabric-ansible-collection.peer_channel:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

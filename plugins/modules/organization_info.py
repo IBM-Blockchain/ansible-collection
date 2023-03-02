@@ -66,7 +66,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Get the organization
-  ibm.blockchain_platform.organization_info:
+  hyperledger.fabric-ansible-collection.organization_info:
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
     api_key: xxxxxxxx

@@ -8,7 +8,7 @@
     - vars.yml
   tasks:
     - name: Get the organization details
-      ibm.blockchain_platform.organization_info:
+      hyperledger.fabric-ansible-collection.organization_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -22,7 +22,7 @@
       when: not organization_info.exists
 
     - name: Load the new admin identity
-      ibm.blockchain_platform.enrolled_identity_info:
+      hyperledger.fabric-ansible-collection.enrolled_identity_info:
         path: "{{ organization_new_admin_identity }}"
       register: organization_new_admin_identity_info
 
@@ -41,7 +41,7 @@
       when: organization_new_admin_identity_info.enrolled_identity.cert not in new_admins
 
     - name: Update the organization with the new admin identity
-      ibm.blockchain_platform.organization:
+      hyperledger.fabric-ansible-collection.organization:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"

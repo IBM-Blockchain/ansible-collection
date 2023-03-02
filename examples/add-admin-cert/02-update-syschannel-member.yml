@@ -8,7 +8,7 @@
     - vars.yml
   tasks:
     - name: Get the ordering service details
-      ibm.blockchain_platform.ordering_service_info:
+      hyperledger.fabric-ansible-collection.ordering_service_info:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -22,7 +22,7 @@
       when: not ordering_service_info.exists
 
     - name: Fetch the system channel configuration
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"
@@ -42,7 +42,7 @@
       changed_when: False
 
     - name: Update the organization in the set of consortium members
-      ibm.blockchain_platform.consortium_member:
+      hyperledger.fabric-ansible-collection.consortium_member:
         state: present
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
@@ -52,7 +52,7 @@
         path: updated_config.bin
 
     - name: Compute the system channel configuration update
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         operation: compute_update
         name: "{{ ordering_service_info.ordering_service[0].system_channel_id }}"
         original: original_config.bin
@@ -62,7 +62,7 @@
       changed_when: False
 
     - name: Sign the system channel configuration update
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         operation: sign_update
         identity: "{{ organization_old_admin_identity }}"
         msp_id: "{{ organization_msp_id }}"
@@ -71,7 +71,7 @@
       when: compute_update.path
 
     - name: Apply the system channel configuration update
-      ibm.blockchain_platform.channel_config:
+      hyperledger.fabric-ansible-collection.channel_config:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

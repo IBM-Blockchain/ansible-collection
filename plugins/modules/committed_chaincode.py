@@ -191,7 +191,7 @@ options:
 
 EXAMPLES = '''
 - name: Commit the chaincode definition on the channel
-  ibm.blockchain_platform.committed_chaincode:
+  hyperledger.fabric-ansible-collection.committed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -206,7 +206,7 @@ EXAMPLES = '''
     sequence: 1
 
 - name: Commit the chaincode definition on the channel with an endorsement policy and collection configuration
-  ibm.blockchain_platform.committed_chaincode:
+  hyperledger.fabric-ansible-collection.committed_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -223,7 +223,7 @@ EXAMPLES = '''
     collections_config: collections-config.json
 
 - name: Ensure the chaincode definition is not committed on the channel
-  ibm.blockchain_platform.committed_chaincode:
+  hyperledger.fabric-ansible-collection.committed_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

@@ -9,7 +9,7 @@
     - org1-vars.yml
   tasks:
     - name: Commit the chaincode on the channel
-      ibm.blockchain_platform.committed_chaincode:
+      hyperledger.fabric-ansible-collection.committed_chaincode:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

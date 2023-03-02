@@ -180,7 +180,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Instantiate the chaincode on the channel
-  ibm.blockchain_platform.instantiated_chaincode:
+  hyperledger.fabric-ansible-collection.instantiated_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -194,7 +194,7 @@ EXAMPLES = '''
     version: 1.0.0
 
 - name: Instantiate the chaincode on the channel with an endorsement policy and collection configuration
-  ibm.blockchain_platform.instantiated_chaincode:
+  hyperledger.fabric-ansible-collection.instantiated_chaincode:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -210,7 +210,7 @@ EXAMPLES = '''
     collections_config: collections-config.json
 
 - name: Ensure the chaincode is not instantiated on the channel
-  ibm.blockchain_platform.instantiated_chaincode:
+  hyperledger.fabric-ansible-collection.instantiated_chaincode:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

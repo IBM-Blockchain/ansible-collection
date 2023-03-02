@@ -62,7 +62,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Set batch size channel parameters
-  ibm.blockchain_platform.channel_parameters:
+  hyperledger.fabric-ansible-collection.channel_parameters:
     path: channel_config.bin
     batch_size:
       max_message_count: 10000
@@ -70,7 +70,7 @@ EXAMPLES = '''
       preferred_max_bytes: 5242880
 
 - name: Set batch timeout channel parameter
-  ibm.blockchain_platform.channel_parameters:
+  hyperledger.fabric-ansible-collection.channel_parameters:
     path: channel_config.bin
     batch_timeout: 500ms
 '''

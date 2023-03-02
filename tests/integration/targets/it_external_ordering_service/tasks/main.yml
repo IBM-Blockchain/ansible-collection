@@ -16,7 +16,7 @@
 - name: Run tests
   block:
     - name: Import external ordering service
-      ibm.blockchain_platform.external_ordering_service:
+      hyperledger.fabric-ansible-collection.external_ordering_service:
         state: present
         <<: *ibp_connection_info
         ordering_service: "{{ lookup('template', 'one_node_ordering_service.json.j2') }}"
@@ -30,7 +30,7 @@
           - result.ordering_service[0].name == ordering_service_name + '_1'
 
     - name: Ensure idempotency
-      ibm.blockchain_platform.external_ordering_service:
+      hyperledger.fabric-ansible-collection.external_ordering_service:
         state: present
         <<: *ibp_connection_info
         ordering_service: "{{ lookup('template', 'one_node_ordering_service.json.j2') }}"
@@ -45,7 +45,7 @@
 
   always:
     - name: Remove external ordering service
-      ibm.blockchain_platform.external_ordering_service:
+      hyperledger.fabric-ansible-collection.external_ordering_service:
         state: absent
         <<: *ibp_connection_info
         name: "{{ ordering_service_name }}"

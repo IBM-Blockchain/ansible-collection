@@ -9,7 +9,7 @@
     - ordering-org-vars.yml
   tasks:
     - name: Import the organization
-      ibm.blockchain_platform.external_organization:
+      hyperledger.fabric-ansible-collection.external_organization:
         api_endpoint: "{{ api_endpoint }}"
         api_authtype: "{{ api_authtype }}"
         api_key: "{{ api_key }}"

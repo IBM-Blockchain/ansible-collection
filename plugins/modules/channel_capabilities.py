@@ -63,22 +63,22 @@ requirements: []
 
 EXAMPLES = '''
 - name: Set application capability level for Hyperledger Fabric v1.4.x
-  ibm.blockchain_platform.channel_capabilities:
+  hyperledger.fabric-ansible-collection.channel_capabilities:
     path: channel_config.bin
     application: V1_4_2
 
 - name: Set channel capability level for Hyperledger Fabric v1.4.x
-  ibm.blockchain_platform.channel_capabilities:
+  hyperledger.fabric-ansible-collection.channel_capabilities:
     path: channel_config.bin
     channel: V1_4_3
 
 - name: Set orderer capability level for Hyperledger Fabric v1.4.x
-  ibm.blockchain_platform.channel_capabilities:
+  hyperledger.fabric-ansible-collection.channel_capabilities:
     path: channel_config.bin
     orderer: V1_4_2
 
 - name: Set all channel capability levels for Hyperledger Fabric v2.x
-  ibm.blockchain_platform.channel_capabilities:
+  hyperledger.fabric-ansible-collection.channel_capabilities:
     path: channel_config.bin
     application: V2_0
     channel: V2_0

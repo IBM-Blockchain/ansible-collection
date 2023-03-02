@@ -60,7 +60,7 @@ Create a new Ansible playbook file called `install-oss-hlf.yml`. Copy and paste 
             namespace: oss-hlf-infra
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_operator_crds
+            - hyperledger.fabric-ansible-collection.fabric_operator_crds
 
         - name: Deploy Open Source Hyperledger Fabric console
           hosts: localhost
@@ -77,7 +77,7 @@ Create a new Ansible playbook file called `install-oss-hlf.yml`. Copy and paste 
             console_tls_secret: <console_tls_secret>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_console
+            - hyperledger.fabric-ansible-collection.fabric_console
 
 **Red Hat OpenShift**
 
@@ -95,7 +95,7 @@ Create a new Ansible playbook file called `install-oss-hlf.yml`. Copy and paste 
             project: oss-hlf-infra
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_operator_crds
+            - hyperledger.fabric-ansible-collection.fabric_operator_crds
 
         - name: Deploy Open Source Hyperledger Fabric console
           hosts: localhost
@@ -109,7 +109,7 @@ Create a new Ansible playbook file called `install-oss-hlf.yml`. Copy and paste 
             console_default_password: <console_default_password>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.fabric_console
+            - hyperledger.fabric-ansible-collection.fabric_console
 
 Next, you will need to replace the variable placeholders with the required values.
 

@@ -253,7 +253,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Create organization from a certificate authority
-  ibm.blockchain_platform.organization:
+  hyperledger.fabric-ansible-collection.organization:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -267,7 +267,7 @@ EXAMPLES = '''
       - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 
 - name: Create organization from certificates
-  ibm.blockchain_platform.organization:
+  hyperledger.fabric-ansible-collection.organization:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -289,7 +289,7 @@ EXAMPLES = '''
       - LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t...
 
 - name: Delete organization
-  ibm.blockchain_platform.organization:
+  hyperledger.fabric-ansible-collection.organization:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

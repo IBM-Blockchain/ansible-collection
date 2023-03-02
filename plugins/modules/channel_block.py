@@ -162,7 +162,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Fetch the genesis block for the channel
-  ibm.blockchain_platform.channel_block:
+  hyperledger.fabric-ansible-collection.channel_block:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic

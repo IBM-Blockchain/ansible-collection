@@ -19,7 +19,7 @@
   block:
     - name: Create endorsing organization
       include_role:
-        name: ibm.blockchain_platform.endorsing_organization
+        name: hyperledger.fabric-ansible-collection.endorsing_organization
       vars:
         state: present
       register: result
@@ -27,6 +27,6 @@
   always:
     - name: Delete endorsing organization
       include_role:
-        name: ibm.blockchain_platform.endorsing_organization
+        name: hyperledger.fabric-ansible-collection.endorsing_organization
       vars:
         state: absent

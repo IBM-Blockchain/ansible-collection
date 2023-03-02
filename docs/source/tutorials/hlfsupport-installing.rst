@@ -62,7 +62,7 @@ Create a new Ansible playbook file called `install-ibm-hlfsupport.yml`. Copy and
             image_registry_email: <image_registry_email>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.hlfsupport_crds
+            - hyperledger.fabric-ansible-collection.hlfsupport_crds
 
         - name: Deploy IBM Support for Hyperledger Fabric console
           hosts: localhost
@@ -78,7 +78,7 @@ Create a new Ansible playbook file called `install-ibm-hlfsupport.yml`. Copy and
             console_default_password: <console_default_password>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.hlfsupport_console
+            - hyperledger.fabric-ansible-collection.hlfsupport_console
 
 **Red Hat OpenShift**
 
@@ -98,7 +98,7 @@ Create a new Ansible playbook file called `install-ibm-hlfsupport.yml`. Copy and
             image_registry_email: <image_registry_email>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.hlfsupport_crds
+            - hyperledger.fabric-ansible-collection.hlfsupport_crds
 
         - name: Deploy IBM Support for Hyperledger Fabric console
           hosts: localhost
@@ -114,7 +114,7 @@ Create a new Ansible playbook file called `install-ibm-hlfsupport.yml`. Copy and
             console_default_password: <console_default_password>
             wait_timeout: 3600
           roles:
-            - ibm.blockchain_platform.hlfsupport_console
+            - hyperledger.fabric-ansible-collection.hlfsupport_console
 
 Next, you will need to replace the variable placeholders with the required values.
 

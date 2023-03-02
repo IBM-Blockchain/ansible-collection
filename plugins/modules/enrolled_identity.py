@@ -166,7 +166,7 @@ requirements: []
 
 EXAMPLES = '''
 - name: Enroll an identity
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: present
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
@@ -179,7 +179,7 @@ EXAMPLES = '''
     path: Org1 Admin.json
 
 - name: Remove an enrolled identity
-  ibm.blockchain_platform.enrolled_identity:
+  hyperledger.fabric-ansible-collection.enrolled_identity:
     state: absent
     api_endpoint: https://ibp-console.example.org:32000
     api_authtype: basic
