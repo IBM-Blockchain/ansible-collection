@@ -25,7 +25,7 @@ spec:
   email: "{{ console_email }}"
   password: "{{ console_default_password }}"
   registryURL: "{{ image_registry_url }}"
-{%+ if product_version is version('2.5.3', '>=') %}
+{%+ if product_version is version('1.0.5', '>=') %}
   usetags: true
 {%+ endif %}
 {%+ if product_version is version('2.5.0', '>=') %}
