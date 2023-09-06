@@ -19,6 +19,8 @@ tags:
   - hyperledger
   - fabric
   - blockchain
+  - infrastructure
+  - cloud
 repository: https://github.com/IBM-Blockchain/ansible-collection
 documentation: https://ibm-blockchain.github.io/ansible-collection/
 homepage: https://www.ibm.com/cloud/blockchain-platform
