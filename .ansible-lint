@@ -12,3 +12,4 @@ exclude_paths:
 skip_list:
     - risky-file-permissions
     - 'fqcn-builtins'
+    - var-naming[no-role-prefix]
