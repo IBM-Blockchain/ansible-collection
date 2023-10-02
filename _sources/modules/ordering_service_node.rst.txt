@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - An ordering service node matching the specified name will be stopped and removed.
+    \ :literal:`absent`\  - An ordering service node matching the specified name will be stopped and removed.
 
-    ``present`` - Asserts that an ordering service node matching the specified name and configuration exists. If no ordering service node matches the specified name, an ordering service node will be created. If an ordering service node matches the specified name but the configuration does not match, then the ordering service node will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+    \ :literal:`present`\  - Asserts that an ordering service node matching the specified name and configuration exists. If no ordering service node matches the specified name, an ordering service node will be created. If an ordering service node matches the specified name but the configuration does not match, then the ordering service node will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -84,21 +84,21 @@ Parameters
 
     You can pass a string, which is the display name of a ordering service registered with the IBM Blockchain Platform console.
 
-    You can also pass a dictionary, which must match the result format of one of the :ref:`ordering_service_info <ordering_service_info_module>` or :ref:`ordering_service <ordering_service_module>` modules.
+    You can also pass a dictionary, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service\_info)" at index 82: Module name "ordering\_service\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service)" at index 110: Module name "ordering\_service" is not a FQCN\  modules.
 
-    Only required when *config* is not specified.
+    Only required when \ :emphasis:`config`\  is not specified.
 
     | **Type**: str
 
   msp_id
     The MSP ID for this ordering service node.
 
-    Only required when *state* is ``present``.
+    Only required when \ :emphasis:`state`\  is \ :literal:`present`\ .
 
     | **Type**: str
 
   orderer_type
-    ``raft`` - The ordering service node will use the Raft consensus algorithm.
+    \ :literal:`raft`\  - The ordering service node will use the Raft consensus algorithm.
 
     | **Type**: str
     | **Default value**: ``raft``
@@ -123,23 +123,23 @@ Parameters
 
     You can pass a string, which is the display name of a certificate authority registered with the IBM Blockchain Platform console.
 
-    You can also pass a dictionary, which must match the result format of one of the :ref:`certificate_authority_info <certificate_authority_info_module>` or :ref:`certificate_authority <certificate_authority_module>` modules.
+    You can also pass a dictionary, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(certificate\_authority\_info)" at index 82: Module name "certificate\_authority\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(certificate\_authority)" at index 115: Module name "certificate\_authority" is not a FQCN\  modules.
 
-    Only required when *config* is not specified.
+    Only required when \ :emphasis:`config`\  is not specified.
 
     | **Type**: raw
 
   enrollment_id
     The enrollment ID, or user name, of an identity registered on the certificate authority for this ordering service node.
 
-    Only required when *config* is not specified.
+    Only required when \ :emphasis:`config`\  is not specified.
 
     | **Type**: str
 
   enrollment_secret
     The enrollment secret, or password, of an identity registered on the certificate authority for this ordering service node.
 
-    Only required when *config* is not specified.
+    Only required when \ :emphasis:`config`\  is not specified.
 
     | **Type**: str
 
@@ -148,13 +148,13 @@ Parameters
 
     Administrator certificates must be supplied as base64 encoded PEM files.
 
-    Only required when *config* is not specified.
+    Only required when \ :emphasis:`config`\  is not specified.
 
     | **Type**: list
     | **Elements**: str
 
   config
-    The initial configuration for the ordering service node. This is only required if you need more advanced configuration than is provided by this module using *certificate_authority* and related options.
+    The initial configuration for the ordering service node. This is only required if you need more advanced configuration than is provided by this module using \ :emphasis:`certificate\_authority`\  and related options.
 
     See the IBM Blockchain Platform documentation for available options: https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-v2-apis#ibp-v2-apis-config
 
@@ -287,9 +287,9 @@ Parameters
 
     If you specify a new version, an existing ordering service node will be automatically upgraded.
 
-    The version can also be specified as a version range specification, for example ``>=2.2,<3.0``, which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
+    The version can also be specified as a version range specification, for example \ :literal:`\>=2.2,\<3.0`\ , which will match Hyperledger Fabric v2.2 and greater, but not Hyperledger Fabric v3.0 and greater.
 
-    See the ``semantic_version`` Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic_version.SimpleSpec
+    See the \ :literal:`semantic\_version`\  Python module documentation for more information: https://python-semanticversion.readthedocs.io/en/latest/reference.html#semantic\_version.SimpleSpec
 
     | **Type**: str
 
@@ -388,7 +388,7 @@ Return Values
   ordering_service_node
     The ordering service node.
 
-    | **Returned**: when *state* is ``present``
+    | **Returned**: when \ :emphasis:`state`\  is \ :literal:`present`\ 
     | **Type**: dict
 
     name

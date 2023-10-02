@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - A user matching the specified email will be removed from the IBM Blockchain Platform console.
+    \ :literal:`absent`\  - A user matching the specified email will be removed from the IBM Blockchain Platform console.
 
-    ``present`` - Asserts that a user matching the specified email and configuration exists in the IBM Blockchain Platform console. If no user matches the specified email, the user will be added to the IBM Blockchain Platform console. If a user matches the specified email but the configuration does not match, then the user in the IBM Blockchain Platform console will be updated.
+    \ :literal:`present`\  - Asserts that a user matching the specified email and configuration exists in the IBM Blockchain Platform console. If no user matches the specified email, the user will be added to the IBM Blockchain Platform console. If a user matches the specified email but the configuration does not match, then the user in the IBM Blockchain Platform console will be updated.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -80,9 +80,9 @@ Parameters
     | **Type**: str
 
   roles
-    The roles for the user. A user must have one or more roles from the list of roles ``reader``, ``writer``, and ``manager``.
+    The roles for the user. A user must have one or more roles from the list of roles \ :literal:`reader`\ , \ :literal:`writer`\ , and \ :literal:`manager`\ .
 
-    If you specify ``manager``, then the roles ``reader`` and ``writer`` will be automatically specified for you. If you specify ``writer``, then the role ``reader`` will be automatically specified for you.
+    If you specify \ :literal:`manager`\ , then the roles \ :literal:`reader`\  and \ :literal:`writer`\  will be automatically specified for you. If you specify \ :literal:`writer`\ , then the role \ :literal:`reader`\  will be automatically specified for you.
 
     | **Type**: list
     | **Elements**: str
@@ -151,7 +151,7 @@ Return Values
   console_user
     The user.
 
-    | **Returned**: when *state* is ``present``
+    | **Returned**: when \ :emphasis:`state`\  is \ :literal:`present`\ 
     | **Type**: dict
 
     uuid

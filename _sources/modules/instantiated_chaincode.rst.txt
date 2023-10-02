@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - If a chaincode matching the specified name and version is instantiated, then an error will be thrown, as it is not possible to uninstantiate chaincode.
+    \ :literal:`absent`\  - If a chaincode matching the specified name and version is instantiated, then an error will be thrown, as it is not possible to uninstantiate chaincode.
 
-    ``present`` - Asserts that a chaincode matching the specified name and version is instantiated on the specified channel. If it is not instantiated, then the chaincode with the specified name and version is instantiated on the specified channel. If it is instantiated with a different version, then the chaincode is upgraded on the specified channel. Otherwise, the instantiated chaincode is checked to ensure that it matches the specified ESCC and VSCC. It is not possible to check that the instantiated chaincode matches the specified endorsement policy and collections configuration. If the instantiated chaincode does not match, then an error will be thrown, as it is not possible to update instantiated chaincode without upgrading to a new version.
+    \ :literal:`present`\  - Asserts that a chaincode matching the specified name and version is instantiated on the specified channel. If it is not instantiated, then the chaincode with the specified name and version is instantiated on the specified channel. If it is instantiated with a different version, then the chaincode is upgraded on the specified channel. Otherwise, the instantiated chaincode is checked to ensure that it matches the specified ESCC and VSCC. It is not possible to check that the instantiated chaincode matches the specified endorsement policy and collections configuration. If the instantiated chaincode does not match, then an error will be thrown, as it is not possible to update instantiated chaincode without upgrading to a new version.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -79,7 +79,7 @@ Parameters
 
     You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`peer_info <peer_info_module>` or :ref:`peer <peer_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(peer\_info)" at index 76: Module name "peer\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(peer)" at index 92: Module name "peer" is not a FQCN\  modules.
 
     | **Type**: raw
 
@@ -88,7 +88,7 @@ Parameters
 
     You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity\_info)" at index 76: Module name "enrolled\_identity\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity)" at index 105: Module name "enrolled\_identity" is not a FQCN\  modules.
 
     | **Type**: raw
 
@@ -100,7 +100,7 @@ Parameters
   hsm
     The PKCS #11 compliant HSM configuration to use for digital signatures.
 
-    Only required if the identity specified in *identity* was enrolled using an HSM.
+    Only required if the identity specified in \ :emphasis:`identity`\  was enrolled using an HSM.
 
     | **Type**: dict
 
@@ -245,7 +245,7 @@ Return Values
   instantiated_chaincode
     The instantiated chaincode.
 
-    | **Returned**: when *state* is ``present``
+    | **Returned**: when \ :emphasis:`state`\  is \ :literal:`present`\ 
     | **Type**: dict
 
     channel

@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - An organization matching the specified name will be removed from the set of admins.
+    \ :literal:`absent`\  - An organization matching the specified name will be removed from the set of admins.
 
-    ``present`` - Asserts that an organization matching the specified name and configuration exists in the set of admins. If no organization matches the specified name, the organization will be added to the set of admins. If an organization matches the specified name but the configuration does not match, then the organization in the set of admins will be updated.
+    \ :literal:`present`\  - Asserts that an organization matching the specified name and configuration exists in the set of admins. If no organization matches the specified name, the organization will be added to the set of admins. If an organization matches the specified name but the configuration does not match, then the organization in the set of admins will be updated.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -77,7 +77,7 @@ Parameters
   path (required)
     Path to current the system channel configuration file.
 
-    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+    This file can be fetched by using the \ :strong:`ERROR while parsing`\ : While parsing "M(channel\_config)" at index 39: Module name "channel\_config" is not a FQCN\  module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
@@ -88,7 +88,7 @@ Parameters
 
     You can pass a string, which is the display name of an organization registered with the IBM Blockchain Platform console.
 
-    You can also pass a dictionary, which must match the result format of one of the :ref:`organization_info <organization_info_module>` or :ref:`organization[] <organization[]_module>` modules.
+    You can also pass a dictionary, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(organization\_info)" at index 82: Module name "organization\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(organization[])" at index 106: Module name "organization[]" is not a FQCN\  modules.
 
     | **Type**: raw
 

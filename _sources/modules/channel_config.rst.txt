@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,21 +61,21 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   operation (required)
-    ``create`` - Create a channel configuration update transaction for a new channel.
+    \ :literal:`create`\  - Create a channel configuration update transaction for a new channel.
 
-    ``fetch`` - Fetch the current channel configuration to the specified *path*.
+    \ :literal:`fetch`\  - Fetch the current channel configuration to the specified \ :emphasis:`path`\ .
 
-    ``compute_update`` - Compute a channel configuration update transaction using the original configuration at *origin* and the updated configuration at *updated*.
+    \ :literal:`compute\_update`\  - Compute a channel configuration update transaction using the original configuration at \ :emphasis:`origin`\  and the updated configuration at \ :emphasis:`updated`\ .
 
-    ``sign_update`` - Sign a channel configuration update transaction.
+    \ :literal:`sign\_update`\  - Sign a channel configuration update transaction.
 
-    ``apply_update`` - Apply a channel configuration update transaction.
+    \ :literal:`apply\_update`\  - Apply a channel configuration update transaction.
 
     | **Type**: str
 
@@ -84,11 +84,11 @@ Parameters
 
     You can pass a string, which is the cluster name of a ordering service registered with the IBM Blockchain Platform console.
 
-    You can also pass a list, which must match the result format of one of the :ref:`ordering_service_info <ordering_service_info_module>` or :ref:`ordering_service <ordering_service_module>` modules.
+    You can also pass a list, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service\_info)" at index 76: Module name "ordering\_service\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service)" at index 104: Module name "ordering\_service" is not a FQCN\  modules.
 
-    Only required when *operation* is ``fetch`` or ``apply_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`fetch`\  or \ :literal:`apply\_update`\ .
 
-    Cannot be specified with *ordering_service_nodes*.
+    Cannot be specified with \ :emphasis:`ordering\_service\_nodes`\ .
 
     | **Type**: raw
 
@@ -97,13 +97,13 @@ Parameters
 
     You can pass strings, which are the names of ordering service nodes that are registered with the IBM Blockchain Platform console.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`ordering_service_node_info <ordering_service_node_info_module>` or :ref:`ordering_service_node <ordering_service_node_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service\_node\_info)" at index 76: Module name "ordering\_service\_node\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(ordering\_service\_node)" at index 109: Module name "ordering\_service\_node" is not a FQCN\  modules.
 
-    Only required when *operation* is ``fetch`` or ``apply_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`fetch`\  or \ :literal:`apply\_update`\ .
 
-    Cannot be specified with *ordering_service*.
+    Cannot be specified with \ :emphasis:`ordering\_service`\ .
 
-    If specified when *operation* is ``create``, then the specified ordering service nodes are used as the consenters for the channel. This is useful when you want to use a subset of nodes in an ordering service; for example, when you only want to use three ordering service nodes from a five node ordering service.
+    If specified when \ :emphasis:`operation`\  is \ :literal:`create`\ , then the specified ordering service nodes are used as the consenters for the channel. This is useful when you want to use a subset of nodes in an ordering service; for example, when you only want to use three ordering service nodes from a five node ordering service.
 
     | **Type**: raw
 
@@ -112,23 +112,23 @@ Parameters
 
     You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity\_info)" at index 76: Module name "enrolled\_identity\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity)" at index 105: Module name "enrolled\_identity" is not a FQCN\  modules.
 
-    Only required when *operation* is ``fetch``, ``sign_update``, or ``apply_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`fetch`\ , \ :literal:`sign\_update`\ , or \ :literal:`apply\_update`\ .
 
     | **Type**: raw
 
   msp_id
     The MSP ID to use for interacting with the ordering service or for signing channel configuration update transactions.
 
-    Only required when *operation* is ``fetch``, ``sign``, or ``apply_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`fetch`\ , \ :literal:`sign`\ , or \ :literal:`apply\_update`\ .
 
     | **Type**: str
 
   hsm
     The PKCS #11 compliant HSM configuration to use for digital signatures.
 
-    Only required if the identity specified in *identity* was enrolled using an HSM, and when *operation* is ``fetch``, ``sign``, or ``apply_update``.
+    Only required if the identity specified in \ :emphasis:`identity`\  was enrolled using an HSM, and when \ :emphasis:`operation`\  is \ :literal:`fetch`\ , \ :literal:`sign`\ , or \ :literal:`apply\_update`\ .
 
     | **Type**: dict
 
@@ -161,14 +161,14 @@ Parameters
   original
     The path to the file where the original channel configuration is stored.
 
-    Only required when *operation* is ``compute_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`compute\_update`\ .
 
     | **Type**: str
 
   updated
     The path to the file where the updated channel configuration is stored.
 
-    Only required when *operation* is ``compute_update``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`compute\_update`\ .
 
     | **Type**: str
 
@@ -179,9 +179,9 @@ Parameters
 
     You can pass strings, which are the names of organizations that are registered with the IBM Blockchain Platform console.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`organization_info <organization_info_module>` or :ref:`organization <organization_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(organization\_info)" at index 76: Module name "organization\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(organization)" at index 100: Module name "organization" is not a FQCN\  modules.
 
-    Only required when *operation* is ``create``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`create`\ .
 
     | **Type**: list
     | **Elements**: raw
@@ -195,7 +195,7 @@ Parameters
 
     You must provide at least an Admins, Writers, and Readers policy.
 
-    Only required when *operation* is ``create``.
+    Only required when \ :emphasis:`operation`\  is \ :literal:`create`\ .
 
     | **Type**: dict
 
@@ -214,7 +214,7 @@ Parameters
 
       The value must be a valid application capability level supported by Hyperledger Fabric, and all peers that will join the new channel must support this application capability level.
 
-      Example application capability levels include ``V1_4_2`` and ``V2_0``.
+      Example application capability levels include \ :literal:`V1\_4\_2`\  and \ :literal:`V2\_0`\ .
 
       | **Type**: str
       | **Default value**: ``V1_4_2``
@@ -224,7 +224,7 @@ Parameters
 
       The value must be a valid channel capability level supported by Hyperledger Fabric, and all peers and ordering service nodes in the new channel must support this channel capability level.
 
-      Example channel capability levels include ``V1_4_3`` and ``V2_0``.
+      Example channel capability levels include \ :literal:`V1\_4\_3`\  and \ :literal:`V2\_0`\ .
 
       | **Type**: str
 
@@ -233,7 +233,7 @@ Parameters
 
       The value must be a valid orderer capability level supported by Hyperledger Fabric, and all ordering service nodes in the new channel must support this orderer capability level.
 
-      Example orderer capability levels include ``V1_4_2`` and ``V2_0``.
+      Example orderer capability levels include \ :literal:`V1\_4\_2`\  and \ :literal:`V2\_0`\ .
 
       | **Type**: str
 
@@ -267,7 +267,7 @@ Parameters
     batch_timeout
       The maximum time to wait before cutting a new block for the channel.
 
-      Example values include *500ms*, *5m*, or *24h*.
+      Example values include \ :emphasis:`500ms`\ , \ :emphasis:`5m`\ , or \ :emphasis:`24h`\ .
 
       | **Type**: str
 
@@ -277,7 +277,7 @@ Parameters
 
     Only use this option if the ordering service TLS certificates have expired.
 
-    The value must be a duration, for example *30m*, *24h*, or *6h30m*.
+    The value must be a duration, for example \ :emphasis:`30m`\ , \ :emphasis:`24h`\ , or \ :emphasis:`6h30m`\ .
 
     | **Type**: str
 

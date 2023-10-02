@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - If a chaincode definition matching the specified name, version and configuration is committed, then an error will be thrown, as it is not possible to uncommit a chaincode definition.
+    \ :literal:`absent`\  - If a chaincode definition matching the specified name, version and configuration is committed, then an error will be thrown, as it is not possible to uncommit a chaincode definition.
 
-    ``present`` - Asserts that a chaincode definition matching the specified name, version and configuration is committed on the specified channel. If it is not committed, then the chaincode definition with the specified name, version and configuration will be committed on the specified channel.
+    \ :literal:`present`\  - Asserts that a chaincode definition matching the specified name, version and configuration is committed on the specified channel. If it is not committed, then the chaincode definition with the specified name, version and configuration will be committed on the specified channel.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -79,7 +79,7 @@ Parameters
 
     You can pass a string, which is the display name of a peer registered with the IBM Blockchain Platform console.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`peer_info <peer_info_module>` or :ref:`peer <peer_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(peer\_info)" at index 76: Module name "peer\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(peer)" at index 92: Module name "peer" is not a FQCN\  modules.
 
     | **Type**: raw
 
@@ -88,7 +88,7 @@ Parameters
 
     You can pass a string, which is the path to the JSON file where the enrolled identity is stored.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`enrolled_identity_info <enrolled_identity_info_module>` or :ref:`enrolled_identity <enrolled_identity_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity\_info)" at index 76: Module name "enrolled\_identity\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(enrolled\_identity)" at index 105: Module name "enrolled\_identity" is not a FQCN\  modules.
 
     | **Type**: raw
 
@@ -100,7 +100,7 @@ Parameters
   hsm
     The PKCS #11 compliant HSM configuration to use for digital signatures.
 
-    Only required if the identity specified in *identity* was enrolled using an HSM.
+    Only required if the identity specified in \ :emphasis:`identity`\  was enrolled using an HSM.
 
     | **Type**: dict
 
@@ -132,9 +132,9 @@ Parameters
 
     You can pass strings, which are the names of organizations that are registered with the IBM Blockchain Platform console.
 
-    You can also pass a dict, which must match the result format of one of the :ref:`organization_info <organization_info_module>` or :ref:`organization <organization_module>` modules.
+    You can also pass a dict, which must match the result format of one of the \ :strong:`ERROR while parsing`\ : While parsing "M(organization\_info)" at index 76: Module name "organization\_info" is not a FQCN\  or \ :strong:`ERROR while parsing`\ : While parsing "M(organization)" at index 100: Module name "organization" is not a FQCN\  modules.
 
-    Only required when *state* is ``present``.
+    Only required when \ :emphasis:`state`\  is \ :literal:`present`\ .
 
     | **Type**: list
     | **Elements**: raw
@@ -155,7 +155,7 @@ Parameters
     | **Type**: int
 
   endorsement_policy_ref
-    A reference to a channel policy to use as the endorsement policy for this chaincode definition, for example */Channel/Application/MyEndorsementPolicy*.
+    A reference to a channel policy to use as the endorsement policy for this chaincode definition, for example \ :emphasis:`/Channel/Application/MyEndorsementPolicy`\ .
 
     | **Type**: str
 
@@ -175,12 +175,12 @@ Parameters
     | **Type**: str
 
   init_required
-    True if this chaincode definition requires called the *Init* method before the *Invoke* method, false otherwise.
+    True if this chaincode definition requires called the \ :emphasis:`Init`\  method before the \ :emphasis:`Invoke`\  method, false otherwise.
 
     | **Type**: bool
 
   init_json_str
-    The JSON string to pass to the Init method. If init_required is true, then the transaciton will be submitted immediately after the commit completes sucessfully. Note if the transaction fails and you wish to resubmit this will need to be done via other (non-ansible) methods
+    The JSON string to pass to the Init method. If init\_required is true, then the transaciton will be submitted immediately after the commit completes sucessfully. Note if the transaction fails and you wish to resubmit this will need to be done via other (non-ansible) methods
 
     | **Type**: string
 
@@ -263,7 +263,7 @@ Return Values
   committed_chaincode
     The committed chaincode definition.
 
-    | **Returned**: when *state* is ``present``
+    | **Returned**: when \ :emphasis:`state`\  is \ :literal:`present`\ 
     | **Type**: dict
 
     channel
@@ -312,7 +312,7 @@ Return Values
       | **Type**: str
 
     init_required
-      True if this chaincode definition requires called the *Init* method before the *Invoke* method, false otherwise.
+      True if this chaincode definition requires called the \ :emphasis:`Init`\  method before the \ :emphasis:`Invoke`\  method, false otherwise.
 
       | **Type**: bool
 

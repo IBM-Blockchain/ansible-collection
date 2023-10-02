@@ -29,9 +29,9 @@ Parameters
 ----------
 
   state
-    ``absent`` - An policy matching the specified name will be removed from the channel.
+    \ :literal:`absent`\  - An policy matching the specified name will be removed from the channel.
 
-    ``present`` - Asserts that an policy matching the specified name and configuration exists in the channel. If no policy matches the specified name, the policy will be added to the channel. If an policy matches the specified name but the configuration does not match, then the policy in the channel will be updated.
+    \ :literal:`present`\  - Asserts that an policy matching the specified name and configuration exists in the channel. If no policy matches the specified name, the policy will be added to the channel. If an policy matches the specified name but the configuration does not match, then the policy in the channel will be updated.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -39,7 +39,7 @@ Parameters
   path (required)
     Path to current the channel configuration file.
 
-    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+    This file can be fetched by using the \ :strong:`ERROR while parsing`\ : While parsing "M(channel\_config)" at index 39: Module name "channel\_config" is not a FQCN\  module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
@@ -57,7 +57,7 @@ Parameters
 
     You can also pass a dict, which must correspond to a parsed policy in the Hyperledger Fabric format (common.Policy).
 
-    Only required when *state* is ``present``.
+    Only required when \ :emphasis:`state`\  is \ :literal:`present`\ .
 
     | **Type**: raw
 

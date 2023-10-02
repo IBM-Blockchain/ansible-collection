@@ -31,7 +31,7 @@ Parameters
   path (required)
     Path to current the channel configuration file.
 
-    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+    This file can be fetched by using the \ :strong:`ERROR while parsing`\ : While parsing "M(channel\_config)" at index 39: Module name "channel\_config" is not a FQCN\  module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
@@ -42,7 +42,7 @@ Parameters
 
     The value must be a valid application capability level supported by Hyperledger Fabric, and all peers in the channel being updated must support this application capability level.
 
-    Example application capability levels include ``V1_4_2`` and ``V2_0``.
+    Example application capability levels include \ :literal:`V1\_4\_2`\  and \ :literal:`V2\_0`\ .
 
     | **Type**: str
 
@@ -51,7 +51,7 @@ Parameters
 
     The value must be a valid channel capability level supported by Hyperledger Fabric, and all peers and ordering service nodes in the channel being updated must support this channel capability level.
 
-    Example channel capability levels include ``V1_4_3`` and ``V2_0``.
+    Example channel capability levels include \ :literal:`V1\_4\_3`\  and \ :literal:`V2\_0`\ .
 
     | **Type**: str
 
@@ -60,7 +60,7 @@ Parameters
 
     The value must be a valid orderer capability level supported by Hyperledger Fabric, and all ordering service nodes in the channel being updated must support this orderer capability level.
 
-    Example orderer capability levels include ``V1_4_2`` and ``V2_0``.
+    Example orderer capability levels include \ :literal:`V1\_4\_2`\  and \ :literal:`V2\_0`\ .
 
     | **Type**: str
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation &mdash; Ansible Collection  documentation</title>
@@ -12,17 +12,16 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Migrating from v1.2 to version 2" href="migrating-v12-v2.html" />
-    <link rel="prev" title="IBM Blockchain collection for Ansible" href="index.html" /> 
+    <link rel="prev" title="⛔️ DEPRECATED ⛔️" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> Ansible Collection
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ansible Collection
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -91,7 +94,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Installation</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/installation.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -103,7 +106,7 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
 <p>There are three options for installing the IBM Blockchain Platform collection for Ansible:</p>
 <ul>
 <li><p>Installing using Ansible Galaxy</p>
@@ -131,7 +134,7 @@
 </li>
 </ul>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <p>In order to use this Ansible collection, you must have the following pre-requisite software installed and available:</p>
 <p><strong>Python v3.8+</strong></p>
 <blockquote>
@@ -201,14 +204,14 @@ If you install Python from the package manager for your operating system, you mu
 </div></blockquote>
 </section>
 <section id="installing-using-ansible-galaxy">
-<h2>Installing using Ansible Galaxy<a class="headerlink" href="#installing-using-ansible-galaxy" title="Permalink to this heading"></a></h2>
+<h2>Installing using Ansible Galaxy<a class="headerlink" href="#installing-using-ansible-galaxy" title="Link to this heading"></a></h2>
 <p>You can use the <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span></code> command to install a collection from Ansible Galaxy, the package manager for Ansible:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ansible</span><span class="o">-</span><span class="n">galaxy</span> <span class="n">collection</span> <span class="n">install</span> <span class="n">ibm</span><span class="o">.</span><span class="n">blockchain_platform</span>
 </pre></div>
 </div>
 </section>
 <section id="installing-from-source">
-<h2>Installing from source<a class="headerlink" href="#installing-from-source" title="Permalink to this heading"></a></h2>
+<h2>Installing from source<a class="headerlink" href="#installing-from-source" title="Link to this heading"></a></h2>
 <p>You can use the <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span></code> command to install a collection built from source. To build your own collection, follow these steps:
 This will build the stable <cite>release-1.2</cite> branch for v1.2.; use the <cite>main</cite> branch for the <cite>2.0.0-beta</cite> level</p>
 <ol class="arabic simple">
@@ -232,7 +235,7 @@ This will build the stable <cite>release-1.2</cite> branch for v1.2.; use the <c
 </div>
 </section>
 <section id="using-a-docker-image">
-<h2>Using a Docker image<a class="headerlink" href="#using-a-docker-image" title="Permalink to this heading"></a></h2>
+<h2>Using a Docker image<a class="headerlink" href="#using-a-docker-image" title="Link to this heading"></a></h2>
 <p>As an alternative to installing all of the requirements on your system, you can use a Docker image that contains all of the requirements.
 You can then use that Docker image to run your playbooks.</p>
 <p>A Docker image, <code class="docutils literal notranslate"><span class="pre">ghcr.io/ibm-blockchain/ofs-ansibe:sha-826e86e</span></code>, has been published to Docker Hub.</p>
@@ -250,7 +253,7 @@ You can then use that Docker image to run your playbooks.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="IBM Blockchain collection for Ansible" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="⛔️ DEPRECATED ⛔️" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="migrating-v12-v2.html" class="btn btn-neutral float-right" title="Migrating from v1.2 to version 2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

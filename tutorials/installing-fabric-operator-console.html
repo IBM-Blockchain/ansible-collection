@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installing the Fabric Operations Console and Operator &mdash; Ansible Collection  documentation</title>
@@ -12,12 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -28,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> Ansible Collection
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Ansible Collection
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -83,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Installing the Fabric Operations Console and Operator</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/IBM-Blockchain/ansible-collection/blob/main/docs/source/tutorials/installing-fabric-operator-console.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -95,11 +98,11 @@
            <div itemprop="articleBody">
              
   <section id="installing-the-fabric-operations-console-and-operator">
-<span id="open-console-operator-tutorial"></span><h1>Installing the Fabric Operations Console and Operator<a class="headerlink" href="#installing-the-fabric-operations-console-and-operator" title="Permalink to this heading"></a></h1>
+<span id="open-console-operator-tutorial"></span><h1>Installing the Fabric Operations Console and Operator<a class="headerlink" href="#installing-the-fabric-operations-console-and-operator" title="Link to this heading"></a></h1>
 <p>This tutorial will demonstrate how to use the Fabric Operations Console and Fabric Operator roles to automate the installation of the IBM Support for Hyperledger Fabric software s Kubernetes cluster</p>
 <p>This tutorial uses the Ansible roles <a class="reference external" href="../roles/fabric-operator-crds.html">fabric-operator-crds</a> and <a class="reference external" href="../roles/fabric-console.html">fabric-console</a> to install the Fabric Operations Console and Fabric Operator software. If you wish to customize the installation process, then you should review the documentation for these roles.</p>
 <section id="before-you-start">
-<h2>Before you start<a class="headerlink" href="#before-you-start" title="Permalink to this heading"></a></h2>
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Link to this heading"></a></h2>
 <p>Ensure that you have installed all of the pre-requisite software described in <a class="reference external" href="../installation.html">Installation</a>.</p>
 <p>If you have a Kubernetes cluster, you must have the Kubernetes CLI (<code class="docutils literal notranslate"><span class="pre">kubectl</span></code>) installed and configured to use your Kubernetes cluster. Verify that it is working by running the following command:</p>
 <blockquote>
@@ -112,7 +115,7 @@
 <p>Examples are given below of setting up such ingress controllers, primarily from a development perspective. These should be considered examples, for more details refer to you kubernetes administrator, and the Fabric Operations Console and Fabric Operator documentation.</p>
 </section>
 <section id="creating-the-playbook">
-<h2>Creating the playbook<a class="headerlink" href="#creating-the-playbook" title="Permalink to this heading"></a></h2>
+<h2>Creating the playbook<a class="headerlink" href="#creating-the-playbook" title="Link to this heading"></a></h2>
 <p>Versions of the files shown here are in the github repo under the <cite>examples/opensource-stack</cite> directory</p>
 <p>Create a new Ansible playbook file called <cite>install-ofs.yml</cite>. Copy the following content</p>
 <blockquote>
@@ -141,7 +144,7 @@
 </div></blockquote>
 </section>
 <section id="kind-ingress-configuration">
-<h2>KIND Ingress configuration<a class="headerlink" href="#kind-ingress-configuration" title="Permalink to this heading"></a></h2>
+<h2>KIND Ingress configuration<a class="headerlink" href="#kind-ingress-configuration" title="Link to this heading"></a></h2>
 <p>This configuration works well with the KIND cluster; KIND works well in development as it runs the whole
 Kubernetes inside a docker container. The playbook is below; this file and templates are in the <cite>examples/opensource-stack</cite> directory</p>
 <blockquote>
@@ -187,7 +190,7 @@ Kubernetes inside a docker container. The playbook is below; this file and templ
 </div></blockquote>
 </section>
 <section id="running-the-playbook">
-<h2>Running the playbook<a class="headerlink" href="#running-the-playbook" title="Permalink to this heading"></a></h2>
+<h2>Running the playbook<a class="headerlink" href="#running-the-playbook" title="Link to this heading"></a></h2>
 <p>Create a <cite>vars.yml</cite> file as follows:</p>
 <blockquote>
 <div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># The type of K8S cluster this is using</span>

@@ -34,9 +34,9 @@ Parameters
     | **Type**: str
 
   api_authtype (required)
-    ``ibmcloud`` - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using *api_key*.
+    \ :literal:`ibmcloud`\  - Authenticate to the IBM Blockchain Platform console using IBM Cloud authentication. You must provide a valid API key using \ :emphasis:`api\_key`\ .
 
-    ``basic`` - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using *api_key* and API secret using *api_secret*.
+    \ :literal:`basic`\  - Authenticate to the IBM Blockchain Platform console using basic authentication. You must provide both a valid API key using \ :emphasis:`api\_key`\  and API secret using \ :emphasis:`api\_secret`\ .
 
     | **Type**: str
 
@@ -48,7 +48,7 @@ Parameters
   api_secret
     The API secret for the IBM Blockchain Platform console.
 
-    Only required when *api_authtype* is ``basic``.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`basic`\ .
 
     | **Type**: str
 
@@ -61,15 +61,15 @@ Parameters
   api_token_endpoint
     The IBM Cloud IAM token endpoint to use when using IBM Cloud authentication.
 
-    Only required when *api_authtype* is ``ibmcloud``, and you are using IBM internal staging servers for testing.
+    Only required when \ :emphasis:`api\_authtype`\  is \ :literal:`ibmcloud`\ , and you are using IBM internal staging servers for testing.
 
     | **Type**: str
     | **Default value**: ``https://iam.cloud.ibm.com/identity/token``
 
   state
-    ``absent`` - A peer matching the specified name will be stopped and removed.
+    \ :literal:`absent`\  - A peer matching the specified name will be stopped and removed.
 
-    ``present`` - Asserts that a peer matching the specified name and configuration exists. If no peer matches the specified name, a peer will be created. If a peer matches the specified name but the configuration does not match, then the peer will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
+    \ :literal:`present`\  - Asserts that a peer matching the specified name and configuration exists. If no peer matches the specified name, a peer will be created. If a peer matches the specified name but the configuration does not match, then the peer will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the specified configuration.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -77,14 +77,14 @@ Parameters
   name
     The name of the external peer.
 
-    Only required when *state* is ``absent``.
+    Only required when \ :emphasis:`state`\  is \ :literal:`absent`\ .
 
     | **Type**: str
 
   peer
     The definition of the external peer
 
-    Only required when *state* is ``present``.
+    Only required when \ :emphasis:`state`\  is \ :literal:`present`\ .
 
     | **Type**: dict
 
@@ -179,7 +179,7 @@ Return Values
   peer
     The peer.
 
-    | **Returned**: when *state* is ``present``
+    | **Returned**: when \ :emphasis:`state`\  is \ :literal:`present`\ 
     | **Type**: dict
 
     name

@@ -31,7 +31,7 @@ Parameters
   path (required)
     Path to current the channel configuration file.
 
-    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+    This file can be fetched by using the \ :strong:`ERROR while parsing`\ : While parsing "M(channel\_config)" at index 39: Module name "channel\_config" is not a FQCN\  module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 
@@ -61,7 +61,7 @@ Parameters
   batch_timeout
     The maximum time to wait before cutting a new block for the channel.
 
-    Example values include *500ms*, *5m*, or *24h*.
+    Example values include \ :emphasis:`500ms`\ , \ :emphasis:`5m`\ , or \ :emphasis:`24h`\ .
 
     | **Type**: str
 

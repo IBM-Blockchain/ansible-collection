@@ -29,9 +29,9 @@ Parameters
 ----------
 
   state
-    ``absent`` - An ACL matching the specified name will be removed from the channel.
+    \ :literal:`absent`\  - An ACL matching the specified name will be removed from the channel.
 
-    ``present`` - Asserts that an ACL matching the specified name and policy exists in the channel. If no ACL matches the specified name, the ACL will be added to the channel. If an ACL matches the specified name but the policy does not match, then the ACL in the channel will be updated.
+    \ :literal:`present`\  - Asserts that an ACL matching the specified name and policy exists in the channel. If no ACL matches the specified name, the ACL will be added to the channel. If an ACL matches the specified name but the policy does not match, then the ACL in the channel will be updated.
 
     | **Type**: str
     | **Default value**: ``present``
@@ -39,7 +39,7 @@ Parameters
   path (required)
     Path to current the channel configuration file.
 
-    This file can be fetched by using the :ref:`channel_config <channel_config_module>` module.
+    This file can be fetched by using the \ :strong:`ERROR while parsing`\ : While parsing "M(channel\_config)" at index 39: Module name "channel\_config" is not a FQCN\  module.
 
     This file will be updated in place. You will need to keep a copy of the original file for computing the configuration update.
 

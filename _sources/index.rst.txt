@@ -2,8 +2,13 @@
 .. SPDX-License-Identifier: Apache-2.0
 ..
 
+⛔️ DEPRECATED ⛔️
+==================
+
+**This ansible collection is deprecated and will no longer be updated or maintained by IBM. Please use the open source ansible collection, maintained by hyperledger-labs, which can be found here:** `Hyperledger Fabric Ansible Collection <https://labs.hyperledger.org/fabric-ansible-collection/>`_
+
 IBM Blockchain collection for Ansible
-==============================================
+=======================================
 
 This Ansible collection, enables you to automate the building of Hyperledger Fabric networks.
 
@@ -21,7 +26,7 @@ Apache-2.0
 Author Information
 ==================
 
-This Ansible collection is maintained by the IBM Blockchain development team.
+This Ansible collection is NO LONGER maintained by the IBM Blockchain development team.
 
 ..
 .. Fabric Operator:
